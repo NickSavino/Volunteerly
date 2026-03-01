@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16
+    container_name: volunteerly-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: volunteerly
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  
+  server:
+    build:
+      context: ./server
+    container_name: volunteerly-server
+    environment:
+      PORT: 4000
+      CORS_ORIGIN: http://localhost:3000
+      DATABASE_URL: postgres://postgres:postgres@db:5432/volunteerly
+    ports:
+     - "4000:4000"
+    depends_on:
+      - db
+    volumes:
+      - ./server:/app
+      - server_node_modules:/app/node_modules
+
+  client:
+    build:
+      context: ./client
+    container_name: volunteerly-web
+    environment:
+      PORT: "3000:3000"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+      - client_node_modules:/app/node_modules
+    
+volumes:
+  db_data:
+  server_node_modules:
+  client_node_modules:
