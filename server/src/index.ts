@@ -32,5 +32,5 @@ app.get("/health/db", async(_req, res) => {
 const port = Number(process.env.PORT ?? 4000);
 const server = "localhost";
 app.listen(port, () => {
-    console.log(`Server is listening on https://${server}:${port}`);
+    console.log(`Server is listening on http://${server}:${port}`);
 });
