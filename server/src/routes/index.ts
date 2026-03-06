@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { healthRouter } from "./health.js";
+import { meRouter } from "./me.js";
 
 /**
  * Base Router for all routes. Injected into app.ts
@@ -10,3 +11,4 @@ import { healthRouter } from "./health.js";
 export const apiRouter = Router();
 
 apiRouter.use("/health", healthRouter);
+apiRouter.use("/me", meRouter);
