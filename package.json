@@ -18,6 +18,11 @@
     "shared"
   ],
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "@types/node": "^25.3.5",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.3"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.6"
   }
 }
