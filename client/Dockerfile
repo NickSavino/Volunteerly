@@ -3,10 +3,14 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+COPY server/package*.json ./server/
+COPY client/package*.json ./client/
+COPY shared/package*.json ./shared/
+
+RUN npm install
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "-w", "client"]
