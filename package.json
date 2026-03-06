@@ -1,0 +1,23 @@
+{
+  "name": "seng513-202601-pg-40",
+  "version": "1.0.0",
+  "description": "To make it easy for you to get started with GitLab, here's a list of recommended next steps.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build -w shared && npm run build -w server && npm run build -w client",
+    "typecheck": "npm run typecheck -w shared && npm run typecheck -w server && npm run typecheck -w client",
+    "dev": "concurrently -n shared,server,client -c auto \"npm run dev -w shared\" \"npm run dev -w server\" \"npm run dev -w client\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": "true",
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

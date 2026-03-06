@@ -5,16 +5,20 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "dev:docker": "prisma generate && tsx watch src/index.ts",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.2",
+    "@volunteerly/shared": "^0.0.1",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
