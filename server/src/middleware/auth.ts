@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express"
 import { supabase } from "../lib/supabase.js";
-import { env } from "../lib/env.js";
 
 type AuthenticatedRequest = Request & {
     auth?: {

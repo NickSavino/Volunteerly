@@ -9,9 +9,9 @@ type AuthenticatedRequest = {
     }
 }
 
-export const meRouter = Router();
+export const currentUserRouter = Router();
 
-meRouter.get("/", auth, async (req, res, next) => {
+currentUserRouter.get("/", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
 

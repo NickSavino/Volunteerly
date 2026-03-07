@@ -17,8 +17,8 @@ model User {
     id       String   @id @default(uuid())
     email    String   @unique
     role    UserRole  @default(VOLUNTEER)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt @map("updated_at")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
 
     @@map("users")
 }
