@@ -119,7 +119,7 @@ Server: <http://localhost:4000>
 The project uses [Prisma Migrations](https://www.prisma.io/docs/orm/prisma-migrate).
 
 Generate the prisma client:
-- `npm run prisma:migrate -w server`
+- `npm run prisma:generate -w server`
 
 Run Migrations
 - `npm run prisma:migrate -w server`
@@ -150,7 +150,7 @@ When a user signs up:
 2. A database triggers automatically inserts a related record into `public.users`, mapping them by keys while protecting the authentication data.
 
 ## Supabase Local Development
-a local supabase instance is used in development. From the repository root:
+a [local supabase instance](https://supabase.com/docs/guides/local-development) is used in development. From the repository root:
 - `supabase start`
 
 You can access the supabase dashboard locally at:
