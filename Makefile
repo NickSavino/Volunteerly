@@ -11,7 +11,6 @@ help:
 	@echo "  make stop        - Stop all running containers"
 	@echo "  make dev         - Start the development environment (builds if necessary)"
 	@echo "  make server      - Start only the server container"
-	@echo "  make client      - Start only the web client container"
 	@echo "  make server-d    - Start the server container detached"
 	@echo "  make web-d       - Start the web client container detached"
 	@echo "  make dev-d       - Start dev detached"

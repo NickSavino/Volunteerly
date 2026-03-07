@@ -10,7 +10,9 @@
     "dev:docker": "prisma generate && tsx watch src/server.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "db:reset": "npx supabase db reset",
+    "prisma:migrate:empty": "prisma migrate dev --create-only",
+    "db:auth-bootstrap": "psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f sql/supabase-auth-bootstrap.sql",
+    "db:setup": "npm run prisma:migrate && npm run db:auth-bootstrap",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "keywords": [],
