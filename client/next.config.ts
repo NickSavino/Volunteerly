@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: ["@volunteerly/shared"],
+  watchOptions: {
+    pollIntervalMs: 800,
+  },
 };
 
 export default nextConfig;

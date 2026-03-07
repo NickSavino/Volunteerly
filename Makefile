@@ -10,13 +10,10 @@ help:
 	@echo "  make clean       - Stop and remove all containers, networks, and volumes"
 	@echo "  make stop        - Stop all running containers"
 	@echo "  make dev         - Start the development environment (builds if necessary)"
-	@echo "  make dev-d       - Start dev detached"
-	@echo "  make db          - Start only the database container"
 	@echo "  make server      - Start only the server container"
-	@echo "  make client      - Start only the web client container"
-	@echo "  make db-d        - Start the database container detached"
 	@echo "  make server-d    - Start the server container detached"
 	@echo "  make web-d       - Start the web client container detached"
+	@echo "  make dev-d       - Start dev detached"
 
 build:
 	docker compose build
@@ -35,12 +32,6 @@ dev:
 
 dev-d:
 	docker compose up --build -d
-
-db:
-	docker compose up db --build
-
-db-d:
-	docker compose up db --build -d
 
 server:
 	docker compose up server --build

@@ -1,7 +1,13 @@
+import { supabase } from "./supabase";
 
 
 
-const base_url = process.env.NEXT_PUBLIC_API_BASE_URL
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
+
+async function getAccessToken(): Promise<string | null> {
+    const { data } = await supabase.auth.getSession();
+    return data.session?.access_token ?? null;
+}
 
 /**
  *  Base wrapper for API to call the backend.
@@ -12,15 +18,22 @@ const base_url = process.env.NEXT_PUBLIC_API_BASE_URL
  * @returns the response body parsed as JSON.
  */
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
-    if (!base_url) throw new Error("NEXT_PUBLIC_API_BASE_URL is not set");
-    const res = await fetch(`${base_url}${path}`, {
+    if (!baseUrl) throw new Error("NEXT_PUBLIC_API_BASE_URL is not set");
+
+    const token = await getAccessToken();
+
+    
+    const res = await fetch(`${baseUrl}${path}`, {
         ...init,
         headers: {
             "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}`} : {}),
             ...(init?.headers ?? {}),
         },
     });
+
     if (!res.ok) throw new Error(await res.text());
+    
     return res.json() as Promise<T>;
     
 }
