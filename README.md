@@ -186,3 +186,8 @@ Alternatively, you can run:
 - `npm run dev -w shared`
 
 For automatic reloading.
+
+### CSS
+Use components from [shacdn/ui](https://ui.shadcn.com/docs/components). Styling for web application is set in `/client/src/app/globals.css`.
+
+Imported components can be styled by accessing the relevant `.tsx` file for that component inside `/client/src/components/ui`
