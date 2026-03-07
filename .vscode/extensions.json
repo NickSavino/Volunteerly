@@ -15,7 +15,8 @@
 		"rvest.vs-code-prettier-eslint",
 		"prisma.prisma",
 		"eliezerrangel.prisma-studio",
-		"supabase.vscode-supabase-extension"
+		"supabase.vscode-supabase-extension",
+		"redhat.vscode-yaml"
 		
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
