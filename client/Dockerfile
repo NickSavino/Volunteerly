@@ -11,6 +11,8 @@ RUN npm install
 
 COPY . .
 
+WORKDIR /app/client
+
 EXPOSE 3000
 
-CMD ["npm", "run", "dev", "-w", "client"]
+CMD ["npm", "run", "dev"]
