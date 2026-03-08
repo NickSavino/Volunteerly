@@ -1,3 +1,4 @@
+image: node:20
 
 workflow:
   rules:
@@ -27,7 +28,6 @@ typecheck:
 
 build:
   stage: build
-  image: node:20
   script:
     - npm run build
   needs: ["install"]
