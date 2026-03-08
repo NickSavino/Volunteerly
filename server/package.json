@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
+    "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "dev:docker": "prisma generate && tsx watch src/server.ts",
     "prisma:generate": "prisma generate",
@@ -13,7 +14,7 @@
     "prisma:migrate:empty": "prisma migrate dev --create-only",
     "db:auth-bootstrap": "psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f sql/supabase-auth-bootstrap.sql",
     "db:setup": "npm run prisma:migrate && npm run db:auth-bootstrap",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit"
   },
   "keywords": [],
   "author": "",
