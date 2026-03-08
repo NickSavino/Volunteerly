@@ -33,7 +33,7 @@ build:
     - npm run build
   needs: ["install"]
 
-vercel-deploy:
+deploy:
   stage: deploy
   image: curlimages/curl:latest
   script:
