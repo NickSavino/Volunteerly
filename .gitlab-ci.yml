@@ -35,9 +35,10 @@ build:
 
 deploy:
   stage: deploy
-  image: curlimages/curl:latest
   script:
-    - curl -X POST "$VERCEL_DEPLOY_HOOK_MAIN"
-  only:
-    - main
+    - npm install -g vercel
+    - cd client
+    - vercel pull --yes --environment=production --token=$"VERCEL_TOKEN"
+    - vercel build --prod --token="$VERCEL_TOKEN"
+    - vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
   needs: ["build"]
