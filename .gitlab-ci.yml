@@ -10,6 +10,7 @@ stages:
   - install
   - typecheck
   - build
+  - deploy
 
 cache:
   paths:
@@ -31,3 +32,11 @@ build:
   script:
     - npm run build
   needs: ["install"]
+
+vercel-deploy:
+  stage: deploy
+  image: curlimages/curl:latest
+  script:
+    - curl -X POST "$VERCEL_DEPLOY_HOOK_MAIN"
+  only:
+    - main

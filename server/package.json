@@ -12,8 +12,10 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:empty": "prisma migrate dev --create-only",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "db:auth-bootstrap": "psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f sql/supabase-auth-bootstrap.sql",
     "db:setup": "npm run prisma:migrate && npm run db:auth-bootstrap",
+    "db:setup-prod": "prisma migrate deploy && npm run db:auth-bootstrap",
     "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit"
   },
   "keywords": [],
