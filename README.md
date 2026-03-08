@@ -1,93 +1,193 @@
-# SENG 513 Project
+# Volunteerly - SENG 513
 
+Volunteerly is a web platform that connects volunteers with organizations.
 
+---
 
-## Getting started
+## Tech Stack / Tool Reference
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### Frontend
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- Next.js 16 - <https://nextjs.org/docs>
+- React - <https://react.dev/reference/react>
+- Typescript - <https://www.typescriptlang.org/docs/>
 
-## Add your files
+### Backend
 
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+- Node.js 20.19.0 - <https://nodejs.org/en/learn/getting-started/introduction-to-nodejs>
+- Express.js 5.2.1 - <https://expressjs.com/en/5x/api.html>
+- Prisma ORM 7.4.2 - <https://www.prisma.io/docs/orm>
 
+### Database
+
+- PostgreSQL 16 - <https://www.postgresql.org/docs/>
+
+### Infrastructure
+
+- Docker - <https://docs.docker.com/reference/dockerfile/>
+- Make - <https://www.gnu.org/software/make/>
+
+## Monorepo Structure
+
+The project consists of 3 packages:
+- `client/` - Next.js frontend
+- `server/` - Express Backend
+- `shared/` - shared Zod schemas and types used by both client and server
+
+Each package and the repository root contain a `package.json` with useful development commands.
+Type `npm run` to view available commands
+
+You can manage each package individually by adding: `-w (package)` to the end of a `npm run` command
+
+Examples:
+```bash
+npm run build -w shared
+npm run typecheck -w client
+npm run db:setup -w server
 ```
-cd existing_repo
-git remote add origin https://csgit.ucalgary.ca/saad.abdullah1/seng-513-project.git
-git branch -M main
-git push -uf origin main
+## Development Setup
+
+The dev environment is ran using docker for a consistent cross-platform environment.
+
+### Prerequisites
+
+#### 1. Install necessary tools
+
+Docker Desktop (reccomended), Docker engine (required):
+- <https://docs.docker.com/desktop/>
+
+Make:
+- Windows: <https://medium.com/@AliMasaoodi/installing-make-on-windows-10-using-chocolatey-a-step-by-step-guide-5e178c449394>
+- Mac: <https://www.google.com/search?client=firefox-b-d&q=install+make+on+mac>
+- Linux/WSL: <https://www.geeksforgeeks.org/installation-guide/how-to-install-make-on-ubuntu/>
+- Node.js (20+):
+
+- Ensure PostgreSQL client is setup, you should be able to run commands using `sql`
+
+#### 2. Verify installation
+
+```bash
+docker --version
+docker compose version
+make # Should print out a list of available commands
+node --version
+npm --version
 ```
 
-## Integrate with your tools
+#### 3. Set environment variables
 
-* [Set up project integrations](https://csgit.ucalgary.ca/saad.abdullah1/seng-513-project/-/settings/integrations)
+In repo root:
+- `touch .env`
 
-## Collaborate with your team
+Place environment variables only in this file 
 
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+**(DO NOT COMMIT SECRETS TO REPOSITORY)**
 
-## Test and Deploy
+#### 4. Install packages
+From repository root:
+`npm install`
 
-Use the built-in continuous integration in GitLab.
+#### 5. Run Development environment
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Simplest method:
 
-***
+```bash
+docker compose up --build
+supabase start
+# After supabase has initialized:
+npm run db:reset -w server
+```
 
-# Editing this README
+This will:
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+1. Build and run the client and server containers
+2. Start supabase containers
+3. Bootstrap authenication to SQL
 
-## Suggestions for a good README
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+*** Note: it is possible to run the client and backend without docker, but not reccomended due to potential issues across development environments.
 
-## Name
-Choose a self-explaining name for your project.
+*** Note: Always remember to run `npm run db:reset -w server` after resetting the database, or auth will not properly bootstrap
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Services
+After startup the following services are available:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Client: <http://localhost:3000>
+Server: <http://localhost:4000>
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## Migrations
+The project uses [Prisma Migrations](https://www.prisma.io/docs/orm/prisma-migrate).
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Generate the prisma client:
+- `npm run prisma:generate -w server`
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Run Migrations
+- `npm run prisma:migrate -w server`
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+*** Note: Never manually deleted a migration file unless it is an untracked change in your current working branch. If you need to make a change or revert after a commit, simply edit the schema file and rerun migrations.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+#### Migration Conventions:
+Use standard snake_case for column names through the use of the `@map()` attribute
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+For tables use `@@map()` and follow snake_case as well.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+The following fields should be in every table that represents a tracked entity within the database schema:
+```bash
+createdAt DateTime @default(now()) @map("created_at")
+updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Enforce id primary keys on every table with `@id @default(uuid())`
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Define both sides of relationship in schema when referencing tables through primary keys
 
-## License
-For open source projects, say how it is licensed.
+## Supabase Auth Integration
+Volunteerly uses [Supabase Auth](https://supabase.com/docs/guides/auth) for authentication.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+When a user signs up:
+
+1. Supabase inserts a row in `auth.users`
+2. A database triggers automatically inserts a related record into `public.users`, mapping them by keys while protecting the authentication data.
+
+## Supabase Local Development
+a [local supabase instance](https://supabase.com/docs/guides/local-development) is used in development. From the repository root:
+- `supabase start`
+
+You can access the supabase dashboard locally at:
+
+<http://localhost:54323>
+
+To view your connection settings, run:
+
+`npx supabase status`
+
+Reset the local database by running:
+- `npm run db:reset -w server`
+
+## Client Authentication Flow
+There the following pages manage authentication:
+- `/`
+- `/login`
+- `/signup`
+- `/bootstrap`
+- `/volunteer`
+- `/organization`
+- `/moderator`
+
+After login or signup, the app routes to `/bootstrap`, fetches the current user from the backend, and redirects to the correct dashboard based on the user`s role.
+
+## API Contract
+API schemas are defined in the `shared/` package using [Zod](https://zod.dev/). This provides runtime validation and shared types between frontend and backend
+
+After adding your schema to `shared/src` run:
+- `npm run build -w shared`
+
+Alternatively, you can run:
+- `npm run dev -w shared`
+
+For automatic reloading.
+
+### CSS
+Use components from [shacdn/ui](https://ui.shadcn.com/docs/components). Styling for web application is set in `/client/src/app/globals.css`.
+
+Imported components can be styled by accessing the relevant `.tsx` file for that component inside `/client/src/components/ui`

@@ -1,0 +1,39 @@
+services:
+
+  server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    container_name: volunteerly-server
+    environment:
+      PORT: ${SERVER_PORT}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      DATABASE_URL: ${DATABASE_URL}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+    ports:
+     - "4000:4000"
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+
+  client:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    container_name: volunteerly-web
+    environment:
+      PORT: ${CLIENT_PORT}
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app/client
+      - node_modules:/app/node_modules
+    
+volumes:
+  node_modules:

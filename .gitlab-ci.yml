@@ -1,0 +1,7 @@
+stages:
+  - noop
+
+empty-pipeline:
+  stage: noop
+  script:
+    - echo "Manual pipeline placeholder"

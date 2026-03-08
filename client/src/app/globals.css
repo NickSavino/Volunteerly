@@ -1,0 +1,101 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-info-strong: var(--info-strong)
+}
+
+:root {
+  --radius: 1rem;
+  
+  --background: #F8FAFC;
+  --foreground: #111827;
+
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #111827;
+
+  /* Primary Colour */
+  --primary: #F4D125;
+  --primary-foreground: #fafafa;
+  /* Secondary Colour */
+  --secondary: #FEFBEA;
+  --secondary-foreground: #111827;
+  /* Tertiary Colour */
+  --muted: #F8FAFC;
+  --muted-foreground: #64748B;
+  --accent: #FEFBEA;
+  --accent-foreground: #111827;
+
+  --destructive: #EF4444;
+
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #F4D125;
+
+  /* Extras */
+  --success: #22C55E;
+  --warning: #F97316;
+  --info: #ABC7EC;
+  --info-strong: #2563EB;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1 {
+    @apply text-4xl font-extrabold tracking-tight text-slate-900;
+  }
+
+  h2 {
+    @apply text-3xl font-extrabold tracking-tight text-slate-900;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold text-slate-900;
+  }
+
+  p {
+    @apply text-slate-600;
+  }
+}
