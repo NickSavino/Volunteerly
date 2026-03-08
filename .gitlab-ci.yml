@@ -7,24 +7,15 @@ workflow:
   - if: $CI_COMMIT_BRANCH == "development"
 
 stages:
-  - deploy
   - install
   - typecheck
   - build
+  - deploy
 
 cache:
   paths:
     - node_modules/
-
-deploy:
-  stage: deploy
-  script:
-    - npm install -g vercel
-    - cd client
-    - vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
-    - vercel build --prod --token="$VERCEL_TOKEN"
-    - vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"  
-
+  
 install:
   stage: install
   script:
@@ -42,4 +33,12 @@ build:
     - npm run build
   needs: ["typecheck"]
 
-
+deploy:
+  stage: deploy
+  script:
+    - npm install -g vercel
+    - cd client
+    - vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+    - vercel build --prod --token="$VERCEL_TOKEN"
+    - vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+  needs: ["build"]
