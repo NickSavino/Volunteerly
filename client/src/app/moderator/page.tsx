@@ -6,45 +6,11 @@ import { useAuth } from "../../providers/auth-provider";
 import { Button } from "../../components/ui/button";
 import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
 import { api } from "../../lib/api";
+import { useModDashboardViewModel } from "./ModDashboardVm";
 
 export default function HomePage() {
-  const router = useRouter();
-  const { session, user, loading, signOut } = useAuth();
-  const [currentUser, setCurrentUser] = useState<CurrentUser | undefined>(undefined);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!loading && !session) {
-      router.replace("/login")
-    }
-  }, [loading, session, router]);
-
-  useEffect(() => {
-    async function loadCurrentUser() {
-      if (!session?.access_token) return;
-
-      try {
-        const response = await api<unknown>("/current-user");
-        const parsed = CurrentUserSchema.safeParse(response)
-
-        if (!parsed.success) {
-          console.error(parsed.error);
-          setError("Received invalid user data from the server.");
-          return;
-        }
-
-        if (parsed.data.role !== "MODERATOR") {
-          router.replace("/bootstrap");
-          return;
-        }
-
-        setCurrentUser(parsed.data);
-      } catch (error) {
-        console.error(error);
-      }
-  }
-  loadCurrentUser();
-}, [session, router]);
+  const {loading, session, signOut, router, user, error, currentUser} = useModDashboardViewModel()
 
   if (loading || !session ) {
     return <main className="p-6">Loading...</main>
