@@ -1,7 +1,43 @@
-stages:
-  - noop
+image: node:20
 
-empty-pipeline:
-  stage: noop
+workflow:
+  rules:
+  - if: $CI_MERGE_REQUEST_ID
+  - if: $CI_COMMIT_BRANCH == "main"
+  - if: $CI_COMMIT_BRANCH == "development"
+
+stages:
+  - install
+  - typecheck
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+  
+install:
+  stage: install
   script:
-    - echo "Manual pipeline placeholder"
+    - npm ci
+
+typecheck:
+  stage: typecheck
+  script:
+    - npm run typecheck
+  needs: ["install"]
+
+build:
+  stage: build
+  script:
+    - npm run build
+  needs: ["typecheck"]
+
+deploy:
+  stage: deploy
+  image: curlimages/curl:latest
+  script:
+    - curl -X POST "$VERCEL_DEPLOY_HOOK_MAIN"
+  only:
+    - main
+  needs: ["build"]
