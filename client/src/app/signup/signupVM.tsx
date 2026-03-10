@@ -3,8 +3,8 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
 
-export function useLoginViewModel() {
-    const router = useRouter();
+export function useSignUpViewModel() {
+ const router = useRouter();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,7 +16,7 @@ export function useLoginViewModel() {
         setSubmitting(true);
         setError(null);
 
-        const {data, error} = await AuthService.loginUserWithEmailPass(email, password)
+        const {data, error} = await AuthService.SignUpUserWithEmailPass(email, password)
 
         setSubmitting(false);
 
@@ -25,7 +25,12 @@ export function useLoginViewModel() {
             return;
         }
 
-        router.push("/bootstrap");
+        if (data.session) {
+            router.push("/bootstrap");
+            return;
+        }
+
+        router.push("/login")
     }
     return {
         email,
