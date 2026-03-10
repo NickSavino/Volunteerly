@@ -8,34 +8,10 @@ import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import Link from "next/link";
+import { useLoginViewModel } from "./loginVM";
 
 export default function LoginPage() {
-    const router = useRouter();
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-
-    async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setSubmitting(true);
-        setError(null);
-
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-
-        setSubmitting(false);
-
-        if (error) {
-            setError(error.message);
-            return;
-        }
-
-        router.push("/bootstrap");
-    }
+    const {email, setEmail, password, setPassword, submitting, error, handleSubmit} = useLoginViewModel()
 
     return (
         <main className="min-h-screen flex items-center justify-center px-6">
