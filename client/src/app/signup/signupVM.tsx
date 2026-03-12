@@ -6,7 +6,10 @@ import { AuthService } from "@/services/AuthService";
 export function useSignUpViewModel() {
  const router = useRouter();
 
+    const [fName, setfName] = useState("");
+    const [lName, setlName] = useState("");
     const [email, setEmail] = useState("");
+    const [role, setRole] = useState("");
     const [password, setPassword] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -16,7 +19,7 @@ export function useSignUpViewModel() {
         setSubmitting(true);
         setError(null);
 
-        const {data, error} = await AuthService.SignUpUserWithEmailPass(email, password)
+        const {data, error} = await AuthService.SignUpUserWithEmailPass(email, password, fName, lName, role)
 
         setSubmitting(false);
 
@@ -37,6 +40,12 @@ export function useSignUpViewModel() {
         setEmail,
         password,
         setPassword,
+        fName,
+        setfName,
+        lName,
+        setlName,
+        role, 
+        setRole,
         submitting,
         error,
         handleSubmit
