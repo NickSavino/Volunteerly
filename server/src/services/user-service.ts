@@ -6,16 +6,17 @@ export async function getCurrentUser(userId: string) {
     const user = await prisma.user.findUnique({
         where: { id: userId },
     });
+
     return user;
 }
 
-export async function createCurrentUser(userId: string, fName: string, lName: string, userRole: string, email: string) {
+export async function createCurrentUser(userId: string, firstName: string, lastName: string, userRole: string, email: string) {
     const user = await prisma.user.create({
             data: {
             id: userId,
             email: email,
-            fName: fName,
-            lName: lName,
+            firstName: firstName,
+            lastName: lastName,
             role: userRole ? (userRole as UserRole) : UserRole.VOLUNTEER,
             },
         });
@@ -26,13 +27,13 @@ export async function createCurrentUser(userId: string, fName: string, lName: st
     return user;
 }
 
-export async function updateCurrentUser(userId: string, fName: string, lName: string, userRole: string, email: string) {
+export async function updateCurrentUser(userId: string, firstName: string, lastName: string, userRole: string, email: string) {
     const user = await prisma.user.update({
         where: { id: userId },
         data: {
         email: email,
-        fName: fName,
-        lName: lName,
+        firstName: firstName,
+        lastName: lastName,
         role: userRole ? (userRole as UserRole) : UserRole.VOLUNTEER,
         },
     });

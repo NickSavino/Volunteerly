@@ -32,17 +32,14 @@ currentUserRouter.get("/", auth, async (req, res, next) => {
                 message: "Application User not found."
             });
         }
-       
-
         res.status(200).json(user);
     } catch (error) {
         next(error);
     }
 })
 
-currentUserRouter.put("/", async (req, res) => {
+currentUserRouter.put("/", auth, async (req, res, next) => {
   try {
-    const { fName, lName, role, email } = req.body;
     const typedReq = req as typeof req & AuthenticatedRequest;
 
     const userId = typedReq.auth?.userId;
@@ -53,13 +50,14 @@ currentUserRouter.put("/", async (req, res) => {
             message: "User context missing."
         });
     }
+    const { firstName, lastName, role, email } = req.body;
 
     const user = await getCurrentUser(userId);
     let modified_user;
     if (!user) {
-        modified_user = await createCurrentUser(userId, fName, lName, role, email);
+        modified_user = await createCurrentUser(userId, firstName, lastName, role, email);
     } else {
-        modified_user = await updateCurrentUser(userId, fName, lName, role, email);    
+        modified_user = await updateCurrentUser(userId, firstName, lastName, role, email);    
     }
     if (!modified_user) {
         return res.status(500).json({
@@ -69,8 +67,8 @@ currentUserRouter.put("/", async (req, res) => {
     }
 
     res.status(200).json(modified_user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
-  }
+  } catch (error) {
+    console.error(error);
+    next(error);
+    }
 });

@@ -6,8 +6,8 @@ export type UserRole = z.infer<typeof UserRoleSchema>;
 export const UserSchema = z.object({
     id: z.uuid(),
     email: z.email(),
-    fName: z.string(),
-    lName: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
     role: UserRoleSchema,
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
@@ -17,8 +17,8 @@ export type User = z.infer<typeof UserSchema>;
 export const CurrentUserSchema = z.object({
     id: z.uuid(),
     email: z.email(),
-    fName: z.string(),
-    lName: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
     role: UserRoleSchema,
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(), 
@@ -28,8 +28,8 @@ export type CurrentUser = z.infer<typeof CurrentUserSchema>
 
 export const CurrentUserUpdateSchema = z.object({
     email: z.email(),
-    fName: z.string(),
-    lName: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
     role: UserRoleSchema,
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(), 
