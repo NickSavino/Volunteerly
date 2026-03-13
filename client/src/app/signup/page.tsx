@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useSignUpViewModel } from "./signupVM";
 
 export default function LoginPage() {
-    const {email, setEmail, password, setPassword, submitting, error, handleSubmit} = useSignUpViewModel()
+    const {email, setEmail, password, setPassword, fName, setfName, lName, role, setRole, setlName, submitting, error, handleSubmit} = useSignUpViewModel()
 
     return (
         <main className="min-h-screen flex items-center justify-center px-6">
@@ -19,6 +19,40 @@ export default function LoginPage() {
                 <CardHeader>Create an account</CardHeader>
                 <CardContent>
                     <form className="space-y-4" onSubmit={handleSubmit}>
+                        <div className="space-y-2">
+                            <Label htmlFor="fName">First Name</Label>
+                            <Input
+                                id="fName"
+                                type="text"
+                                value={fName}
+                                onChange={(e) => setfName(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="lName">Last Name</Label>
+                            <Input
+                                id="lName"
+                                type="text"
+                                value={lName}
+                                onChange={(e) => setlName(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="role">Role</Label>
+                            <select
+                                id="role"
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                required
+                                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="">Select a role</option>
+                                <option value="VOLUNTEER">Volunteer</option>
+                                <option value="ORGANIZATION">Organization</option>
+                            </select>
+                        </div>
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
