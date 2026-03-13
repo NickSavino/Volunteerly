@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "prisma generate && tsc",
-    "start": "node dist/server.js",
+    "start": "prisma generate && node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "dev:docker": "prisma generate && tsx watch src/server.ts",
     "prisma:generate": "prisma generate",
