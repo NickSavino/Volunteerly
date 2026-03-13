@@ -27,7 +27,6 @@ export const CurrentUserSchema = z.object({
 export type CurrentUser = z.infer<typeof CurrentUserSchema>
 
 export const CurrentUserUpdateSchema = z.object({
-    id: z.uuid(),
     email: z.email(),
     fName: z.string(),
     lName: z.string(),
@@ -35,3 +34,4 @@ export const CurrentUserUpdateSchema = z.object({
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(), 
 })
+export type CurrentUserUpdateSchema = z.infer<typeof CurrentUserUpdateSchema>
