@@ -21,7 +21,7 @@ export function useSignUpViewModel() {
         setSubmitting(true);
         setError(null);
 
-        const {data, error} = await AuthService.SignUpUserWithEmailPass(email, password, fName, lName, role)
+        const {data, error} = await AuthService.SignUpUserWithEmailPass(email, password)
 
         setSubmitting(false);
 
