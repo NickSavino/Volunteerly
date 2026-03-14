@@ -14,6 +14,9 @@ RUN npm install
 # Copy source code
 COPY . .
 
+RUN npm run build -w shared
+RUN npm run build -w server
+
 EXPOSE 4000
 
-CMD ["npm", "run", "dev:docker", "-w", "server"]
+CMD ["npm", "run", "start", "-w", "server"]
