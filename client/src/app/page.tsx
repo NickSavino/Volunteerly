@@ -32,12 +32,12 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen">
       <Navbar></Navbar>
-      <main className="flex flex-1 h-[calc(100vh-64px)]">
-        <div className="w-1/2 relative h-full overflow-hidden">
+      <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)]">
+        <div className="w-full md:w-1/2 relative h-screen md:h-full overflow-hidden flex flex-col">
           <img
             src={tms.src}
             alt="Preview"
-            className="w-full h-full"
+            className="w-full w-full h-auto md:h-full"
           />
           <div className="absolute inset-0 w-full bg-black/50"></div>
           <div className="absolute bottom-20 left-12 text-left">
@@ -52,7 +52,7 @@ export default function LandingPage() {
             </p>
           </div>
         </div>
-        <div className="w-1/2 items-center h-full flex flex-col px-8 ">
+        <div className="w-full md:w-1/2 items-center h-full flex flex-col px-8 ">
           <h1 className="text-4x1 font-bold tracking-tight pt-5 text-left">How It Works?</h1>
           <div className="flex flex-col flex-1 justify-around">
             <div className="space-y-0 text-left">
