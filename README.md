@@ -206,7 +206,7 @@ docker compose up --build
 
 To test the application in a production-like setup, run:
 ```bash
-docker compose up -f docker-compose.yml -f docker-compose.prod.yml up --build
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
 ```
 This disables development only behaviour (hot reload, bind mounts)
 
