@@ -17,6 +17,7 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen">
+            <title>Log In - Volunteerly</title>
             <Navbar></Navbar>
             <main className="flex flex-col md:flex-row h-screen md:h-[calc(100vh-64px)]">
                 <div className="hidden md:flex w-full md:w-1/2 relative h-screen md:h-full overflow-hidden flex-col">

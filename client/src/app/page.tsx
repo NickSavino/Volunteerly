@@ -31,6 +31,7 @@ export default function LandingPage() {
   }
   return (
     <div className="min-h-screen">
+      <title>Home - Volunteerly</title>
       <Navbar></Navbar>
       <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)]">
         <div className="w-full md:w-1/2 relative h-screen md:h-full overflow-hidden flex flex-col">
