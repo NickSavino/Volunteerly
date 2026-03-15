@@ -4,12 +4,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { Card, CardContent, CardFooter, CardHeader } from "../../components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import Link from "next/link";
 import { useLoginViewModel } from "./loginVM";
 import tms from "@/assets/tms.png"
+import avtImg from "@/assets/avatarImg.png"
 import { Navbar } from "@/components/custom/login_navbar";
 
 export default function LoginPage() {
@@ -37,6 +39,16 @@ export default function LoginPage() {
                         <p className="text-muted text-lg">
                         "Through Volunteerly, we were able to find volunteers for our most complex tasks, allowing us to devote more funds to hepling our cause."
                         </p>
+                        <div className="flex items-center gap-3">
+                            <Avatar>
+                                <AvatarImage src={avtImg.src} />
+                                <AvatarFallback>TMS</AvatarFallback>
+                            </Avatar>
+                            <div className="flex flex-col justify-center">
+                                <p className="text-secondary text-sm">Joshua Bright</p>
+                                <p className="text-secondary text-sm">Verified Volunteer</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="w-full md:w-1/2 flex-1 flex items-center justify-center md:justify-around px-8">

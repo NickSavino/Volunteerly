@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../providers/auth-provider";
 import { useEffect } from "react";
 import { Navbar } from "@/components/custom/login_navbar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import tms from "@/assets/tms.png"
+import avtImg from "@/assets/avatarImg.png"
 import {
   Item,
   ItemContent,
@@ -51,6 +53,16 @@ export default function LandingPage() {
             <p className="text-muted text-lg">
               "Through Volunteerly, we were able to find volunteers for our most complex tasks, allowing us to devote more funds to hepling our cause."
             </p>
+            <div className="flex items-center gap-3">
+              <Avatar>
+                <AvatarImage src={avtImg.src} />
+                <AvatarFallback>TMS</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col justify-center">
+                <p className="text-secondary text-sm">Joshua Bright</p>
+                <p className="text-secondary text-sm">Verified Volunteer</p>
+              </div>
+            </div>
           </div>
         </div>
         <div className="w-full md:w-1/2 items-center h-full flex flex-col px-8 ">
