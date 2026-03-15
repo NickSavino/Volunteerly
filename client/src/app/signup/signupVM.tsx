@@ -11,7 +11,7 @@ export function useSignUpViewModel() {
     const [fName, setfName] = useState("");
     const [lName, setlName] = useState("");
     const [email, setEmail] = useState("");
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState("VOLUNTEER");
     const [password, setPassword] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
