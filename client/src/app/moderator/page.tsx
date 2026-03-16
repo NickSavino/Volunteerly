@@ -7,7 +7,7 @@ import { ModStatCard } from "@/components/custom/mod_stat_card";
 import { Button } from "@/components/ui/button";
 
 export default function ModeratorDashboardPage() {
-    const { loading, session, router, currentUser, dashboardSummary, error } =
+    const { loading, session, signOut, router, currentUser, dashboardSummary, error } =
         useModDashboardViewModel();
 
     if (loading || !session) {
@@ -16,7 +16,7 @@ export default function ModeratorDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <ModeratorNavbar currentUser={currentUser} />
+            <ModeratorNavbar currentUser={currentUser} onSignOut={signOut} />
 
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <div className="mb-8">

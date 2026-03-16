@@ -3,17 +3,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     NavigationMenu,
-    NavigationMenuList,
+    NavigationMenuContent,
     NavigationMenuItem,
+    NavigationMenuList,
+    NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import logo from "@/assets/logo.png";
+import avtImg from "@/assets/avatarImg.png";
 import { CurrentUser } from "@volunteerly/shared";
 
 type ModeratorNavbarProps = {
     currentUser: CurrentUser | undefined;
+    onSignOut: () => void;
 };
 
 const NAV_LINKS = [
@@ -23,13 +27,8 @@ const NAV_LINKS = [
     { label: "Tickets", href: "/moderator/tickets" },
 ] as const;
 
-export function ModeratorNavbar({ currentUser }: ModeratorNavbarProps) {
+export function ModeratorNavbar({ currentUser, onSignOut }: ModeratorNavbarProps) {
     const pathname = usePathname();
-
-    const initials =
-        currentUser
-            ? `${currentUser.firstName[0] ?? ""}${currentUser.lastName[0] ?? ""}`.toUpperCase()
-            : "?";
 
     const fullName =
         currentUser
@@ -65,19 +64,29 @@ export function ModeratorNavbar({ currentUser }: ModeratorNavbarProps) {
                     </NavigationMenuList>
                 </NavigationMenu>
 
-                <div className="flex items-center gap-3">
-                    <div className="hidden text-right sm:block">
-                        <p className="text-sm font-semibold leading-tight text-gray-800">
-                            {fullName}
-                        </p>
-                        <p className="text-xs text-gray-400">Moderator</p>
-                    </div>
-                    <Avatar className="h-9 w-9 bg-gray-200">
-                        <AvatarFallback className="text-sm font-semibold text-gray-600">
-                            {initials}
-                        </AvatarFallback>
-                    </Avatar>
-                </div>
+                <NavigationMenu>
+                    <NavigationMenuList className="flex gap-2">
+                        <NavigationMenuItem>
+                            <NavigationMenuTrigger className="w-40">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex flex-col justify-center">
+                                        <p className="text-primary text-sm">{fullName}</p>
+                                        <p className="text-bright text-sm">Moderator</p>
+                                    </div>
+                                    <Avatar>
+                                        <AvatarImage src={avtImg.src} />
+                                        <AvatarFallback>MOD</AvatarFallback>
+                                    </Avatar>
+                                </div>
+                            </NavigationMenuTrigger>
+                            <NavigationMenuContent>
+                                <button className="w-40" onClick={onSignOut}>
+                                    Log Out
+                                </button>
+                            </NavigationMenuContent>
+                        </NavigationMenuItem>
+                    </NavigationMenuList>
+                </NavigationMenu>
             </div>
         </header>
     );
