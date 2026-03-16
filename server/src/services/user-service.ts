@@ -10,13 +10,11 @@ export async function getCurrentUser(userId: string) {
     return user;
 }
 
-export async function createCurrentUser(userId: string, firstName: string, lastName: string, userRole: string, email: string) {
+export async function createCurrentUser(userId: string, userRole: string, email: string) {
     const user = await prisma.user.create({
             data: {
             id: userId,
             email: email,
-            firstName: firstName,
-            lastName: lastName,
             role: userRole ? (userRole as UserRole) : UserRole.VOLUNTEER,
             },
         });
@@ -27,13 +25,11 @@ export async function createCurrentUser(userId: string, firstName: string, lastN
     return user;
 }
 
-export async function updateCurrentUser(userId: string, firstName: string, lastName: string, userRole: string, email: string) {
+export async function updateCurrentUser(userId: string, userRole: string, email: string) {
     const user = await prisma.user.update({
         where: { id: userId },
         data: {
         email: email,
-        firstName: firstName,
-        lastName: lastName,
         role: userRole ? (userRole as UserRole) : UserRole.VOLUNTEER,
         },
     });
