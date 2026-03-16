@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth } from "../middleware/auth.js";
-import { createCurrentUser, getCurrentUser, updateCurrentUser } from "../services/user-service.js";
+import { createCurrentVolunteer, getCurrentVolunteer, updateCurrentVolunteer } from "../services/volunteer-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -9,9 +9,9 @@ type AuthenticatedRequest = {
     }
 }
 
-export const currentUserRouter = Router();
+export const currentVolunteerRouter = Router();
 
-currentUserRouter.get("/", auth, async (req, res, next) => {
+currentVolunteerRouter.get("/", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
 
@@ -24,12 +24,12 @@ currentUserRouter.get("/", auth, async (req, res, next) => {
             });
         }
 
-        const user = await getCurrentUser(userId);
+        const user = await getCurrentVolunteer(userId);
         
         if (!user) {
             return res.status(404).json({
                 error: "Not Found",
-                message: "Application User not found."
+                message: "Volunteer not found."
             });
         }
         res.status(200).json(user);
@@ -38,30 +38,31 @@ currentUserRouter.get("/", auth, async (req, res, next) => {
     }
 })
 
-currentUserRouter.put("/", auth, async (req, res, next) => {
+currentVolunteerRouter.put("/", auth, async (req, res, next) => {
   try {
     const typedReq = req as typeof req & AuthenticatedRequest;
 
     const userId = typedReq.auth?.userId;
 
+    console.log("got req")
     if (!userId) {
         return res.status(401).json({
             error: "Unauthorized",
             message: "User context missing."
         });
     }
-    const {role, email} = req.body;
+    const { firstName, lastName, location, bio, availability, hourlyValue} = req.body;
 
-    const user = await getCurrentUser(userId);
+    const user = await getCurrentVolunteer(userId);
     let modified_user;
     if (!user) {
-        modified_user = await createCurrentUser(userId, role, email);
+        modified_user = await createCurrentVolunteer(userId, firstName, lastName);
     } else {
-        modified_user = await updateCurrentUser(userId, role, email);    
+        modified_user = await updateCurrentVolunteer(userId, firstName, lastName, location, bio, availability, hourlyValue);    
     }
     if (!modified_user) {
         return res.status(500).json({
-            error: "Cannot update/create User",
+            error: "Cannot update/create Volunteer",
             message: "Internal server error."
         });
     }

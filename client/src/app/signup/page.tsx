@@ -16,7 +16,7 @@ import { Navbar } from "@/components/custom/login_navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function LoginPage() {
-    const {email, setEmail, password, setPassword, fName, setfName, lName, role, setRole, setlName, submitting, error, handleSubmit} = useSignUpViewModel()
+    const {email, setEmail, password, setPassword, fName, setfName, lName, role, orgName, setorgName, setRole, setlName, submitting, error, handleSubmit} = useSignUpViewModel()
 
     return (
 
@@ -127,12 +127,12 @@ export default function LoginPage() {
                                 </div>
                                 <form className="space-y-4" onSubmit={handleSubmit}>
                                     <div className="space-y-2">
-                                        <Label htmlFor="fName">Organization Name</Label>
+                                        <Label htmlFor="orgName">Organization Name</Label>
                                         <Input
-                                            id="fName"
+                                            id="orgName"
                                             type="text"
-                                            value={fName}
-                                            onChange={(e) => setfName(e.target.value)}
+                                            value={orgName}
+                                            onChange={(e) => setorgName(e.target.value)}
                                             required
                                         />
                                     </div>
