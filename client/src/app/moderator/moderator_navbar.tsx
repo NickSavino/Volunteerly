@@ -13,10 +13,10 @@ import {
 } from "@/components/ui/navigation-menu";
 import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
-import { CurrentUser } from "@volunteerly/shared";
+import { CurrentModerator } from "@volunteerly/shared";
 
 type ModeratorNavbarProps = {
-    currentUser: CurrentUser | undefined;
+    currentModerator: CurrentModerator | undefined;
     onSignOut: () => void;
 };
 
@@ -27,13 +27,12 @@ const NAV_LINKS = [
     { label: "Tickets", href: "/moderator/tickets" },
 ] as const;
 
-export function ModeratorNavbar({ currentUser, onSignOut }: ModeratorNavbarProps) {
+export function ModeratorNavbar({ currentModerator, onSignOut }: ModeratorNavbarProps) {
     const pathname = usePathname();
 
-    const fullName =
-        currentUser
-            ? `${currentUser.firstName} ${currentUser.lastName}`
-            : "Loading...";
+    const fullName = currentModerator
+        ? `${currentModerator.firstName} ${currentModerator.lastName}`
+        : "Loading...";
 
     return (
         <header className="w-full border-b bg-white px-6 py-3">
