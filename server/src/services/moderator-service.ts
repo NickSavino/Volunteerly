@@ -24,3 +24,43 @@ export async function getModeratorDashboardSummary(): Promise<ModeratorDashboard
         recentTickets: openTickets,
     };
 }
+
+export async function getCurrentModerator(moderatorId: string) {
+    const moderator = await prisma.moderator.findUnique({
+        where: { id: moderatorId },
+    });
+ 
+    return moderator;
+}
+ 
+export async function createCurrentModerator(userId: string, firstName: string, lastName: string) {
+    const moderator = await prisma.moderator.create({
+        data: {
+            id: userId,
+            firstName: firstName,
+            lastName: lastName,
+        },
+    });
+ 
+    if (!moderator) {
+        throw new Error("Error creating the Moderator.");
+    }
+ 
+    return moderator;
+}
+ 
+export async function updateCurrentModerator(userId: string, firstName: string, lastName: string) {
+    const moderator = await prisma.moderator.update({
+        where: { id: userId },
+        data: {
+            firstName: firstName,
+            lastName: lastName,
+        },
+    });
+ 
+    if (!moderator) {
+        throw new Error("Error updating the Moderator.");
+    }
+ 
+    return moderator;
+}
