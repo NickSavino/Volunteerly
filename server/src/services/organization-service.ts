@@ -68,3 +68,17 @@ export async function applyOrganization(orgId: string, orgName:string, charityNu
 
     return organization;
 }
+
+export async function approveOrganization(orgId: string){
+    const organization = await prisma.organization.update({
+        where: { id: orgId },
+        data: {
+            status: OrganizationState.VERIFIED
+        },}
+    )
+    if (!organization) {
+        throw new Error("Error approving the Organization.");
+    }
+
+    return organization;
+}
