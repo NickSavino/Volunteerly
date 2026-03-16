@@ -2,14 +2,17 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
-import { CurrentUserUpdateSchema } from "@volunteerly/shared";
+import { CurrentOrganizationUpdateSchema, CurrentUserUpdateSchema, UpdateCurrentVolunteerSchema } from "@volunteerly/shared";
 import { UserService } from "@/services/UserService";
+import { VolunteerService } from "@/services/VolunteerService";
+import { OrganizationService } from "@/services/OrganizationService";
 
 export function useSignUpViewModel() {
  const router = useRouter();
 
     const [fName, setfName] = useState("");
     const [lName, setlName] = useState("");
+    const [orgName, setorgName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("VOLUNTEER");
     const [password, setPassword] = useState("");
@@ -33,8 +36,6 @@ export function useSignUpViewModel() {
 
         const createdUser = CurrentUserUpdateSchema.parse({
             email: email,
-            firstName: fName,
-            lastName: lName,
             role: role,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -43,10 +44,40 @@ export function useSignUpViewModel() {
         const result = await UserService.update_create_User(createdUser);
         
         if (result.success) {
-            console.log("Updated user:", result.data);
-            if (data.session) {
-                router.push("/bootstrap");
-                return;
+            if (role == "VOLUNTEER") {
+                const createdVolunteer = UpdateCurrentVolunteerSchema.parse({
+                    firstName: fName,
+                    lastName: lName,
+                });
+                const result = await VolunteerService.update_create_Volunteer(createdVolunteer);
+                if (result.success) {
+                    console.log("Updated user:", result.data);
+
+                    if (data.session) {
+                        router.push("/volunteer");
+                        return;
+                    }
+
+                } else {
+                    console.error("Failed to parse volunteer:", result.error);
+                }
+            } else if (role == "ORGANIZATION") {
+                const createdOrg = CurrentOrganizationUpdateSchema.parse({
+                    orgName: orgName,
+                    status: "CREATED"
+                });
+                const result = await OrganizationService.update_create_Organization(createdOrg);
+                if (result.success) {
+                    console.log("Updated org:", result.data);
+
+                    if (data.session) {
+                        router.push("/organization");
+                        return;
+                    }
+
+                } else {
+                    console.error("Failed to parse organization:", result.error);
+                }
             }
         } else {
             console.error("Failed to parse user:", result.error);
@@ -66,6 +97,8 @@ export function useSignUpViewModel() {
         setfName,
         lName,
         setlName,
+        orgName, 
+        setorgName,
         role, 
         setRole,
         submitting,
