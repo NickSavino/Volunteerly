@@ -23,7 +23,10 @@ export class OrganizationService {
     }
 
     static async apply(user: CurrentOrganizationUpdateSchema) {
-        const response = await api<unknown>("/current-organization/apply");
+        const response = await api<unknown>("/current-organization/apply", {
+            method:"PUT",
+            body: JSON.stringify(user)
+        });
         const parsed = CurrentOrganizationSchema.safeParse(response)
 
         return parsed

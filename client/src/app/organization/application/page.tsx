@@ -60,7 +60,7 @@ export default function HomePage() {
                     </Field>
                     <Field>
                       <Label htmlFor="website">Website<span className="text-destructive">*</span></Label>
-                      <Input id="website" type="url" placeholder="https://example.org" 
+                      <Input id="website" type="url" placeholder="https://example.org" value={currentOrg?.website}
                       onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, website: e.target.value } : prev)} required/>
                     </Field>
                   </div>
@@ -68,18 +68,18 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
                         <Label htmlFor="causeCategory">Cause Category<span className="text-destructive">*</span></Label>
-                        <Input id="causeCategory" type="text" placeholder="Education" 
+                        <Input id="causeCategory" type="text" placeholder="Education" value={currentOrg?.causeCategory}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, causeCategory: e.target.value } : prev)} required/>
                     </Field>
                     <Field>
                       <Label htmlFor="address">Address<span className="text-destructive">*</span></Label>
-                      <Input id="address" type="text" placeholder="2500 University Dr NW, Calgary, AB" 
+                      <Input id="address" type="text" placeholder="2500 University Dr NW, Calgary, AB" value={currentOrg?.hqAdr}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, hqAdr: e.target.value } : prev)} required/>
                     </Field>
                   </div>
                   <Field>
                     <Label htmlFor="mission_statement">Mission Statment<span className="text-destructive">*</span></Label>
-                    <Input id="mission_statement" type="text" placeholder="Briefly describe your organization's core mission and goals."
+                    <Input id="mission_statement" type="text" placeholder="Briefly describe your organization's core mission and goals." value={currentOrg?.missionStatement}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, missionStatement: e.target.value } : prev)} required/>
                   </Field>
                   
@@ -94,7 +94,7 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
                       <Label htmlFor="charityNumber">Charity Number<span className="text-destructive">*</span></Label>
-                      <Input id="charityNumber" type="number" placeholder="XXXXXXXXX" 
+                      <Input id="charityNumber" type="number" placeholder="XXXXXXXXX" value={currentOrg?.charityNum}
                         onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, charityNum: Number(e.target.value) } : prev)} required/>
                       <FieldDescription>9-Digit Charity Number obtained from CRA.</FieldDescription>
                     </Field>
@@ -104,7 +104,6 @@ export default function HomePage() {
                         id="documentUpload"
                         type="file"
                         accept=".pdf"
-                        required
                       />
                       <FieldDescription>Upload CRA Notice of Registration or any other document verifying non-profit status.</FieldDescription>
                     </Field>
@@ -120,18 +119,19 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
                       <Label htmlFor="contactName">Contact Name<span className="text-destructive">*</span></Label>
-                      <Input id="contactName" type="text" placeholder="John Doe" 
+                      <Input id="contactName" type="text" placeholder="John Doe" value={currentOrg?.contactName}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, contactName: e.target.value } : prev)} required/>
                     </Field>
                     <Field>
                       <Label htmlFor="contactNumber">Contact Number<span className="text-destructive">*</span></Label>
-                      <Input id="contactNumber" type="tel" placeholder="(403) 000-0000" 
-                          onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, contactNum: Number(e.target.value) } : prev)} required/>                      
+                      <Input id="contactNumber" type="tel" placeholder="(403) 000-0000" value={currentOrg?.contactNum}
+                          onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, contactNum: e.target.value } : prev)} required/>                      
                     </Field>                  
                   </div>
                   <Field>
                     <Label htmlFor="contactEmail">Contact Email<span className="text-destructive">*</span></Label>
-                    <Input id="contactEmail" type="email" placeholder="john@charity.ca" required />
+                    <Input id="contactEmail" type="email" placeholder="john@charity.ca" value={currentOrg?.contactEmail}
+                    onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, contactEmail: e.target.value } : prev)} required/>                      
                   </Field>                  
                 </CardContent>
 

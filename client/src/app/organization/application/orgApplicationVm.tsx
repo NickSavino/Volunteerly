@@ -24,7 +24,7 @@ export function useOrgApplicationViewModel() {
 
   useEffect(() => {
     async function loadCurrentUser() {
-        if (!session?.access_token) return;
+        if (!session?.access_token || currentOrg) return;
         setSubmitting(true)
         const org = await OrganizationService.getCurrentOrganization()
 
