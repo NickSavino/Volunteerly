@@ -51,3 +51,33 @@ export const ModeratorDashboardSummarySchema = z.object({
     recentTickets: SupportTicketsSchema,
 });
 export type ModeratorDashboardSummary = z.infer<typeof ModeratorDashboardSummarySchema>;
+
+export const ModeratorSchema = z.object({
+    id: z.uuid(),
+    firstName: z.string(),
+    lastName: z.string(),
+    createdAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime(),
+});
+export type Moderator = z.infer<typeof ModeratorSchema>;
+ 
+export const CurrentModeratorSchema = z.object({
+    id: z.uuid(),
+    firstName: z.string(),
+    lastName: z.string(),
+    createdAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime(),
+});
+export type CurrentModerator = z.infer<typeof CurrentModeratorSchema>;
+ 
+export const CreateCurrentModeratorSchema = z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+});
+export type CreateCurrentModerator = z.infer<typeof CreateCurrentModeratorSchema>;
+ 
+export const UpdateCurrentModeratorSchema = z.object({
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+});
+export type UpdateCurrentModerator = z.infer<typeof UpdateCurrentModeratorSchema>;
