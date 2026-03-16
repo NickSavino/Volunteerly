@@ -28,5 +28,4 @@ enum UserRole {
     VOLUNTEER
     ORGANIZATION
     MODERATOR
-    ADMIN
 }
