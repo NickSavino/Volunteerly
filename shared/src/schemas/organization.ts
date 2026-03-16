@@ -62,7 +62,7 @@ export const CurrentOrganizationUpdateSchema = z.object({
 
   contactName: z.string().optional(),
   contactEmail: z.email().optional(),
-  contactNum: z.string(),
+  contactNum: z.string().optional(),
 
   hqAdr: z.string().optional(),
   missionStatement: z.string().optional(),
