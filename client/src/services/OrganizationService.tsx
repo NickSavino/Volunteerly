@@ -22,4 +22,12 @@ export class OrganizationService {
         return parsed
     }
 
+    static async apply(user: CurrentOrganizationUpdateSchema) {
+        const response = await api<unknown>("/current-organization/apply");
+        const parsed = CurrentOrganizationSchema.safeParse(response)
+
+        return parsed
+    }
+
+
 }
