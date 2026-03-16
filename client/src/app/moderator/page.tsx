@@ -2,7 +2,7 @@
 
 import { Building2, Flag, Ticket } from "lucide-react";
 import { useModDashboardViewModel } from "./ModDashboardVm";
-import { ModeratorNavbar } from "@/components/custom/moderator_navbar";
+import { ModeratorNavbar } from "@/app/moderator/moderator_navbar";
 import { ModStatCard } from "@/components/custom/mod_stat_card";
 import { Button } from "@/components/ui/button";
 
