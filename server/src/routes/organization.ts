@@ -1,7 +1,7 @@
 
 import { Router } from "express";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, approveOrganization, createCurrentOrganization, getCurrentOrganization, updateCurrentOrganization } from "../services/organization-service.js";
+import { approveOrganization, getCurrentOrganization } from "../services/organization-service.js";
 import { getCurrentUser } from "../services/user-service.js";
 
 type AuthenticatedRequest = {
@@ -58,7 +58,7 @@ OrganizationRouter.put("/approve", auth, async (req, res, next) => {
                         message: "Cannot Approve."
                     });
             }}
-            
+
             const approved_org = await approveOrganization(orgId)
                 if (!approved_org) {
                     return res.status(500).json({
