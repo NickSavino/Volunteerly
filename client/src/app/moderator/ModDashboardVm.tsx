@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserService } from "@/services/UserService";
+import { ModeratorService } from "@/services/ModeratorService";
 import { useAuth } from "@/providers/auth-provider";
-import { CurrentUser, ModeratorDashboardSummary, ModeratorDashboardSummarySchema } from "@volunteerly/shared";
-import { api } from "@/lib/api";
+import { CurrentModerator } from "@volunteerly/shared";
 
 export function useModDashboardViewModel() {
     const router = useRouter();
     const { session, user, loading, signOut } = useAuth();
-    const [currentUser, setCurrentUser] = useState<CurrentUser | undefined>(undefined);
-    const [dashboardSummary, setDashboardSummary] = useState<ModeratorDashboardSummary | undefined>(undefined);
+    const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(undefined);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -19,56 +18,40 @@ export function useModDashboardViewModel() {
     }, [loading, session, router]);
 
     useEffect(() => {
-        async function loadCurrentUser() {
+        async function loadAndVerify() {
             if (!session?.access_token) return;
 
             try {
-                const result = await UserService.getCurrentUser();
+                const userResult = await UserService.getCurrentUser();
 
-                if (!result.success) {
-                    console.error(result.error);
+                if (!userResult.success) {
+                    console.error(userResult.error);
                     setError("Received invalid user data from the server.");
                     return;
                 }
 
-                if (result.data.role !== "MODERATOR") {
+                if (userResult.data.role !== "MODERATOR") {
                     router.replace("/bootstrap");
                     return;
                 }
 
-                setCurrentUser(result.data);
-            } catch (err) {
-                console.error(err);
-                setError("Failed to load user data.");
-            }
-        }
+                const modResult = await ModeratorService.getCurrentModerator();
 
-        loadCurrentUser();
-    }, [session, router]);
-
-    useEffect(() => {
-        async function loadDashboardSummary() {
-            if (!currentUser) return;
-
-            try {
-                const raw = await api<unknown>("/moderator/dashboard");
-                const parsed = ModeratorDashboardSummarySchema.safeParse(raw);
-
-                if (!parsed.success) {
-                    console.error(parsed.error);
-                    setError("Received invalid dashboard data from the server.");
+                if (!modResult.success) {
+                    console.error(modResult.error);
+                    setError("Received invalid moderator data from the server.");
                     return;
                 }
 
-                setDashboardSummary(parsed.data);
+                setCurrentModerator(modResult.data);
             } catch (err) {
                 console.error(err);
-                setError("Failed to load dashboard data.");
+                setError("Failed to load moderator data.");
             }
         }
 
-        loadDashboardSummary();
-    }, [currentUser]);
+        loadAndVerify();
+    }, [session, router]);
 
     return {
         loading,
@@ -77,7 +60,6 @@ export function useModDashboardViewModel() {
         router,
         user,
         error,
-        currentUser,
-        dashboardSummary,
+        currentModerator,
     };
 }
