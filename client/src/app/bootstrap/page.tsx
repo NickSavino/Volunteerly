@@ -46,7 +46,7 @@ export default function BootstrapPage() {
                             router.replace("/organization/application");
                             return;
                         } else if (org.data.status == "APPLIED") {
-                            router.replace("/unverifiedDash");
+                            router.replace("/organization/appliedDashboard");
                             return;
                         } else {
                             router.replace("/organization");
