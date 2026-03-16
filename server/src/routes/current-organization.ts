@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth } from "../middleware/auth.js";
-import { createCurrentUser, getCurrentUser, updateCurrentUser } from "../services/user-service.js";
+import { createCurrentOrganization, getCurrentOrganization, updateCurrentOrganization } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -9,9 +9,9 @@ type AuthenticatedRequest = {
     }
 }
 
-export const currentUserRouter = Router();
+export const currentOrganizationRouter = Router();
 
-currentUserRouter.get("/", auth, async (req, res, next) => {
+currentOrganizationRouter.get("/", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
 
@@ -24,21 +24,21 @@ currentUserRouter.get("/", auth, async (req, res, next) => {
             });
         }
 
-        const user = await getCurrentUser(userId);
+        const org = await getCurrentOrganization(userId);
         
-        if (!user) {
+        if (!org) {
             return res.status(404).json({
                 error: "Not Found",
-                message: "Application User not found."
+                message: "Volunteer not found."
             });
         }
-        res.status(200).json(user);
+        res.status(200).json(org);
     } catch (error) {
         next(error);
     }
 })
 
-currentUserRouter.put("/", auth, async (req, res, next) => {
+currentOrganizationRouter.put("/", auth, async (req, res, next) => {
   try {
     const typedReq = req as typeof req & AuthenticatedRequest;
 
@@ -50,18 +50,18 @@ currentUserRouter.put("/", auth, async (req, res, next) => {
             message: "User context missing."
         });
     }
-    const {role, email} = req.body;
+    const { orgName, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights} = req.body;
 
-    const user = await getCurrentUser(userId);
+    const user = await getCurrentOrganization(userId);
     let modified_user;
     if (!user) {
-        modified_user = await createCurrentUser(userId, role, email);
+        modified_user = await createCurrentOrganization(userId, orgName);
     } else {
-        modified_user = await updateCurrentUser(userId, role, email);    
+        modified_user = await updateCurrentOrganization(userId, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights);    
     }
     if (!modified_user) {
         return res.status(500).json({
-            error: "Cannot update/create User",
+            error: "Cannot update/create Volunteer",
             message: "Internal server error."
         });
     }
