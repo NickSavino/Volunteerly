@@ -58,7 +58,7 @@ export type CurrentOrganization = z.infer<typeof CurrentOrganizationSchema>
 
 export const CurrentOrganizationUpdateSchema = z.object({
   orgName: z.string(),
-  status: OrganizationStateSchema.optional(),
+  charityNum: z.number().int().optional(),
 
   contactName: z.string().optional(),
   contactEmail: z.email().optional(),

@@ -5,6 +5,7 @@ import { useAuth } from "../../providers/auth-provider";
 import { useEffect } from "react";
 import { api } from "../../lib/api";
 import { CurrentUserSchema } from "@volunteerly/shared";
+import { OrganizationService } from "@/services/OrganizationService";
 
 export default function BootstrapPage() {
     const router = useRouter();
@@ -34,7 +35,22 @@ export default function BootstrapPage() {
                         router.replace("/volunteer");
                         break;
                     case "ORGANIZATION":
-                        router.replace("/organization");
+                        const org = await OrganizationService.getCurrentOrganization()
+                        
+                        if (!org.success) {
+                        console.error(org.error);
+                        return;
+                        }
+
+                        if (org.data.status == "CREATED") {
+                            router.replace("/organization/application");
+                            return;
+                        } else if (org.data.status == "APPLIED") {
+                            router.replace("/unverifiedDash");
+                            return;
+                        } else {
+                            router.replace("/organization");
+                        }
                         break;
                     case "MODERATOR":
                         router.replace("/moderator");

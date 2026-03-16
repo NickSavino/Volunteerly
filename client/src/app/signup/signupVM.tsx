@@ -64,7 +64,6 @@ export function useSignUpViewModel() {
             } else if (role == "ORGANIZATION") {
                 const createdOrg = CurrentOrganizationUpdateSchema.parse({
                     orgName: orgName,
-                    status: "CREATED"
                 });
                 const result = await OrganizationService.update_create_Organization(createdOrg);
                 if (result.success) {
