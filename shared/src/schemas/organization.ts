@@ -17,7 +17,7 @@ export const OrganizationSchema = z.object({
 
   contactName: z.string(),
   contactEmail: z.email(),
-  contactNum: z.number().int(),
+  contactNum: z.string(),
 
   hqAdr: z.string(),
   missionStatement: z.string(),
@@ -41,7 +41,7 @@ export const CurrentOrganizationSchema = z.object({
 
   contactName: z.string(),
   contactEmail: z.string(),
-  contactNum: z.number().int(),
+  contactNum: z.string(),
 
   hqAdr: z.string(),
   missionStatement: z.string(),
@@ -62,7 +62,7 @@ export const CurrentOrganizationUpdateSchema = z.object({
 
   contactName: z.string().optional(),
   contactEmail: z.email().optional(),
-  contactNum: z.number().int().optional(),
+  contactNum: z.string(),
 
   hqAdr: z.string().optional(),
   missionStatement: z.string().optional(),
