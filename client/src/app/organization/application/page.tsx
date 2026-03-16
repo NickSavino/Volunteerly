@@ -12,6 +12,7 @@ import {
 import { useOrgApplicationViewModel } from "./orgApplicationVm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 
 export default function HomePage() {
   const {        
@@ -60,8 +61,13 @@ export default function HomePage() {
                     </Field>
                     <Field>
                       <Label htmlFor="website">Website<span className="text-destructive">*</span></Label>
-                      <Input id="website" type="url" placeholder="https://example.org" value={currentOrg?.website}
-                      onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, website: e.target.value } : prev)} required/>
+                      <InputGroup id="website">
+                        <InputGroupInput id="website" type="text" placeholder="example.org" value={currentOrg?.website}
+                          onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, website: e.target.value } : prev)} required/>
+                        <InputGroupAddon>
+                          <InputGroupText>https://</InputGroupText>
+                        </InputGroupAddon>              
+                      </InputGroup>
                     </Field>
                   </div>
 
@@ -94,7 +100,7 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
                       <Label htmlFor="charityNumber">Charity Number<span className="text-destructive">*</span></Label>
-                      <Input id="charityNumber" type="number" placeholder="XXXXXXXXX" value={currentOrg?.charityNum}
+                      <Input id="charityNumber" type="number" placeholder="XXXXXXXXX"
                         onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, charityNum: Number(e.target.value) } : prev)} required/>
                       <FieldDescription>9-Digit Charity Number obtained from CRA.</FieldDescription>
                     </Field>
