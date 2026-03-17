@@ -6,8 +6,16 @@ import { ModeratorNavbar } from "./moderator_navbar";
 import { ModStatCard } from "@/components/custom/mod_stat_card";
 
 export default function ModeratorDashboardPage() {
-    const { loading, session, signOut, router, currentModerator, error } =
-        useModDashboardViewModel();
+    const {
+        loading,
+        session,
+        signOut,
+        router,
+        currentModerator,
+        pendingOrgsCount,
+        recentPendingOrgs,
+        error,
+    } = useModDashboardViewModel();
 
     if (loading || !session) {
         return <main className="p-6">Loading...</main>;
@@ -41,7 +49,7 @@ export default function ModeratorDashboardPage() {
                     <ModStatCard
                         icon={Building2}
                         label="Pending Organizations"
-                        count={0}
+                        count={pendingOrgsCount}
                     />
                     <ModStatCard
                         icon={Flag}
@@ -69,9 +77,36 @@ export default function ModeratorDashboardPage() {
                                 View All
                             </button>
                         </div>
-                        <p className="py-8 text-center text-sm text-gray-400">
-                            No Organizations Found.
-                        </p>
+
+                        {recentPendingOrgs.length === 0 ? (
+                            <p className="py-8 text-center text-sm text-gray-400">
+                                No Organizations Found.
+                            </p>
+                        ) : (
+                            <ul className="divide-y">
+                                {recentPendingOrgs.map((org) => (
+                                    <li key={org.id} className="flex items-center justify-between py-3">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
+                                                <Building2 className="h-4 w-4 text-gray-500" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm font-medium text-gray-700">{org.orgName}</p>
+                                                <p className="text-xs text-gray-400">
+                                                    Submitted {new Date(org.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            className="rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium text-black hover:bg-yellow-500"
+                                            onClick={() => router.push("/moderator/organizations")}
+                                        >
+                                            View Application
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
 
                     <div className="rounded-xl border bg-white p-6 shadow-sm">
