@@ -1,8 +1,15 @@
 "use client";
 
-import { Building2, X, CheckSquare, Square } from "lucide-react";
-import { useOrgListViewModel } from "./orgListVm";
+import { Building2, X, CheckSquare, Square, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { useOrgListViewModel, type TabKey } from "./orgListVm";
 import { ModeratorNavbar } from "../moderator_navbar";
+
+const TABS: { key: TabKey; label: string }[] = [
+    { key: "ALL", label: "All Organizations" },
+    { key: "APPLIED", label: "Pending Approval" },
+    { key: "VERIFIED", label: "Approved" },
+    { key: "REJECTED", label: "Rejected" },
+];
 
 export default function ModeratorOrganizationsPage() {
     const {
@@ -11,8 +18,23 @@ export default function ModeratorOrganizationsPage() {
         signOut,
         router,
         currentModerator,
-        organizations,
+        paginatedOrgs,
+        filteredOrgs,
         error,
+        activeTab,
+        tabCounts,
+        pendingSearch,
+        setPendingSearch,
+        pendingSort,
+        setPendingSort,
+        pendingPageSize,
+        setPendingPageSize,
+        PAGE_SIZE_OPTIONS,
+        currentPage,
+        totalPages,
+        setCurrentPage,
+        applyFilters,
+        handleTabChange,
         selectedOrg,
         checks,
         allChecked,
@@ -31,6 +53,9 @@ export default function ModeratorOrganizationsPage() {
     if (loading || !session) {
         return <main className="p-6">Loading...</main>;
     }
+
+    const startItem = filteredOrgs.length === 0 ? 0 : (currentPage - 1) * pendingPageSize + 1;
+    const endItem = Math.min(currentPage * pendingPageSize, filteredOrgs.length);
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -54,12 +79,86 @@ export default function ModeratorOrganizationsPage() {
                     </p>
                 )}
 
-                <div className="rounded-xl border bg-white shadow-sm">
-                    {organizations.length === 0 ? (
-                        <p className="py-16 text-center text-sm text-gray-400">No Pending Organizations Found.</p>
+                <div className="mb-4 rounded-xl border bg-white p-4 shadow-sm">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                        <div className="flex-1">
+                            <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                Search Organizations
+                            </label>
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                                <input
+                                    type="text"
+                                    placeholder="Search by name..."
+                                    value={pendingSearch}
+                                    onChange={(e) => setPendingSearch(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && applyFilters()}
+                                    className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                Sort By
+                            </label>
+                            <select
+                                value={pendingSort}
+                                onChange={(e) => setPendingSort(e.target.value as typeof pendingSort)}
+                                className="rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            >
+                                <option value="alphabetical">Alphabetical</option>
+                                <option value="newest">Newest</option>
+                                <option value="oldest">Oldest</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                Show Per Page
+                            </label>
+                            <select
+                                value={pendingPageSize}
+                                onChange={(e) => setPendingPageSize(Number(e.target.value))}
+                                className="rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            >
+                                {PAGE_SIZE_OPTIONS.map((n) => (
+                                    <option key={n} value={n}>{n}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <button
+                            onClick={applyFilters}
+                            className="rounded-lg bg-yellow-400 px-5 py-2 text-sm font-semibold text-black hover:bg-yellow-500"
+                        >
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+
+                <div className="mb-0 flex border-b bg-white">
+                    {TABS.map(({ key, label }) => (
+                        <button
+                            key={key}
+                            onClick={() => handleTabChange(key)}
+                            className={`px-5 py-3 text-sm font-medium transition-colors ${
+                                activeTab === key
+                                    ? "border-b-2 border-yellow-400 text-yellow-500"
+                                    : "text-gray-500 hover:text-gray-700"
+                            }`}
+                        >
+                            {label} ({tabCounts[key]})
+                        </button>
+                    ))}
+                </div>
+
+                <div className="rounded-b-xl border border-t-0 bg-white shadow-sm">
+                    {paginatedOrgs.length === 0 ? (
+                        <p className="py-16 text-center text-sm text-gray-400">No Organizations Found.</p>
                     ) : (
                         <ul className="divide-y">
-                            {organizations.map((org) => (
+                            {paginatedOrgs.map((org) => (
                                 <li key={org.id} className="flex items-center justify-between px-6 py-4">
                                     <div className="flex items-center gap-4">
                                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
@@ -67,21 +166,82 @@ export default function ModeratorOrganizationsPage() {
                                         </div>
                                         <div>
                                             <p className="font-medium text-gray-800">{org.orgName}</p>
-                                            <p className="text-xs text-gray-400">
-                                                Submitted {new Date(org.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                                            </p>
+                                            <div className="flex items-center gap-3 text-xs text-gray-400">
+                                                <span>
+                                                    📅 Submitted {new Date(org.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                                </span>
+                                                <span>
+                                                    🕐 Last Updated {new Date(org.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <button
-                                        className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                                        onClick={() => openReviewModal(org)}
-                                    >
-                                        Review Application
-                                    </button>
+                                    <div className="flex items-center gap-3">
+                                        {org.status === "APPLIED" && (
+                                            <button
+                                                className="rounded-md border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                                onClick={() => openReviewModal(org)}
+                                            >
+                                                Review Application
+                                            </button>
+                                        )}
+                                        {org.status === "VERIFIED" && (
+                                            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                                                Approved
+                                            </span>
+                                        )}
+                                        {org.status === "REJECTED" && (
+                                            <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+                                                Rejected
+                                            </span>
+                                        )}
+                                        {org.status === "CREATED" && (
+                                            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500">
+                                                Not Applied
+                                            </span>
+                                        )}
+                                    </div>
                                 </li>
                             ))}
                         </ul>
                     )}
+                </div>
+
+                <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+                    <p>
+                        {filteredOrgs.length === 0
+                            ? "No organizations found"
+                            : `Showing ${startItem}–${endItem} of ${filteredOrgs.length} organizations`}
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <button
+                            disabled={currentPage === 1}
+                            onClick={() => setCurrentPage((p) => p - 1)}
+                            className="rounded-md border p-1.5 disabled:opacity-40 hover:bg-gray-100"
+                        >
+                            <ChevronLeft className="h-4 w-4" />
+                        </button>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`h-8 w-8 rounded-md text-sm font-medium ${
+                                    page === currentPage
+                                        ? "bg-yellow-400 text-black"
+                                        : "border hover:bg-gray-100 text-gray-600"
+                                }`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                        <button
+                            disabled={currentPage === totalPages}
+                            onClick={() => setCurrentPage((p) => p + 1)}
+                            className="rounded-md border p-1.5 disabled:opacity-40 hover:bg-gray-100"
+                        >
+                            <ChevronRight className="h-4 w-4" />
+                        </button>
+                    </div>
                 </div>
             </main>
 
@@ -161,16 +321,14 @@ export default function ModeratorOrganizationsPage() {
                                     <div className="flex flex-col items-center gap-2 rounded-xl border p-4">
                                         <Building2 className="h-8 w-8 text-yellow-400" />
                                         <p className="text-xs text-gray-600">Document</p>
-                                        <div className="flex gap-2">
-                                            <a
-                                                href={selectedOrg.docId}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="rounded-md bg-yellow-400 px-3 py-1 text-xs font-medium text-black hover:bg-yellow-500"
-                                            >
-                                                View
-                                            </a>
-                                        </div>
+                                        <a
+                                            href={selectedOrg.docId}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="rounded-md bg-yellow-400 px-3 py-1 text-xs font-medium text-black hover:bg-yellow-500"
+                                        >
+                                            View
+                                        </a>
                                     </div>
                                 </div>
                             ) : (
