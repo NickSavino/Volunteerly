@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth } from "../middleware/auth.js";
-import { createCurrentVolunteer, getCurrentVolunteer, updateCurrentVolunteer } from "../services/volunteer-service.js";
+import { createCurrentVolunteer, getCurrentVolunteer, updateCurrentVolunteer, getYourOpportunities } from "../services/volunteer-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -71,5 +71,19 @@ currentVolunteerRouter.put("/", auth, async (req, res, next) => {
   } catch (error) {
     console.error(error);
     next(error);
+    }
+});
+
+
+//retrieve volunteers opps
+currentVolunteerRouter.get("/opportunities", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await getYourOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
     }
 });

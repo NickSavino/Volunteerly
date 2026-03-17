@@ -43,3 +43,11 @@ export async function updateCurrentVolunteer(userId: string, firstName: string, 
 
     return volunteer;
 }
+
+//call to retrieve volunteers opps
+export async function getYourOpportunities(volunteerId: string) {
+    return prisma.opportunity.findMany({
+        where: { volId: volunteerId },
+        include: { organization: true },
+    });
+}
