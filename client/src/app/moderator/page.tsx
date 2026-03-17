@@ -36,7 +36,7 @@ export default function ModeratorDashboardPage() {
                     <h1 className="text-2xl font-bold text-gray-900">
                         Hello, {currentModerator?.firstName ?? "Moderator"}!
                     </h1>
-                    <p className="text-sm text-gray-500">Moderation Dashboard</p>
+                    <p className="text-sm text-gray-500">Moderator Dashboard</p>
                 </div>
 
                 {error && (
@@ -68,7 +68,6 @@ export default function ModeratorDashboardPage() {
                         <div className="mb-4 flex items-start justify-between">
                             <div>
                                 <h2 className="font-semibold text-gray-800">Pending Organizations</h2>
-                                <p className="text-xs text-gray-400">Documents pending review.</p>
                             </div>
                             <button
                                 className="rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium text-black hover:bg-yellow-500"
@@ -80,7 +79,7 @@ export default function ModeratorDashboardPage() {
 
                         {recentPendingOrgs.length === 0 ? (
                             <p className="py-8 text-center text-sm text-gray-400">
-                                No Organizations Found.
+                                No Pending Organizations Found.
                             </p>
                         ) : (
                             <ul className="divide-y">
@@ -120,7 +119,7 @@ export default function ModeratorDashboardPage() {
                             </button>
                         </div>
                         <p className="py-4 text-center text-sm text-gray-400">
-                            No Tickets Found.
+                            No Flagged Accounts Found.
                         </p>
                     </div>
                 </div>
