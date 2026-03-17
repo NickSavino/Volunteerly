@@ -51,3 +51,16 @@ export async function getYourOpportunities(volunteerId: string) {
         include: { organization: true },
     });
 }
+
+
+export async function getVolunteerOrganizations(volunteerId: string) {
+    const opportunities = await prisma.opportunity.findMany({
+        where: { volId: volunteerId },
+        select: {
+            organization: true,
+        },
+        distinct: ["orgId"],
+    });
+
+    return opportunities.map((opp) => opp.organization);
+}   
