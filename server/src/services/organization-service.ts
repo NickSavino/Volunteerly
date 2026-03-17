@@ -69,16 +69,48 @@ export async function applyOrganization(orgId: string, orgName:string, charityNu
     return organization;
 }
 
-export async function approveOrganization(orgId: string){
+export async function approveOrganization(orgId: string) {
     const organization = await prisma.organization.update({
         where: { id: orgId },
         data: {
             status: OrganizationState.VERIFIED
-        },}
-    )
+        },
+    });
     if (!organization) {
         throw new Error("Error approving the Organization.");
     }
 
     return organization;
+}
+
+export async function rejectOrganization(orgId: string, rejectionReason: string) {
+    const organization = await prisma.organization.update({
+        where: { id: orgId },
+        data: {
+            status: OrganizationState.REJECTED,
+            rejectionReason: rejectionReason,
+        },
+    });
+    if (!organization) {
+        throw new Error("Error rejecting the Organization.");
+    }
+
+    return organization;
+}
+
+export async function getAppliedOrganizations() {
+    const organizations = await prisma.organization.findMany({
+        where: { status: OrganizationState.APPLIED },
+        orderBy: { createdAt: "desc" },
+    });
+
+    return organizations;
+}
+
+export async function getAllOrganizations() {
+    const organizations = await prisma.organization.findMany({
+        orderBy: { createdAt: "desc" },
+    });
+
+    return organizations;
 }
