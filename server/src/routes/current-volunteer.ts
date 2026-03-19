@@ -1,13 +1,6 @@
 import { Router } from "express";
 import { auth } from "../middleware/auth.js";
-import {
-    createCurrentVolunteer,
-    getCurrentVolunteer,
-    updateCurrentVolunteer,
-    getYourOpportunities,
-    getVolunteerOrganizations,
-    getMonthlyHours,
-} from "../services/volunteer-service.js";
+import {createCurrentVolunteer, getCurrentVolunteer,updateCurrentVolunteer, getYourOpportunities, getVolunteerOrganizations, getMonthlyHours } from "../services/volunteer-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
