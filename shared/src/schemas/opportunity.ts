@@ -11,6 +11,7 @@ export const OpportunitySchema = z.object({
     candidateDesc: z.string(),
     workType: z.enum(["IN_PERSON", "REMOTE", "HYBRID"]),
     commitmentLevel: z.enum(["FLEXIBLE", "PART_TIME", "FULL_TIME"]),
+    hours: z.number(),
     length: z.string(),
     deadlineDate: z.iso.datetime().nullable(),
     availability: z.array(z.any()),
