@@ -14,11 +14,7 @@ export const currentVolunteerRouter = Router();
 
 
 //retrieve volunteers opps
-currentVolunteerRouter.get("/opportunities", (req, res, next) => {
-    console.log("pre-auth hit, header:", req.headers.authorization);
-    next();
-}, auth, async (req, res, next) => {
-    console.log("HIT /opportunities route");
+currentVolunteerRouter.get("/opportunities", auth, async (req, res, next) => {
     try {
         const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
