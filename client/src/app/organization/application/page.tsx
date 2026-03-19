@@ -25,7 +25,8 @@ export default function HomePage() {
     setFile,
     setCurrentOrg,
     signOut,
-    handleSubmit
+    handleSubmit,
+    viewSubmittedDoc
   } = useOrgApplicationViewModel()
 
 
@@ -154,6 +155,14 @@ export default function HomePage() {
                   </Button>
                 </div>
               </form>
+                {isReadOnly && (                
+                  <div className="px-6 pb-6">
+                    <Button type="button" onClick={viewSubmittedDoc} className="w-full">
+                      View Submitted Document
+                    </Button>
+                  </div>
+                )}
+
             </Card>
         </main>
       </div>

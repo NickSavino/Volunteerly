@@ -81,8 +81,27 @@ export function useOrgApplicationViewModel() {
       router.push("/bootstrap");
   }
 
-  
-  
+  async function viewSubmittedDoc() {
+    if (currentOrg?.docId) {
+      try {
+        const fileBlob = await OrganizationService.getOrganizationDocument(currentOrg.docId);
+
+        const url = URL.createObjectURL(fileBlob);
+        const newWindow = window.open(url, "_blank");
+        const interval = setInterval(() => {
+          if (newWindow?.closed) {
+            clearInterval(interval);
+            URL.revokeObjectURL(url);
+          }
+        }, 2000);
+
+      } catch (error) {
+        console.error("Failed to load document", error);
+      }
+    }
+    return
+   }  
+
 
     return {
         loading,
@@ -94,6 +113,7 @@ export function useOrgApplicationViewModel() {
         setFile,
         setCurrentOrg,
         signOut,
-        handleSubmit
+        handleSubmit,
+        viewSubmittedDoc
     } 
 }
