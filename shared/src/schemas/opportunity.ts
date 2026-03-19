@@ -13,11 +13,15 @@ export const OpportunitySchema = z.object({
     commitmentLevel: z.enum(["FLEXIBLE", "PART_TIME", "FULL_TIME"]),
     hours: z.number(),
     length: z.string(),
-    deadlineDate: z.iso.datetime().nullable(),
+    deadlineDate: z.string().nullable(),
     availability: z.array(z.any()),
-    postedDate: z.iso.datetime(),
-    createdAt: z.iso.datetime(),
-    updatedAt: z.iso.datetime(),
+    postedDate: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    organization: z.object({
+        id: z.uuid(),
+        orgName: z.string(),
+    }).optional(),
 });
 
 export type Opportunity = z.infer<typeof OpportunitySchema>;
