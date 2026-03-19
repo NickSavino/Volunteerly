@@ -39,6 +39,12 @@ export class OrganizationService {
         return parsed;
     }
 
+    static async getOrganizationDocument(file_path:string) {
+        const url = `/organization/document/?file_path=${file_path}`
+        const response = await api<Blob>(url, {responseType: "blob"});
+        return response;
+    }
+
     static async approveOrganization(orgId: string) {
         const response = await api<unknown>("/organization/approve", {
             method: "PUT",
