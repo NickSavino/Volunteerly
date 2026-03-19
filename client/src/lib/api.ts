@@ -22,11 +22,13 @@ export async function api<T>(path: string, init?: RequestInit & { responseType?:
 
     const token = await getAccessToken();
     const { responseType = "json" } = init ?? {};
-
+    const isJsonBody =
+        init?.body && typeof init.body === "string";
     
     const res = await fetch(`${baseUrl}${path}`, {
         ...init,
         headers: {
+            ...(isJsonBody ? { "Content-Type": "application/json" } : {}),
             ...(token ? { Authorization: `Bearer ${token}`} : {}),
             ...(init?.headers ?? {}),
         },
