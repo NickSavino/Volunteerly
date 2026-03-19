@@ -32,6 +32,7 @@ const RANGE_LABELS: Record<ChartRange, string> = {
     last_month:    "Last Month",
     last_6_months: "Last 6 Months",
     last_year:     "Last Year",
+    this_year:     "This Year",
     total:         "Total",
 };
 
@@ -64,7 +65,14 @@ export default function VolunteerDashboardPage() {
                         <NavigationMenuList className="flex gap-6">
                             {NAV_LINKS.map(({ label, href }) => (
                                 <NavigationMenuItem key={href}>
-                                    <Link href={href} className={`text-sm font-medium transition-colors hover:text-yellow-500 ${pathname === href ? "border-b-2 border-yellow-400 text-yellow-500" : "text-gray-600"}`}>
+                                    <Link
+                                        href={href}
+                                        className={`text-sm font-medium transition-colors hover:text-yellow-500 ${
+                                            pathname === href
+                                                ? "border-b-2 border-yellow-400 text-yellow-500"
+                                                : "text-gray-600"
+                                        }`}
+                                    >
                                         {label}
                                     </Link>
                                 </NavigationMenuItem>
@@ -75,7 +83,10 @@ export default function VolunteerDashboardPage() {
                         <div className="hidden items-center gap-2 rounded-full border bg-gray-50 px-3 py-1.5 text-sm text-gray-400 sm:flex">
                             <Search className="h-4 w-4" /><span>Search activities...</span>
                         </div>
-                        <button onClick={() => router.push("/volunteer/activity/new")} className="flex items-center gap-1.5 rounded-full bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-500">
+                        <button
+                            onClick={() => router.push("/volunteer/activity/new")}
+                            className="flex items-center gap-1.5 rounded-full bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-500"
+                        >
                             <Plus className="h-4 w-4" />Record Hours
                         </button>
                         <NavigationMenu>
@@ -84,7 +95,10 @@ export default function VolunteerDashboardPage() {
                                     <NavigationMenuTrigger className="p-0">
                                         <Avatar className="h-9 w-9">
                                             <AvatarImage src={avtImg.src} />
-                                            <AvatarFallback>{currentVolunteer?.firstName?.[0] ?? "V"}{currentVolunteer?.lastName?.[0] ?? ""}</AvatarFallback>
+                                            <AvatarFallback>
+                                                {currentVolunteer?.firstName?.[0] ?? "V"}
+                                                {currentVolunteer?.lastName?.[0] ?? ""}
+                                            </AvatarFallback>
                                         </Avatar>
                                     </NavigationMenuTrigger>
                                     <NavigationMenuContent>
@@ -92,7 +106,12 @@ export default function VolunteerDashboardPage() {
                                             <p className="px-2 py-1 text-sm font-medium text-gray-800">{fullName}</p>
                                             <p className="px-2 pb-2 text-xs text-gray-400">Volunteer</p>
                                             <hr className="mb-1" />
-                                            <button className="w-full rounded px-2 py-1 text-left text-sm text-gray-600 hover:bg-gray-100" onClick={handleSignOut}>Log Out</button>
+                                            <button
+                                                className="w-full rounded px-2 py-1 text-left text-sm text-gray-600 hover:bg-gray-100"
+                                                onClick={handleSignOut}
+                                            >
+                                                Log Out
+                                            </button>
                                         </div>
                                     </NavigationMenuContent>
                                 </NavigationMenuItem>
@@ -109,14 +128,42 @@ export default function VolunteerDashboardPage() {
                     <p className="text-sm text-gray-500">You have made a significant impact this month.</p>
                 </div>
 
-                {error && <p className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">{error}</p>}
+                {error && (
+                    <p className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                        {error}
+                    </p>
+                )}
 
                 {/* KPI Cards */}
                 <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-                    <StatCard icon={<Clock className="h-5 w-5 text-gray-700" />} label="Total Hours" value={totalHours.toFixed(1)} sub="Sum of all volunteered hours" trend={null} />
-                    <StatCard icon={<Star className="h-5 w-5 text-gray-700" />} label="Impact Score" value={impactScore.toLocaleString()} sub={`Across ${orgsAssisted} org${orgsAssisted !== 1 ? "s" : ""}`} trend={null} />
-                    <StatCard icon={<DollarSign className="h-5 w-5 text-gray-700" />} label="Economic Value" value={`$${economicValue.toLocaleString()}`} sub="Calculated at $25.00/hr" trend={null} />
-                    <StatCard icon={<Building2 className="h-5 w-5 text-gray-700" />} label="Orgs Assisted" value={String(orgsAssisted)} sub="Distinct organizations" trend={null} />
+                    <StatCard
+                        icon={<Clock className="h-5 w-5 text-gray-700" />}
+                        label="Total Hours"
+                        value={totalHours.toFixed(1)}
+                        sub="Sum of all volunteered hours"
+                        trend={null}
+                    />
+                    <StatCard
+                        icon={<Star className="h-5 w-5 text-gray-700" />}
+                        label="Impact Score"
+                        value={impactScore.toLocaleString()}
+                        sub={`Across ${orgsAssisted} org${orgsAssisted !== 1 ? "s" : ""}`}
+                        trend={null}
+                    />
+                    <StatCard
+                        icon={<DollarSign className="h-5 w-5 text-gray-700" />}
+                        label="Economic Value"
+                        value={`$${economicValue.toLocaleString()}`}
+                        sub="Calculated at $25.00/hr"
+                        trend={null}
+                    />
+                    <StatCard
+                        icon={<Building2 className="h-5 w-5 text-gray-700" />}
+                        label="Orgs Assisted"
+                        value={String(orgsAssisted)}
+                        sub="Distinct organizations"
+                        trend={null}
+                    />
                 </div>
 
                 {/* Chart + Partner Orgs */}
@@ -141,11 +188,16 @@ export default function VolunteerDashboardPage() {
                         </div>
                         <div className="flex items-end justify-between gap-2 px-2" style={{ height: "180px" }}>
                             {chartData.map((h, i) => {
-                                const heightPct = Math.round((h / maxHours) * 100);
+                                const heightPct = Math.max(Math.round((h / maxHours) * 100), h > 0 ? 4 : 0);
                                 const isLatest = i === chartData.length - 1;
                                 return (
-                                    <div key={chartLabels[i]} className="flex flex-1 flex-col items-center gap-1">
-                                        <div className={`w-full rounded-t-md ${isLatest ? "bg-yellow-400" : "bg-yellow-200"}`} style={{ height: `${heightPct}%` }} />
+                                    <div key={`${chartLabels[i]}-${i}`} className="flex flex-1 flex-col items-center gap-1" style={{ height: "100%" }}>
+                                        <div className="flex flex-1 items-end w-full">
+                                            <div
+                                                className={`w-full rounded-t-md ${h > 0 ? (isLatest ? "bg-yellow-400" : "bg-yellow-200") : "bg-gray-100"}`}
+                                                style={{ height: `${heightPct}%`, minHeight: h > 0 ? "4px" : "2px" }}
+                                            />
+                                        </div>
                                         <span className="text-xs text-gray-400">{chartLabels[i]}</span>
                                     </div>
                                 );
@@ -159,7 +211,7 @@ export default function VolunteerDashboardPage() {
                         {partnerOrgs.length === 0 ? (
                             <p className="py-4 text-center text-sm text-gray-400">No organizations yet.</p>
                         ) : (
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 {partnerOrgs.map((org) => (
                                     <button
                                         key={org.id}
@@ -171,13 +223,19 @@ export default function VolunteerDashboardPage() {
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-gray-800">{org.orgName}</p>
-                                            <p className="text-xs text-gray-400">{org.totalHours}h total</p>
+                                        </div>
+                                        <div className="flex-shrink-0 text-right">
+                                            <p className="text-sm font-semibold text-gray-800">{org.totalHours}h</p>
+                                            <p className="text-xs text-gray-400">TOTAL</p>
                                         </div>
                                     </button>
                                 ))}
                             </div>
                         )}
-                        <button className="mt-5 w-full rounded-lg border py-2 text-sm font-medium text-gray-600 hover:bg-gray-50" onClick={() => router.push("/volunteer/organizations")}>
+                        <button
+                            className="mt-5 w-full rounded-lg border py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+                            onClick={() => router.push("/volunteer/organizations")}
+                        >
                             View All {partnerOrgs.length} Partners
                         </button>
                     </div>
@@ -197,25 +255,39 @@ export default function VolunteerDashboardPage() {
                                     <th className="pb-3 pr-4">Commitment</th>
                                     <th className="pb-3 pr-4">Hours</th>
                                     <th className="pb-3 pr-4">Status</th>
+                                    <th className="pb-3 pr-4">Last Updated</th>
                                     <th className="pb-3"></th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {opportunities.length === 0 ? (
-                                    <tr><td colSpan={6} className="py-8 text-center text-sm text-gray-400">No opportunities found.</td></tr>
+                                    <tr>
+                                        <td colSpan={7} className="py-8 text-center text-sm text-gray-400">
+                                            No opportunities found.
+                                        </td>
+                                    </tr>
                                 ) : (
                                     opportunities.map((opp) => (
                                         <tr key={opp.id} className="hover:bg-gray-50">
-                                            <td className="py-3 pr-4 font-medium text-gray-800">{opp.organization?.orgName ?? "—"}</td>
+                                            <td className="py-3 pr-4 font-medium text-gray-800">
+                                                {opp.organization?.orgName ?? "—"}
+                                            </td>
                                             <td className="py-3 pr-4 text-gray-600">{opp.category}</td>
                                             <td className="py-3 pr-4 text-gray-600">{opp.commitmentLevel}</td>
                                             <td className="py-3 pr-4 text-gray-800">{opp.hours}h</td>
                                             <td className="py-3 pr-4">
-                                                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[opp.status]}`}>{opp.status}</span>
+                                                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[opp.status]}`}>
+                                                    {opp.status}
+                                                </span>
+                                            </td>
+                                            <td className="py-3 pr-4 text-gray-500">
+                                                {new Date(opp.updatedAt).toLocaleDateString("en-US", {
+                                                    month: "short", day: "numeric", year: "numeric"
+                                                })}
                                             </td>
                                             <td className="py-3">
                                                 <button
-                                                    className="rounded-md border px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                                                    className="rounded-md bg-yellow-400 px-3 py-1 text-xs font-medium text-black hover:bg-yellow-500"
                                                     onClick={() => router.push(`/volunteer/opportunities/${opp.id}`)}
                                                 >
                                                     View More
@@ -226,18 +298,6 @@ export default function VolunteerDashboardPage() {
                                 )}
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
-                {/* Next Milestone */}
-                <div className="mt-6 rounded-xl border bg-yellow-50 p-5">
-                    <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-yellow-700">Next Milestone</p>
-                    <div className="flex items-center justify-between">
-                        <p className="font-bold text-gray-800">Elite Member</p>
-                        <p className="text-sm text-gray-500">{totalHours.toFixed(1)} / 150 hrs</p>
-                    </div>
-                    <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-yellow-200">
-                        <div className="h-full rounded-full bg-yellow-400" style={{ width: `${Math.min(Math.round((totalHours / 150) * 100), 100)}%` }} />
                     </div>
                 </div>
 
