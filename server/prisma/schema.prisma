@@ -48,7 +48,11 @@ model Organization {
     createdAt        DateTime          @default(now()) @map("created_at")
     updatedAt        DateTime          @updatedAt @default(now()) @map("updated_at")
 
+
+    opportunities Opportunity[]
+
     @@map("organizations")
+
 }
 
 model Volunteer {
@@ -63,7 +67,36 @@ model Volunteer {
     createdAt            DateTime @default(now()) @map("created_at")
     updatedAt            DateTime @updatedAt @default(now()) @map("updated_at")
 
+    opportunities Opportunity[]
+
     @@map("volunteers")
+
+}
+
+
+model Opportunity {
+    id              String           @id @default(uuid())
+    orgId           String           @map("org_id")
+    volId           String?          @map("vol_id")
+    status          OpportunityState @default(OPEN)
+    name            String           @default("") @map("name")
+    category        String           @default("") @map("category")
+    description     String           @default("") @map("description")
+    candidateDesc   String           @default("") @map("candidate_desc")
+    workType        WorkType         @default(IN_PERSON) @map("work_type")
+    commitmentLevel CommitmentLevel  @default(FLEXIBLE) @map("commitment_level")
+    hours           Float            @default(0) @map("hours")
+    length          String           @default("") @map("length")
+    deadlineDate    DateTime?        @map("deadline_date")
+    availability    Json             @default("[]") @map("availability")
+    postedDate      DateTime         @default(now()) @map("posted_date")
+    createdAt       DateTime         @default(now()) @map("created_at")
+    updatedAt       DateTime         @updatedAt @default(now()) @map("updated_at")
+
+    organization    Organization     @relation(fields: [orgId], references: [id])
+    volunteer       Volunteer?       @relation(fields: [volId], references: [id])
+
+    @@map("opportunities")
 }
 
 enum UserRole {
@@ -84,4 +117,23 @@ enum OrganizationState {
     CREATED
     APPLIED
     VERIFIED
+}
+
+enum OpportunityState {
+    OPEN
+    FILLED
+    CLOSED
+    CANCELLED
+}
+
+enum WorkType {
+    IN_PERSON
+    REMOTE
+    HYBRID
+}
+
+enum CommitmentLevel {
+    FLEXIBLE
+    PART_TIME
+    FULL_TIME
 }
