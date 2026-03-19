@@ -26,7 +26,6 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`${baseUrl}${path}`, {
         ...init,
         headers: {
-            "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}`} : {}),
             ...(init?.headers ?? {}),
         },
