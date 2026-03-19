@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Clock, Star, DollarSign, Building2, Search, Plus } from "lucide-react";
+import { Clock, Star, DollarSign, Building2, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     NavigationMenu, NavigationMenuContent, NavigationMenuItem,
@@ -83,12 +83,6 @@ export default function VolunteerDashboardPage() {
                         <div className="hidden items-center gap-2 rounded-full border bg-gray-50 px-3 py-1.5 text-sm text-gray-400 sm:flex">
                             <Search className="h-4 w-4" /><span>Search activities...</span>
                         </div>
-                        <button
-                            onClick={() => router.push("/volunteer/activity/new")}
-                            className="flex items-center gap-1.5 rounded-full bg-yellow-400 px-4 py-2 text-sm font-semibold text-black hover:bg-yellow-500"
-                        >
-                            <Plus className="h-4 w-4" />Record Hours
-                        </button>
                         <NavigationMenu>
                             <NavigationMenuList>
                                 <NavigationMenuItem>
@@ -121,11 +115,10 @@ export default function VolunteerDashboardPage() {
                 </div>
             </header>
 
-            <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <main className="mx-auto max-w-7xl px=4 py-8 sm:px-6 lg:px-8">
 
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">Welcome back, {firstName}!</h1>
-                    <p className="text-sm text-gray-500">You have made a significant impact this month.</p>
                 </div>
 
                 {error && (
@@ -140,14 +133,14 @@ export default function VolunteerDashboardPage() {
                         icon={<Clock className="h-5 w-5 text-gray-700" />}
                         label="Total Hours"
                         value={totalHours.toFixed(1)}
-                        sub="Sum of all volunteered hours"
+                        sub="Sum of your Hours"
                         trend={null}
                     />
                     <StatCard
                         icon={<Star className="h-5 w-5 text-gray-700" />}
                         label="Impact Score"
                         value={impactScore.toLocaleString()}
-                        sub={`Across ${orgsAssisted} org${orgsAssisted !== 1 ? "s" : ""}`}
+                        sub={`Across ${orgsAssisted} Org${orgsAssisted !== 1 ? "s" : ""}`}
                         trend={null}
                     />
                     <StatCard
@@ -161,7 +154,7 @@ export default function VolunteerDashboardPage() {
                         icon={<Building2 className="h-5 w-5 text-gray-700" />}
                         label="Orgs Assisted"
                         value={String(orgsAssisted)}
-                        sub="Distinct organizations"
+                        sub="Distinct Organizations"
                         trend={null}
                     />
                 </div>
@@ -174,7 +167,7 @@ export default function VolunteerDashboardPage() {
                         <div className="mb-4 flex items-start justify-between">
                             <div>
                                 <h2 className="font-semibold text-gray-800">Contribution Trends</h2>
-                                <p className="text-xs text-gray-400">Monthly breakdown of volunteer hours</p>
+                                <p className="text-xs text-gray-400">Monthly Breakdown of your Volunteer Hours</p>
                             </div>
                             <select
                                 value={chartRange}
@@ -186,13 +179,22 @@ export default function VolunteerDashboardPage() {
                                 ))}
                             </select>
                         </div>
-                        <div className="flex items-end justify-between gap-2 px-2" style={{ height: "180px" }}>
+                        <div className="flex items-end justify-between gap-2 px-2" style={{ height: "200px" }}>
                             {chartData.map((h, i) => {
                                 const heightPct = Math.max(Math.round((h / maxHours) * 100), h > 0 ? 4 : 0);
                                 const isLatest = i === chartData.length - 1;
                                 return (
-                                    <div key={`${chartLabels[i]}-${i}`} className="flex flex-1 flex-col items-center gap-1" style={{ height: "100%" }}>
-                                        <div className="flex flex-1 items-end w-full">
+                                    <div
+                                        key={`${chartLabels[i]}-${i}`}
+                                        className="flex flex-1 flex-col items-center gap-1"
+                                        style={{ height: "100%" }}
+                                    >
+                                        <div className="flex flex-1 flex-col items-center justify-end w-full">
+                                            {h > 0 && (
+                                                <span className="text-xs font-medium text-gray-500 mb-1">
+                                                    {h % 1 === 0 ? h : h.toFixed(1)}
+                                                </span>
+                                            )}
                                             <div
                                                 className={`w-full rounded-t-md ${h > 0 ? (isLatest ? "bg-yellow-400" : "bg-yellow-200") : "bg-gray-100"}`}
                                                 style={{ height: `${heightPct}%`, minHeight: h > 0 ? "4px" : "2px" }}
