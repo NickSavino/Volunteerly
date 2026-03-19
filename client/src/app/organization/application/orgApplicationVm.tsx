@@ -11,6 +11,7 @@ export function useOrgApplicationViewModel() {
   const router = useRouter();
   const { session, user, loading, signOut } = useAuth();
   const [currentOrg, setCurrentOrg] = useState<CurrentOrganization>();
+  const [file, setFile] = useState<File | null>();
 
 
   const [error, setError] = useState<string | null>(null);
@@ -46,8 +47,18 @@ async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     setError(null);
 
     const createdOrg = CurrentOrganizationUpdateSchema.parse(currentOrg);
-    
-    const {data, error, success} = await OrganizationService.apply(createdOrg)
+
+    const formData = new FormData();
+    if (file && currentOrg){
+      formData.append("document", file);
+
+      Object.entries(currentOrg).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, String(value));
+        }
+      });
+
+    const {data, error, success} = await OrganizationService.apply(formData)
 
     if (success) {
       router.replace("/organization/appliedDashboard");
@@ -62,6 +73,7 @@ async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         setError(error.message);
         return;
     }
+    }
 
     router.push("/bootstrap");
 }
@@ -72,6 +84,8 @@ async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         error,
         submitting,
         currentOrg,
+        file,
+        setFile,
         setCurrentOrg,
         signOut,
         handleSubmit

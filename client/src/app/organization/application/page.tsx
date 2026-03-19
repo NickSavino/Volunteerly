@@ -20,6 +20,8 @@ export default function HomePage() {
     error,
     submitting,
     currentOrg,
+    file,
+    setFile,
     setCurrentOrg,
     signOut,
     handleSubmit
@@ -110,6 +112,8 @@ export default function HomePage() {
                         id="documentUpload"
                         type="file"
                         accept=".pdf"
+                        onChange={(e) => { if (e.target.files?.[0]) setFile(e.target.files[0]); }}
+
                       />
                       <FieldDescription>Upload CRA Notice of Registration or any other document verifying non-profit status.</FieldDescription>
                     </Field>
