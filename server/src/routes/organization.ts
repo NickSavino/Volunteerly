@@ -56,7 +56,7 @@ OrganizationRouter.get("/", auth, async (req, res, next) => {
     }
 });
 
-OrganizationRouter.get("/document", auth, async (req, res, next) => {
+OrganizationRouter.get("/document", auth, async (req:any, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
         const userId = typedReq.auth?.userId;
@@ -65,8 +65,12 @@ OrganizationRouter.get("/document", auth, async (req, res, next) => {
             return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
         }
 
-        const { file_path } = req.body;
-        if (!file_path) return res.status(400).json({ error: "File Path is missing." });
+        const { file_path } = req.query;
+
+        if (!(file_path)){
+            return res.status(400).json({ error: "File Path is missing/invalid." });
+        }
+            
         const fileId = file_path.split("org_")[1].split(".")[0]
 
         if (!(fileId == userId)){
