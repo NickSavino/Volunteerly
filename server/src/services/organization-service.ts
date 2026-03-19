@@ -1,5 +1,6 @@
 import { Prisma, OrganizationState } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
+import { supabase } from "../lib/supabase.js";
 
 
 export async function getCurrentOrganization(orgId: string) {
@@ -46,12 +47,15 @@ export async function updateCurrentOrganization(orgId: string, contactName: stri
 }
 
 export async function applyOrganization(orgId: string, orgName:string, charityNum: number, status:OrganizationState, contactName: string, contactEmail: string,
-    contactNum: string, missionStmt: string, causeCat: string, website:string, hqAdr: string) {
+    contactNum: string, missionStmt: string, causeCat: string, website:string, hqAdr: string, file:Express.Multer.File) {
+
+    const savedFilePath = await saveFile(orgId, file)
     const organization = await prisma.organization.update({
         where: { id: orgId },
         data: {
             orgName: orgName,
             charityNum: charityNum,
+            docId: savedFilePath,
             status: status,
             contactName: contactName,
             contactEmail: contactEmail,
@@ -62,11 +66,28 @@ export async function applyOrganization(orgId: string, orgName:string, charityNu
             hqAdr: hqAdr
         },
     });
+
     if (!organization) {
         throw new Error("Error applying for the Organization.");
     }
 
     return organization;
+}
+
+export async function saveFile(orgId:string, file:Express.Multer.File){
+    const fileName = `org_${orgId}.pdf`;
+
+    const { data, error } = await supabase.storage
+    .from("organization-documents")
+    .upload(fileName, file.buffer, {
+      contentType: file.mimetype,
+      upsert: true,
+    });
+
+    if (error) {
+        throw new Error(`Failed to upload file: ${error.message}`);
+    }
+    return data.fullPath
 }
 
 export async function approveOrganization(orgId: string) {
