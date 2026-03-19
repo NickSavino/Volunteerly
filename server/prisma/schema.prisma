@@ -56,16 +56,16 @@ model Organization {
 }
 
 model Volunteer {
-    id                   String   @id @default(uuid())
-    firstName            String   @default("") @map("first_name")
-    lastName             String   @default("") @map("last_name")
-    location             String   @default("") @map("location")
-    bio                  String   @default("") @map("bio")
-    availability         Json     @default("[]") @map("availability")
-    hourlyValue          Int      @default(0) @map("hourly_value")
-    organizationsAssisted Int     @default(0) @map("organizations_assisted")
-    createdAt            DateTime @default(now()) @map("created_at")
-    updatedAt            DateTime @updatedAt @default(now()) @map("updated_at")
+    id                    String   @id @default(uuid())
+    firstName             String   @default("") @map("first_name")
+    lastName              String   @default("") @map("last_name")
+    location              String   @default("") @map("location")
+    bio                   String   @default("") @map("bio")
+    availability          Json     @default("[]") @map("availability")
+    hourlyValue           Int      @default(0) @map("hourly_value")
+    organizationsAssisted Int      @default(0) @map("organizations_assisted")
+    createdAt             DateTime @default(now()) @map("created_at")
+    updatedAt             DateTime @updatedAt @default(now()) @map("updated_at")
 
     opportunities Opportunity[]
 

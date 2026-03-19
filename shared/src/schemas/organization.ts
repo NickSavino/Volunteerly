@@ -4,8 +4,8 @@ export const OrganizationStateSchema = z.enum([
   "CREATED",
   "APPLIED",
   "VERIFIED",
+  "REJECTED",
 ]);
-
 
 export const OrganizationSchema = z.object({
   id: z.uuid(),
@@ -25,11 +25,15 @@ export const OrganizationSchema = z.object({
   website: z.string(),
 
   impactHighlights: z.array(z.any()).optional(),
+  rejectionReason: z.string().optional(),
 
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime()
 });
 export type Organization = z.infer<typeof OrganizationSchema>;
+
+export const OrganizationsSchema = z.array(OrganizationSchema);
+export type Organizations = z.infer<typeof OrganizationsSchema>;
 
 export const CurrentOrganizationSchema = z.object({
   id: z.uuid(),
@@ -49,12 +53,12 @@ export const CurrentOrganizationSchema = z.object({
   website: z.string(),
 
   impactHighlights: z.array(z.any()).optional(),
+  rejectionReason: z.string().optional(),
 
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime()
-})
-
-export type CurrentOrganization = z.infer<typeof CurrentOrganizationSchema>
+});
+export type CurrentOrganization = z.infer<typeof CurrentOrganizationSchema>;
 
 export const CurrentOrganizationUpdateSchema = z.object({
   orgName: z.string(),
@@ -69,6 +73,6 @@ export const CurrentOrganizationUpdateSchema = z.object({
   causeCategory: z.string().optional(),
   website: z.string().optional(),
 
-  impactHighlights: z.array(z.any()).optional().optional(),
-})
-export type CurrentOrganizationUpdateSchema = z.infer<typeof CurrentOrganizationUpdateSchema>
+  impactHighlights: z.array(z.any()).optional(),
+});
+export type CurrentOrganizationUpdateSchema = z.infer<typeof CurrentOrganizationUpdateSchema>;
