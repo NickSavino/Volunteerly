@@ -41,42 +41,47 @@ export function useOrgApplicationViewModel() {
       loadCurrentUser()
     },[session]);
 
-async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSubmitting(true);
-    setError(null);
+  const isReadOnly = currentOrg?.status === "APPLIED" || currentOrg?.status === "VERIFIED";
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
 
-    const createdOrg = CurrentOrganizationUpdateSchema.parse(currentOrg);
+      if (isReadOnly) {return}
+      e.preventDefault();
+      setSubmitting(true);
+      setError(null);
 
-    const formData = new FormData();
-    if (file && currentOrg){
-      formData.append("document", file);
+      const createdOrg = CurrentOrganizationUpdateSchema.parse(currentOrg);
 
-      Object.entries(currentOrg).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          formData.append(key, String(value));
-        }
-      });
+      const formData = new FormData();
+      if (file && currentOrg){
+        formData.append("document", file);
 
-    const {data, error, success} = await OrganizationService.apply(formData)
+        Object.entries(currentOrg).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            formData.append(key, String(value));
+          }
+        });
 
-    if (success) {
-      router.replace("/organization/appliedDashboard");
-    }else {
-      setError("Error submitting application.")
-      console.error(error)
-    }
+      const {data, error, success} = await OrganizationService.apply(formData)
 
-    setSubmitting(false);
+      if (success) {
+        router.replace("/organization/appliedDashboard");
+      }else {
+        setError("Error submitting application.")
+        console.error(error)
+      }
 
-    if (error) {
-        setError(error.message);
-        return;
-    }
-    }
+      setSubmitting(false);
 
-    router.push("/bootstrap");
-}
+      if (error) {
+          setError(error.message);
+          return;
+      }
+      }
+
+      router.push("/bootstrap");
+  }
+
+  
   
 
     return {
@@ -85,6 +90,7 @@ async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         submitting,
         currentOrg,
         file,
+        isReadOnly,
         setFile,
         setCurrentOrg,
         signOut,

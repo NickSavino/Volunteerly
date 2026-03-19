@@ -21,6 +21,7 @@ export default function HomePage() {
     submitting,
     currentOrg,
     file,
+    isReadOnly,
     setFile,
     setCurrentOrg,
     signOut,
@@ -39,10 +40,11 @@ export default function HomePage() {
         <main className="w-full items-center h-full flex flex-col p-8 ">
           <div className="text-center pb-5">
             <div className="text-foreground bg-warning mb-5 p-1 radius-2 rounded-sm">
-                <h2>Limited Functionality</h2>
-                <p className="text-sm text-center text-foreground bg-warning my-2 p-1 radius-2 rounded-sm">Complete Application Below to gain full access as organization.</p>
+                <h2>{isReadOnly ? "Application Submitted":"Limited Functionality"}</h2>
+                <p className="text-sm text-center text-foreground bg-warning my-2 p-1 radius-2 rounded-sm">
+                  {isReadOnly ? "Your Application has been successfully submitted.":"Complete Application Below to gain full access as organization."}
+                </p>
             </div>
-
 
             <h1>Organization Application</h1>
             <p className="text-center">To ensure the integrity of our platform, all organizations must be verified. <br/> Complete the application below and our moderators will review it.</p>
@@ -58,13 +60,13 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field >
                       <Label htmlFor="orgName">Organization Name <span className="text-destructive">*</span></Label>
-                      <Input id="orgName" type="text" value={currentOrg?.orgName || ""} placeholder="Legal name of organization" 
+                      <Input id="orgName" disabled={isReadOnly} type="text"  value={currentOrg?.orgName || ""} placeholder="Legal name of organization" 
                       onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, orgName: e.target.value } : prev)} required/>
                     </Field>
                     <Field>
                       <Label htmlFor="website">Website<span className="text-destructive">*</span></Label>
                       <InputGroup id="website">
-                        <InputGroupInput id="website" type="text" placeholder="example.org" value={currentOrg?.website}
+                        <InputGroupInput id="website" disabled={isReadOnly} type="text" placeholder="example.org" value={currentOrg?.website}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, website: e.target.value } : prev)} required/>
                         <InputGroupAddon>
                           <InputGroupText>https://</InputGroupText>
@@ -76,18 +78,18 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
                         <Label htmlFor="causeCategory">Cause Category<span className="text-destructive">*</span></Label>
-                        <Input id="causeCategory" type="text" placeholder="Education" value={currentOrg?.causeCategory}
+                        <Input id="causeCategory"  disabled={isReadOnly} type="text" placeholder="Education" value={currentOrg?.causeCategory}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, causeCategory: e.target.value } : prev)} required/>
                     </Field>
                     <Field>
                       <Label htmlFor="address">Address<span className="text-destructive">*</span></Label>
-                      <Input id="address" type="text" placeholder="2500 University Dr NW, Calgary, AB" value={currentOrg?.hqAdr}
+                      <Input id="address" disabled={isReadOnly} type="text" placeholder="2500 University Dr NW, Calgary, AB" value={currentOrg?.hqAdr}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, hqAdr: e.target.value } : prev)} required/>
                     </Field>
                   </div>
                   <Field>
                     <Label htmlFor="mission_statement">Mission Statment<span className="text-destructive">*</span></Label>
-                    <Input id="mission_statement" type="text" placeholder="Briefly describe your organization's core mission and goals." value={currentOrg?.missionStatement}
+                    <Input id="mission_statement" disabled={isReadOnly} type="text" placeholder="Briefly describe your organization's core mission and goals." value={currentOrg?.missionStatement}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, missionStatement: e.target.value } : prev)} required/>
                   </Field>
                   
@@ -102,7 +104,7 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
                       <Label htmlFor="charityNumber">Charity Number<span className="text-destructive">*</span></Label>
-                      <Input id="charityNumber" type="number" placeholder="XXXXXXXXX"
+                      <Input id="charityNumber" disabled={isReadOnly} type="number" placeholder="XXXXXXXXX" value={currentOrg?.charityNum === 0 ? "" : currentOrg?.charityNum}
                         onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, charityNum: Number(e.target.value) } : prev)} required/>
                       <FieldDescription>9-Digit Charity Number obtained from CRA.</FieldDescription>
                     </Field>
@@ -111,6 +113,7 @@ export default function HomePage() {
                       <Input
                         id="documentUpload"
                         type="file"
+                        disabled={isReadOnly}
                         accept=".pdf"
                         onChange={(e) => { if (e.target.files?.[0]) setFile(e.target.files[0]); }}
 
@@ -129,24 +132,24 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
                       <Label htmlFor="contactName">Contact Name<span className="text-destructive">*</span></Label>
-                      <Input id="contactName" type="text" placeholder="John Doe" value={currentOrg?.contactName}
+                      <Input id="contactName" disabled={isReadOnly} type="text" placeholder="John Doe" value={currentOrg?.contactName}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, contactName: e.target.value } : prev)} required/>
                     </Field>
                     <Field>
                       <Label htmlFor="contactNumber">Contact Number<span className="text-destructive">*</span></Label>
-                      <Input id="contactNumber" type="tel" placeholder="(403) 000-0000" value={currentOrg?.contactNum}
+                      <Input id="contactNumber" disabled={isReadOnly} type="tel" placeholder="(403) 000-0000" value={currentOrg?.contactNum}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, contactNum: e.target.value } : prev)} required/>                      
                     </Field>                  
                   </div>
                   <Field>
                     <Label htmlFor="contactEmail">Contact Email<span className="text-destructive">*</span></Label>
-                    <Input id="contactEmail" type="email" placeholder="john@charity.ca" value={currentOrg?.contactEmail}
+                    <Input id="contactEmail" disabled={isReadOnly} type="email" placeholder="john@charity.ca" value={currentOrg?.contactEmail}
                     onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, contactEmail: e.target.value } : prev)} required/>                      
                   </Field>                  
                 </CardContent>
 
                 <div className="px-6 pb-6">
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" disabled={isReadOnly} className="w-full">
                     Submit
                   </Button>
                 </div>
