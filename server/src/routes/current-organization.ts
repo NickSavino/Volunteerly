@@ -12,16 +12,21 @@ type AuthenticatedRequest = {
 
 export const currentOrganizationRouter = Router();
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage,
-    fileFilter: (req, file, cb) => {
-    const allowedTypes = ['application/pdf'];
-    if (!allowedTypes.includes(file.mimetype)) {
-      return cb(new Error('Only PDFs are allowed!'));
-    }
-    cb(null, true);
-  }
-});
+const upload = multer({
+  storage,
+  fileFilter: (_req, file, cb) => {
+    const allowedTypes = ["application/pdf"];
 
+    if (!allowedTypes.includes(file.mimetype)) {
+      return cb(new Error("Only PDFs are allowed!"));
+    }
+
+    cb(null, true);
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
 
 currentOrganizationRouter.get("/", auth, async (req, res, next) => {
     try {
@@ -114,6 +119,7 @@ currentOrganizationRouter.put("/apply", auth, upload.single("document"),async (r
 
         } else {
             const { orgName, charityNum, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr} = req.body;
+            const charityNum_int = Number(charityNum)
             const file = req.file
 
             if (!file) {
@@ -122,7 +128,7 @@ currentOrganizationRouter.put("/apply", auth, upload.single("document"),async (r
                 message: "No Document Submitted."
             });
             }
-            const updated_org = await applyOrganization(userId, orgName, charityNum, "APPLIED" ,contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr, file);    
+            const updated_org = await applyOrganization(userId, orgName, charityNum_int, "APPLIED" ,contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr, file);  
                 if (!updated_org) {
                     return res.status(500).json({
                         error: "Cannot update Organization",
