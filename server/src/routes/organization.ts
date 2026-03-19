@@ -6,6 +6,7 @@ import {
     getCurrentOrganization,
     getAllOrganizations,
     getAppliedOrganizations,
+    downloadFile,
 } from "../services/organization-service.js";
 import { getCurrentUser } from "../services/user-service.js";
 
@@ -50,6 +51,34 @@ OrganizationRouter.get("/", auth, async (req, res, next) => {
             : await getAllOrganizations();
 
         res.status(200).json(organizations);
+    } catch (error) {
+        next(error);
+    }
+});
+
+OrganizationRouter.get("/document", auth, async (req, res, next) => {
+    try {
+        const typedReq = req as typeof req & AuthenticatedRequest;
+        const userId = typedReq.auth?.userId;
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        }
+
+        const { file_path } = req.body;
+        if (!file_path) return res.status(400).json({ error: "File Path is missing." });
+        const fileId = file_path.split("org_")[1].split(".")[0]
+
+        if (!(fileId == userId)){
+            const mod = await requireModerator(userId, res);
+            if (!mod) return;
+        }
+
+        const file_data = downloadFile(file_path)
+
+        res.setHeader("Content-Disposition", `attachment; filename="${file_path}"`);
+        res.setHeader("Content-Type", "application/pdf");
+        res.send(file_data)
     } catch (error) {
         next(error);
     }

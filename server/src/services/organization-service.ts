@@ -90,6 +90,22 @@ export async function saveFile(orgId:string, file:Express.Multer.File){
     return data.fullPath
 }
 
+export async function downloadFile(filePath:string){
+
+    const { data, error } = await supabase.storage
+        .from("organization-documents")
+        .download(filePath);
+
+    if (error) {
+        throw new Error(`Failed to upload file: ${error.message}`);
+    }
+        
+    const arrayBuffer = await data.arrayBuffer();
+    return Buffer.from(arrayBuffer)
+}
+
+
+
 export async function approveOrganization(orgId: string) {
     const organization = await prisma.organization.update({
         where: { id: orgId },
