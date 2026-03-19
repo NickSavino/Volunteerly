@@ -23,10 +23,10 @@ export class OrganizationService {
         return parsed;
     }
 
-    static async apply(user: CurrentOrganizationUpdateSchema) {
+    static async apply(formData: FormData) {
         const response = await api<unknown>("/current-organization/apply", {
             method: "PUT",
-            body: JSON.stringify(user),
+            body: formData
         });
         const parsed = CurrentOrganizationSchema.safeParse(response);
         return parsed;
@@ -37,6 +37,12 @@ export class OrganizationService {
         const response = await api<unknown>(url);
         const parsed = OrganizationsSchema.safeParse(response);
         return parsed;
+    }
+
+    static async getOrganizationDocument(file_path:string) {
+        const url = `/organization/document/?file_path=${file_path}`
+        const response = await api<Blob>(url, {responseType: "blob"});
+        return response;
     }
 
     static async approveOrganization(orgId: string) {
