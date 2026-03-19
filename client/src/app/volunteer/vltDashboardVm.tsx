@@ -5,7 +5,7 @@ import { VolunteerService, PartnerOrg } from "@/services/VolunteerService";
 import { useAuth } from "@/providers/auth-provider";
 import { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
 
-export type ChartRange = "last_month" | "last_6_months" | "last_year" | "total";
+export type ChartRange = "last_month" | "last_6_months" | "last_year" | "this_year" | "total";
 
 export function useVltDashboardViewModel() {
     const router = useRouter();
@@ -55,59 +55,80 @@ export function useVltDashboardViewModel() {
 
     const handleSignOut = async () => { await signOut(); router.push("/"); };
 
-    // KPIs derived from real data
+    // KPIs
     const totalHours = useMemo(() =>
         opportunities.reduce((sum, opp) => sum + opp.hours, 0),
     [opportunities]);
 
-    const economicValue = useMemo(() =>
-        Math.round(totalHours * 25),
-    [totalHours]);
-
+    const economicValue = useMemo(() => Math.round(totalHours * 25), [totalHours]);
     const orgsAssisted = partnerOrgs.length;
+    const impactScore = useMemo(() => Math.round(economicValue * orgsAssisted), [economicValue, orgsAssisted]);
 
-    const impactScore = useMemo(() =>
-        Math.round(economicValue * orgsAssisted),
-    [economicValue, orgsAssisted]);
-
-    // Chart data filtered by range
+    // Chart
     const { chartLabels, chartData } = useMemo(() => {
         const now = new Date();
-        const allKeys = Object.keys(monthlyHoursMap).sort();
 
-        let filtered: string[];
-        if (chartRange === "last_month") {
-            const cutoff = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            filtered = allKeys.filter(k => new Date(k + "-01") >= cutoff);
-        } else if (chartRange === "last_6_months") {
-            const cutoff = new Date(now.getFullYear(), now.getMonth() - 5, 1);
-            filtered = allKeys.filter(k => new Date(k + "-01") >= cutoff);
-        } else if (chartRange === "last_year") {
-            const cutoff = new Date(now.getFullYear() - 1, now.getMonth(), 1);
-            filtered = allKeys.filter(k => new Date(k + "-01") >= cutoff);
-        } else {
-            filtered = allKeys;
-        }
-
-        // if no data yet, show empty placeholders for last 6 months
-        if (filtered.length === 0) {
-            const labels = [];
-            for (let i = 5; i >= 0; i--) {
+        // helper to build a fixed sequence of N months ending at current month
+        function buildMonthRange(monthCount: number): { labels: string[]; data: number[] } {
+            const labels: string[] = [];
+            const data: number[] = [];
+            for (let i = monthCount - 1; i >= 0; i--) {
                 const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
                 labels.push(d.toLocaleString("default", { month: "short" }).toUpperCase());
+                data.push(monthlyHoursMap[key] ?? 0);
             }
-            return { chartLabels: labels, chartData: labels.map(() => 0) };
+            return { labels, data };
         }
 
+        if (chartRange === "last_month") {
+            // exactly 1 bar: the previous calendar month
+            const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const key = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, "0")}`;
+            return {
+                chartLabels: [prev.toLocaleString("default", { month: "short" }).toUpperCase()],
+                chartData: [monthlyHoursMap[key] ?? 0],
+            };
+        }
+
+        if (chartRange === "last_6_months") {
+            const { labels, data } = buildMonthRange(6);
+            return { chartLabels: labels, chartData: data };
+        }
+
+        if (chartRange === "last_year") {
+            const { labels, data } = buildMonthRange(12);
+            return { chartLabels: labels, chartData: data };
+        }
+
+        if (chartRange === "this_year") {
+            // Jan 1 to Dec 31 of current calendar year, all 12 months
+            const labels: string[] = [];
+            const data: number[] = [];
+            for (let m = 0; m < 12; m++) {
+                const d = new Date(now.getFullYear(), m, 1);
+                const key = `${now.getFullYear()}-${String(m + 1).padStart(2, "0")}`;
+                labels.push(d.toLocaleString("default", { month: "short" }).toUpperCase());
+                data.push(monthlyHoursMap[key] ?? 0);
+            }
+            return { chartLabels: labels, chartData: data };
+        }
+
+        // total — aggregate all keys across all years by month label
+        const allKeys = Object.keys(monthlyHoursMap).sort();
+        if (allKeys.length === 0) {
+            const { labels, data } = buildMonthRange(6);
+            return { chartLabels: labels, chartData: data };
+        }
         return {
-            chartLabels: filtered.map(k => {
+            chartLabels: allKeys.map(k => {
                 const [year, month] = k.split("-");
-                return new Date(Number(year), Number(month) - 1, 1)
-                    .toLocaleString("default", { month: "short" })
-                    .toUpperCase();
+                const d = new Date(Number(year), Number(month) - 1, 1);
+                return `${d.toLocaleString("default", { month: "short" }).toUpperCase()} ${year}`;
             }),
-            chartData: filtered.map(k => monthlyHoursMap[k]),
+            chartData: allKeys.map(k => monthlyHoursMap[k] ?? 0),
         };
+
     }, [monthlyHoursMap, chartRange]);
 
     return {
