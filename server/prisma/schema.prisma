@@ -45,6 +45,7 @@ model Organization {
     causeCategory    String            @default("") @map("cause_category")
     website          String            @default("") @map("website")
     impactHighlights Json              @default("[]") @map("impact_highlights")
+    rejectionReason  String            @default("") @map("rejection_reason")
     createdAt        DateTime          @default(now()) @map("created_at")
     updatedAt        DateTime          @updatedAt @default(now()) @map("updated_at")
 
@@ -117,6 +118,7 @@ enum OrganizationState {
     CREATED
     APPLIED
     VERIFIED
+<<<<<<< HEAD
 }
 
 enum OpportunityState {
@@ -136,4 +138,7 @@ enum CommitmentLevel {
     FLEXIBLE
     PART_TIME
     FULL_TIME
+=======
+    REJECTED
+>>>>>>> development
 }
