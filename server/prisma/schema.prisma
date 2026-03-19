@@ -118,7 +118,7 @@ enum OrganizationState {
     CREATED
     APPLIED
     VERIFIED
-<<<<<<< HEAD
+    REJECTED
 }
 
 enum OpportunityState {
@@ -138,7 +138,4 @@ enum CommitmentLevel {
     FLEXIBLE
     PART_TIME
     FULL_TIME
-=======
-    REJECTED
->>>>>>> development
 }
