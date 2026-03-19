@@ -90,21 +90,20 @@ export async function saveFile(orgId:string, file:Express.Multer.File){
     return data.fullPath
 }
 
-export async function downloadFile(filePath:string){
-
+export async function downloadFile(bucket:string, filePath:string){
+    console.log(filePath)
     const { data, error } = await supabase.storage
-        .from("organization-documents")
+        .from(bucket)
         .download(filePath);
 
     if (error) {
-        throw new Error(`Failed to upload file: ${error.message}`);
+        console.log(error)
+        throw new Error(`Failed to download file: ${error.message}`);
     }
         
     const arrayBuffer = await data.arrayBuffer();
     return Buffer.from(arrayBuffer)
 }
-
-
 
 export async function approveOrganization(orgId: string) {
     const organization = await prisma.organization.update({

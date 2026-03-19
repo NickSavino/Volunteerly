@@ -77,8 +77,9 @@ OrganizationRouter.get("/document", auth, async (req:any, res, next) => {
             const mod = await requireModerator(userId, res);
             if (!mod) return;
         }
-
-        const file_data = downloadFile(file_path)
+        const bucket = file_path.split("/")[0]
+        const filePath = file_path.split("/")[1]
+        const file_data = downloadFile(bucket, filePath)
 
         res.setHeader("Content-Disposition", `attachment; filename="${file_path}"`);
         res.setHeader("Content-Type", "application/pdf");
