@@ -19,7 +19,7 @@ import volunteerly_logo from "@/assets/volunteerly_logo.png"
 
 
 export default function HomePage() {
-  const {loading, session, signOut, router, user, error, currentUser, opportunities} = useOrgDashboardViewModel()
+  const {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} = useOrgDashboardViewModel()
 
   if (loading || !session ) {
     return <main className="p-6">Loading...</main>
@@ -58,17 +58,17 @@ export default function HomePage() {
                     <ModStatCard
                         icon={FolderKanban}
                         label="Total Projects"
-                        count={0}
+                        count={totalOpps}
                     />
                     <ModStatCard
                         icon={PersonStanding}
                         label="Active Volunteers"
-                        count={0}
+                        count={activeVlt}
                     />
                     <ModStatCard
                         icon={Hourglass}
                         label="Hours Contribuited"
-                        count={0}
+                        count={totalHours}
                     />
                 </div>
 
@@ -94,7 +94,7 @@ export default function HomePage() {
                             </CardContent>
                                 ) : (
                                     opportunities.map((opp) => (
-                                        <CardContent>
+                                        <CardContent key={opp.id}>
                                             <Item variant="outline">
                                                 <ItemContent>
                                                     <ItemTitle>{opp.name} <Badge>{opp.status}</Badge> </ItemTitle>

@@ -26,7 +26,7 @@ export const OpportunitySchema = z.object({
         id: z.uuid(),
         firstName: z.string(),
         lastName: z.string(),
-    }).optional(),
+    }).nullable(),
 });
 
 export type Opportunity = z.infer<typeof OpportunitySchema>;

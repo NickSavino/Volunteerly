@@ -5,6 +5,8 @@ import {
     OpportunitiesSchema,
     OrganizationSchema,
     OrganizationsSchema,
+    CountSchema,
+    TotalHoursSchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -64,10 +66,29 @@ export class OrganizationService {
         return parsed;
     }
 
-    static async getYourOpportunities() {
+    static async getAllOpportunities() {
         const response = await api<unknown>("/current-organization/opportunities");
         const asArray = Array.isArray(response) ? response : [response];
         return OpportunitiesSchema.safeParse(asArray);
     }
+
+    static async getActiveOpportunities() {
+        const response = await api<unknown>("/current-organization/opportunities/active");
+        const asArray = Array.isArray(response) ? response : [response];
+        return OpportunitiesSchema.safeParse(asArray);
+    }
+
+    static async countAllOpportunities() {
+        const response = await api<unknown>("/current-organization/opportunities/totalCount");
+        const parsed = CountSchema.safeParse(response)
+        return parsed
+    }
+
+    static async sumTotalHours() {
+        const response = await api<unknown>("/current-organization/opportunities/hoursTotal");
+        const parsed = TotalHoursSchema.safeParse(response)
+        return parsed
+    }
+
     
 }

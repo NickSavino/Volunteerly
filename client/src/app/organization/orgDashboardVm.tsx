@@ -67,14 +67,27 @@ export function useOrgDashboardViewModel() {
     useEffect(() => {
       async function loadOpportunities() {
 
-        const opps = await OrganizationService.getYourOpportunities()
-        if (!opps.success) { setError("Failed to load opportunities."); return; }
-        setOpportunities(opps.data);        
+        const opps = await OrganizationService.getActiveOpportunities()
+        if (!opps.success) { 
+          console.error(opps.error)
+          setError("Failed to load opportunities."); return; }
+        setOpportunities(opps.data);   
+        
+        const totalOpps = await OrganizationService.countAllOpportunities()
+        if (!totalOpps.success) { setError("Failed to get total opportunities."); return; }
+        setTotalOpps(totalOpps.data)
+        
+        const hours = await OrganizationService.sumTotalHours()
+        if (!hours.success) { setError("Failed to get hours total."); return; }
+        setTotalHours(hours.data._sum.hours || 0)
+
+        setActiveVlt(opps.data.length)
+        
       }
       loadOpportunities()
     }, [])
 
 
 
-    return {loading, session, signOut, router, user, error, currentUser, opportunities} 
+    return {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} 
 }

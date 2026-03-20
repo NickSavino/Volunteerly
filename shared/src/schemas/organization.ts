@@ -7,6 +7,14 @@ export const OrganizationStateSchema = z.enum([
   "REJECTED",
 ]);
 
+export const CountSchema = z.number();
+export const TotalHoursSchema = z.object({
+  _sum: z.object({
+    hours: z.number().nullable(),
+  }),
+})
+
+
 export const OrganizationSchema = z.object({
   id: z.uuid(),
   orgName: z.string(),
