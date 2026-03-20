@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, updateCurrentOrganization } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getYourOpportunities, updateCurrentOrganization } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -145,4 +145,16 @@ currentOrganizationRouter.put("/apply", auth, upload.single("document"),async (r
     next(error);
     }
 
+});
+
+currentOrganizationRouter.get("/opportunities", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        
+        const opportunities = await getYourOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
 });

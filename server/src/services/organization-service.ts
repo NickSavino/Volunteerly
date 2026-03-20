@@ -150,3 +150,18 @@ export async function getAllOrganizations() {
 
     return organizations;
 }
+
+export async function getYourOpportunities(organizationId: string) {
+    return prisma.opportunity.findMany({
+        where: { orgId: organizationId },
+        include: {
+            volunteer: {
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true
+                },
+            },
+        },
+    });
+}
