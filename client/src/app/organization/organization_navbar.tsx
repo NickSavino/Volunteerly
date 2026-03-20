@@ -96,7 +96,7 @@ export function OrganizationNavbar({ currentOrg, onSignOut }: OrganizationNavbar
                                     })}
                                 </NavigationMenuList>
                                 <hr className="md:hidden my-3 border-gray-300" />
-                                <button className="w-full md:w-40 text-sm font-medium text-center text-gray-600 transition-colors hover:text-yellow-500" onClick={onSignOut}>
+                                <button className="w-full md:w-40 text-sm font-medium text-center text-gray-600 transition-colors hover:text-yellow-500 cursor-pointer" onClick={onSignOut}>
                                     Log Out
                                 </button>
                             </NavigationMenuContent>
