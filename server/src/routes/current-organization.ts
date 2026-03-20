@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getYourOpportunities, updateCurrentOrganization } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -151,10 +151,60 @@ currentOrganizationRouter.get("/opportunities", auth, async (req, res, next) => 
     try {
         const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
-        
-        const opportunities = await getYourOpportunities(userId);
+
+        const opportunities = await getAllOpportunities(userId);
         res.status(200).json(opportunities);
     } catch (error) {
         next(error);
     }
 });
+
+currentOrganizationRouter.get("/opportunities/active", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await getActiveOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunities/totalCount", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await countAllOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+currentOrganizationRouter.get("/opportunities/hoursTotal", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await sumTotalOpportunityHours(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunities/activeTotal", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await countActiveOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
