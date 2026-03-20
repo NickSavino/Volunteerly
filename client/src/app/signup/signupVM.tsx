@@ -70,7 +70,7 @@ export function useSignUpViewModel() {
                     console.log("Updated org:", result.data);
 
                     if (data.session) {
-                        router.push("/organization");
+                        router.push("/organization/application");
                         return;
                     }
 
