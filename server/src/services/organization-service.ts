@@ -150,3 +150,54 @@ export async function getAllOrganizations() {
 
     return organizations;
 }
+
+export async function getAllOpportunities(organizationId: string) {
+    return prisma.opportunity.findMany({
+        where: { orgId: organizationId },
+        include: {
+            volunteer: {
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true
+                },
+            },
+        },
+    });
+}
+
+export async function countAllOpportunities(organizationId: string) {
+    return prisma.opportunity.count({
+        where: { orgId: organizationId }
+    });
+}
+
+export async function countActiveOpportunities(organizationId: string) {
+    return prisma.opportunity.count({
+        where: { orgId: organizationId, status: "OPEN"}
+    });
+}
+
+export async function sumTotalOpportunityHours(organizationId: string) {
+    return prisma.opportunity.aggregate({
+        where: { orgId: organizationId },
+        _sum: {
+            hours:true,
+        }
+    });
+}
+
+export async function getActiveOpportunities(organizationId: string) {
+    return prisma.opportunity.findMany({
+        where: { orgId: organizationId, status: "OPEN" },
+        include: {
+            volunteer: {
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true
+                },
+            },
+        },
+    });
+}
