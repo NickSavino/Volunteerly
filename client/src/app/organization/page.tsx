@@ -47,7 +47,7 @@ export default function HomePage() {
                     </div>
 
                     <div>
-                        <Button type="submit" className="w-full text-accent-foreground cursor-pointer">
+                        <Button type="submit" className="w-full text-accent-foreground cursor-pointer" onClick={async () => { router.push("/organization/opportunities/create");}}>
                             Create New Opportunity
                         </Button>
 
@@ -77,7 +77,7 @@ export default function HomePage() {
                         <CardHeader>
                             <CardTitle>Your Active Opportunities</CardTitle>
                             <CardAction>
-                                <Button variant="link" className="cursor-pointer">View All</Button>
+                                <Button variant="link" className="cursor-pointer" onClick={async () => { router.push("/organization/opportunities");}}>View All</Button>
                             </CardAction>
                         </CardHeader>
 
@@ -103,7 +103,7 @@ export default function HomePage() {
                                                     </ItemDescription>
                                                 </ItemContent>
                                                 <ItemActions>
-                                                    <Button variant="outline" className="cursor-pointer" size="sm">
+                                                    <Button variant="outline" className="cursor-pointer" size="sm" onClick={async () => { router.push(`/organization/opportunities/${opp.id}`);}}>
                                                         View
                                                     </Button>
                                                 </ItemActions>
@@ -128,13 +128,13 @@ export default function HomePage() {
                     </CardContent>
                     <hr className="mx-10 border-gray-300" />
                     <CardContent>
-                        <Button variant="ghost" className="text-lg py-6 cursor-pointer flex gap-3 cursor-pointer">
+                        <Button variant="ghost" className="text-lg py-6 cursor-pointer flex gap-3 cursor-pointer" onClick={async () => { router.push("/organization/profile"); }}>
                             <UserRoundPen className="!w-5 !h-5 shrink-0"/>
                             View Profile
                         </Button>
                     </CardContent>
                     <CardContent>
-                        <Button variant="ghost" onClick={signOut} className="text-lg py-6 cursor-pointer flex gap-3 cursor-pointer">
+                        <Button variant="ghost" onClick={async () => { await signOut(); router.push("/"); }} className="text-lg py-6 cursor-pointer flex gap-3 cursor-pointer">
                             <LogOut className="!w-5 !h-5 shrink-0"/>
                             Log Out
                         </Button>
