@@ -2,6 +2,7 @@ import { api } from "@/lib/api";
 import {
     CurrentOrganizationSchema,
     CurrentOrganizationUpdateSchema,
+    OpportunitiesSchema,
     OrganizationSchema,
     OrganizationsSchema,
 } from "@volunteerly/shared";
@@ -62,4 +63,11 @@ export class OrganizationService {
         const parsed = OrganizationSchema.safeParse(response);
         return parsed;
     }
+
+    static async getYourOpportunities() {
+        const response = await api<unknown>("/current-organization/opportunities");
+        const asArray = Array.isArray(response) ? response : [response];
+        return OpportunitiesSchema.safeParse(asArray);
+    }
+    
 }

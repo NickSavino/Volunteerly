@@ -15,9 +15,11 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/co
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
+import volunteerly_logo from "@/assets/volunteerly_logo.png"
+
 
 export default function HomePage() {
-  const {loading, session, signOut, router, user, error, currentUser} = useOrgDashboardViewModel()
+  const {loading, session, signOut, router, user, error, currentUser, opportunities} = useOrgDashboardViewModel()
 
   if (loading || !session ) {
     return <main className="p-6">Loading...</main>
@@ -35,7 +37,7 @@ export default function HomePage() {
                 />    
         <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 ">
     
-            <div className="w-full md:w-2/3 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
+            <div className="w-full mb-5 md:mb-0 md:w-2/3 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
                 <div className="md:flex items-center justify-between">
                     <div>
                         <h1 className="text-2x1 font-bold">Welcome, {currentUser?.orgName}</h1>
@@ -52,7 +54,7 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                <div className="md:flex items-center md:justify-around">
+                <div className="md:flex items-center md:justify-around gap-5">
                     <ModStatCard
                         icon={FolderKanban}
                         label="Total Projects"
@@ -79,21 +81,36 @@ export default function HomePage() {
                             </CardAction>
                         </CardHeader>
 
-                        <CardContent>
-                            <Item variant="outline">
-                                <ItemContent>
-                                    <ItemTitle>Website Modernization <Badge>Active</Badge> </ItemTitle>
-                                    <ItemDescription>
-                                        8 Applicants, posted 2 days ago
-                                    </ItemDescription>
-                                </ItemContent>
-                                <ItemActions>
-                                    <Button variant="outline" className="cursor-pointer" size="sm">
-                                        View
-                                    </Button>
-                                </ItemActions>
-                            </Item>
-                        </CardContent>                        
+                        {opportunities.length === 0 ? (
+                            <CardContent className="flex flex-col justify-center h-full text-center justify-center">
+                                <div className="flex justify-center mb-4">
+                                    <Avatar size="lg">
+                                        <AvatarImage src={volunteerly_logo.src} />
+                                        <AvatarFallback></AvatarFallback>
+                                    </Avatar>
+                                </div>
+                                <h3 className="text-lg">No Opportunities</h3>
+                                <p>Posted Opportunities awaiting selection, or in-progress opportunities show up here.</p>
+                            </CardContent>
+                                ) : (
+                                    opportunities.map((opp) => (
+                                        <CardContent>
+                                            <Item variant="outline">
+                                                <ItemContent>
+                                                    <ItemTitle>{opp.name} <Badge>{opp.status}</Badge> </ItemTitle>
+                                                    <ItemDescription>
+                                                        Posted: {opp.postedDate} | Due: {opp.deadlineDate} | Work Type: {opp.workType}
+                                                    </ItemDescription>
+                                                </ItemContent>
+                                                <ItemActions>
+                                                    <Button variant="outline" className="cursor-pointer" size="sm">
+                                                        View
+                                                    </Button>
+                                                </ItemActions>
+                                            </Item>
+                                        </CardContent>                                                                
+                                    ))
+                                )}
                     </Card>
                 </div>
             </div>
@@ -111,14 +128,14 @@ export default function HomePage() {
                     </CardContent>
                     <hr className="mx-10 border-gray-300" />
                     <CardContent>
-                        <Button variant="ghost" className="text-xl py-6 cursor-pointer flex gap-3 cursor-pointer">
-                            <UserRoundPen className="!w-7 !h-7 shrink-0"/>
+                        <Button variant="ghost" className="text-lg py-6 cursor-pointer flex gap-3 cursor-pointer">
+                            <UserRoundPen className="!w-5 !h-5 shrink-0"/>
                             View Profile
                         </Button>
                     </CardContent>
                     <CardContent>
-                        <Button variant="ghost" onClick={signOut} className="text-xl py-6 cursor-pointer flex gap-3 cursor-pointer">
-                            <LogOut className="!w-7 !h-7 shrink-0"/>
+                        <Button variant="ghost" onClick={signOut} className="text-lg py-6 cursor-pointer flex gap-3 cursor-pointer">
+                            <LogOut className="!w-5 !h-5 shrink-0"/>
                             Log Out
                         </Button>
                     </CardContent>
