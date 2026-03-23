@@ -63,11 +63,11 @@ export function OrganizationNavbar({ currentOrg, onSignOut }: OrganizationNavbar
                 <NavigationMenu>
                     <NavigationMenuList className="flex gap-2">
                         <NavigationMenuItem>
-                            <NavigationMenuTrigger className="w-40">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex flex-col justify-center">
-                                        <p className="text-primary text-sm">{fullName}</p>
-                                        <p className="text-bright text-sm">{currentOrg?.status === "VERIFIED" ? "VERIFIED" : "UNVERIFIED"}</p>
+                            <NavigationMenuTrigger className="w-45">
+                                <div className="flex items-center w-full min-w-0 gap-2">
+                                    <div className="flex flex-col min-w-0 text-left">
+                                        <p className="text-primary text-sm truncate">{fullName}</p>
+                                        <p className="text-bright text-sm truncate">{currentOrg?.status === "VERIFIED" ? "VERIFIED" : "UNVERIFIED"}</p>
                                     </div>
                                     <Avatar>
                                         <AvatarImage src={avtImg.src} />
