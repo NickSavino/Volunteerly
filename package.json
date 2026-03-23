@@ -25,6 +25,7 @@
     "supabase": "^2.76.17"
   },
   "dependencies": {
+    "@azure-rest/ai-document-intelligence": "^1.1.0",
     "@types/express": "^5.0.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

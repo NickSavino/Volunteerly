@@ -7,7 +7,9 @@ const envSchema = z.object({
     CORS_ORIGIN: z.string(),
     DATABASE_URL: z.string().min(1),
     SUPABASE_URL: z.string().min(1),
-    SUPABASE_SERVICE_ROLE_KEY: z.string()
+    SUPABASE_SERVICE_ROLE_KEY: z.string(),
+    AZURE_DI_ENDPOINT: z.string(),
+    AZURE_DI_KEY: z.string()
 })
 
 export const env = envSchema.parse(process.env);
