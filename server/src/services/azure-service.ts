@@ -25,7 +25,6 @@ export async function callDocumentAnalysis(file:Express.Multer.File) {
     const pollerResult = await poller.pollUntilDone();
 
     const analyzeResult = (pollerResult as any).body.analyzeResult;
-    const result = analyzeResult.documents?.[0]
     
-    return result.paragraphs
+    return analyzeResult.paragraphs
 }

@@ -87,25 +87,27 @@ export async function autoApproval(orgName:string, charityNum: number, file:Expr
     try {    
         const result = await callDocumentAnalysis(file)
 
-        const officialNameParagraph = result.find((p: string) =>
-        p.toLowerCase().includes("registered under the name")
+        const officialNameParagraph = result.find((p: any) =>
+        p.content.toLowerCase().includes("registered under the name")
         );
 
-        const businessNumberParagraph = result.find((p: string) =>
-        p.toLowerCase().includes("business number is")
+        const businessNumberParagraph = result.find((p: any) =>
+        p.content.toLowerCase().includes("business number is")
         );
 
-        const officialName = officialNameParagraph?.split(":")[1]?.trim() || null
-        const officialNumber = Number(businessNumberParagraph?.split("business number is")[1]?.trim() || null)
+        const officialName = officialNameParagraph?.content.split(":")[1]?.trim().slice(0, -1) || null
+        const officialNumber = Number(businessNumberParagraph?.content.toLowerCase().split("business number is")[1]?.trim() || null)
 
         if (officialName == orgName && charityNum ==  officialNumber) {
             const temporary_CRA_Mapping: Record<string, number> = {"World Impact": 123456789};
             if (officialName in temporary_CRA_Mapping && temporary_CRA_Mapping[officialName] == officialNumber) {
                 return true
             }else {
+                console.log("Values did not match CRA DB.", officialName, officialNumber)
                 return false
             }
         }else {
+            console.log("Values did not match those given.", officialName, orgName, charityNum, officialNumber)
             return false
         }
     } catch (error) {
