@@ -38,7 +38,7 @@ export function Navbar({
                         </div>
                         <Avatar>
                             <AvatarImage src={avtImg.src} />
-                            <AvatarFallback>TMS</AvatarFallback>
+                            <AvatarFallback>ORG</AvatarFallback>
                         </Avatar>
                     </div>
                 </NavigationMenuTrigger>
