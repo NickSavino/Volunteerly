@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentOrganizationUpdateSchema, CurrentUser, CurrentUserSchema } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
 export function useOrgApplicationViewModel() {
   const router = useRouter();
@@ -64,7 +65,13 @@ export function useOrgApplicationViewModel() {
       const {data, error, success} = await OrganizationService.apply(formData)
 
       if (success) {
-        router.replace("/organization/appliedDashboard");
+        if (data.status == "VERIFIED") {
+            toast.success("Application was automatically approved!")
+            router.replace("/organization");
+        }else {
+          toast.success("Application submitted, Awaiting moderator review")
+          router.replace("/organization/appliedDashboard");
+        }
       }else {
         setError("Error submitting application.")
         console.error(error)
