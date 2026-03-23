@@ -36,6 +36,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@azure-rest/ai-document-intelligence": "^1.1.0",
     "@prisma/client": "^7.4.2",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
