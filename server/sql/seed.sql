@@ -126,10 +126,10 @@ VALUES
 
 
 --Insert Volunteers
-INSERT INTO public.volunteers (id, first_name, last_name, location, bio, hourly_value, organizations_assisted)
+INSERT INTO public.volunteers (id, first_name, last_name, location, bio, hourly_value, organizations_assisted, availability)
 VALUES
-    (vol1_id::text, 'Estelle', 'Bright',  'Calgary, AB', 'Passionate volunteer with a love for data.', 25, 2),
-    (vol2_id::text, 'Joshua',   'Bright', 'Calgary, AB', 'Software developer who loves giving back.',       30, 1);
+    (vol1_id::text, 'Estelle', 'Bright',  'Calgary, AB', 'Passionate volunteer with a love for data.', 25, 2, '["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"]'),
+    (vol2_id::text, 'Joshua',   'Bright', 'Calgary, AB', 'Software developer who loves giving back.',       30, 1, '["Mon", "Sat", "Sun"]');
 
 
 --Insert Skills
@@ -148,11 +148,11 @@ VALUES
     (gen_random_uuid()::text, vol2_id::text, skill3_id::text);
 
 --Insert Opps
-INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date)
+INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)
 VALUES
-    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',  'Create a website for our charity', 'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15'),
-    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation', 'Data Anlytics', 'Create a dashboard for our stakeholders.',              'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10'),
-    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',          'Data Science',   'Predict our Q3 donation amounts.',          'Programming experience required.', 'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01');
+    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',  'Create a website for our charity', 'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]'),
+    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation', 'Data Anlytics', 'Create a dashboard for our stakeholders.',              'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL, '["Fri", "Sat", "Sun"]'),
+    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',          'Data Science',   'Predict our Q3 donation amounts.',          'Programming experience required.', 'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
 
 
 --Applications
