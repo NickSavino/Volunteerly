@@ -1,6 +1,7 @@
 import { Prisma, OrganizationState } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { supabase } from "../lib/supabase.js";
+import { callDocumentAnalysis } from "./azure-service.js";
 
 
 export async function getCurrentOrganization(orgId: string) {
@@ -50,6 +51,13 @@ export async function applyOrganization(orgId: string, orgName:string, charityNu
     contactNum: string, missionStmt: string, causeCat: string, website:string, hqAdr: string, file:Express.Multer.File) {
 
     const savedFilePath = await saveFile(orgId, file)
+
+    const autoApprove = await autoApproval(orgName, charityNum, file)
+
+    if (autoApprove) {
+        status = "VERIFIED"
+    }
+
     const organization = await prisma.organization.update({
         where: { id: orgId },
         data: {
@@ -72,6 +80,39 @@ export async function applyOrganization(orgId: string, orgName:string, charityNu
     }
 
     return organization;
+}
+
+export async function autoApproval(orgName:string, charityNum: number, file:Express.Multer.File) {
+    
+    try {    
+        const result = await callDocumentAnalysis(file)
+
+        const officialNameParagraph = result.find((p: string) =>
+        p.toLowerCase().includes("registered under the name")
+        );
+
+        const businessNumberParagraph = result.find((p: string) =>
+        p.toLowerCase().includes("business number is")
+        );
+
+        const officialName = officialNameParagraph?.split(":")[1]?.trim() || null
+        const officialNumber = Number(businessNumberParagraph?.split("business number is")[1]?.trim() || null)
+
+        if (officialName == orgName && charityNum ==  officialNumber) {
+            const temporary_CRA_Mapping: Record<string, number> = {"World Impact": 123456789};
+            if (officialName in temporary_CRA_Mapping && temporary_CRA_Mapping[officialName] == officialNumber) {
+                return true
+            }else {
+                return false
+            }
+        }else {
+            return false
+        }
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+
 }
 
 export async function saveFile(orgId:string, file:Express.Multer.File){
