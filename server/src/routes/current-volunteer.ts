@@ -1,28 +1,12 @@
 import { Router } from "express";
-import { auth } from "../middleware/auth.js";
 import { createCurrentVolunteer, getCurrentVolunteer, updateCurrentVolunteer } from "../services/volunteer-service.js";
-
-type AuthenticatedRequest = {
-    auth?: {
-        userId: string;
-        email?: string;
-    }
-}
 
 export const currentVolunteerRouter = Router();
 
-currentVolunteerRouter.get("/", auth, async (req, res, next) => {
+currentVolunteerRouter.get("/", async (req, res, next) => {
     try {
-        const typedReq = req as typeof req & AuthenticatedRequest;
 
-        const userId = typedReq.auth?.userId;
-
-        if (!userId) {
-            return res.status(401).json({
-                error: "Unauthorized",
-                message: "User context missing."
-            });
-        }
+        const userId = req.auth!.userId;
 
         const user = await getCurrentVolunteer(userId);
         
@@ -38,19 +22,10 @@ currentVolunteerRouter.get("/", auth, async (req, res, next) => {
     }
 })
 
-currentVolunteerRouter.put("/", auth, async (req, res, next) => {
+currentVolunteerRouter.put("/", async (req, res, next) => {
   try {
-    const typedReq = req as typeof req & AuthenticatedRequest;
+    const userId = req.auth!.userId;
 
-    const userId = typedReq.auth?.userId;
-
-    console.log("got req")
-    if (!userId) {
-        return res.status(401).json({
-            error: "Unauthorized",
-            message: "User context missing."
-        });
-    }
     const { firstName, lastName, location, bio, availability, hourlyValue} = req.body;
 
     const user = await getCurrentVolunteer(userId);

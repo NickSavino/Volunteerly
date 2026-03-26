@@ -1,28 +1,12 @@
 import { Router } from "express";
-import { auth } from "../middleware/auth.js";
 import { createCurrentUser, getCurrentUser, updateCurrentUser } from "../services/user-service.js";
 
-type AuthenticatedRequest = {
-    auth?: {
-        userId: string;
-        email?: string;
-    }
-}
 
 export const currentUserRouter = Router();
 
-currentUserRouter.get("/", auth, async (req, res, next) => {
+currentUserRouter.get("/", async (req, res, next) => {
     try {
-        const typedReq = req as typeof req & AuthenticatedRequest;
-
-        const userId = typedReq.auth?.userId;
-
-        if (!userId) {
-            return res.status(401).json({
-                error: "Unauthorized",
-                message: "User context missing."
-            });
-        }
+        const userId = req.auth!.userId;
 
         const user = await getCurrentUser(userId);
         
@@ -38,18 +22,10 @@ currentUserRouter.get("/", auth, async (req, res, next) => {
     }
 })
 
-currentUserRouter.put("/", auth, async (req, res, next) => {
+currentUserRouter.put("/", async (req, res, next) => {
   try {
-    const typedReq = req as typeof req & AuthenticatedRequest;
+    const userId = req.auth!.userId;
 
-    const userId = typedReq.auth?.userId;
-
-    if (!userId) {
-        return res.status(401).json({
-            error: "Unauthorized",
-            message: "User context missing."
-        });
-    }
     const {role, email} = req.body;
 
     const user = await getCurrentUser(userId);

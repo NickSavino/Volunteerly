@@ -1,28 +1,11 @@
 import { Router } from "express";
-import { auth } from "../middleware/auth.js";
 import { applyOrganization, createCurrentOrganization, getCurrentOrganization, updateCurrentOrganization } from "../services/organization-service.js";
-
-type AuthenticatedRequest = {
-    auth?: {
-        userId: string;
-        email?: string;
-    }
-}
 
 export const currentOrganizationRouter = Router();
 
-currentOrganizationRouter.get("/", auth, async (req, res, next) => {
+currentOrganizationRouter.get("/", async (req, res, next) => {
     try {
-        const typedReq = req as typeof req & AuthenticatedRequest;
-
-        const userId = typedReq.auth?.userId;
-
-        if (!userId) {
-            return res.status(401).json({
-                error: "Unauthorized",
-                message: "User context missing."
-            });
-        }
+        const userId = req.auth!.userId;
 
         const org = await getCurrentOrganization(userId);
         
@@ -38,18 +21,10 @@ currentOrganizationRouter.get("/", auth, async (req, res, next) => {
     }
 })
 
-currentOrganizationRouter.put("/", auth, async (req, res, next) => {
+currentOrganizationRouter.put("/", async (req, res, next) => {
   try {
-    const typedReq = req as typeof req & AuthenticatedRequest;
+    const userId = req.auth!.userId;
 
-    const userId = typedReq.auth?.userId;
-
-    if (!userId) {
-        return res.status(401).json({
-            error: "Unauthorized",
-            message: "User context missing."
-        });
-    }
     const { orgName, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights} = req.body;
 
     const user = await getCurrentOrganization(userId);
@@ -73,18 +48,9 @@ currentOrganizationRouter.put("/", auth, async (req, res, next) => {
     }
 });
 
-currentOrganizationRouter.put("/apply", auth, async (req, res, next) => {
+currentOrganizationRouter.put("/apply", async (req, res, next) => {
   try {
-    const typedReq = req as typeof req & AuthenticatedRequest;
-
-    const userId = typedReq.auth?.userId;
-
-    if (!userId) {
-        return res.status(401).json({
-            error: "Unauthorized",
-            message: "User context missing."
-        });
-    }
+    const userId = req.auth!.userId;
 
     const org = await getCurrentOrganization(userId);
     
