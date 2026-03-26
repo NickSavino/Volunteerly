@@ -8,17 +8,20 @@ type SelectOption = {
 }
 
 type ModeratorFilterBarProps = {
+    // Search Options
     searchLabel: string;
     searchPlaceholder: string;
     searchValue: string;
     onSearchChange: (value: string) => void;
     onSearchEnter?: () => void;
 
+    // Sorting Options
     sortLabel: string;
     sortValue: string;
     onSortChange: (value: string) => void;
     sortOptions: SelectOption[];
 
+    //Page Size Option
     pageSizeLabel?: string;
     pageSizeValue: number;
     onPageSizeChange: (value: number) => void;
@@ -53,7 +56,7 @@ export function ModeratorFilterBar({
                         {searchLabel}
                     </label>
                 <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                    <Search className="absolute w-max left-3 top-1/2 h-4 -translate-y-1/2 text-gray-400" />
                     <input
                         type="text"
                         placeholder={searchPlaceholder}
