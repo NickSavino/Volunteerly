@@ -57,7 +57,7 @@ export async function getModeratorVolunteerList(): Promise<ModeratorVolunteerLis
 
         return {
             id: volunteer.id,
-            firstname: volunteer.firstName,
+            firstName: volunteer.firstName,
             lastName: volunteer.lastName,
             location: volunteer.location,
             flaggedByDisplayName: latestReport 
