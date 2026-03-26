@@ -15,6 +15,11 @@ model User {
     updatedAt DateTime     @updatedAt @default(now()) @map("updated_at")
 
     moderator Moderator?
+    organization Organization?
+    volunteer Volunteer?
+
+    reportsFiled VolunteerReport[] @relation("ReportsFiled")
+    reportsReceived VolunteerReport[] @relation("ReportsReceived")
 
     @@map("users")
 }
@@ -32,7 +37,7 @@ model Moderator {
 }
 
 model Organization {
-    id               String            @id @default(uuid())
+    id               String            @id
     orgName          String            @default("") @map("org_name")
     status           OrganizationState @default(CREATED)
     charityNum       Int               @default(0) @map("charity_num")
@@ -49,20 +54,27 @@ model Organization {
     createdAt        DateTime          @default(now()) @map("created_at")
     updatedAt        DateTime          @updatedAt @default(now()) @map("updated_at")
 
+    user User @relation(fields: [id], references: [id])
+
     @@map("organizations")
 }
 
 model Volunteer {
-    id                    String   @id @default(uuid())
+    id                    String   @id
     firstName             String   @default("") @map("first_name")
     lastName              String   @default("") @map("last_name")
+    status                VolunteerState @default(CLEAR)
     location              String   @default("") @map("location")
     bio                   String   @default("") @map("bio")
     availability          Json     @default("[]") @map("availability")
     hourlyValue           Int      @default(0) @map("hourly_value")
     organizationsAssisted Int      @default(0) @map("organizations_assisted")
+    averageRating Float @default(0) @map("average_rating")
+
     createdAt             DateTime @default(now()) @map("created_at")
     updatedAt             DateTime @updatedAt @default(now()) @map("updated_at")
+
+    user User @relation(fields: [id], references: [id])
 
     @@map("volunteers")
 }
@@ -81,9 +93,34 @@ enum AccountState {
     BANNED
 }
 
+enum VolunteerState {
+    CLEAR
+    FLAGGED
+    RESOLVED
+    CLOSED
+}
+
 enum OrganizationState {
     CREATED
     APPLIED
     VERIFIED
     REJECTED
+}
+
+model VolunteerReport {
+    id String @id @default(uuid())
+    
+    reason String @default("")
+    isOpen Boolean @default(true) @map("is_open")
+
+    reportedUser User @relation("ReportsReceived", fields: [reportedUserId], references: [id])
+    reportedUserId String @map("reported_user_id")
+
+    reportingUser User @relation("ReportsFiled", fields: [reportingUserId], references: [id])
+    reportingUserId String @map("reporting_user_id")
+
+ createdAt             DateTime @default(now()) @map("created_at")
+    updatedAt             DateTime @updatedAt @default(now()) @map("updated_at")
+
+    @@map("volunteer_reports")
 }
