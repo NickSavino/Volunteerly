@@ -7,120 +7,120 @@ datasource db {
 }
 
 model User {
-    id        String       @id @default(uuid())
-    email     String       @unique
-    role      UserRole     @default(VOLUNTEER)
-    status    AccountState @default(UNVERIFIED)
-    createdAt DateTime     @default(now()) @map("created_at")
-    updatedAt DateTime     @updatedAt @default(now()) @map("updated_at")
+  id        String       @id @default(uuid())
+  email     String       @unique
+  role      UserRole     @default(VOLUNTEER)
+  status    AccountState @default(UNVERIFIED)
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @default(now()) @updatedAt @map("updated_at")
 
-    moderator Moderator?
-    organization Organization?
-    volunteer Volunteer?
+  moderator    Moderator?
+  organization Organization?
+  volunteer    Volunteer?
 
-    reportsFiled VolunteerReport[] @relation("ReportsFiled")
-    reportsReceived VolunteerReport[] @relation("ReportsReceived")
+  reportsFiled    VolunteerReport[] @relation("ReportsFiled")
+  reportsReceived VolunteerReport[] @relation("ReportsReceived")
 
-    @@map("users")
+  @@map("users")
 }
 
 model Moderator {
-    id        String   @id @map("id")
-    firstName String   @default("") @map("first_name")
-    lastName  String   @default("") @map("last_name")
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
+  id        String   @id @map("id")
+  firstName String   @default("") @map("first_name")
+  lastName  String   @default("") @map("last_name")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-    user User @relation(fields: [id], references: [id])
+  user User @relation(fields: [id], references: [id])
 
-    @@map("moderators")
+  @@map("moderators")
 }
 
 model Organization {
-    id               String            @id
-    orgName          String            @default("") @map("org_name")
-    status           OrganizationState @default(CREATED)
-    charityNum       Int               @default(0) @map("charity_num")
-    docId            String            @default("") @map("doc_id")
-    contactName      String            @default("") @map("contact_name")
-    contactEmail     String            @default("") @map("contact_email")
-    contactNum       String            @default("") @map("contact_num")
-    hqAdr            String            @default("") @map("hq_adr")
-    missionStatement String            @default("") @map("mission_statement")
-    causeCategory    String            @default("") @map("cause_category")
-    website          String            @default("") @map("website")
-    impactHighlights Json              @default("[]") @map("impact_highlights")
-    rejectionReason  String            @default("") @map("rejection_reason")
-    createdAt        DateTime          @default(now()) @map("created_at")
-    updatedAt        DateTime          @updatedAt @default(now()) @map("updated_at")
+  id               String            @id
+  orgName          String            @default("") @map("org_name")
+  status           OrganizationState @default(CREATED)
+  charityNum       Int               @default(0) @map("charity_num")
+  docId            String            @default("") @map("doc_id")
+  contactName      String            @default("") @map("contact_name")
+  contactEmail     String            @default("") @map("contact_email")
+  contactNum       String            @default("") @map("contact_num")
+  hqAdr            String            @default("") @map("hq_adr")
+  missionStatement String            @default("") @map("mission_statement")
+  causeCategory    String            @default("") @map("cause_category")
+  website          String            @default("") @map("website")
+  impactHighlights Json              @default("[]") @map("impact_highlights")
+  rejectionReason  String            @default("") @map("rejection_reason")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @default(now()) @updatedAt @map("updated_at")
 
-    user User @relation(fields: [id], references: [id])
+  user User @relation(fields: [id], references: [id])
 
-    @@map("organizations")
+  @@map("organizations")
 }
 
 model Volunteer {
-    id                    String   @id
-    firstName             String   @default("") @map("first_name")
-    lastName              String   @default("") @map("last_name")
-    status                VolunteerState @default(CLEAR)
-    location              String   @default("") @map("location")
-    bio                   String   @default("") @map("bio")
-    availability          Json     @default("[]") @map("availability")
-    hourlyValue           Int      @default(0) @map("hourly_value")
-    organizationsAssisted Int      @default(0) @map("organizations_assisted")
-    averageRating Float @default(0) @map("average_rating")
+  id                    String         @id
+  firstName             String         @default("") @map("first_name")
+  lastName              String         @default("") @map("last_name")
+  status                VolunteerState @default(CLEAR)
+  location              String         @default("") @map("location")
+  bio                   String         @default("") @map("bio")
+  availability          Json           @default("[]") @map("availability")
+  hourlyValue           Int            @default(0) @map("hourly_value")
+  organizationsAssisted Int            @default(0) @map("organizations_assisted")
+  averageRating         Float          @default(0) @map("average_rating")
 
-    createdAt             DateTime @default(now()) @map("created_at")
-    updatedAt             DateTime @updatedAt @default(now()) @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-    user User @relation(fields: [id], references: [id])
+  user User @relation(fields: [id], references: [id])
 
-    @@map("volunteers")
+  @@map("volunteers")
 }
 
 enum UserRole {
-    VOLUNTEER
-    ORGANIZATION
-    MODERATOR
-    ADMIN
+  VOLUNTEER
+  ORGANIZATION
+  MODERATOR
+  ADMIN
 }
 
 enum AccountState {
-    VERIFIED
-    UNVERIFIED
-    FLAGGED
-    BANNED
+  VERIFIED
+  UNVERIFIED
+  FLAGGED
+  BANNED
 }
 
 enum VolunteerState {
-    CLEAR
-    FLAGGED
-    RESOLVED
-    CLOSED
+  CLEAR
+  FLAGGED
+  RESOLVED
+  CLOSED
 }
 
 enum OrganizationState {
-    CREATED
-    APPLIED
-    VERIFIED
-    REJECTED
+  CREATED
+  APPLIED
+  VERIFIED
+  REJECTED
 }
 
 model VolunteerReport {
-    id String @id @default(uuid())
-    
-    reason String @default("")
-    isOpen Boolean @default(true) @map("is_open")
+  id String @id @default(uuid())
 
-    reportedUser User @relation("ReportsReceived", fields: [reportedUserId], references: [id])
-    reportedUserId String @map("reported_user_id")
+  reason String  @default("")
+  isOpen Boolean @default(true) @map("is_open")
 
-    reportingUser User @relation("ReportsFiled", fields: [reportingUserId], references: [id])
-    reportingUserId String @map("reporting_user_id")
+  reportedUser   User   @relation("ReportsReceived", fields: [reportedUserId], references: [id])
+  reportedUserId String @map("reported_user_id")
 
- createdAt             DateTime @default(now()) @map("created_at")
-    updatedAt             DateTime @updatedAt @default(now()) @map("updated_at")
+  reportingUser   User   @relation("ReportsFiled", fields: [reportingUserId], references: [id])
+  reportingUserId String @map("reporting_user_id")
 
-    @@map("volunteer_reports")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("volunteer_reports")
 }
