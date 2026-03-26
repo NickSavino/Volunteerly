@@ -1,6 +1,8 @@
 import { api } from "@/lib/api";
 import {
     CurrentModeratorSchema,
+    ModeratorVolunteerList,
+    ModeratorVolunteerListSchema,
     UpdateCurrentModerator,
 } from "@volunteerly/shared";
 
@@ -21,4 +23,15 @@ export class ModeratorService {
 
         return parsed;
     }
+
+    static async getModeratorVolunteers(): Promise<ModeratorVolunteerList> {
+                const json = await api<unknown>("/moderator/volunteers");
+                const parsed = ModeratorVolunteerListSchema.safeParse(json);
+
+                if (!parsed.success) {
+                    throw new Error("Error fetching volunteers.");
+                }
+                
+                return parsed.data;
+        }
 }
