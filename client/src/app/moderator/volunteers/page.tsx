@@ -9,6 +9,10 @@ import { ExternalLink, Star } from "lucide-react";
 import { ModeratorPagination } from "../../../components/moderator/moderator-pagination";
 import { useVolunteerListViewModel, VOLUNTEER_TABS, VolunteerSortKey } from "./volunteerListVm";
 
+function getSeverity(pastFlagsCount: number) {
+    return pastFlagsCount >= 3 ? "HIGH": "MEDIUM";
+}
+
 export default function ModeratorVolunteersPage() {
     const { auth, page, filters, data, pagination } = useVolunteerListViewModel();
 
@@ -17,8 +21,8 @@ export default function ModeratorVolunteersPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="h-20 border-b bg-white" />
+        <div className="min-h-screen bg-background">
+            <div className="h-20 border-b border-border bg-card" />
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <ModeratorPageHeader
                     title={page.title}
@@ -58,10 +62,16 @@ export default function ModeratorVolunteersPage() {
                     className="p-6"
                 >
                     <div className="space-y-5">
-                        {data.rows.map((volunteer) => (
+                        {data.rows.map((volunteer) => {
+                            const showFlaggedActions =
+                                page.activeTab === "FLAGGED" && volunteer.state === "FLAGGED";
+                            
+                            const severity = getSeverity(volunteer.pastFlagsCount);
+
+                        return (
                             <div
                                 key={volunteer.id}
-                                className="overflow-hidden rounded-2xl border bg-white shadow-sm"
+                                className="overflow-hidden rounded-2xl border bg-card shadow-sm"
                             >
                                 <div className="flex flex-col gap-6 px-6 py-6 lg:flex-row lg:items-center lg:justify-between">
                                     <div className="flex items-start gap-4">
@@ -84,23 +94,61 @@ export default function ModeratorVolunteersPage() {
                                             <p className="text-2xl font-bold text-gray-900">
                                                 {volunteer.firstName} {volunteer.lastName}
                                             </p>
+                                            
                                             <p className="text-lg text-gray-500">{volunteer.location}</p>
                                             
-                                            <p className="mt-3 text-sm text-gray-700">
-                                                <span className="font-semibold">Flagged By: </span>
-                                                <span className="text-gray-500">{volunteer.flaggedByDisplayName}</span>
-                                            </p>
-
-                                            <p className="mt-1 text-sm text-gray-700">
+                                            {volunteer.flaggedByDisplayName ? (
+                                                <p className="mt-3 text-sm text-gray-700">
+                                                    <span className="font-semibold">Flagged By: </span>
+                                                    <span className="text-gray-500">{volunteer.flaggedByDisplayName}</span>
+                                                </p>
+                                            ): null }
+                                            
+                                            {volunteer.latestFlagReason ? (
+                                                <p className="mt-1 text-sm text-gray-700">
                                                 {volunteer.latestFlagReason}
                                             </p>
+                                            ) : null }
                                         </div>
                                     </div>   
+                                
+                                {showFlaggedActions ? (
+                                    <div className="flex flex-col items-end gap-3">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <span className={`rounded-full px-5 py-1.5 text-xs font-bold uppercase tracking-wide text-white ${
+                                                severity === "HIGH" ? "bg-destructive" : "bg-warning"
+                                            }`}>
+                                                {severity}
+                                            </span>
 
-                                <button className="inline-flex items-center gap-2 rounded-xl bg-yellow-400 px-6 py-4 text-xl font-bold text-black hover:bg-yellow-500">
-                                    View Profile
-                                    <ExternalLink className="h-5 w-5" />
-                                </button>
+                                            <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-4 text-xl font-bold text-foreground hover:opacity-90">
+                                                View Profile
+                                                <ExternalLink className="h-5 w-5" />
+                                            </button>
+
+                                        </div>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <button className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-foreground hover:opacity-90">
+                                                View Investigation
+                                            </button>
+
+                                            <button className="rounded-xl border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary">
+                                                Issue Warning
+                                            </button>
+
+                                            <button className="rounded-xl border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary">
+                                                Suspend
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-4 text-xl font-bold text-foreground hover:opacity-90">
+                                        View Profile
+                                        <ExternalLink className="h-5 w-5" />
+                                    </button>
+                                )}
+
+                                
                             </div>
 
                             <div className="flex flex-wrap items-center gap-3 border-t px-6 py-3 text-sm text-gray-600">
@@ -112,12 +160,12 @@ export default function ModeratorVolunteersPage() {
                                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                             </div>
                         </div>
-                        ))}
+                        )})}
                     </div>
                 </ModeratorListContainer>
 
                 <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-                    <p>Showing {pagination.startItem}-{pagination.endItem} of {pagination.totalItems} accounts</p>
+                    <p>Showing <b>{pagination.startItem}</b>-<b>{pagination.endItem}</b> of <b>{pagination.totalItems}</b> accounts</p>
                     <ModeratorPagination
                         currentPage={pagination.currentPage}
                         totalPages={pagination.totalPages}

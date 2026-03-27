@@ -49,9 +49,9 @@ export function ModeratorFilterBar({
     applyLabel = "Apply Filters",
 }: ModeratorFilterBarProps) {
     return (
-        <div className="mb-4 rounded-xl border bg-white p-4 shadow-sm">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-                <div>
+        <div className="mb-4 rounded-xl border bg-card p-4 shadow-sm">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
+                <div className="min-w-0 flex-1">
                     <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
                         {searchLabel}
                     </label>
@@ -68,14 +68,14 @@ export function ModeratorFilterBar({
                 </div>
             </div>
 
-            <div>
+            <div className="w-full lg:w-40">
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
                     {sortLabel}
                 </label>
                 <select
                     value={sortValue}
                     onChange={(e) => onSortChange(e.target.value)}
-                    className="rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    className="w-full rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
                         {sortOptions.map((option) => (
                             <option key={String(option.value)} value={option.value}>
                                 {option.label}
@@ -84,14 +84,14 @@ export function ModeratorFilterBar({
                 </select>
             </div>
 
-            <div>
+            <div className="w-full lg:w-24">
                 <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
                     {pageSizeLabel}
                 </label>
                 <select
                     value={pageSizeValue}
                     onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                    className="rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    className="w-full rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
                         {pageSizeOptions.map((n) => (
                             <option key={n} value={n}>
                                 {n}
@@ -102,7 +102,7 @@ export function ModeratorFilterBar({
 
             <button
                 onClick={onApply}
-                className="rounded-lg bg-yellow-400 px-5 py-2 text-sm font-semibold text-black hover:bg-yellow-500">
+                className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-black hover:opacity-90">
                 {applyLabel}
             </button>
         </div>

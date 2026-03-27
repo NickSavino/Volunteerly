@@ -30,7 +30,7 @@ export function ModeratorTabs<T extends string>({
         >
             <TabsList
                 variant="line"
-                className="mb-0 w-full justify-start rounded-none border-b bg-white p-0"
+                className="mb-0 w-full justify-start rounded-none border-b bg-card p-0"
             >
                 {tabs.map(({ key, label }) => (
                     <TabsTrigger
@@ -44,10 +44,10 @@ export function ModeratorTabs<T extends string>({
                         py-3 
                         text-sm 
                         font-medium
-                        text-gray-500
+                        text-muted-foreground
                         shadow-none
-                        data-[state=active]:border-yellow-400
-                        data-[state=active]:text-gray-900">
+                        data-[state=active]:border-primary
+                        data-[state=active]:text-foreground">
                             {label} ({counts[key]})
                     </TabsTrigger>
                 ))}
