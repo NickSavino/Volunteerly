@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../providers/auth-provider";
+import { Toaster } from "sonner";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>{children}</AuthProvider>
+        <Toaster position="bottom-left" expand={false} richColors={false} />
       </body>
     </html>
   );

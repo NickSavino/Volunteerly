@@ -52,24 +52,24 @@ export function ModeratorFilterBar({
         <div className="mb-4 rounded-xl border bg-card p-4 shadow-sm">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
                 <div className="min-w-0 flex-1">
-                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {searchLabel}
                     </label>
                 <div className="relative">
-                    <Search className="absolute w-max left-3 top-1/2 h-4 -translate-y-1/2 text-gray-400" />
+                    <Search className="absolute w-max left-3 top-1/2 h-4 -translate-y-1/2 text-muted-foreground" />
                     <input
                         type="text"
                         placeholder={searchPlaceholder}
                         value={searchValue}
                         onChange={(e) => onSearchChange(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && onSearchEnter?.()}
-                        className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                     />
                 </div>
             </div>
 
             <div className="w-full lg:w-40">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                     {sortLabel}
                 </label>
                 <select
