@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent } from "../ui/alert-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from "../ui/alert-dialog";
 import { Check, X } from "lucide-react";
 import { cn } from "../../lib/utils";
 
@@ -49,16 +49,22 @@ export function ConfirmActionDialog({
                         {icon ?? <Check className="h-7 w-7 text-primary" />}
                     </div>
 
-                    <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
-                        {title}
-                    </h2>
-
-                    <p className="mt-3 text-base text-muted-foreground">{message}</p>
-
-                    {additionalInfo ? (
-                        <p className="mt-2 text-sm text-muted-foreground">{additionalInfo}</p>
+                    <AlertDialogTitle asChild>
+                        <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
+                            {title}
+                        </h2>
+                    </AlertDialogTitle>
+                    
+                    <AlertDialogDescription>
+                        <p className="mt-3 text-base text-muted-foreground">{message}</p>
+                        
+                        {additionalInfo ? (
+                        <p className="mt-2 text-sm text-muted-foreground">
+                            {additionalInfo}
+                        </p>
                     ) : null}
-
+                    </AlertDialogDescription>
+                    
                     <div className="mt-8 flex items-center justify-center gap-3">
                         <AlertDialogCancel
                         className={cn(

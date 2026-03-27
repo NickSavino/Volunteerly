@@ -39,8 +39,7 @@ export function useVolunteerListViewModel() {
             try {
                 const volunteers = await ModeratorService.getModeratorVolunteers();
                 setVolunteersList(volunteers);
-            } catch (err) {
-                console.log(err)
+            } catch {
                 setError("Failed to load volunteers.");
             } finally {
                 setLoadingData(false);

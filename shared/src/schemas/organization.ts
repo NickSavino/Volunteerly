@@ -16,7 +16,7 @@ export const OrganizationSchema = z.object({
   docId: z.string(),
 
   contactName: z.string(),
-  contactEmail: z.email(),
+  contactEmail: z.string(),
   contactNum: z.string(),
 
   hqAdr: z.string(),
@@ -43,14 +43,14 @@ export const CurrentOrganizationSchema = z.object({
   charityNum: z.number().int(),
   docId: z.string(),
 
-  contactName: z.string(),
-  contactEmail: z.string(),
-  contactNum: z.string(),
+  contactName: z.string().optional(),
+  contactEmail: z.string().optional(),
+  contactNum: z.string().optional(),
 
-  hqAdr: z.string(),
-  missionStatement: z.string(),
-  causeCategory: z.string(),
-  website: z.string(),
+  hqAdr: z.string().optional(),
+  missionStatement: z.string().optional(),
+  causeCategory: z.string().optional(),
+  website: z.string().optional(),
 
   impactHighlights: z.array(z.any()).optional(),
   rejectionReason: z.string().optional(),
@@ -75,4 +75,24 @@ export const CurrentOrganizationUpdateSchema = z.object({
 
   impactHighlights: z.array(z.any()).optional(),
 });
-export type CurrentOrganizationUpdateSchema = z.infer<typeof CurrentOrganizationUpdateSchema>;
+export type CurrentOrganizationUpdate = z.infer<typeof CurrentOrganizationUpdateSchema>;
+
+export const ModeratorOrganizationListItemSchema = z.object({
+  id: z.uuid(),
+  orgName: z.string(),
+  status: OrganizationStateSchema,
+
+  charityNum: z.number().int().catch(0),
+  docId: z.string().catch(""),
+
+  website: z.string().catch(""),
+  hqAdr: z.string().catch(""),
+  causeCategory: z.string().catch(""),
+
+  createdAt: z.string(),
+  updatedAt: z.string(),
+})
+export type ModeratorOrganizationListItem = z.infer<typeof ModeratorOrganizationListItemSchema>;
+
+export const ModeratorOrganizationListSchema = z.array(ModeratorOrganizationListItemSchema);
+export type ModeratorOrganizationList = z.infer<typeof ModeratorOrganizationListSchema>;
