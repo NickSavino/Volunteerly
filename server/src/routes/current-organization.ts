@@ -1,7 +1,24 @@
 import { Router } from "express";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, updateCurrentOrganization } from "../services/organization-service.js";
+import multer from "multer";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities } from "../services/organization-service.js";
 
 export const currentOrganizationRouter = Router();
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  fileFilter: (_req, file, cb) => {
+    const allowedTypes = ["application/pdf"];
+
+    if (!allowedTypes.includes(file.mimetype)) {
+      return cb(new Error("Only PDFs are allowed!"));
+    }
+
+    cb(null, true);
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
 
 currentOrganizationRouter.get("/", async (req, res, next) => {
     try {
@@ -48,7 +65,7 @@ currentOrganizationRouter.put("/", async (req, res, next) => {
     }
 });
 
-currentOrganizationRouter.put("/apply", async (req, res, next) => {
+currentOrganizationRouter.put("/apply", auth, upload.single("document"),async (req, res, next) => {
   try {
     const userId = req.auth!.userId;
 
@@ -68,7 +85,16 @@ currentOrganizationRouter.put("/apply", async (req, res, next) => {
 
         } else {
             const { orgName, charityNum, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr} = req.body;
-            const updated_org = await applyOrganization(userId, orgName, charityNum, "APPLIED" ,contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr);    
+            const charityNum_int = Number(charityNum)
+            const file = req.file
+
+            if (!file) {
+                return res.status(500).json({
+                error: "Must submit verification document.",
+                message: "No Document Submitted."
+            });
+            }
+            const updated_org = await applyOrganization(userId, orgName, charityNum_int, "APPLIED" ,contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr, file);  
                 if (!updated_org) {
                     return res.status(500).json({
                         error: "Cannot update Organization",
@@ -86,3 +112,65 @@ currentOrganizationRouter.put("/apply", async (req, res, next) => {
     }
 
 });
+
+currentOrganizationRouter.get("/opportunities", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await getAllOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunities/active", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await getActiveOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunities/totalCount", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await countAllOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+currentOrganizationRouter.get("/opportunities/hoursTotal", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await sumTotalOpportunityHours(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunities/activeTotal", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const opportunities = await countActiveOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+

@@ -2,12 +2,15 @@ import { api } from "@/lib/api";
 import {
     CurrentOrganizationSchema,
     CurrentOrganizationUpdate,
+    OpportunitiesSchema,
     ModeratorOrganizationList,
     ModeratorOrganizationListItem,
     ModeratorOrganizationListItemSchema,
     ModeratorOrganizationListSchema,
     OrganizationSchema,
     OrganizationsSchema,
+    CountSchema,
+    TotalHoursSchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -27,10 +30,10 @@ export class OrganizationService {
         return parsed;
     }
 
-    static async apply(user: CurrentOrganizationUpdate) {
+    static async apply(formData: FormData) {
         const response = await api<unknown>("/current-organization/apply", {
             method: "PUT",
-            body: JSON.stringify(user),
+            body: formData
         });
         const parsed = CurrentOrganizationSchema.safeParse(response);
         return parsed;
@@ -46,6 +49,12 @@ export class OrganizationService {
             throw new Error("Error fetching organizations.");
         }
         return parsed.data;
+    }
+
+    static async getOrganizationDocument(file_path:string) {
+        const url = `/organization/document/?file_path=${file_path}`
+        const response = await api<Blob>(url, {responseType: "blob"});
+        return response;
     }
 
     static async approveOrganization(orgId: string) {
@@ -65,4 +74,30 @@ export class OrganizationService {
         const parsed = OrganizationSchema.safeParse(response);
         return parsed;
     }
+
+    static async getAllOpportunities() {
+        const response = await api<unknown>("/current-organization/opportunities");
+        const asArray = Array.isArray(response) ? response : [response];
+        return OpportunitiesSchema.safeParse(asArray);
+    }
+
+    static async getActiveOpportunities() {
+        const response = await api<unknown>("/current-organization/opportunities/active");
+        const asArray = Array.isArray(response) ? response : [response];
+        return OpportunitiesSchema.safeParse(asArray);
+    }
+
+    static async countAllOpportunities() {
+        const response = await api<unknown>("/current-organization/opportunities/totalCount");
+        const parsed = CountSchema.safeParse(response)
+        return parsed
+    }
+
+    static async sumTotalHours() {
+        const response = await api<unknown>("/current-organization/opportunities/hoursTotal");
+        const parsed = TotalHoursSchema.safeParse(response)
+        return parsed
+    }
+
+    
 }

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import { CurrentOrganization, CurrentUser, CurrentUserSchema } from "@volunteerly/shared";
+import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 
@@ -12,6 +12,11 @@ export function useOrgDashboardViewModel() {
   const { session, user, loading, signOut } = useAuth();
   const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([])
+  const [totalOpps, setTotalOpps] = useState(0)
+  const [activeVlt, setActiveVlt] = useState(0)
+  const [totalHours, setTotalHours] = useState(0)
+
 
   useEffect(() => {
     if (!loading && !session) {
@@ -59,5 +64,30 @@ export function useOrgDashboardViewModel() {
     loadCurrentUser();
     }, [session, router]);
 
-    return {loading, session, signOut, router, user, error, currentUser} 
+    useEffect(() => {
+      async function loadOpportunities() {
+
+        const opps = await OrganizationService.getActiveOpportunities()
+        if (!opps.success) { 
+          console.error(opps.error)
+          setError("Failed to load opportunities."); return; }
+        setOpportunities(opps.data);   
+        
+        const totalOpps = await OrganizationService.countAllOpportunities()
+        if (!totalOpps.success) { setError("Failed to get total opportunities."); return; }
+        setTotalOpps(totalOpps.data)
+        
+        const hours = await OrganizationService.sumTotalHours()
+        if (!hours.success) { setError("Failed to get hours total."); return; }
+        setTotalHours(hours.data._sum.hours || 0)
+
+        setActiveVlt(opps.data.length)
+        
+      }
+      loadOpportunities()
+    }, [])
+
+
+
+    return {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} 
 }

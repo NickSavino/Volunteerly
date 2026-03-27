@@ -67,7 +67,7 @@ export function useSignUpViewModel() {
                 const result = await OrganizationService.update_create_Organization(createdOrg);
                 if (result.success) {
                     if (data.session) {
-                        router.push("/organization");
+                        router.push("/organization/application");
                         return;
                     }
 

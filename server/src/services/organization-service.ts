@@ -1,5 +1,7 @@
 import { Prisma, OrganizationState } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
+import { supabase } from "../lib/supabase.js";
+import { callDocumentAnalysis } from "./azure-service.js";
 
 
 export async function getCurrentOrganization(orgId: string) {
@@ -46,12 +48,22 @@ export async function updateCurrentOrganization(orgId: string, contactName: stri
 }
 
 export async function applyOrganization(orgId: string, orgName:string, charityNum: number, status:OrganizationState, contactName: string, contactEmail: string,
-    contactNum: string, missionStmt: string, causeCat: string, website:string, hqAdr: string) {
+    contactNum: string, missionStmt: string, causeCat: string, website:string, hqAdr: string, file:Express.Multer.File) {
+
+    const savedFilePath = await saveFile(orgId, file)
+
+    const autoApprove = await autoApproval(orgName, charityNum, file)
+
+    if (autoApprove) {
+        status = "VERIFIED"
+    }
+
     const organization = await prisma.organization.update({
         where: { id: orgId },
         data: {
             orgName: orgName,
             charityNum: charityNum,
+            docId: savedFilePath,
             status: status,
             contactName: contactName,
             contactEmail: contactEmail,
@@ -62,11 +74,78 @@ export async function applyOrganization(orgId: string, orgName:string, charityNu
             hqAdr: hqAdr
         },
     });
+
     if (!organization) {
         throw new Error("Error applying for the Organization.");
     }
 
     return organization;
+}
+
+export async function autoApproval(orgName:string, charityNum: number, file:Express.Multer.File) {
+    
+    try {    
+        const result = await callDocumentAnalysis(file)
+
+        const officialNameParagraph = result.find((p: any) =>
+        p.content.toLowerCase().includes("registered under the name")
+        );
+
+        const businessNumberParagraph = result.find((p: any) =>
+        p.content.toLowerCase().includes("business number is")
+        );
+
+        const officialName = officialNameParagraph?.content.split(":")[1]?.trim().slice(0, -1) || null
+        const officialNumber = Number(businessNumberParagraph?.content.toLowerCase().split("business number is")[1]?.trim() || null)
+
+        if (officialName == orgName && charityNum ==  officialNumber) {
+            const temporary_CRA_Mapping: Record<string, number> = {"World Impact": 123456789};
+            if (officialName in temporary_CRA_Mapping && temporary_CRA_Mapping[officialName] == officialNumber) {
+                return true
+            }else {
+                console.log("Values did not match CRA DB.", officialName, officialNumber)
+                return false
+            }
+        }else {
+            console.log("Values did not match those given.", officialName, orgName, charityNum, officialNumber)
+            return false
+        }
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+
+}
+
+export async function saveFile(orgId:string, file:Express.Multer.File){
+    const fileName = `org_${orgId}.pdf`;
+
+    const { data, error } = await supabase.storage
+    .from("organization-documents")
+    .upload(fileName, file.buffer, {
+      contentType: file.mimetype,
+      upsert: true,
+    });
+
+    if (error) {
+        throw new Error(`Failed to upload file: ${error.message}`);
+    }
+    return data.fullPath
+}
+
+export async function downloadFile(bucket:string, filePath:string){
+    console.log(filePath)
+    const { data, error } = await supabase.storage
+        .from(bucket)
+        .download(filePath);
+
+    if (error) {
+        console.log(error)
+        throw new Error(`Failed to download file: ${error.message}`);
+    }
+        
+    const arrayBuffer = await data.arrayBuffer();
+    return Buffer.from(arrayBuffer)
 }
 
 export async function approveOrganization(orgId: string) {
@@ -113,4 +192,55 @@ export async function getAllOrganizations() {
     });
 
     return organizations;
+}
+
+export async function getAllOpportunities(organizationId: string) {
+    return prisma.opportunity.findMany({
+        where: { orgId: organizationId },
+        include: {
+            volunteer: {
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true
+                },
+            },
+        },
+    });
+}
+
+export async function countAllOpportunities(organizationId: string) {
+    return prisma.opportunity.count({
+        where: { orgId: organizationId }
+    });
+}
+
+export async function countActiveOpportunities(organizationId: string) {
+    return prisma.opportunity.count({
+        where: { orgId: organizationId, status: "OPEN"}
+    });
+}
+
+export async function sumTotalOpportunityHours(organizationId: string) {
+    return prisma.opportunity.aggregate({
+        where: { orgId: organizationId },
+        _sum: {
+            hours:true,
+        }
+    });
+}
+
+export async function getActiveOpportunities(organizationId: string) {
+    return prisma.opportunity.findMany({
+        where: { orgId: organizationId, status: "OPEN" },
+        include: {
+            volunteer: {
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true
+                },
+            },
+        },
+    });
 }
