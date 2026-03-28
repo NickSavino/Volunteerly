@@ -59,7 +59,7 @@ export default function OrgOpportunitiesPage() {
                     <Card className="h-full overflow-y-auto">
                         <CardContent className="h-full flex flex-col">
                             <Tabs defaultValue="OPEN" value={currentTab} onValueChange={setCurrentTab} className="flex flex-col h-full">
-                                <div className="w-full border-b border-gray-300">
+                                <div className="w-full border-b border-gray-300 mb-5">
                                     <TabsList className="flex w-1/2" variant="line">
                                         <TabsTrigger value="OPEN" className="cursor-pointer">Posted</TabsTrigger>
                                         <TabsTrigger value="FILLED" className="cursor-pointer">In-Progress</TabsTrigger>

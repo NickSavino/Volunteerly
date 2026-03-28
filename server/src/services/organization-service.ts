@@ -222,7 +222,7 @@ export async function countAllOpportunities(organizationId: string) {
 
 export async function countActiveOpportunities(organizationId: string) {
     return prisma.opportunity.count({
-        where: { orgId: organizationId, status: "OPEN"}
+        where: { orgId: organizationId, status: "FILLED"}
     });
 }
 
@@ -237,13 +237,18 @@ export async function sumTotalOpportunityHours(organizationId: string) {
 
 export async function getActiveOpportunities(organizationId: string) {
     return prisma.opportunity.findMany({
-        where: { orgId: organizationId, status: "OPEN" },
+        where: { orgId: organizationId, status: {in: ["OPEN", "FILLED"]}},
         include: {
             volunteer: {
                 select: {
                     id: true,
                     firstName: true,
                     lastName: true
+                },                
+            },
+            _count: {
+                select: {
+                    applications:true
                 },
             },
         },

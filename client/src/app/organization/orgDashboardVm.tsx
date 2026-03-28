@@ -81,7 +81,9 @@ export function useOrgDashboardViewModel() {
         if (!hours.success) { setError("Failed to get hours total."); return; }
         setTotalHours(hours.data._sum.hours || 0)
 
-        setActiveVlt(opps.data.length)
+        const actVolunteers = await OrganizationService.countActiveVolunteers()
+        if (!actVolunteers.success) { setError("Failed to get active volunteer count."); return; }
+        setActiveVlt(actVolunteers.data)
         
       }
       loadOpportunities()

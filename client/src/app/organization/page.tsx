@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FolderKanban, PersonStanding, Hourglass, UserRoundPen, LogOut, MessageCircleQuestionMark} from "lucide-react";
+import { FolderKanban, PersonStanding, Hourglass, UserRoundPen, LogOut, MessageCircleQuestionMark, Users, Calendar, CalendarCheck, Briefcase} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { useAuth } from "../../providers/auth-provider";
 import { Button } from "../../components/ui/button";
@@ -67,7 +67,7 @@ export default function HomePage() {
                     />
                     <ModStatCard
                         icon={Hourglass}
-                        label="Hours Contribuited"
+                        label="Total Hours"
                         count={totalHours}
                     />
                 </div>
@@ -98,9 +98,36 @@ export default function HomePage() {
                                             <Item variant="outline">
                                                 <ItemContent>
                                                     <ItemTitle>{opp.name} <Badge>{opp.status}</Badge> </ItemTitle>
-                                                    <ItemDescription>
-                                                        Posted: {opp.postedDate} | Due: {opp.deadlineDate} | Work Type: {opp.workType}
-                                                    </ItemDescription>
+                                                    {opp.status == "OPEN" ? (
+                                                        <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                            <span className="flex items-center gap-1">
+                                                                <Users/> {opp._count?.applications} Applicant(s)
+                                                            </span>
+
+                                                            <span className="flex items-center gap-1">
+                                                                <Calendar/> Posted {opp.postedDate}
+                                                            </span>
+
+                                                            <span className="flex items-center gap-1">
+                                                                <Hourglass/> Due {opp.deadlineDate}
+                                                            </span>
+                                                        </ItemDescription>
+                                                    ): 
+                                                        (<ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                            <span className="flex items-center gap-1">
+                                                                <PersonStanding/> {opp.volunteer?.firstName} {opp.volunteer?.lastName} 
+                                                            </span>
+
+                                                            <span className="flex items-center gap-1">
+                                                                <CalendarCheck/> {opp.length}
+                                                            </span>
+
+                                                            <span className="flex items-center gap-1">
+                                                                <Briefcase/> {opp.workType}
+                                                            </span>
+                                                        </ItemDescription>   
+                                                        )                                                                                                                                             
+                                                }
                                                 </ItemContent>
                                                 <ItemActions>
                                                     <Button variant="outline" className="cursor-pointer" size="sm" onClick={async () => { router.push(`/organization/opportunities/${opp.id}`);}}>

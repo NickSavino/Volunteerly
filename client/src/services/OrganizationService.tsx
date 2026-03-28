@@ -84,6 +84,12 @@ export class OrganizationService {
         return parsed
     }
 
+    static async countActiveVolunteers() {
+        const response = await api<unknown>("/current-organization/opportunities/activeTotal");
+        const parsed = CountSchema.safeParse(response)
+        return parsed
+    }
+
     static async sumTotalHours() {
         const response = await api<unknown>("/current-organization/opportunities/hoursTotal");
         const parsed = TotalHoursSchema.safeParse(response)
