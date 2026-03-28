@@ -205,6 +205,11 @@ export async function getAllOpportunities(organizationId: string) {
                     lastName: true
                 },
             },
+            _count: {
+                select: {
+                    applications:true
+                },
+            },
         },
     });
 }

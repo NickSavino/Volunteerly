@@ -27,6 +27,7 @@ export const OpportunitySchema = z.object({
         firstName: z.string(),
         lastName: z.string(),
     }).nullish(),
+    _count: z.object({ applications: z.number() }).optional()
 });
 
 export type Opportunity = z.infer<typeof OpportunitySchema>;

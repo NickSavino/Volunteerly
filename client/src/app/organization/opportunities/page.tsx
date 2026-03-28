@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FolderKanban, PersonStanding, Hourglass, UserRoundPen, LogOut, Briefcase} from "lucide-react";
+import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
@@ -61,12 +61,12 @@ export default function OrgOpportunitiesPage() {
                             <Tabs defaultValue="OPEN" value={currentTab} onValueChange={setCurrentTab} className="flex flex-col h-full">
                                 <div className="w-full border-b border-gray-300">
                                     <TabsList className="flex w-1/2" variant="line">
-                                        <TabsTrigger value="OPEN">Posted</TabsTrigger>
-                                        <TabsTrigger value="FILLED">In-Progress</TabsTrigger>
-                                        <TabsTrigger value="CLOSED">Completed</TabsTrigger>
+                                        <TabsTrigger value="OPEN" className="cursor-pointer">Posted</TabsTrigger>
+                                        <TabsTrigger value="FILLED" className="cursor-pointer">In-Progress</TabsTrigger>
+                                        <TabsTrigger value="CLOSED" className="cursor-pointer">Completed</TabsTrigger>
                                     </TabsList>
                                 </div>                           
-                                <TabsContent value={"OPEN"} className="flex flex-col justify-center h-full text-center justify-center">
+                                <TabsContent value={"OPEN"}>
                                     {filteredOpportunities.length === 0 ? (
                                         <CardContent className="flex flex-col justify-center h-full text-center justify-center">
                                             <div className="flex justify-center mb-4">
@@ -77,19 +77,29 @@ export default function OrgOpportunitiesPage() {
                                             </div>
                                             <h3 className="text-lg">No Posted Opportunities</h3>
                                             <p>Posted Opportunities awaiting selection show up here.</p>
-                                        </CardContent>
+                                        </CardContent>                                                                        
                                             ) : (
                                                 filteredOpportunities.map((opp) => (
-                                                    <Item key={opp.id} variant="outline">
+                                                    <Item key={opp.id} variant="outline" className="mb-2">
                                                         <ItemContent>
                                                             <ItemTitle>{opp.name} <Badge>{opp.status}</Badge> </ItemTitle>
-                                                            <ItemDescription>
-                                                                Posted: {opp.postedDate} | Due: {opp.deadlineDate} | Work Type: {opp.workType}
+                                                            <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                                <span className="flex items-center gap-1">
+                                                                    <Users/> {opp._count?.applications} Applicant(s)
+                                                                </span>
+
+                                                                <span className="flex items-center gap-1">
+                                                                    <Calendar/> Posted {opp.postedDate}
+                                                                </span>
+
+                                                                <span className="flex items-center gap-1">
+                                                                    <Hourglass/> Due {opp.deadlineDate}
+                                                                </span>
                                                             </ItemDescription>
                                                         </ItemContent>
                                                         <ItemActions>
                                                             <Button variant="outline" className="cursor-pointer" size="sm" onClick={async () => { router.push(`/organization/opportunities/${opp.id}`);}}>
-                                                                View
+                                                                View Applications
                                                             </Button>
                                                         </ItemActions>
                                                     </Item>
@@ -120,7 +130,7 @@ export default function OrgOpportunitiesPage() {
                                                                 </span>
 
                                                                 <span className="flex items-center gap-1">
-                                                                    <Hourglass/> Due {opp.deadlineDate}
+                                                                    <CalendarCheck/> {opp.length}
                                                                 </span>
 
                                                                 <span className="flex items-center gap-1">
