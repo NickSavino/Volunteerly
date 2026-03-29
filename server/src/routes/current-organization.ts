@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -129,12 +129,12 @@ currentOrganizationRouter.put("/apply", auth, upload.single("document"),async (r
             });
             }
             const updated_org = await applyOrganization(userId, orgName, charityNum_int, "APPLIED" ,contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr, file);  
-                if (!updated_org) {
-                    return res.status(500).json({
-                        error: "Cannot update Organization",
-                        message: "Internal server error."
-                    });
-                }
+            if (!updated_org) {
+                return res.status(500).json({
+                    error: "Cannot update Organization",
+                    message: "Internal server error."
+                });
+            }
             res.status(200).json(updated_org);
         }
 
@@ -223,6 +223,12 @@ currentOrganizationRouter.get("/opportunity", auth, async (req, res, next) => {
         }
         const opportunity = await getOrgOpportunity(userId, opp_id);
 
+        if (!opportunity) {
+            return res.status(500).json({
+                error: "Cannot fetch Opportunity",
+                message: "Opportunity doesn't exist or not owned by this organization."
+            });
+        }
 
         res.status(200).json(opportunity);
     } catch (error) {
@@ -230,3 +236,30 @@ currentOrganizationRouter.get("/opportunity", auth, async (req, res, next) => {
     }
 });
 
+currentOrganizationRouter.get("/opportunity/applications", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        }
+
+        const { opp_id } = req.query;
+        if (!opp_id || typeof opp_id !== "string") {
+            return res.status(401).json({ error: "Unavailable", message: "Opportunity context missing or invalid." });
+        }
+        const applications = await getApplications(userId, opp_id);
+
+        if (!applications) {
+            return res.status(500).json({
+                error: "Cannot fetch Applications",
+                message: "Opportunity doesn't exist or not owned by this organization."
+            });
+        }
+
+        res.status(200).json(applications);
+    } catch (error) {
+        next(error);
+    }
+});

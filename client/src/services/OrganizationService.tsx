@@ -7,7 +7,8 @@ import {
     OrganizationsSchema,
     CountSchema,
     TotalHoursSchema,
-    OpportunitySchema
+    OpportunitySchema,
+    ApplicationsSchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -99,9 +100,17 @@ export class OrganizationService {
 
     static async getOpportunity(oppId: string) {
         const url = `/current-organization/opportunity/?opp_id=${oppId}`
-        const response = await api<Blob>(url);
+        const response = await api<unknown>(url);
         const parsed = OpportunitySchema.safeParse(response)
         return parsed
     }
+
+    static async getApplications(oppId: string) {
+        const url = `/current-organization/opportunity/applications/?opp_id=${oppId}`
+        const response = await api<unknown>(url);
+        const asArray = Array.isArray(response) ? response : [response];
+        return ApplicationsSchema.safeParse(asArray);
+    }
+
     
 }

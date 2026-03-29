@@ -10,7 +10,7 @@ import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationNavbar } from "../../organization_navbar";
 import { ModStatCard } from "@/components/custom/mod_stat_card";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
@@ -27,7 +27,7 @@ export default function ViewOpportunityPage({
   params: Promise<{ id: string }>
 }) {
     const { id } = use(params);
-    const {loading, session, signOut, router, user, error, currentUser, opportunity} = useOrgViewOpportunityViewModel(id)
+    const {loading, session, signOut, router, user, error, currentUser, opportunity, applications} = useOrgViewOpportunityViewModel(id)
 
     if (loading || !session ) {
         return <main className="p-6">Loading...</main>
@@ -45,59 +45,119 @@ export default function ViewOpportunityPage({
         />    
 
         <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 mx-10">
-            <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
+            <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6 mb-10">
                 <div className="flex items-center gap-2 flex-wrap">
                     <Badge>{opportunity?.status}</Badge>
                     <p>Posted on {opportunity?.postedDate}</p>
                 </div>
                 <h2 className="text-2x1 font-bold">{opportunity?.name} - {opportunity?.workType}</h2>
                 <h3>{opportunity?.category}</h3>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Project Description</CardTitle>
-                    </CardHeader>
-                    <CardContent>{opportunity?.description}</CardContent>
-                    <CardHeader>
-                        <CardTitle>Ideal Candidate</CardTitle>
-                    </CardHeader>
-                    <CardContent>{opportunity?.candidateDesc}</CardContent>
+                {
+                    opportunity?.status == "OPEN" ?
+                    (
+                        <div>
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Project Description</CardTitle>
+                                </CardHeader>
+                                <CardContent>{opportunity?.description}</CardContent>
+                                <CardHeader>
+                                    <CardTitle>Ideal Candidate</CardTitle>
+                                </CardHeader>
+                                <CardContent>{opportunity?.candidateDesc}</CardContent>
 
-                    <CardContent className="md:flex justify-around">
-                        <span className="flex flex-1 items-center gap-3">
-                            <Calendar className="w-9 h-9"/> 
-                            <div className="flex flex-col">
-                                <span className="text-xs">Length</span>
-                                <span className="text-sm">{opportunity?.length}</span>
-                            </div>
-                        </span>
-                        <span className="flex flex-1 items-center gap-3">
-                            <CalendarX className="w-9 h-9"/> 
-                            <div className="flex flex-col">
-                                <span className="text-xs">Deadline</span>
-                                <span className="text-sm">{opportunity?.deadlineDate}</span>
-                            </div>
-                        </span>
-                    </CardContent>
-                    <CardContent className="md:flex justify-around">
-                        <span className="flex flex-1 items-center gap-3">
-                            <AlarmClockCheck className="w-9 h-9"/> 
-                            <div className="flex flex-col">
-                                <span className="text-xs">Availablity</span>
-                                <span>{opportunity?.availability}</span>
-                            </div>
-                        </span>
+                                <CardContent className="md:flex justify-around">
+                                    <span className="flex flex-1 items-center gap-3">
+                                        <Calendar className="w-9 h-9"/> 
+                                        <div className="flex flex-col">
+                                            <span className="text-xs">Length</span>
+                                            <span className="text-sm">{opportunity?.length}</span>
+                                        </div>
+                                    </span>
+                                    <span className="flex flex-1 items-center gap-3">
+                                        <CalendarX className="w-9 h-9"/> 
+                                        <div className="flex flex-col">
+                                            <span className="text-xs">Deadline</span>
+                                            <span className="text-sm">{opportunity?.deadlineDate}</span>
+                                        </div>
+                                    </span>
+                                </CardContent>
+                                <CardContent className="md:flex justify-around">
+                                    <span className="flex flex-1 items-center gap-3">
+                                        <AlarmClockCheck className="w-9 h-9"/> 
+                                        <div className="flex flex-col">
+                                            <span className="text-xs">Availablity</span>
+                                            <span>{opportunity?.availability}</span>
+                                        </div>
+                                    </span>
 
-                        <span className="flex flex-1 items-center gap-3">
-                            <Handshake className="w-9 h-9"/> 
-                            <div className="flex flex-col">
-                                <span className="text-xs">Commitment</span>
-                                <span>{opportunity?.commitmentLevel}</span>
-                            </div>
-                        </span>
-                    </CardContent>
-                </Card>
+                                    <span className="flex flex-1 items-center gap-3">
+                                        <Handshake className="w-9 h-9"/> 
+                                        <div className="flex flex-col">
+                                            <span className="text-xs">Commitment</span>
+                                            <span>{opportunity?.commitmentLevel}</span>
+                                        </div>
+                                    </span>
+                                </CardContent>
+                            </Card>
+                            <Card className="mt-5 mb-5">
+                                <CardHeader>
+                                    <CardTitle>Applications</CardTitle>
+                                </CardHeader>
 
-
+                                <CardContent>
+                                    {applications.length === 0 ? (
+                                        <CardContent className="flex flex-col justify-center h-full text-center justify-center">
+                                            <div className="flex justify-center mb-4">
+                                                <Avatar size="lg">
+                                                    <AvatarImage src={volunteerly_logo.src} />
+                                                    <AvatarFallback></AvatarFallback>
+                                                </Avatar>
+                                            </div>
+                                            <h3 className="text-lg">No Applications</h3>
+                                            <p>Volunteer Applications for this posting show up here.</p>
+                                        </CardContent>                                                                        
+                                            ) : (
+                                                applications.map((app) => (
+                                                    <Item key={app.id} variant="outline" className="mb-2">
+                                                        <ItemMedia>
+                                                            <Avatar size="lg">
+                                                                <AvatarImage src={avtImg.src} />
+                                                                <AvatarFallback>ORG</AvatarFallback>
+                                                            </Avatar>
+                                                        </ItemMedia>
+                                                        <ItemContent>
+                                                            <ItemTitle className="text-md">{app.volunteer?.firstName} {app.volunteer?.lastName}</ItemTitle>
+                                                            <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                                {app.message}
+                                                            </ItemDescription>
+                                                        </ItemContent>
+                                                        <ItemActions>
+                                                            <Badge   className={
+                                                                app.matchPercentage >= 80
+                                                                ? "bg-green-500"
+                                                                : app.matchPercentage >= 50
+                                                                ? "bg-yellow-500"
+                                                                : "bg-red-500"
+                                                            }
+                                                            >{app.matchPercentage}% Match</Badge>
+                                                            <Button variant="outline" className="cursor-pointer" size="sm" onClick={async () => { router.push(`/organization/opportunities/${opportunity.id}/application/${app.id}`);}}>
+                                                                View Application
+                                                            </Button>
+                                                        </ItemActions>
+                                                    </Item>
+                                                ))
+                                        )}     
+                                </CardContent>
+                            </Card>
+                       
+                        </div>
+                    )
+                    :
+                    (
+                        <h1> diff type</h1>
+                    )
+                }
             </div>
         </main>
     </div>
