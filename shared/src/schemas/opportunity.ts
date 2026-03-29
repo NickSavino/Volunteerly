@@ -27,7 +27,17 @@ export const OpportunitySchema = z.object({
         firstName: z.string(),
         lastName: z.string(),
     }).nullish(),
-    _count: z.object({ applications: z.number() }).optional()
+    _count: z.object({ applications: z.number() }).optional(),
+    progressUpdates: z.array(
+        z.object({
+            id: z.uuid(),
+            senderRole: z.enum(["VOLUNTEER", "ORGANIZATION"]),
+            title: z.string(),
+            description: z.string(),
+            hoursContributed: z.number(),
+            createdAt: z.string(),
+        })
+    ).nullish()
 });
 
 export type Opportunity = z.infer<typeof OpportunitySchema>;

@@ -198,7 +198,7 @@ export default function ViewOpportunityPage({
                                 </CardContent>
                             </Card>
 
-                            <Card>
+                            <Card className="mb-5">
                                 <CardContent>
                                     <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
                                         <div className="flex md:w-full justify-center md:col-span-2">
@@ -216,6 +216,41 @@ export default function ViewOpportunityPage({
                                         </div>
                                     </div>
                                 </CardContent>
+                            </Card>
+
+                            <Card className="mb-5">
+                                <CardHeader>
+                                    <CardTitle>Progress Tracking</CardTitle>
+                                </CardHeader>
+                                    {opportunity?.progressUpdates?.length === 0 ? (
+                                            <CardContent className="flex flex-col justify-center h-full text-center justify-center">
+                                                <div className="flex justify-center mb-4">
+                                                    <Avatar size="lg">
+                                                        <AvatarImage src={volunteerly_logo.src} />
+                                                        <AvatarFallback></AvatarFallback>
+                                                    </Avatar>
+                                                </div>
+                                                <h3 className="text-lg">No Updates</h3>
+                                                <p>Progress Updates for this opportunity will show up here.</p>
+                                            </CardContent>                                                                        
+                                                ) : (                        
+                                                    <CardContent className="space-y-4">
+                                                        <div className="border-l-2 pl-4 space-y-4">
+                                                            {opportunity?.progressUpdates?.map((update) => (
+                                                                <div key={update.id}>
+                                                                    <span className="absolute -left-3 top-1 w-3 h-3 rounded-full bg-primary" />
+                                                                    <p className="text-xs">{update.createdAt}</p>
+                                                                    <h5 className="text-lg">{update.title}</h5>
+                                                                    <p className="text-sm text-muted-foreground">
+                                                                    {update.description}
+                                                                    </p>
+                                                                    <p className="text-xs">{update.senderRole}</p>
+                                                                </div>
+                                                                ))}
+                                                        </div>
+                                                    </CardContent>                                                                        
+                                                )     
+                                            }                             
                             </Card>
                         </div>                        
                     )

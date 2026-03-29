@@ -261,7 +261,10 @@ export async function getOrgOpportunity(orgId: string, oppId: string) {
         include: {
         volunteer: {
             select: { id: true, firstName: true, lastName: true },
-        },       
+        },
+        progressUpdates: {
+            select:{id:true, senderRole:true, title:true, description:true, hoursContributed:true, createdAt:true}
+        }
     }
     });
     return org;
