@@ -166,13 +166,23 @@ export default function OrgOpportunitiesPage() {
                                                     <Item key={opp.id} variant="outline">
                                                         <ItemContent>
                                                             <ItemTitle>{opp.name} <Badge>{opp.status}</Badge> </ItemTitle>
-                                                            <ItemDescription>
-                                                                Posted: {opp.postedDate} | Due: {opp.deadlineDate} | Work Type: {opp.workType}
+                                                            <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                                <span className="flex items-center gap-1">
+                                                                    <PersonStanding/> {opp.volunteer?.firstName} {opp.volunteer?.lastName} 
+                                                                </span>
+
+                                                                <span className="flex items-center gap-1">
+                                                                    <CalendarCheck/> {opp.length}
+                                                                </span>
+
+                                                                <span className="flex items-center gap-1">
+                                                                    <Briefcase/> {opp.workType}
+                                                                </span>
                                                             </ItemDescription>
                                                         </ItemContent>
                                                         <ItemActions>
                                                             <Button variant="outline" className="cursor-pointer" size="sm" onClick={async () => { router.push(`/organization/opportunities/${opp.id}`);}}>
-                                                                View
+                                                                View History
                                                             </Button>
                                                         </ItemActions>
                                                     </Item>

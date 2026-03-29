@@ -254,3 +254,15 @@ export async function getActiveOpportunities(organizationId: string) {
         },
     });
 }
+
+export async function getOrgOpportunity(orgId: string, oppId: string) {
+    const org = await prisma.opportunity.findFirst({
+        where: { id: oppId, orgId:orgId },
+        include: {
+        volunteer: {
+            select: { id: true, firstName: true, lastName: true },
+        },       
+    }
+    });
+    return org;
+}

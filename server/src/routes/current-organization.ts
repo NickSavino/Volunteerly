@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -203,6 +203,28 @@ currentOrganizationRouter.get("/opportunities/activeTotal", auth, async (req, re
 
         const opportunities = await countActiveOpportunities(userId);
         res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunity", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        }
+
+        const { opp_id } = req.query;
+        if (!opp_id || typeof opp_id !== "string") {
+            return res.status(401).json({ error: "Unavailable", message: "Opportunity context missing or invalid." });
+        }
+        const opportunity = await getOrgOpportunity(userId, opp_id);
+
+
+        res.status(200).json(opportunity);
     } catch (error) {
         next(error);
     }

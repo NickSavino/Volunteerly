@@ -6,7 +6,8 @@ import {
     OrganizationSchema,
     OrganizationsSchema,
     CountSchema,
-    TotalHoursSchema
+    TotalHoursSchema,
+    OpportunitySchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -96,5 +97,11 @@ export class OrganizationService {
         return parsed
     }
 
+    static async getOpportunity(oppId: string) {
+        const url = `/current-organization/opportunity/?opp_id=${oppId}`
+        const response = await api<Blob>(url);
+        const parsed = OpportunitySchema.safeParse(response)
+        return parsed
+    }
     
 }
