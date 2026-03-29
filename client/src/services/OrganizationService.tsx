@@ -119,6 +119,13 @@ export class OrganizationService {
         const parsed = ApplicationSchema.safeParse(response)
         return parsed
     }
-
-   
+    
+    static async selectOppVolunteer(oppId: string, vltId:string) {
+        const response = await api<unknown>("/current-organization/opportunity/select", {
+            method: "PUT",
+            body: JSON.stringify({ oppId, vltId }),
+        });
+        const parsed = OpportunitySchema.safeParse(response);
+        return parsed;
+    }   
 }

@@ -62,7 +62,11 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
 
     useEffect(() => {
       async function loadApplication() {
-
+        const opp = await OrganizationService.getOpportunity(oppId)
+        if (!(opp.data?.status == "OPEN")) {
+          router.replace(`/organization/opportunities/${oppId}`);
+          return;
+        }
         const app = await OrganizationService.getApplication(appId)
         if (!app.success) { 
           console.error(app.error)
@@ -72,5 +76,15 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
       loadApplication()
     }, [appId])
 
-    return {loading, session, signOut, router, user, error, currentUser, application} 
+    async function selectVolunteer() {
+      if (application?.volunteer?.id){
+        const updated_opp = await OrganizationService.selectOppVolunteer(oppId, application.volunteer.id)
+        if (updated_opp.success) {
+            router.replace(`/organization/opportunities/${oppId}`);
+            return;
+        }
+      }
+      setError("Cannot Select Volunteer")
+    }
+    return {loading, session, signOut, router, user, error, currentUser, application, selectVolunteer} 
 }

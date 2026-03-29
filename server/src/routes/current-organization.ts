@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -288,6 +288,37 @@ currentOrganizationRouter.get("/opportunity/application", auth, async (req, res,
 
         res.status(200).json(application);
     } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { oppId, vltId } = req.body;
+
+        const opportunity = await getOrgOpportunity(userId, oppId);
+
+        if (!opportunity) {
+            return res.status(500).json({
+                error: "Cannot fetch Opportunity",
+                message: "Opportunity doesn't exist or not owned by this organization."
+            });
+        }
+
+        const selected_vlt = await selectOppVolunteer(oppId, vltId);
+        if (!selected_vlt) {
+            return res.status(500).json({
+                error: "Cannot Select Volunteer",
+                message: "Error selecting Volunteer for this opportunity."
+            });
+        }
+        
+        res.status(200).json(selected_vlt);
+    } catch (error) {
+        console.error(error);
         next(error);
     }
 });

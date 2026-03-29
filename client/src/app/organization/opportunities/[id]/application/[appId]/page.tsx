@@ -26,7 +26,7 @@ export default function ViewApplicationPage({
   params: Promise<{ id: string, appId: string }>
 }) {
     const { id, appId } = use(params);
-    const {loading, session, signOut, router, user, error, currentUser, application} = useOppApplicationViewModel(id, appId)
+    const {loading, session, signOut, router, user, error, currentUser, application, selectVolunteer} = useOppApplicationViewModel(id, appId)
 
     if (loading || !session ) {
         return <main className="p-6">Loading...</main>
@@ -108,7 +108,7 @@ export default function ViewApplicationPage({
                     </CardContent>
                 </Card>
 
-                <Button className="cursor-pointer">Approve Application</Button>
+                <Button className="cursor-pointer" onClick={selectVolunteer}>Approve Application</Button>
 
             </div>
         </main>
