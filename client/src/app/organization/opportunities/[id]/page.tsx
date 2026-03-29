@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake} from "lucide-react";
+import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
@@ -45,11 +45,23 @@ export default function ViewOpportunityPage({
         />    
 
         <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 mx-10">
+
             <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6 mb-10">
-                <div className="flex items-center gap-2 flex-wrap">
-                    <Badge>{opportunity?.status}</Badge>
-                    <p>Posted on {opportunity?.postedDate}</p>
+                <div>
+                    <Button
+                    variant="ghost"
+                    className="cursor-pointer"
+                    onClick={() => router.back()}
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back
+                    </Button>
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <Badge>{opportunity?.status}</Badge>
+                        <p>Posted on {opportunity?.postedDate}</p>
+                    </div>
                 </div>
+                
                 <h2 className="text-2x1 font-bold">{opportunity?.name} - {opportunity?.workType}</h2>
                 <h3>{opportunity?.category}</h3>
                 {

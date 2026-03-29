@@ -278,3 +278,15 @@ export async function getApplications(orgId: string, oppId: string) {
     });
     return org;
 }
+
+export async function getOrgApplication(orgId: string, appId: string) {
+    const org = await prisma.application.findFirst({
+        where: { id: appId, opportunity:{orgId:orgId} },
+        include: {
+        volunteer: {
+            select: { id: true, firstName: true, lastName: true, bio:true, location:true, availability:true },
+        },       
+    }
+    });
+    return org;
+}

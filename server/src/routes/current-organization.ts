@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -259,6 +259,34 @@ currentOrganizationRouter.get("/opportunity/applications", auth, async (req, res
         }
 
         res.status(200).json(applications);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunity/application", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        }
+
+        const { app_id } = req.query;
+        if (!app_id || typeof app_id !== "string") {
+            return res.status(401).json({ error: "Unavailable", message: "Application context missing or invalid." });
+        }
+        const application = await getOrgApplication(userId, app_id);
+
+        if (!application) {
+            return res.status(500).json({
+                error: "Cannot fetch Application",
+                message: "Application doesn't exist or opportunity not owned by this organization."
+            });
+        }
+
+        res.status(200).json(application);
     } catch (error) {
         next(error);
     }

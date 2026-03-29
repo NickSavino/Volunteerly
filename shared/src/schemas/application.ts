@@ -15,7 +15,9 @@ export const ApplicationSchema = z.object({
         id: z.uuid(),
         firstName: z.string(),
         lastName: z.string(),
-        bio: z.string().optional()
+        bio: z.string(),
+        location: z.string().optional(),
+        availability: z.array(z.any()).optional(),
     }).optional(),
 });
 

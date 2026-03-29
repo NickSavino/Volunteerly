@@ -8,7 +8,8 @@ import {
     CountSchema,
     TotalHoursSchema,
     OpportunitySchema,
-    ApplicationsSchema
+    ApplicationsSchema,
+    ApplicationSchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -112,5 +113,12 @@ export class OrganizationService {
         return ApplicationsSchema.safeParse(asArray);
     }
 
-    
+    static async getApplication(appId: string) {
+        const url = `/current-organization/opportunity/application/?app_id=${appId}`
+        const response = await api<unknown>(url);
+        const parsed = ApplicationSchema.safeParse(response)
+        return parsed
+    }
+
+   
 }
