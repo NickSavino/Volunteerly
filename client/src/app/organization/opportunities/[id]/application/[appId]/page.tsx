@@ -61,18 +61,18 @@ export default function ViewApplicationPage({
 
                 <Card>
                     <CardContent>
-                        <div className="grid grid-cols-8 gap-6">
-                            <div className="col-span-2">
-                                <img src={avtImg.src} className="w-1/2 rounded-lg object-cover"/>
+                        <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
+                            <div className="flex md:w-full justify-center md:col-span-2">
+                                <img src={avtImg.src} className="w-24 md:w-30 rounded-lg object-cover"/>
                             </div>
 
-                            <div className="col-span-4 flex flex-col gap-3">
+                            <div className="md:col-span-4 flex flex-col gap-3">
                                 <h3>{application?.volunteer?.firstName} {application?.volunteer?.lastName}</h3>
                                 <p>Applied {application?.dateApplied}</p>
                                 <p className="text-sm">{application?.volunteer?.bio}</p>
                             </div>
 
-                            <div className="col-span-2 flex flex-col gap-3">
+                            <div className="md:col-span-2 flex flex-col items-center gap-3">
                                 <Badge   className={
                                     (application?.matchPercentage || 0) >= 80
                                     ? "bg-green-500"
@@ -81,7 +81,7 @@ export default function ViewApplicationPage({
                                     : "bg-red-500"
                                 }>
                                 {application?.matchPercentage}% Match</Badge>                                
-                                <span className="flex flex-1 items-center gap-3">
+                                <span className="flex flex-1 items-center gap-3 justify-center md:justify-start">
                                     <MapPin/> 
                                     <div className="flex flex-col">
                                         <span className="text-sm">{application?.volunteer?.location}</span>

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft} from "lucide-react";
+import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft, MessageSquareCheck, MessageCircleMore, UserStar} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
@@ -62,8 +62,7 @@ export default function ViewOpportunityPage({
                     </div>
                 </div>
                 
-                <h2 className="text-2x1 font-bold">{opportunity?.name} - {opportunity?.workType}</h2>
-                <h3>{opportunity?.category}</h3>
+                <h2 className="text-2x1 font-bold">{opportunity?.name} - {opportunity?.workType} - {opportunity?.category}</h2>
                 {
                     opportunity?.status == "OPEN" ?
                     (
@@ -167,7 +166,58 @@ export default function ViewOpportunityPage({
                     )
                     :
                     (
-                        <h1> diff type</h1>
+                        <div> 
+                            <Card className="mb-5">
+                                <CardHeader>
+                                    <CardTitle>Opportunity Overview</CardTitle>
+                                    <CardDescription>{opportunity?.description}</CardDescription>
+                                </CardHeader>
+                                <CardContent className="md:flex justify-around">
+                                    <span className="flex flex-1 items-center gap-3">
+                                        <Calendar className="w-9 h-9"/> 
+                                        <div className="flex flex-col">
+                                            <span className="text-xs">Length</span>
+                                            <span className="text-sm">{opportunity?.length}</span>
+                                        </div>
+                                    </span>
+                                    <span className="flex flex-1 items-center gap-3">
+                                        <AlarmClockCheck className="w-9 h-9"/> 
+                                        <div className="flex flex-col">
+                                            <span className="text-xs">Availablity</span>
+                                            <span>{opportunity?.availability}</span>
+                                        </div>
+                                    </span>
+
+                                    <span className="flex flex-1 items-center gap-3">
+                                        <Handshake className="w-9 h-9"/> 
+                                        <div className="flex flex-col">
+                                            <span className="text-xs">Commitment</span>
+                                            <span>{opportunity?.commitmentLevel}</span>
+                                        </div>
+                                    </span>
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardContent>
+                                    <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
+                                        <div className="flex md:w-full justify-center md:col-span-2">
+                                            <img src={avtImg.src} className="w-22 rounded-lg object-cover"/>
+                                        </div>
+
+                                        <div className="md:col-span-4 flex flex-col gap-3">
+                                            <p>Assigned Volunteer</p>
+                                            <h3>{opportunity?.volunteer?.firstName} {opportunity?.volunteer?.lastName}</h3>
+                                        </div>
+
+                                        <div className="md:col-span-2 flex flex-col gap-3">
+                                            <Button variant="outline" data-icon="inline-end" className="cursor-pointer"> <UserStar/> Review</Button>
+                                            <Button variant="outline" data-icon="inline-end" className="cursor-pointer"> <MessageCircleMore/> Message</Button>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>                        
                     )
                 }
             </div>
