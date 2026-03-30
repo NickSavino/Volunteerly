@@ -27,7 +27,7 @@ export default function ViewOpportunityPage({
   params: Promise<{ id: string }>
 }) {
     const { id } = use(params);
-    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications} = useOrgViewOpportunityViewModel(id)
+    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity} = useOrgViewOpportunityViewModel(id)
 
     if (loading || !session || fetching) {
         return <main className="p-6">Loading...</main>
@@ -58,7 +58,18 @@ export default function ViewOpportunityPage({
                     </Button>
                     <div className="flex items-center gap-2 flex-wrap">
                         <Badge>{opportunity?.status}</Badge>
-                        <p>Posted on {opportunity?.postedDate.toLocaleDateString()}</p>
+                        {opportunity?.status == "OPEN"? (
+                            <p>Posted on {opportunity?.postedDate.toLocaleDateString()}</p>
+                        ): 
+                        (opportunity?.status == "FILLED"? 
+                            (
+                                <p>Started on {opportunity?.updatedAt.toLocaleDateString()}</p>
+                            ):
+                            (
+                                <p>Completed on {opportunity?.updatedAt.toLocaleDateString()}</p>
+                            )
+                        )
+                        }
                     </div>
                 </div>
                 
@@ -97,8 +108,8 @@ export default function ViewOpportunityPage({
                                     <span className="flex flex-1 items-center gap-3">
                                         <AlarmClockCheck className="w-9 h-9"/> 
                                         <div className="flex flex-col">
-                                            <span className="text-xs">Availablity</span>
-                                            <span>{opportunity?.availability}</span>
+                                            <span className="text-xs">Availability</span>
+                                            <span>{opportunity?.availability.join(", ")}</span>
                                         </div>
                                     </span>
 
@@ -173,7 +184,7 @@ export default function ViewOpportunityPage({
                                     <CardDescription>{opportunity?.description}</CardDescription>
                                     {opportunity?.status == "FILLED" &&
                                         <CardAction>
-                                            <Button className="cursor-pointer">Complete Opportunity</Button>
+                                            <Button className="cursor-pointer" onClick={completeOpportunity}>Complete Opportunity</Button>
                                         </CardAction>
                                     }
 
@@ -189,8 +200,8 @@ export default function ViewOpportunityPage({
                                     <span className="flex flex-1 items-center gap-3">
                                         <AlarmClockCheck className="w-9 h-9"/> 
                                         <div className="flex flex-col">
-                                            <span className="text-xs">Availablity</span>
-                                            <span>{opportunity?.availability}</span>
+                                            <span className="text-xs">Availability</span>
+                                            <span>{opportunity?.availability.join(", ")}</span>
                                         </div>
                                     </span>
 

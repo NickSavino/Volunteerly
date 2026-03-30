@@ -127,5 +127,13 @@ export class OrganizationService {
         });
         const parsed = OpportunitySchema.safeParse(response);
         return parsed;
+    }
+    static async completeOpportunity(oppId: string) {
+        const response = await api<unknown>("/current-organization/opportunity/complete", {
+            method: "PUT",
+            body: JSON.stringify({ oppId}),
+        });
+        const parsed = OpportunitySchema.safeParse(response);
+        return parsed;
     }   
 }

@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { Application, CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
 export function useOrgViewOpportunityViewModel(id: string) {
   const router = useRouter();
@@ -15,6 +16,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
   const [opportunity, setOpportunity] = useState<Opportunity>()
   const [applications, setApplications] = useState<Application[]>([])
   const [fetching, setFetching] = useState(true)
+  const [reload, setReload] = useState(false)
 
   useEffect(() => {
     if (!loading && !session) {
@@ -87,9 +89,23 @@ export function useOrgViewOpportunityViewModel(id: string) {
           setApplications(apps.data);   
         }
         setFetching(false)
+        setReload(false)
       }
       loadOpportunities()
-    }, [id])
+    }, [id, reload])
 
-    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications} 
+    async function completeOpportunity() {
+      if (opportunity?.status == "FILLED"){
+        const completed_opp = await OrganizationService.completeOpportunity(opportunity.id)
+        if (completed_opp.success) {
+            toast.success("Opportunity completed!")
+            setReload(true)
+            return
+        }
+      }
+      setError("Cannot Complete Opportunity")
+    }
+    
+
+    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity} 
 }

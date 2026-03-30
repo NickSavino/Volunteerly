@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -317,6 +317,44 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
         }
         
         res.status(200).json(selected_vlt);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+currentOrganizationRouter.put("/opportunity/complete", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { oppId } = req.body;
+
+        const opportunity = await getOrgOpportunity(userId, oppId);
+
+        if (!opportunity) {
+            return res.status(500).json({
+                error: "Cannot fetch Opportunity",
+                message: "Opportunity doesn't exist or not owned by this organization."
+            });
+        } 
+
+        if (!(opportunity.status == "FILLED")){
+            return res.status(500).json({
+                error: "Cannot Complete Opportunity",
+                message: "Opportunity must be filled status to complete."
+            });
+        }
+
+        const completed_opp = await completeOpportunity(oppId);
+        if (!completed_opp) {
+            return res.status(500).json({
+                error: "Cannot Complete Opportunity",
+                message: "Error completing this opportunity."
+            });
+        }
+        
+        res.status(200).json(completed_opp);
     } catch (error) {
         console.error(error);
         next(error);

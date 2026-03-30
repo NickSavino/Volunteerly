@@ -299,11 +299,27 @@ export async function selectOppVolunteer(oppId:string, vltId:string) {
         where: { id: oppId },
         data: {
             volId: vltId,
-            status: "FILLED"
+            status: "FILLED",
+            updatedAt: new Date()
         },
     });
     if (!organization) {
         throw new Error("Error selecting the Volunteer.");
+    }
+
+    return organization;
+}
+
+export async function completeOpportunity(oppId:string) {
+    const organization = await prisma.opportunity.update({
+        where: { id: oppId },
+        data: {
+            status: "CLOSED",
+            updatedAt: new Date()
+        },
+    });
+    if (!organization) {
+        throw new Error("Error completing Opportunity.");
     }
 
     return organization;
