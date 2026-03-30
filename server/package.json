@@ -13,9 +13,9 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:empty": "prisma migrate dev --create-only",
     "prisma:migrate:deploy": "prisma migrate deploy",
-"db:auth-bootstrap": "docker exec -i supabase_db_seng513-202601-pg-40 psql -U postgres -d postgres < sql/supabase-auth-bootstrap.sql",
-"db:seed": "docker exec -i supabase_db_seng513-202601-pg-40 psql -U postgres -d postgres < sql/seed.sql",
-"db:reset": "prisma migrate reset --force && npm run db:auth-bootstrap && npm run db:seed",  
+    "db:auth-bootstrap": "docker exec -i supabase_db_seng513-202601-pg-40 psql -U postgres -d postgres < sql/supabase-auth-bootstrap.sql",
+    "db:seed": "docker exec -i supabase_db_seng513-202601-pg-40 psql -U postgres -d postgres < sql/seed.sql",
+    "db:reset": "prisma migrate reset --force && npm run db:auth-bootstrap && npm run db:seed",
     "db:setup": "npm run prisma:migrate && npm run db:auth-bootstrap",
     "db:setup-prod": "prisma migrate deploy && npm run db:auth-bootstrap",
     "typecheck": "prisma generate && tsc -p tsconfig.json --noEmit"
