@@ -13,11 +13,11 @@ export const OpportunitySchema = z.object({
     commitmentLevel: z.enum(["FLEXIBLE", "PART_TIME", "FULL_TIME"]),
     hours: z.number(),
     length: z.string(),
-    deadlineDate: z.string().nullable(),
+    deadlineDate: z.coerce.date().nullable(),
     availability: z.array(z.any()),
-    postedDate: z.string(),
-    createdAt: z.string(),
-    updatedAt: z.string(),
+    postedDate: z.coerce.date(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
     organization: z.object({
         id: z.uuid(),
         orgName: z.string(),
@@ -35,7 +35,7 @@ export const OpportunitySchema = z.object({
             title: z.string(),
             description: z.string(),
             hoursContributed: z.number(),
-            createdAt: z.string(),
+            createdAt: z.coerce.date(),
         })
     ).nullish()
 });

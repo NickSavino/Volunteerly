@@ -14,6 +14,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
   const [error, setError] = useState<string | null>(null);
   const [opportunity, setOpportunity] = useState<Opportunity>()
   const [applications, setApplications] = useState<Application[]>([])
+  const [fetching, setFetching] = useState(true)
 
   useEffect(() => {
     if (!loading && !session) {
@@ -63,11 +64,19 @@ export function useOrgViewOpportunityViewModel(id: string) {
 
     useEffect(() => {
       async function loadOpportunities() {
-
+        setFetching(true)
         const opp = await OrganizationService.getOpportunity(id)
         if (!opp.success) { 
           console.error(opp.error)
           setError("Failed to load opportunities."); return; }
+
+        const sortedApp = {
+          ...opp.data,
+          progressUpdates: opp.data?.progressUpdates?.sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          ),
+        };
+
         setOpportunity(opp.data);   
         
         if (opp.data.status == "OPEN") {
@@ -77,9 +86,10 @@ export function useOrgViewOpportunityViewModel(id: string) {
             setError("Failed to load opportunities."); return; }
           setApplications(apps.data);   
         }
+        setFetching(false)
       }
       loadOpportunities()
     }, [id])
 
-    return {loading, session, signOut, router, user, error, currentUser, opportunity, applications} 
+    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications} 
 }

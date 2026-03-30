@@ -6,7 +6,7 @@ export const ApplicationSchema = z.object({
     volId: z.uuid().nullable(),
     matchPercentage: z.number(),
     message: z.string(),
-    dateApplied: z.string(),
+    dateApplied: z.coerce.date(),
     opportunity: z.object({
         id: z.uuid(),
         name: z.string(),        

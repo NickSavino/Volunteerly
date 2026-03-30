@@ -26,9 +26,9 @@ export default function ViewApplicationPage({
   params: Promise<{ id: string, appId: string }>
 }) {
     const { id, appId } = use(params);
-    const {loading, session, signOut, router, user, error, currentUser, application, selectVolunteer} = useOppApplicationViewModel(id, appId)
+    const {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} = useOppApplicationViewModel(id, appId)
 
-    if (loading || !session ) {
+    if (loading || !session || fetching) {
         return <main className="p-6">Loading...</main>
     }
 
@@ -68,7 +68,7 @@ export default function ViewApplicationPage({
 
                             <div className="md:col-span-4 flex flex-col gap-3">
                                 <h3>{application?.volunteer?.firstName} {application?.volunteer?.lastName}</h3>
-                                <p>Applied {application?.dateApplied}</p>
+                                <p>Applied {application?.dateApplied?.toLocaleDateString()}</p>
                                 <p className="text-sm">{application?.volunteer?.bio}</p>
                             </div>
 

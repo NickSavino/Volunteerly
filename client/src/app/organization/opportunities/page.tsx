@@ -89,11 +89,11 @@ export default function OrgOpportunitiesPage() {
                                                                 </span>
 
                                                                 <span className="flex items-center gap-1">
-                                                                    <Calendar/> Posted {opp.postedDate}
+                                                                    <Calendar/> Posted {opp.postedDate?.toLocaleDateString()}
                                                                 </span>
 
                                                                 <span className="flex items-center gap-1">
-                                                                    <Hourglass/> Due {opp.deadlineDate}
+                                                                    <Hourglass/> Due {opp.deadlineDate?.toLocaleDateString()}
                                                                 </span>
                                                             </ItemDescription>
                                                         </ItemContent>

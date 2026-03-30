@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { Application, CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
 export function useOppApplicationViewModel(oppId: string, appId: string) {
   const router = useRouter();
@@ -13,6 +14,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
   const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
   const [application, setApplication] = useState<Application>()
+  const [fetching, setFetching] = useState(true)
 
   useEffect(() => {
     if (!loading && !session) {
@@ -62,6 +64,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
 
     useEffect(() => {
       async function loadApplication() {
+        setFetching(true)
         const opp = await OrganizationService.getOpportunity(oppId)
         if (!(opp.data?.status == "OPEN")) {
           router.replace(`/organization/opportunities/${oppId}`);
@@ -72,6 +75,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
           console.error(app.error)
           setError("Failed to load application."); return; }
         setApplication(app.data);   
+        setFetching(false)
       }
       loadApplication()
     }, [appId])
@@ -80,11 +84,12 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
       if (application?.volunteer?.id){
         const updated_opp = await OrganizationService.selectOppVolunteer(oppId, application.volunteer.id)
         if (updated_opp.success) {
+            toast.success("Volunteer Selected, Opportunity is now filled.")
             router.replace(`/organization/opportunities/${oppId}`);
             return;
         }
       }
       setError("Cannot Select Volunteer")
     }
-    return {loading, session, signOut, router, user, error, currentUser, application, selectVolunteer} 
+    return {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} 
 }

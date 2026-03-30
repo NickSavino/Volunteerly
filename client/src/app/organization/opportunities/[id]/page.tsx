@@ -27,9 +27,9 @@ export default function ViewOpportunityPage({
   params: Promise<{ id: string }>
 }) {
     const { id } = use(params);
-    const {loading, session, signOut, router, user, error, currentUser, opportunity, applications} = useOrgViewOpportunityViewModel(id)
+    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications} = useOrgViewOpportunityViewModel(id)
 
-    if (loading || !session ) {
+    if (loading || !session || fetching) {
         return <main className="p-6">Loading...</main>
     }
 
@@ -58,7 +58,7 @@ export default function ViewOpportunityPage({
                     </Button>
                     <div className="flex items-center gap-2 flex-wrap">
                         <Badge>{opportunity?.status}</Badge>
-                        <p>Posted on {opportunity?.postedDate}</p>
+                        <p>Posted on {opportunity?.postedDate.toLocaleDateString()}</p>
                     </div>
                 </div>
                 
@@ -89,7 +89,7 @@ export default function ViewOpportunityPage({
                                         <CalendarX className="w-9 h-9"/> 
                                         <div className="flex flex-col">
                                             <span className="text-xs">Deadline</span>
-                                            <span className="text-sm">{opportunity?.deadlineDate}</span>
+                                            <span className="text-sm">{opportunity?.deadlineDate?.toLocaleDateString()}</span>
                                         </div>
                                     </span>
                                 </CardContent>
@@ -171,6 +171,12 @@ export default function ViewOpportunityPage({
                                 <CardHeader>
                                     <CardTitle>Opportunity Overview</CardTitle>
                                     <CardDescription>{opportunity?.description}</CardDescription>
+                                    {opportunity?.status == "FILLED" &&
+                                        <CardAction>
+                                            <Button className="cursor-pointer">Complete Opportunity</Button>
+                                        </CardAction>
+                                    }
+
                                 </CardHeader>
                                 <CardContent className="md:flex justify-around">
                                     <span className="flex flex-1 items-center gap-3">
@@ -221,6 +227,12 @@ export default function ViewOpportunityPage({
                             <Card className="mb-5">
                                 <CardHeader>
                                     <CardTitle>Progress Tracking</CardTitle>
+                                    {opportunity?.status == "FILLED" &&
+                                        <CardAction>
+                                            <Button variant={"outline"} className="cursor-pointer">Add Update</Button>
+                                        </CardAction>
+                                    }
+
                                 </CardHeader>
                                     {opportunity?.progressUpdates?.length === 0 ? (
                                             <CardContent className="flex flex-col justify-center h-full text-center justify-center">
@@ -239,7 +251,7 @@ export default function ViewOpportunityPage({
                                                             {opportunity?.progressUpdates?.map((update) => (
                                                                 <div key={update.id}>
                                                                     <span className="absolute -left-3 top-1 w-3 h-3 rounded-full bg-primary" />
-                                                                    <p className="text-xs">{update.createdAt}</p>
+                                                                    <p className="text-xs">{update.createdAt.toLocaleDateString()}</p>
                                                                     <h5 className="text-lg">{update.title}</h5>
                                                                     <p className="text-sm text-muted-foreground">
                                                                     {update.description}
@@ -251,7 +263,7 @@ export default function ViewOpportunityPage({
                                                     </CardContent>                                                                        
                                                 )     
                                             }                             
-                            </Card>
+                            </Card>                            
                         </div>                        
                     )
                 }
