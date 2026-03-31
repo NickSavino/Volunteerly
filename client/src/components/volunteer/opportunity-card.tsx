@@ -10,25 +10,6 @@ const WORK_TYPE_LABELS: Record<string, string> = {
     HYBRID:    "Hybrid",
 };
 
-function getCategoryTags(category: string): string[] {
-    const map: Record<string, string[]> = {
-        "web dev":        ["React", "Node.js", "CSS"],
-        "data analytics": ["Python", "SQL", "Django"],
-        "data science":   ["Python", "R", "TensorFlow"],
-        "frontend developer": ["React", "TypeScript", "CSS"],
-        "backend developer":  ["Node.js", "SQL", "Docker"],
-        "ui/ux design":   ["Figma", "Sketch", "Adobe XD"],
-        "mobile app dev": ["Python", "Dart", "Firebase"],
-        "humanitarian":   ["Communication", "Logistics"],
-        "poverty":        ["Outreach", "Coordination"],
-    };
-    const key = category.toLowerCase();
-    for (const [k, tags] of Object.entries(map)) {
-        if (key.includes(k)) return tags;
-    }
-    return [category];
-}
-
 function getAvatarColor(name: string): string {
     const colors = [
         "bg-blue-100 text-blue-700",
@@ -63,7 +44,6 @@ function MatchBadge({ pct }: { pct: number }) {
 }
 
 export function OpportunityCard({ opp, matchPct, isSelected, onClick }: OppCardProps) {
-    const tags = getCategoryTags(opp.category);
     const avatarColor = getAvatarColor(opp.organization?.orgName ?? "O");
     const initials = opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG";
 
@@ -92,14 +72,9 @@ export function OpportunityCard({ opp, matchPct, isSelected, onClick }: OppCardP
             </div>
 
             <div className="mb-3 flex flex-wrap gap-1.5">
-                {tags.map((tag) => (
-                    <span
-                        key={tag}
-                        className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground"
-                    >
-                        {tag}
-                    </span>
-                ))}
+                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">
+                    {opp.category}
+                </span>
             </div>
 
             <div className="flex items-center justify-between">

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useRef, useCallback } from "react";
 import { ArrowUpDown } from "lucide-react";
 import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
 import { OpportunityCard } from "@/components/volunteer/opportunity-card";
@@ -43,6 +44,10 @@ const SORT_LABELS: Record<SortOption, string> = {
     NEWEST:     "Newest",
 };
 
+const MAP_MIN_WIDTH = 200;
+const MAP_MAX_WIDTH = 800;
+const MAP_DEFAULT_WIDTH = 420;
+
 export default function OpportunitiesPage() {
     const {
         loading,
@@ -70,6 +75,36 @@ export default function OpportunitiesPage() {
         getMatchPct,
         handleApply,
     } = useOpportunitiesViewModel();
+
+    const mapWidthRef = useRef<number>(MAP_DEFAULT_WIDTH);
+    const mapPanelRef = useRef<HTMLDivElement>(null);
+    const isDragging = useRef(false);
+
+    const onMouseDown = useCallback((e: React.MouseEvent) => {
+        e.preventDefault();
+        isDragging.current = true;
+        document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+
+        const onMouseMove = (ev: MouseEvent) => {
+            if (!isDragging.current || !mapPanelRef.current) return;
+            const newWidth = window.innerWidth - ev.clientX;
+            const clamped = Math.min(Math.max(newWidth, MAP_MIN_WIDTH), MAP_MAX_WIDTH);
+            mapWidthRef.current = clamped;
+            mapPanelRef.current.style.width = `${clamped}px`;
+        };
+
+        const onMouseUp = () => {
+            isDragging.current = false;
+            document.body.style.cursor = "";
+            document.body.style.userSelect = "";
+            window.removeEventListener("mousemove", onMouseMove);
+            window.removeEventListener("mouseup", onMouseUp);
+        };
+
+        window.addEventListener("mousemove", onMouseMove);
+        window.addEventListener("mouseup", onMouseUp);
+    }, []);
 
     if (loading || !session) {
         return (
@@ -181,65 +216,79 @@ export default function OpportunitiesPage() {
                     </button>
                 </aside>
 
-                <div className="flex flex-1 flex-col overflow-hidden">
-                    <div className="flex-shrink-0 border-b bg-card px-5 py-4">
-                        <div className="flex items-center justify-between gap-3">
-                            <h1 className="font-bold text-foreground">
-                                {oppCount} {oppCount === 1 ? "Opportunity" : "Opportunities"} Found
-                            </h1>
-                            <input
-                                type="text"
-                                placeholder="Search opportunities..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && applyFilters()}
-                                className="hidden rounded-lg border bg-muted px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:block sm:w-56"
-                            />
-                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                <ArrowUpDown className="h-3.5 w-3.5 flex-shrink-0" />
-                                <span className="hidden sm:inline">Sort:</span>
-                                <select
-                                    value={sortBy}
-                                    onChange={(e) => setSortBy(e.target.value as SortOption)}
-                                    className="cursor-pointer rounded-md border-0 bg-transparent py-0 pr-6 text-sm font-medium text-foreground focus:outline-none focus:ring-0"
-                                >
-                                    {(Object.keys(SORT_LABELS) as SortOption[]).map((opt) => (
-                                        <option key={opt} value={opt}>
-                                            {SORT_LABELS[opt]}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    {error && (
-                        <div className="mx-5 mt-4 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-2 text-sm text-destructive">
-                            {error}
-                        </div>
-                    )}
-
-                    <div className="flex-1 overflow-y-auto p-5 space-y-4">
-                        {opportunities.length === 0 ? (
-                            <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
-                                No opportunities found. Try adjusting your filters.
-                            </div>
-                        ) : (
-                            opportunities.map((opp) => (
-                                <OpportunityCard
-                                    key={opp.id}
-                                    opp={opp}
-                                    matchPct={getMatchPct(opp)}
-                                    isSelected={selectedOpp?.id === opp.id}
-                                    onClick={() => setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)}
+                <div className="flex flex-1 overflow-hidden">
+                    <div className="flex flex-1 flex-col overflow-hidden">
+                        <div className="flex-shrink-0 border-b bg-card px-5 py-4">
+                            <div className="flex items-center justify-between gap-3">
+                                <h1 className="font-bold text-foreground">
+                                    {oppCount} {oppCount === 1 ? "Opportunity" : "Opportunities"} Found
+                                </h1>
+                                <input
+                                    type="text"
+                                    placeholder="Search opportunities..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && applyFilters()}
+                                    className="hidden rounded-lg border bg-muted px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:block sm:w-56"
                                 />
-                            ))
-                        )}
-                    </div>
-                </div>
+                                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                    <ArrowUpDown className="h-3.5 w-3.5 flex-shrink-0" />
+                                    <span className="hidden sm:inline">Sort:</span>
+                                    <select
+                                        value={sortBy}
+                                        onChange={(e) => setSortBy(e.target.value as SortOption)}
+                                        className="cursor-pointer rounded-md border-0 bg-transparent py-0 pr-6 text-sm font-medium text-foreground focus:outline-none focus:ring-0"
+                                    >
+                                        {(Object.keys(SORT_LABELS) as SortOption[]).map((opt) => (
+                                            <option key={opt} value={opt}>
+                                                {SORT_LABELS[opt]}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-                <div className="hidden w-96 flex-shrink-0 overflow-hidden border-l lg:block xl:w-[480px]">
-                    <OpportunitiesMap opportunities={opportunities} />
+                        {error && (
+                            <div className="mx-5 mt-4 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-2 text-sm text-destructive">
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+                            {opportunities.length === 0 ? (
+                                <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
+                                    No opportunities found. Try adjusting your filters.
+                                </div>
+                            ) : (
+                                opportunities.map((opp) => (
+                                    <OpportunityCard
+                                        key={opp.id}
+                                        opp={opp}
+                                        matchPct={getMatchPct(opp)}
+                                        isSelected={selectedOpp?.id === opp.id}
+                                        onClick={() => setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)}
+                                    />
+                                ))
+                            )}
+                        </div>
+                    </div>
+
+                    <div
+                        onMouseDown={onMouseDown}
+                        className="hidden lg:flex w-1.5 flex-shrink-0 cursor-col-resize items-center justify-center bg-border hover:bg-primary/40 transition-colors group"
+                        title="Drag to resize map"
+                    >
+                        <div className="h-8 w-0.5 rounded-full bg-muted-foreground/30 group-hover:bg-primary/60 transition-colors" />
+                    </div>
+
+                    <div
+                        ref={mapPanelRef}
+                        className="hidden lg:block flex-shrink-0 overflow-hidden border-l"
+                        style={{ width: MAP_DEFAULT_WIDTH }}
+                    >
+                        <OpportunitiesMap opportunities={opportunities} />
+                    </div>
                 </div>
             </div>
 
