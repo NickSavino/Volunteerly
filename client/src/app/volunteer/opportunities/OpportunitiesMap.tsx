@@ -22,7 +22,7 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
                 shadowUrl:     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
             });
 
-            const map = L.map(mapRef.current).setView([51.0447, -114.0719], 10);
+            const map = L.map(mapRef.current).setView([51.0447, -114.0719], 11);
 
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution: "&copy; OpenStreetMap contributors",
@@ -34,23 +34,40 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
                 const lat = (opp as any).latitude  ?? (51.0447  + (Math.random() - 0.5) * 0.08);
                 const lng = (opp as any).longitude ?? (-114.0719 + (Math.random() - 0.5) * 0.08);
 
+                const label = opp.organization?.orgName?.slice(0, 1).toUpperCase() ?? "O";
+
                 const el = document.createElement("div");
-                el.className =
-                    "flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-yellow-400 text-xs font-bold text-black shadow-md";
-                el.textContent = opp.organization?.orgName?.slice(0, 1) ?? "O";
+                el.style.cssText = [
+                    "display:flex",
+                    "align-items:center",
+                    "justify-content:center",
+                    "width:32px",
+                    "height:32px",
+                    "border-radius:50%",
+                    "border:2px solid white",
+                    "background:#F4D125",
+                    "font-size:12px",
+                    "font-weight:700",
+                    "color:#111827",
+                    "box-shadow:0 2px 6px rgba(0,0,0,0.3)",
+                    "cursor:pointer",
+                ].join(";");
+                el.textContent = label;
                 el.title = opp.name;
 
                 const icon = L.divIcon({
                     html: el.outerHTML,
                     className: "",
-                    iconSize: [32, 32],
+                    iconSize:   [32, 32],
+                    iconAnchor: [16, 16],
+                    popupAnchor: [0, -18],
                 });
 
                 const marker = L.marker([lat, lng], { icon }).addTo(map);
                 marker.bindPopup(`
-                    <div style="padding:4px">
-                        <p style="font-weight:600;font-size:13px;margin:0">${opp.name}</p>
-                        <p style="color:#6b7280;font-size:12px;margin:2px 0 0">${opp.organization?.orgName ?? ""}</p>
+                    <div style="padding:4px;min-width:140px">
+                        <p style="font-weight:600;font-size:13px;margin:0;color:#111827">${opp.name}</p>
+                        <p style="color:#6b7280;font-size:12px;margin:4px 0 0">${opp.organization?.orgName ?? ""}</p>
                         <p style="color:#9ca3af;font-size:11px;margin:4px 0 0">${(opp.organization as any)?.hqAdr ?? ""}</p>
                     </div>
                 `);
@@ -63,14 +80,7 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
                 mapInstance.current = null;
             }
         };
-        
     }, []);
-
-
-    useEffect(() => {
-        if (!mapInstance.current) return;
-
-    }, [opportunities]);
 
     return <div ref={mapRef} className="h-full w-full" />;
 }

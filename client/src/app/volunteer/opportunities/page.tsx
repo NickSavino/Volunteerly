@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { ArrowUpDown } from "lucide-react";
 import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
 import { OpportunityCard } from "@/components/volunteer/opportunity-card";
 import { OpportunityDetailModal } from "@/components/volunteer/opportunity-detail-modal";
@@ -11,6 +12,7 @@ import {
     OPPORTUNITY_CATEGORIES,
     type WorkTypeFilter,
     type CommitmentFilter,
+    type SortOption,
 } from "./opportunitiesVm";
 
 const OpportunitiesMap = dynamic(() => import("./OpportunitiesMap"), {
@@ -32,6 +34,14 @@ const COMMITMENT_LABELS: Record<CommitmentFilter, string> = {
     FULL_TIME: "Full-Time",
 };
 
+const SORT_LABELS: Record<SortOption, string> = {
+    RELEVANT:   "Relevant",
+    MATCH_HIGH: "Best Match",
+    MATCH_LOW:  "Lowest Match",
+    HOURS_LOW:  "Fewest Hours",
+    HOURS_HIGH: "Most Hours",
+    NEWEST:     "Newest",
+};
 
 export default function OpportunitiesPage() {
     const {
@@ -53,6 +63,8 @@ export default function OpportunitiesPage() {
         setMaxHours,
         searchQuery,
         setSearchQuery,
+        sortBy,
+        setSortBy,
         toggleCategory,
         applyFilters,
         getMatchPct,
@@ -76,7 +88,7 @@ export default function OpportunitiesPage() {
 
             <div className="flex flex-1 overflow-hidden">
                 <aside className="hidden w-56 flex-shrink-0 overflow-y-auto border-r bg-card p-5 lg:block">
-                    <p className="mb-5 text-sm font-semibold text-foreground">Filters</p>
+                    <p className="mb-5 text-sm font-semibold text-foreground">= Filters</p>
 
                     <div className="mb-6">
                         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -183,9 +195,21 @@ export default function OpportunitiesPage() {
                                 onKeyDown={(e) => e.key === "Enter" && applyFilters()}
                                 className="hidden rounded-lg border bg-muted px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:block sm:w-56"
                             />
-                            <span className="text-sm text-muted-foreground">
-                                Sort: <span className="font-medium text-foreground">Relevant</span>
-                            </span>
+                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                <ArrowUpDown className="h-3.5 w-3.5 flex-shrink-0" />
+                                <span className="hidden sm:inline">Sort:</span>
+                                <select
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value as SortOption)}
+                                    className="cursor-pointer rounded-md border-0 bg-transparent py-0 pr-6 text-sm font-medium text-foreground focus:outline-none focus:ring-0"
+                                >
+                                    {(Object.keys(SORT_LABELS) as SortOption[]).map((opt) => (
+                                        <option key={opt} value={opt}>
+                                            {SORT_LABELS[opt]}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
                     </div>
 

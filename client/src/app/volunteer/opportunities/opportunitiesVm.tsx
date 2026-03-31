@@ -8,6 +8,7 @@ import type { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
 
 export type WorkTypeFilter = "ALL" | "REMOTE" | "IN_PERSON" | "HYBRID";
 export type CommitmentFilter = "ALL" | "FLEXIBLE" | "PART_TIME" | "FULL_TIME";
+export type SortOption = "RELEVANT" | "MATCH_HIGH" | "MATCH_LOW" | "HOURS_LOW" | "HOURS_HIGH" | "NEWEST";
 
 export const OPPORTUNITY_CATEGORIES = [
     "Frontend Developer",
@@ -20,6 +21,24 @@ export const OPPORTUNITY_CATEGORIES = [
     "Humanitarian",
     "Poverty",
 ] as const;
+
+function getMatchPctStatic(opp: Opportunity): number {
+    const seed = opp.id.charCodeAt(0) + opp.id.charCodeAt(1);
+    return 50 + (seed % 46);
+}
+
+function sortOpportunities(opps: Opportunity[], sort: SortOption): Opportunity[] {
+    const arr = [...opps];
+    switch (sort) {
+        case "MATCH_HIGH": return arr.sort((a, b) => getMatchPctStatic(b) - getMatchPctStatic(a));
+        case "MATCH_LOW":  return arr.sort((a, b) => getMatchPctStatic(a) - getMatchPctStatic(b));
+        case "HOURS_LOW":  return arr.sort((a, b) => a.hours - b.hours);
+        case "HOURS_HIGH": return arr.sort((a, b) => b.hours - a.hours);
+        case "NEWEST":     return arr.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
+        case "RELEVANT":
+        default:           return arr.sort((a, b) => getMatchPctStatic(b) - getMatchPctStatic(a));
+    }
+}
 
 export function useOpportunitiesViewModel() {
     const router = useRouter();
@@ -35,12 +54,13 @@ export function useOpportunitiesViewModel() {
     const [commitmentLevel, setCommitmentLevel] = useState<CommitmentFilter>("ALL");
     const [maxHours, setMaxHours] = useState<number>(40);
     const [searchQuery, setSearchQuery] = useState("");
+    const [sortBy, setSortBy] = useState<SortOption>("RELEVANT");
 
     useEffect(() => {
         if (!loading && !session) router.replace("/login");
     }, [loading, session, router]);
 
-    const fetchOpportunities = useCallback(async (cats: string[], wt: WorkTypeFilter, cl: CommitmentFilter, mh: number, sq: string) => {
+    const fetchOpportunities = useCallback(async (cats: string[], wt: WorkTypeFilter, cl: CommitmentFilter, mh: number, sq: string, sort: SortOption) => {
         try {
             const result = await VolunteerService.browseOpportunities({
                 search: sq || undefined,
@@ -61,7 +81,7 @@ export function useOpportunitiesViewModel() {
                 );
             }
 
-            setOpportunities(filtered);
+            setOpportunities(sortOpportunities(filtered, sort));
         } catch (err) {
             console.error(err);
             setError("Failed to load opportunities.");
@@ -81,7 +101,7 @@ export function useOpportunitiesViewModel() {
                 const volResult = await VolunteerService.getCurrentVolunteer();
                 if (volResult.success) setCurrentVolunteer(volResult.data);
 
-                await fetchOpportunities([], "ALL", "ALL", 40, "");
+                await fetchOpportunities([], "ALL", "ALL", 40, "", "RELEVANT");
             } catch (err) {
                 console.error(err);
                 setError("Failed to load data.");
@@ -92,6 +112,10 @@ export function useOpportunitiesViewModel() {
         load();
     }, [session, router, fetchOpportunities]);
 
+    useEffect(() => {
+        setOpportunities((prev) => sortOpportunities(prev, sortBy));
+    }, [sortBy]);
+
     function toggleCategory(cat: string) {
         setSelectedCategories((prev) =>
             prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
@@ -99,12 +123,11 @@ export function useOpportunitiesViewModel() {
     }
 
     function applyFilters() {
-        fetchOpportunities(selectedCategories, workType, commitmentLevel, maxHours, searchQuery);
+        fetchOpportunities(selectedCategories, workType, commitmentLevel, maxHours, searchQuery, sortBy);
     }
 
     function getMatchPct(opp: Opportunity): number {
-        const seed = opp.id.charCodeAt(0) + opp.id.charCodeAt(1);
-        return 50 + (seed % 46);
+        return getMatchPctStatic(opp);
     }
 
     async function handleApply() {
@@ -140,6 +163,8 @@ export function useOpportunitiesViewModel() {
         setMaxHours,
         searchQuery,
         setSearchQuery,
+        sortBy,
+        setSortBy,
         toggleCategory,
         applyFilters,
         getMatchPct,
