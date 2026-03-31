@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -384,4 +384,60 @@ currentOrganizationRouter.get("/opportunity/analytics", auth, async (req, res, n
     } catch (error) {
         next(error);
     }
+});
+
+currentOrganizationRouter.put("/opportunity/progressUpdate", auth, async (req, res, next) => {
+  try {
+    const typedReq = req as typeof req & AuthenticatedRequest;
+
+    const userId = typedReq.auth?.userId;
+
+    if (!userId) {
+        return res.status(401).json({
+            error: "Unauthorized",
+            message: "User context missing."
+        });
+    }
+    const { opportunityId, title, description, hoursContributed} = req.body;
+
+    if (!opportunityId || !title || !description || !hoursContributed){
+        return res.status(404).json({
+            error: "Not Enought Information",
+            message: "Ensure proper parameters are given."
+        });
+    }
+    const opp = await getOrgOpportunity(userId, opportunityId);
+    
+    if (!opp) {
+        return res.status(404).json({
+            error: "Not Found",
+            message: "Opportunity not found, or not owned by organization"
+        });
+    }
+    
+    else {
+        if (!(opp.status == "FILLED")) {
+            return res.status(500).json({
+                error: "Cannot add progress update.",
+                message: "Opportunity is not eligible for progress update."
+            });
+
+        } else {
+            const added_update = await createOrgProgressUpdate(userId, opportunityId, title, description, Number(hoursContributed))
+            if (!added_update){
+                return res.status(404).json({
+                    error: "Error Adding Update",
+                    message: "Cannot Add Update."
+                });
+            }
+            res.status(200).json(added_update);
+        }
+
+    }
+
+  } catch (error) {
+    console.error(error);
+    next(error);
+    }
+
 });

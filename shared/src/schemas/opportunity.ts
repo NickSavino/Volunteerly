@@ -4,6 +4,17 @@ export const OpportunityAnalyticsSchema = z.object({
   hours: z.number(),
   value: z.number()
 })
+export const ProgressUpdateSchema = z.object({
+    id: z.uuid().optional(),
+    opportunityId: z.uuid().optional(),
+    senderId: z.uuid().optional(),
+    senderRole: z.enum(["VOLUNTEER", "ORGANIZATION"]).optional(),
+    title: z.string(),      
+    description: z.string(),         
+    hoursContributed: z.number(),
+    createdAt: z.coerce.date().optional(),
+})
+export type ProgressUpdate = z.infer<typeof ProgressUpdateSchema>;
 
 export const OpportunitySchema = z.object({
     id: z.uuid(),

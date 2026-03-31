@@ -360,3 +360,22 @@ export async function getOpportunityAnalytics(organizationId: string, opportunit
     value: opp.hours*(opp.volunteer?.hourlyValue || 0),
   };
 }
+
+export async function createOrgProgressUpdate(orgId: string, oppId: string, title: string, description:string, hoursContributed:number) {
+    const org = await prisma.progressUpdate.create({
+            data: {
+                opportunityId:oppId,
+                senderId:orgId,
+                senderRole:"ORGANIZATION",
+                title: title,
+                description:description,
+                hoursContributed: hoursContributed,
+                createdAt: new Date()
+            },
+        });
+    if (!org) {
+        throw new Error("Error creating the Organization.");
+    }
+
+    return org;
+}

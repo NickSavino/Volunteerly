@@ -13,6 +13,7 @@ import { useOrgApplicationViewModel } from "./orgApplicationVm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function HomePage() {
   const {        
@@ -90,7 +91,7 @@ export default function HomePage() {
                   </div>
                   <Field>
                     <Label htmlFor="mission_statement">Mission Statment<span className="text-destructive">*</span></Label>
-                    <Input id="mission_statement" disabled={isReadOnly} type="text" placeholder="Briefly describe your organization's core mission and goals." value={currentOrg?.missionStatement}
+                    <Textarea id="mission_statement" disabled={isReadOnly} placeholder="Briefly describe your organization's core mission and goals." value={currentOrg?.missionStatement}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, missionStatement: e.target.value } : prev)} required/>
                   </Field>
                   

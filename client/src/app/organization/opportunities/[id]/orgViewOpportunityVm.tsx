@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import { Application, CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
+import { Application, CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity, ProgressUpdate } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 import { toast } from "sonner";
@@ -19,6 +19,11 @@ export function useOrgViewOpportunityViewModel(id: string) {
   const [applications, setApplications] = useState<Application[]>([])
   const [fetching, setFetching] = useState(true)
   const [reload, setReload] = useState(false)
+  const [progressUpdate, setProgressUpdate] = useState<ProgressUpdate>({
+    title: "",
+    description: "",
+    hoursContributed: 0
+  })
 
   useEffect(() => {
     if (!loading && !session) {
@@ -116,7 +121,26 @@ export function useOrgViewOpportunityViewModel(id: string) {
       }
       setError("Cannot Complete Opportunity")
     }
+    async function addUpdate() {
+      if (progressUpdate){
+        setFetching(true)
+        progressUpdate.opportunityId = opportunity?.id
+        const updated = await OrganizationService.addProgressUpdate(progressUpdate)
+        if (updated.success){
+          toast.success("Progress Updated Added!")
+          setProgressUpdate({
+            title: "",
+            description: "",
+            hoursContributed: 0
+          })
+          setFetching(false)
+          setReload(true)
+          return
+        }
+      }
+    }
+
     
 
-    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue} 
+    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate} 
 }

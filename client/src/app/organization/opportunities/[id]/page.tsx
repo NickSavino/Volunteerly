@@ -19,6 +19,11 @@ import { useOrgOpportunitiesViewModel } from "../orgOpportunitiesVm";
 import { use } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { FieldGroup } from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 
 export default function ViewOpportunityPage({
@@ -27,7 +32,7 @@ export default function ViewOpportunityPage({
   params: Promise<{ id: string }>
 }) {
     const { id } = use(params);
-    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue} = useOrgViewOpportunityViewModel(id)
+    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate} = useOrgViewOpportunityViewModel(id)
 
     if (loading || !session || fetching) {
         return <main className="p-6">Loading...</main>
@@ -256,7 +261,33 @@ export default function ViewOpportunityPage({
                                     <CardTitle>Progress Tracking</CardTitle>
                                     {opportunity?.status == "FILLED" &&
                                         <CardAction>
-                                            <Button variant={"outline"} className="cursor-pointer">Add Update</Button>
+                                                <Dialog>
+                                                    <DialogTrigger asChild>
+                                                        <Button variant={"outline"} className="cursor-pointer">Add Update</Button>
+                                                    </DialogTrigger>
+                                                    <DialogContent className="sm:max-w-sm">
+                                                        <form onSubmit={addUpdate}>
+                                                            <DialogHeader className="mb-5">
+                                                                <DialogTitle>Add Progress Update</DialogTitle>
+                                                            </DialogHeader>
+                                                            <FieldGroup>
+                                                                <Label htmlFor="progU-title">Title</Label>
+                                                                <Input id="pu-title" name="title" onChange={(e) => setProgressUpdate((prev) => prev ? { ...prev, title: e.target.value } : prev)} required/>
+                                                                <Label htmlFor="progU-desc">Description</Label>
+                                                                <Textarea id="progU-desc" name="description" onChange={(e) => setProgressUpdate((prev) => prev ? { ...prev, description: e.target.value } : prev)} required/>
+                                                                <Label htmlFor="progU-hours">Hours Contribuited</Label>
+                                                                <Input id="progU-hours" type="number" name="hours" onChange={(e) => setProgressUpdate((prev) => prev ? { ...prev, hoursContributed: Number(e.target.value) } : prev)} required/>
+
+                                                            </FieldGroup>
+                                                            <DialogFooter className="mt-5">
+                                                                <DialogClose asChild>
+                                                                    <Button variant="outline" className="cursor-pointer">Cancel</Button>
+                                                                </DialogClose>
+                                                                <Button type="submit" className="cursor-pointer">Add</Button>
+                                                            </DialogFooter>
+                                                        </form>
+                                                    </DialogContent>
+                                                </Dialog>
                                         </CardAction>
                                     }
 
