@@ -9,7 +9,8 @@ import {
     TotalHoursSchema,
     OpportunitySchema,
     ApplicationsSchema,
-    ApplicationSchema
+    ApplicationSchema,
+    OpportunityAnalyticsSchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -135,5 +136,12 @@ export class OrganizationService {
         });
         const parsed = OpportunitySchema.safeParse(response);
         return parsed;
-    }   
+    }
+    static async getOpportunityAnalytics(oppId:string) {
+        const url = `/current-organization/opportunity/analytics/?oppId=${oppId}`
+        const response = await api<unknown>(url);
+        const parsed = OpportunityAnalyticsSchema.safeParse(response)
+        return parsed
+    }
+   
 }

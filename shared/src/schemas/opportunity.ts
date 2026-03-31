@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+export const OpportunityAnalyticsSchema = z.object({
+  hours: z.number(),
+  value: z.number()
+})
+
 export const OpportunitySchema = z.object({
     id: z.uuid(),
     orgId: z.uuid(),

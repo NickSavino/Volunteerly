@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
 import volunteerly_logo from "@/assets/volunteerly_logo.png"
+import { OrgStatCard } from "@/components/custom/org_stat_card";
 
 
 export default function HomePage() {
@@ -54,21 +55,24 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                <div className="md:flex items-center md:justify-around gap-5">
-                    <ModStatCard
-                        icon={FolderKanban}
-                        label="Total Projects"
-                        count={totalOpps}
-                    />
-                    <ModStatCard
+                <div className="md:flex md:justify-around md:grid md:gap-3 md:grid-cols-3">
+                    <OrgStatCard
                         icon={PersonStanding}
                         label="Active Volunteers"
                         count={activeVlt}
+                        money={false}
                     />
-                    <ModStatCard
+                    <OrgStatCard
+                        icon={FolderKanban}
+                        label="All-Time Projects"
+                        count={totalOpps}
+                        money={false}
+                    />
+                    <OrgStatCard
                         icon={Hourglass}
-                        label="Total Hours"
+                        label="All-Time Hours"
                         count={totalHours}
+                        money={false}
                     />
                 </div>
 
@@ -105,11 +109,11 @@ export default function HomePage() {
                                                             </span>
 
                                                             <span className="flex items-center gap-1">
-                                                                <Calendar/> Posted {opp.postedDate}
+                                                                <Calendar/> Posted {opp.postedDate.toLocaleDateString()}
                                                             </span>
 
                                                             <span className="flex items-center gap-1">
-                                                                <Hourglass/> Due {opp.deadlineDate}
+                                                                <Hourglass/> Due {opp.deadlineDate?.toLocaleDateString()}
                                                             </span>
                                                         </ItemDescription>
                                                     ): 
@@ -141,7 +145,7 @@ export default function HomePage() {
                     </Card>
                 </div>
             </div>
-            <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 min-h-full">
+            <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 min-h-full flex flex-col justify-center">
                 <Card className="mx-5">
                     <CardContent className="text-center">
                         <div className="flex justify-center mb-4">

@@ -311,11 +311,23 @@ export async function selectOppVolunteer(oppId:string, vltId:string) {
 }
 
 export async function completeOpportunity(oppId:string) {
+    const updateTotals = await prisma.progressUpdate.aggregate({
+        where: {
+            opportunityId: oppId,
+        },
+        _sum: {
+        hoursContributed: true,
+        },
+    });
+
+    const totalHours = updateTotals._sum.hoursContributed ?? 0
+
     const organization = await prisma.opportunity.update({
         where: { id: oppId },
         data: {
             status: "CLOSED",
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            hours: totalHours
         },
     });
     if (!organization) {
@@ -323,4 +335,28 @@ export async function completeOpportunity(oppId:string) {
     }
 
     return organization;
+}
+
+
+export async function getOpportunityAnalytics(organizationId: string, opportunityId:string) {
+  const opp = await prisma.opportunity.findFirst({
+    where: { orgId: organizationId, id: opportunityId},
+    select: {
+      hours: true,
+      volunteer: {
+        select: {
+          hourlyValue: true,
+        },
+      },
+    },
+  });
+
+    if (!opp) {
+        throw new Error("Error getting Opportunity Analytics.");
+    }
+
+  return {
+    hours: opp.hours,
+    value: opp.hours*(opp.volunteer?.hourlyValue || 0),
+  };
 }

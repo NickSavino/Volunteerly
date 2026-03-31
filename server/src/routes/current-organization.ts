@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -357,6 +357,31 @@ currentOrganizationRouter.put("/opportunity/complete", auth, async (req, res, ne
         res.status(200).json(completed_opp);
     } catch (error) {
         console.error(error);
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunity/analytics", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { oppId } = req.query;
+        if (!oppId || typeof oppId !== "string") {
+            return res.status(401).json({ error: "Unavailable", message: "Application context missing or invalid." });
+        }
+
+        const analytics = await getOpportunityAnalytics(userId, oppId);
+
+        if (!analytics) {
+            return res.status(500).json({
+                error: "Cannot get Opportunity Analytics",
+                message: "Ensure opportunity owned by this organization."
+            });
+        }
+
+        res.status(200).json(analytics);
+    } catch (error) {
         next(error);
     }
 });

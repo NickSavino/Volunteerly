@@ -121,7 +121,7 @@ export default function OrgOpportunitiesPage() {
                                         </CardContent>
                                             ) : (
                                                 filteredOpportunities.map((opp) => (
-                                                    <Item key={opp.id} variant="outline">
+                                                    <Item key={opp.id} variant="outline" className="mb-2">
                                                         <ItemContent>
                                                             <ItemTitle>{opp.name} <Badge>{opp.status}</Badge> </ItemTitle>
                                                             <ItemDescription className="flex items-center gap-2 flex-wrap">
@@ -163,7 +163,7 @@ export default function OrgOpportunitiesPage() {
                                         </CardContent>
                                             ) : (
                                                 filteredOpportunities.map((opp) => (
-                                                    <Item key={opp.id} variant="outline">
+                                                    <Item key={opp.id} variant="outline" className="mb-2">
                                                         <ItemContent>
                                                             <ItemTitle>{opp.name} <Badge>{opp.status}</Badge> </ItemTitle>
                                                             <ItemDescription className="flex items-center gap-2 flex-wrap">

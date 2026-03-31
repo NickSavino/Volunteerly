@@ -14,6 +14,8 @@ export function useOrgViewOpportunityViewModel(id: string) {
   const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
   const [opportunity, setOpportunity] = useState<Opportunity>()
+  const [totalHours, setTotalHours] = useState(0)
+  const [monetaryValue, setMonetaryValue] = useState(0)
   const [applications, setApplications] = useState<Application[]>([])
   const [fetching, setFetching] = useState(true)
   const [reload, setReload] = useState(false)
@@ -88,6 +90,15 @@ export function useOrgViewOpportunityViewModel(id: string) {
             setError("Failed to load opportunities."); return; }
           setApplications(apps.data);   
         }
+
+        if (opp.data.status == "CLOSED"){
+          const analytics = await OrganizationService.getOpportunityAnalytics(opp.data.id)
+          if (analytics.success){
+            setTotalHours(analytics.data?.hours)
+            setMonetaryValue(analytics.data?.value)
+          }
+        }
+
         setFetching(false)
         setReload(false)
       }
@@ -107,5 +118,5 @@ export function useOrgViewOpportunityViewModel(id: string) {
     }
     
 
-    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity} 
+    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue} 
 }

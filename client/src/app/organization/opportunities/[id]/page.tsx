@@ -2,14 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft, MessageSquareCheck, MessageCircleMore, UserStar} from "lucide-react";
+import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft, MessageSquareCheck, MessageCircleMore, UserStar, CircleDollarSign, Clock4} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationNavbar } from "../../organization_navbar";
-import { ModStatCard } from "@/components/custom/mod_stat_card";
+import { OrgStatCard } from "@/components/custom/org_stat_card";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -27,7 +27,7 @@ export default function ViewOpportunityPage({
   params: Promise<{ id: string }>
 }) {
     const { id } = use(params);
-    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity} = useOrgViewOpportunityViewModel(id)
+    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue} = useOrgViewOpportunityViewModel(id)
 
     if (loading || !session || fetching) {
         return <main className="p-6">Loading...</main>
@@ -74,6 +74,22 @@ export default function ViewOpportunityPage({
                 </div>
                 
                 <h2 className="text-2x1 font-bold">{opportunity?.name} - {opportunity?.workType} - {opportunity?.category}</h2>
+                {opportunity?.status == "CLOSED" &&
+                    <div className="md:flex md:justify-around md:grid md:gap-3 md:grid-cols-2">
+                        <OrgStatCard
+                            icon={Clock4}
+                            label="Hours Spent"
+                            count={totalHours}
+                            money={false}
+                        />
+                        <OrgStatCard
+                            icon={CircleDollarSign}
+                            label="Monetary Valuation"
+                            count={monetaryValue}
+                            money={true}
+                        />
+                </div>
+                }
                 {
                     opportunity?.status == "OPEN" ?
                     (
