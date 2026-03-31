@@ -8,7 +8,7 @@ import { currentModeratorRouter } from "./current-moderator.js";
 import { moderatorRouter } from "./moderator/index.js";
 import { requireRole } from "../middleware/require-role.js";
 import { auth } from "../middleware/auth.js";
-import { skillExtractionRouter } from "./skill-extraction.js";
+import { skillExtractionRouter} from "./skill-extraction.js";
 
 /**
  * Base Router for all routes. Injected into app.ts
@@ -18,7 +18,8 @@ import { skillExtractionRouter } from "./skill-extraction.js";
 
 export const apiRouter = Router();
 
-apiRouter.use("/current-volunteer/extract-skills", skillExtractionRouter);
+
+apiRouter.use("/current-volunteer/extract-skills", auth, requireRole("VOLUNTEER"), skillExtractionRouter);
 
 apiRouter.use("/health", auth, healthRouter);
 apiRouter.use("/current-user", auth, currentUserRouter);
