@@ -82,6 +82,7 @@ model Volunteer {
   hourlyValue           Int            @default(0) @map("hourly_value")
   organizationsAssisted Int            @default(0) @map("organizations_assisted")
   averageRating         Float          @default(0) @map("average_rating")
+  skillVector           Unsupported("vector(3072)")?  @map("skill_vector")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
