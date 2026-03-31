@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import type { Opportunity } from "@volunteerly/shared";
-import "leaflet/dist/leaflet.css";
 
 export default function OpportunitiesMap({ opportunities }: { opportunities: Opportunity[] }) {
     const mapRef = useRef<HTMLDivElement>(null);
