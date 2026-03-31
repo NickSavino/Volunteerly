@@ -18,7 +18,6 @@ import type { CurrentVolunteer } from "@volunteerly/shared";
 const NAV_LINKS = [
     { label: "Dashboard",     href: "/volunteer" },
     { label: "Opportunities", href: "/volunteer/opportunities" },
-    { label: "Activity Log",  href: "/volunteer/activity" },
     { label: "Skills",        href: "/volunteer/skills" },
     { label: "Messages",      href: "/volunteer/messages" },
 ] as const;
