@@ -34,16 +34,25 @@ export function useVltDashboardViewModel() {
                 setCurrentVolunteer(volResult.data);
 
                 const oppResult = await VolunteerService.getYourOpportunities();
-                if (!oppResult.success) { setError("Failed to load opportunities."); return; }
-                setOpportunities(oppResult.data);
+                if (oppResult.success) {
+                    setOpportunities(oppResult.data);
+                } else {
+                    console.warn("Failed to load opportunities:", oppResult.error);
+                }
 
                 const orgResult = await VolunteerService.getVolunteerOrganizations();
-                if (!orgResult.success) { setError("Failed to load organizations."); return; }
-                setPartnerOrgs(orgResult.data);
+                if (orgResult.success) {
+                    setPartnerOrgs(orgResult.data);
+                } else {
+                    console.warn("Failed to load organizations:", orgResult.error);
+                }
 
                 const hoursResult = await VolunteerService.getMonthlyHours();
-                if (!hoursResult.success) { setError("Failed to load monthly hours."); return; }
-                setMonthlyHoursMap(hoursResult.data);
+                if (hoursResult.success) {
+                    setMonthlyHoursMap(hoursResult.data);
+                } else {
+                    console.warn("Failed to load monthly hours:", hoursResult.error);
+                }
 
             } catch (err) {
                 console.error(err);
@@ -55,7 +64,6 @@ export function useVltDashboardViewModel() {
 
     const handleSignOut = async () => { await signOut(); router.push("/"); };
 
-    // KPIs
     const totalHours = useMemo(() =>
         opportunities.reduce((sum, opp) => sum + opp.hours, 0),
     [opportunities]);
@@ -64,11 +72,9 @@ export function useVltDashboardViewModel() {
     const orgsAssisted = partnerOrgs.length;
     const impactScore = useMemo(() => Math.round(economicValue * orgsAssisted), [economicValue, orgsAssisted]);
 
-    // Chart
     const { chartLabels, chartData } = useMemo(() => {
         const now = new Date();
 
-        // helper to build a fixed sequence of N months ending at current month
         function buildMonthRange(monthCount: number): { labels: string[]; data: number[] } {
             const labels: string[] = [];
             const data: number[] = [];
@@ -82,7 +88,6 @@ export function useVltDashboardViewModel() {
         }
 
         if (chartRange === "last_month") {
-            // exactly 1 bar: the previous calendar month
             const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
             const key = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, "0")}`;
             return {
@@ -102,7 +107,6 @@ export function useVltDashboardViewModel() {
         }
 
         if (chartRange === "this_year") {
-            // Jan 1 to Dec 31 of current calendar year, all 12 months
             const labels: string[] = [];
             const data: number[] = [];
             for (let m = 0; m < 12; m++) {
@@ -114,7 +118,6 @@ export function useVltDashboardViewModel() {
             return { chartLabels: labels, chartData: data };
         }
 
-        // total — aggregate all keys across all years by month label
         const allKeys = Object.keys(monthlyHoursMap).sort();
         if (allKeys.length === 0) {
             const { labels, data } = buildMonthRange(6);
