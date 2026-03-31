@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
+import type { OpportunityFilters } from "@volunteerly/shared";
 
 export async function getCurrentVolunteer(volunteerId: string) {
     const volunteer = await prisma.volunteer.findUnique({
@@ -12,25 +13,26 @@ export async function createCurrentVolunteer(userId: string, firstName: string, 
     const volunteer = await prisma.volunteer.create({
         data: {
             id: userId,
-            firstName: firstName,
-            lastName: lastName,
+            firstName,
+            lastName,
         },
     });
     if (!volunteer) throw new Error("Error creating the Volunteer.");
     return volunteer;
 }
 
-export async function updateCurrentVolunteer(userId: string, firstName: string, lastName: string, location: string, bio: string, availability: Prisma.InputJsonValue, hourlyValue: number) {
+export async function updateCurrentVolunteer(
+    userId: string,
+    firstName: string,
+    lastName: string,
+    location: string,
+    bio: string,
+    availability: Prisma.InputJsonValue,
+    hourlyValue: number,
+) {
     const volunteer = await prisma.volunteer.update({
         where: { id: userId },
-        data: {
-            location,
-            firstName,
-            lastName,
-            bio,
-            availability,
-            hourlyValue,
-        },
+        data: { location, firstName, lastName, bio, availability, hourlyValue },
     });
     if (!volunteer) throw new Error("Error updating the Volunteer.");
     return volunteer;
@@ -41,10 +43,7 @@ export async function getYourOpportunities(volunteerId: string) {
         where: { volId: volunteerId },
         include: {
             organization: {
-                select: {
-                    id: true,
-                    orgName: true,
-                },
+                select: { id: true, orgName: true },
             },
         },
     });
@@ -57,10 +56,7 @@ export async function getVolunteerOrganizations(volunteerId: string) {
             orgId: true,
             hours: true,
             organization: {
-                select: {
-                    id: true,
-                    orgName: true,
-                },
+                select: { id: true, orgName: true },
             },
         },
     });
@@ -86,10 +82,7 @@ export async function getVolunteerOrganizations(volunteerId: string) {
 export async function getMonthlyHours(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
         where: { volId: volunteerId },
-        select: {
-            hours: true,
-            postedDate: true,
-        },
+        select: { hours: true, postedDate: true },
     });
 
     const map = new Map<string, number>();
@@ -99,4 +92,37 @@ export async function getMonthlyHours(volunteerId: string) {
     }
 
     return Object.fromEntries(map);
+}
+
+export async function browseOpportunities(filters: OpportunityFilters) {
+    return prisma.opportunity.findMany({
+        where: {
+            status: "OPEN",
+            ...(filters.search
+                ? {
+                    OR: [
+                        { name: { contains: filters.search, mode: "insensitive" } },
+                        { description: { contains: filters.search, mode: "insensitive" } },
+                        { category: { contains: filters.search, mode: "insensitive" } },
+                        { organization: { orgName: { contains: filters.search, mode: "insensitive" } } },
+                    ],
+                }
+                : {}),
+            ...(filters.category ? { category: { equals: filters.category, mode: "insensitive" } } : {}),
+            ...(filters.workType ? { workType: filters.workType } : {}),
+            ...(filters.commitmentLevel ? { commitmentLevel: filters.commitmentLevel } : {}),
+            ...(filters.maxHours !== undefined ? { hours: { lte: filters.maxHours } } : {}),
+        },
+        include: {
+            organization: {
+                select: {
+                    id: true,
+                    orgName: true,
+                    hqAdr: true,
+                    causeCategory: true,
+                },
+            },
+        },
+        orderBy: { postedDate: "desc" },
+    });
 }
