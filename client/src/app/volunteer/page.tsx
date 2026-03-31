@@ -12,6 +12,8 @@ import {
 import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
 import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
+import { VolunteerNavbar } from "./volunteer_navbar";
+
 
 const NAV_LINKS = [
     { label: "Dashboard",     href: "/volunteer" },
@@ -55,65 +57,10 @@ export default function VolunteerDashboardPage() {
     return (
         <div className="min-h-screen bg-gray-50">
 
-            {/* Navbar */}
-            <header className="w-full border-b bg-white px-6 py-3">
-                <div className="mx-auto flex max-w-7xl items-center justify-between">
-                    <Link href="/volunteer" className="flex-shrink-0">
-                        <Image src={logo} alt="Volunteerly" width={140} height={40} priority />
-                    </Link>
-                    <NavigationMenu className="hidden md:flex">
-                        <NavigationMenuList className="flex gap-6">
-                            {NAV_LINKS.map(({ label, href }) => (
-                                <NavigationMenuItem key={href}>
-                                    <Link
-                                        href={href}
-                                        className={`text-sm font-medium transition-colors hover:text-yellow-500 ${
-                                            pathname === href
-                                                ? "border-b-2 border-yellow-400 text-yellow-500"
-                                                : "text-gray-600"
-                                        }`}
-                                    >
-                                        {label}
-                                    </Link>
-                                </NavigationMenuItem>
-                            ))}
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                    <div className="flex items-center gap-3">
-                        <div className="hidden items-center gap-2 rounded-full border bg-gray-50 px-3 py-1.5 text-sm text-gray-400 sm:flex">
-                            <Search className="h-4 w-4" /><span>Search activities...</span>
-                        </div>
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                                <NavigationMenuItem>
-                                    <NavigationMenuTrigger className="p-0">
-                                        <Avatar className="h-9 w-9">
-                                            <AvatarImage src={avtImg.src} />
-                                            <AvatarFallback>
-                                                {currentVolunteer?.firstName?.[0] ?? "V"}
-                                                {currentVolunteer?.lastName?.[0] ?? ""}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent>
-                                        <div className="w-40 p-1">
-                                            <p className="px-2 py-1 text-sm font-medium text-gray-800">{fullName}</p>
-                                            <p className="px-2 pb-2 text-xs text-gray-400">Volunteer</p>
-                                            <hr className="mb-1" />
-                                            <button
-                                                className="w-full rounded px-2 py-1 text-left text-sm text-gray-600 hover:bg-gray-100"
-                                                onClick={handleSignOut}
-                                            >
-                                                Log Out
-                                            </button>
-                                        </div>
-                                    </NavigationMenuContent>
-                                </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
-                    </div>
-                </div>
-            </header>
+        <VolunteerNavbar
+        currentVolunteer={currentVolunteer}
+        onSignOut={handleSignOut}
+        />
 
             <main className="mx-auto max-w-7xl px=4 py-8 sm:px-6 lg:px-8">
 
