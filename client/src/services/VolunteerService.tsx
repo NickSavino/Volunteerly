@@ -2,9 +2,9 @@ import { api } from "@/lib/api";
 import { z } from "zod";
 import {
     CurrentVolunteerSchema,
-    UpdateCurrentVolunteer,
     OpportunitiesSchema,
-    OrganizationSchema,
+    type OpportunityFilters,
+    type UpdateCurrentVolunteer,
 } from "@volunteerly/shared";
 
 const PartnerOrgSchema = z.object({
@@ -48,5 +48,21 @@ export class VolunteerService {
     static async getMonthlyHours() {
         const response = await api<unknown>("/current-volunteer/monthly-hours");
         return MonthlyHoursSchema.safeParse(response);
+    }
+
+    static async browseOpportunities(filters: OpportunityFilters = {}) {
+        const params = new URLSearchParams();
+        if (filters.search) params.set("search", filters.search);
+        if (filters.category) params.set("category", filters.category);
+        if (filters.workType) params.set("workType", filters.workType);
+        if (filters.commitmentLevel) params.set("commitmentLevel", filters.commitmentLevel);
+        if (filters.maxHours !== undefined) params.set("maxHours", String(filters.maxHours));
+
+        const query = params.toString();
+        const response = await api<unknown>(
+            `/current-volunteer/opportunities/browse${query ? `?${query}` : ""}`
+        );
+        const asArray = Array.isArray(response) ? response : [response];
+        return OpportunitiesSchema.safeParse(asArray);
     }
 }
