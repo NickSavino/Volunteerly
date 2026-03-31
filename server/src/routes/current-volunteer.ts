@@ -1,7 +1,36 @@
 import { Router } from "express";
-import {createCurrentVolunteer, getCurrentVolunteer,updateCurrentVolunteer, getYourOpportunities, getVolunteerOrganizations, getMonthlyHours } from "../services/volunteer-service.js";
+import {
+    createCurrentVolunteer,
+    getCurrentVolunteer,
+    updateCurrentVolunteer,
+    getYourOpportunities,
+    getVolunteerOrganizations,
+    getMonthlyHours,
+    browseOpportunities,
+} from "../services/volunteer-service.js";
 
 export const currentVolunteerRouter = Router();
+
+currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { search, category, workType, commitmentLevel, maxHours } = req.query;
+
+        const opportunities = await browseOpportunities({
+            search: search as string | undefined,
+            category: category as string | undefined,
+            workType: workType as "IN_PERSON" | "REMOTE" | "HYBRID" | undefined,
+            commitmentLevel: commitmentLevel as "FLEXIBLE" | "PART_TIME" | "FULL_TIME" | undefined,
+            maxHours: maxHours ? Number(maxHours) : undefined,
+        });
+
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
 
 currentVolunteerRouter.get("/opportunities", async (req, res, next) => {
     try {
@@ -50,7 +79,7 @@ currentVolunteerRouter.get("/", async (req, res, next) => {
 
 currentVolunteerRouter.put("/", async (req, res, next) => {
     try {
-    const userId = req.auth!.userId;
+        const userId = req.auth!.userId;
         console.log("got req");
         const { firstName, lastName, location, bio, availability, hourlyValue } = req.body;
         const user = await getCurrentVolunteer(userId);
