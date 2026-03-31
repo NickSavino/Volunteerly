@@ -82,9 +82,8 @@ model Volunteer {
   hourlyValue           Int            @default(0) @map("hourly_value")
   organizationsAssisted Int            @default(0) @map("organizations_assisted")
   averageRating         Float          @default(0) @map("average_rating")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt             DateTime       @default(now()) @map("created_at")
+  updatedAt             DateTime       @default(now()) @updatedAt @map("updated_at")
 
   user User @relation(fields: [id], references: [id])
 
@@ -111,6 +110,8 @@ model Opportunity {
   length          String           @default("") @map("length")
   deadlineDate    DateTime?        @map("deadline_date")
   availability    Json             @default("[]") @map("availability")
+  latitude        Float?           @map("latitude")
+  longitude       Float?           @map("longitude")
   postedDate      DateTime         @default(now()) @map("posted_date")
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
@@ -276,6 +277,24 @@ model Flag {
   @@map("flags")
 }
 
+model VolunteerReport {
+  id String @id @default(uuid())
+
+  reason String  @default("")
+  isOpen Boolean @default(true) @map("is_open")
+
+  reportedUser   User   @relation("ReportsReceived", fields: [reportedUserId], references: [id])
+  reportedUserId String @map("reported_user_id")
+
+  reportingUser   User   @relation("ReportsFiled", fields: [reportingUserId], references: [id])
+  reportingUserId String @map("reporting_user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("volunteer_reports")
+}
+
 enum TicketStatus {
   OPEN
   CLOSED
@@ -350,22 +369,4 @@ enum CommitmentLevel {
   FLEXIBLE
   PART_TIME
   FULL_TIME
-}
-
-model VolunteerReport {
-  id String @id @default(uuid())
-
-  reason String  @default("")
-  isOpen Boolean @default(true) @map("is_open")
-
-  reportedUser   User   @relation("ReportsReceived", fields: [reportedUserId], references: [id])
-  reportedUserId String @map("reported_user_id")
-
-  reportingUser   User   @relation("ReportsFiled", fields: [reportingUserId], references: [id])
-  reportingUserId String @map("reporting_user_id")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@map("volunteer_reports")
 }

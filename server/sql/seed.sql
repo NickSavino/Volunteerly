@@ -147,16 +147,15 @@ VALUES
     (gen_random_uuid()::text, vol1_id::text, skill2_id::text),
     (gen_random_uuid()::text, vol2_id::text, skill3_id::text);
 
---Insert Opps
-INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)
+--Insert Opps (with Calgary lat/lng coordinates)
+INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability, latitude, longitude)
 VALUES
-    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',  'Create a website for our charity', 'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]'),
-    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation', 'Data Anlytics', 'Create a dashboard for our stakeholders.',              'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL, '["Fri", "Sat", "Sun"]'),
-    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',          'Data Science',   'Predict our Q3 donation amounts.',          'Programming experience required.', 'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
+    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]',      51.0447, -114.0719),
+    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]',      51.0520, -114.0800),
+    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]',      51.0350, -114.0580);
 
 
 --Applications
-
 INSERT INTO public.applications (id, opp_id, vol_id, match_pct, message, date_applied)
 VALUES
     (app1_id::text, opp3_id::text, vol1_id::text, 85, 'I have 5 years data science experience at google.', '2026-03-05'),
