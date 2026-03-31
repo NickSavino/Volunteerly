@@ -15,8 +15,6 @@ export const OpportunitySchema = z.object({
     length: z.string(),
     deadlineDate: z.string().nullable(),
     availability: z.array(z.any()),
-    latitude: z.number().nullable(),
-    longitude: z.number().nullable(),
     postedDate: z.string(),
     createdAt: z.string(),
     updatedAt: z.string(),

@@ -120,9 +120,9 @@ VALUES (mod1_id::text, 'Admin', 'Moderator');
 --Insert Organizations
 INSERT INTO public.organizations (id, org_name, status, charity_num, doc_id, contact_name, contact_email, contact_num, hq_adr, mission_statement, cause_category, website)
 VALUES
-    (org1_id::text, 'Red Cross International', 'VERIFIED', 123456, 'doc-red-cross',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '123 Main St, Calgary, AB',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org'),
-    (org2_id::text, 'World United',  'VERIFIED', 654321, 'doc-world-united', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '456 Park Ave, Calgary, AB',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org'),
-    (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012, 'doc-tms',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '789 Tech Blvd, Calgary, AB', 'Ending Homelessness.', 'Poverty',    'https://tms.org');
+    (org1_id::text, 'Red Cross International', 'VERIFIED', 123456, 'doc-red-cross',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '2609 15 St NE, Calgary, AB, Canada',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org'),
+    (org2_id::text, 'World United',  'VERIFIED', 654321, 'doc-world-united', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org'),
+    (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012, 'doc-tms',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org');
 
 
 --Insert Volunteers
@@ -147,12 +147,12 @@ VALUES
     (gen_random_uuid()::text, vol1_id::text, skill2_id::text),
     (gen_random_uuid()::text, vol2_id::text, skill3_id::text);
 
---Insert Opps (with Calgary lat/lng coordinates)
-INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability, latitude, longitude)
+--Insert Opps
+INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)
 VALUES
-    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]',      51.0447, -114.0719),
-    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]',      51.0520, -114.0800),
-    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]',      51.0350, -114.0580);
+    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]'),
+    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]'),
+    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
 
 
 --Applications

@@ -110,8 +110,6 @@ model Opportunity {
   length          String           @default("") @map("length")
   deadlineDate    DateTime?        @map("deadline_date")
   availability    Json             @default("[]") @map("availability")
-  latitude        Float?           @map("latitude")
-  longitude       Float?           @map("longitude")
   postedDate      DateTime         @default(now()) @map("posted_date")
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
