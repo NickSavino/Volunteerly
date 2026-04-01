@@ -4,18 +4,27 @@ import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
-import type { CurrentModerator, Organization } from "@volunteerly/shared";
+import type { CurrentModerator, ModeratorOrganizationList, ModeratorOrganizationListItem, Organization } from "@volunteerly/shared";
+import { appToast } from "../../../components/common/app-toast";
 
 export type TabKey = "ALL" | "APPLIED" | "VERIFIED" | "REJECTED";
 export type SortKey = "alphabetical" | "newest" | "oldest";
+
+export const ORG_TABS: { key: TabKey; label: string }[] = [
+  { key: "ALL", label: "All Accounts" },
+  { key: "APPLIED", label: "Flagged Accounts" },
+  { key: "VERIFIED", label: "Resolved" },
+  { key: "REJECTED", label: "Closed" },
+];
 
 const PAGE_SIZE_OPTIONS = [3, 5, 10] as const;
 
 export function useOrgListViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
+
     const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(undefined);
-    const [allOrgs, setAllOrgs] = useState<Organization[]>([]);
+    const [allOrgs, setAllOrgs] = useState<ModeratorOrganizationList>([]);
     const [error, setError] = useState<string | null>(null);
     const [loadingData, setLoadingData] = useState(true);
 
@@ -28,16 +37,17 @@ export function useOrgListViewModel() {
     const [pendingPageSize, setPendingPageSize] = useState<number>(3);
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
+    const [selectedOrg, setSelectedOrg] = useState<ModeratorOrganizationListItem | null>(null);
     const [checks, setChecks] = useState({
         charityVerified: false,
         websiteMatches: false,
         documentsValid: false,
         addressConfirmed: false,
     });
+
     const [showRejectModal, setShowRejectModal] = useState(false);
+    const [showApproveConfirm, setShowApproveConfirm] = useState(false);
     const [rejectionReason, setRejectionReason] = useState("");
-    const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: "", visible: false });
 
     const allChecked = Object.values(checks).every(Boolean);
 
@@ -59,11 +69,11 @@ export function useOrgListViewModel() {
                 if (modResult.success) setCurrentModerator(modResult.data);
 
                 const orgsResult = await OrganizationService.getAllOrganizations();
-                if (!orgsResult.success) {
+                if (!orgsResult) {
                     setError("Failed to load organizations.");
                     return;
                 }
-                setAllOrgs(orgsResult.data);
+                setAllOrgs(orgsResult);
             } catch (err) {
                 console.error(err);
                 setError("Failed to load data.");
@@ -108,6 +118,9 @@ export function useOrgListViewModel() {
     const totalPages = Math.max(1, Math.ceil(filteredOrgs.length / pageSize));
     const paginatedOrgs = filteredOrgs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+    const startItem = filteredOrgs.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+    const endItem = Math.min(currentPage * pageSize, filteredOrgs.length);
+
     function applyFilters() {
         setSearchQuery(pendingSearch);
         setSortBy(pendingSort);
@@ -120,81 +133,121 @@ export function useOrgListViewModel() {
         setCurrentPage(1);
     }
 
-    function openReviewModal(org: Organization) {
+    function openReviewModal(org: ModeratorOrganizationListItem) {
         setSelectedOrg(org);
         setChecks({ charityVerified: false, websiteMatches: false, documentsValid: false, addressConfirmed: false });
         setShowRejectModal(false);
+        setShowApproveConfirm(false);
         setRejectionReason("");
     }
 
     function closeReviewModal() {
         setSelectedOrg(null);
         setShowRejectModal(false);
+        setShowApproveConfirm(false);
+        setRejectionReason("");
     }
 
     function toggleCheck(key: keyof typeof checks) {
         setChecks((prev) => ({ ...prev, [key]: !prev[key] }));
     }
 
-    function showToast(message: string) {
-        setToast({ message, visible: true });
-        setTimeout(() => setToast({ message: "", visible: false }), 3000);
+    function requestApprove() {
+        if (!selectedOrg || !allChecked) return;
+        setShowApproveConfirm(true);
     }
 
     async function handleApprove() {
         if (!selectedOrg || !allChecked) return;
-        const result = await OrganizationService.approveOrganization(selectedOrg.id);
-        if (!result.success) { setError("Failed to approve organization."); return; }
-        setAllOrgs((prev) => prev.map((o) => o.id === selectedOrg.id ? { ...o, status: "VERIFIED" as const } : o));
-        closeReviewModal();
-        showToast("Organization Approved");
+        try {
+            const result = await OrganizationService.approveOrganization(selectedOrg.id);
+            if (!result.success) { setError("Failed to approve organization."); return; }
+            setAllOrgs((prev) => prev.map((o) => o.id === selectedOrg.id ? { ...o, status: "VERIFIED" as const } : o));
+            closeReviewModal();
+            appToast.success("Organization approved", {
+                message: `${result.data.orgName} has been approved.`
+            })
+        }
+        catch {
+            appToast.error("Rejection Failed", {
+                message: "The organization could not be rejected."
+            })
+        }
     }
 
     async function handleReject() {
         if (!selectedOrg || !rejectionReason.trim()) return;
-        const result = await OrganizationService.rejectOrganization(selectedOrg.id, rejectionReason);
-        if (!result.success) { setError("Failed to reject organization."); return; }
-        setAllOrgs((prev) => prev.map((o) => o.id === selectedOrg.id ? { ...o, status: "REJECTED" as const } : o));
-        closeReviewModal();
-        showToast("Organization Rejected");
+        try {
+            const result = await OrganizationService.rejectOrganization(selectedOrg.id, rejectionReason);
+            if (!result.success) { setError("Failed to reject organization."); return; }
+            setAllOrgs((prev) => prev.map((o) => o.id === selectedOrg.id ? { ...o, status: "REJECTED" as const } : o));
+            closeReviewModal();
+
+            appToast.success("Organization approved", {
+            message: `${result.data.orgName} has been rejected.`
+        })
+        } catch {
+            appToast.error("Rejection Failed", {
+                message: "The organization could not be rejected."
+        })
+        }
+        
     }
 
     return {
-        loading: loading || loadingData,
-        session,
-        signOut,
-        router,
-        currentModerator,
-        paginatedOrgs,
-        filteredOrgs,
-        error,
-        activeTab,
-        tabCounts,
-        pendingSearch,
-        setPendingSearch,
-        pendingSort,
-        setPendingSort,
-        pendingPageSize,
-        setPendingPageSize,
-        pageSize,
-        PAGE_SIZE_OPTIONS,
-        currentPage,
-        totalPages,
-        setCurrentPage,
-        applyFilters,
-        handleTabChange,
-        selectedOrg,
-        checks,
-        allChecked,
-        showRejectModal,
-        rejectionReason,
-        toast,
-        openReviewModal,
-        closeReviewModal,
-        toggleCheck,
-        setShowRejectModal,
-        setRejectionReason,
-        handleApprove,
-        handleReject,
+        auth: {
+            loading: loading || loadingData,
+            session,
+            signOut,
+            router,
+            currentModerator,
+        },
+        page: {
+            title: "Organizations",
+            subtitle: "Review and Approve Organizations",
+            activeTab,
+            tabCounts,
+            error,
+        },
+        filters: {
+            pendingSearch,
+            setPendingSearch,
+            pendingSort,
+            setPendingSort,
+            pendingPageSize,
+            setPendingPageSize,
+            pageSizeOptions: PAGE_SIZE_OPTIONS,
+            applyFilters,
+            handleTabChange,
+        },
+        data: {
+            rows: paginatedOrgs,
+            isEmpty: paginatedOrgs.length === 0,
+        },
+        pagination: {
+            currentPage,
+            totalPages,
+            setCurrentPage,
+            startItem,
+            endItem,
+            totalItems: filteredOrgs.length
+        },
+        review: {
+            selectedOrg,
+            checks,
+            allChecked,
+            showRejectModal,
+            showApproveConfirm,
+            rejectionReason,
+            openReviewModal,
+            closeReviewModal,
+            toggleCheck,
+            setShowRejectModal,
+            setShowApproveConfirm,
+            setRejectionReason,
+            handleApprove,
+            handleReject,
+            requestApprove
+        }
     };
 }

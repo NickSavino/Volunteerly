@@ -10,7 +10,7 @@ BEGIN
     EXECUTE 'TRUNCATE TABLE 
         public.chat_messages,
         public.chat_conversations,
-        public.flags,
+        public.volunteer_reports,
         public.tickets,
         public.reviews,
         public.progress_updates,

@@ -222,3 +222,48 @@ For local testing of production, you may optionally use a separate .env.prod fil
 ```bash
 docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up --build
 ```
+
+### schema-milestone : Seeding Script Instructions
+
+1. Prerequisites
+ 
+    Ensure you have Node.js installed
+
+    `node --version`
+
+
+2. Clone Repository
+ 
+    `git clone https://csgit.ucalgary.ca/saad.abdullah1/seng513-202601-pg-40.git`
+
+
+3. In repo root, run npm commands
+ 
+    `npm install supabase`
+
+    `npm install prisma`
+
+    Need to install Supabase CLI to run Supabase locally and Prisma for migrations
+
+
+4. Set your environment variables
+ 
+    In repo root:
+
+    - `touch .env`
+
+    - Place environment variables only in this file, use from sample or submission 
+
+
+5. Run Supabase Locally
+ 
+    `npx supabase start`
+
+    Copy the authentication key -> Secret into the .env file
+
+    Copy the authentication key -> Publishable into the .env file
+
+
+6. Run the seeding script
+ 
+    `npm run db:reset -w server`
