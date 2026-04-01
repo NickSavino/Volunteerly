@@ -93,6 +93,8 @@ model Volunteer {
   applications  Application[]
   skillTrees    SkillTree[]
   skillProfile  VolunteerSkillProfile?
+  workExperiences VolunteerWorkExperience[]
+  educations      VolunteerEducation[]
 
   @@map("volunteers")
 }
@@ -125,15 +127,42 @@ model Opportunity {
 }
 
 model VolunteerSkillProfile {
-  volId      String   @id @map("vol_id")
-  technical  Json     @default("[]")
-  soft       Json     @default("[]")
-  leadership Json     @default("[]")
-  createdAt  DateTime @default(now()) @map("created_at")
+  volId        String   @id @map("vol_id")
+  technical    Json     @default("[]")
+  nonTechnical Json     @default("[]") @map("non_technical")
+  createdAt    DateTime @default(now()) @map("created_at")
 
   volunteer Volunteer @relation(fields: [volId], references: [id])
 
   @@map("volunteer_skill_profiles")
+}
+
+model VolunteerWorkExperience {
+  id               String    @id @default(uuid())
+  volId            String    @map("vol_id")
+  jobTitle         String    @default("") @map("job_title")
+  company          String    @default("") @map("company")
+  startDate        String    @default("") @map("start_date")
+  endDate          String    @default("") @map("end_date")
+  responsibilities String    @default("") @map("responsibilities")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  volunteer Volunteer @relation(fields: [volId], references: [id])
+
+  @@map("volunteer_work_experiences")
+}
+
+model VolunteerEducation {
+  id             String   @id @default(uuid())
+  volId          String   @map("vol_id")
+  institution    String   @default("") @map("institution")
+  degree         String   @default("") @map("degree")
+  graduationYear String   @default("") @map("graduation_year")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  volunteer Volunteer @relation(fields: [volId], references: [id])
+
+  @@map("volunteer_educations")
 }
 
 
