@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -441,3 +441,36 @@ currentOrganizationRouter.put("/opportunity/progressUpdate", auth, async (req, r
     }
 
 });
+
+currentOrganizationRouter.put("/opportunity", auth, async (req, res, next) => {
+  try {
+    const typedReq = req as typeof req & AuthenticatedRequest;
+
+    const userId = typedReq.auth?.userId;
+
+    if (!userId) {
+        return res.status(401).json({
+            error: "Unauthorized",
+            message: "User context missing."
+        });
+    }
+    const { name, category, description, candidateDesc, workType,
+        commitmentLevel, length, deadlineDate, availability } = req.body;
+
+    const created_opp = await createOpportunity(userId, name, category, description, candidateDesc, workType,
+        commitmentLevel, length, deadlineDate, availability as string[]);
+    
+    if (!created_opp){
+        return res.status(404).json({
+            error: "Error Creating Opportunity",
+            message: "Cannot Create."
+        });
+    }
+    res.status(200).json(created_opp);
+  } catch (error) {
+    console.error(error);
+    next(error);
+    }
+
+});
+

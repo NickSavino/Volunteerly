@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function HomePage() {
+export default function OrgApplicationPage() {
   const {        
     loading,
     error,

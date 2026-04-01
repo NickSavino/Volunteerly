@@ -12,7 +12,9 @@ import {
     ApplicationSchema,
     OpportunityAnalyticsSchema,
     ProgressUpdate,
-    ProgressUpdateSchema
+    ProgressUpdateSchema,
+    Opportunity,
+    UpdateOpportunitySchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -154,4 +156,12 @@ export class OrganizationService {
         return parsed;
     }
 
+    static async addOpportunity(opportunity: UpdateOpportunitySchema) {
+        const response = await api<unknown>("/current-organization/opportunity", {
+            method: "PUT",
+            body: JSON.stringify(opportunity),
+        });
+        const parsed = OpportunitySchema.safeParse(response);
+        return parsed;
+    }
 }
