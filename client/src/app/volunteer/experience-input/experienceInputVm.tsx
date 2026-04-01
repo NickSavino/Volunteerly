@@ -7,9 +7,6 @@ import { VolunteerService } from "@/services/VolunteerService";
 import { api } from "@/lib/api";
 import { CurrentUserSchema } from "@volunteerly/shared";
 
-
-const { session, loading } = useAuth();
-
 export type WorkExperience = {
     jobTitle: string;
     company: string;
@@ -32,7 +29,7 @@ export type FormErrors = {
 
 export function useExperienceInputViewModel() {
     const router = useRouter();
-    const { signOut } = useAuth();
+    const { session, loading, signOut } = useAuth();
 
     const [resumeFile, setResumeFile] = useState<File | null>(null);
     const [workExperiences, setWorkExperiences] = useState<WorkExperience[]>([
