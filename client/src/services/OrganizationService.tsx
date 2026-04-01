@@ -1,8 +1,12 @@
 import { api } from "@/lib/api";
 import {
     CurrentOrganizationSchema,
-    CurrentOrganizationUpdateSchema,
+    CurrentOrganizationUpdate,
     OpportunitiesSchema,
+    ModeratorOrganizationList,
+    ModeratorOrganizationListItem,
+    ModeratorOrganizationListItemSchema,
+    ModeratorOrganizationListSchema,
     OrganizationSchema,
     OrganizationsSchema,
     CountSchema,
@@ -25,7 +29,7 @@ export class OrganizationService {
         return parsed;
     }
 
-    static async update_create_Organization(user: CurrentOrganizationUpdateSchema) {
+    static async update_create_Organization(user: CurrentOrganizationUpdate) {
         const response = await api<unknown>("/current-organization", {
             method: "PUT",
             body: JSON.stringify(user),
@@ -43,11 +47,16 @@ export class OrganizationService {
         return parsed;
     }
 
-    static async getAllOrganizations(status?: "APPLIED") {
+    static async getAllOrganizations(status?: "APPLIED") : Promise<ModeratorOrganizationList> {
         const url = status ? `/organization?status=${status}` : "/organization";
         const response = await api<unknown>(url);
-        const parsed = OrganizationsSchema.safeParse(response);
-        return parsed;
+        const parsed = ModeratorOrganizationListSchema.safeParse(response);
+        if (!parsed.success) {
+            console.error("Organization parse failed:", parsed.error.issues);
+            console.error("Raw organization response:", response);
+            throw new Error("Error fetching organizations.");
+        }
+        return parsed.data;
     }
 
     static async getOrganizationDocument(file_path:string) {

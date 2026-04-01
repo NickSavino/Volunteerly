@@ -29,8 +29,7 @@ export function useSignUpViewModel() {
         setSubmitting(false);
 
         if (error) {
-            console.log(error.message)
-            setError(error.message);
+            setError("Error Signing Up User.");
             return;
         }
 
@@ -67,8 +66,6 @@ export function useSignUpViewModel() {
                 });
                 const result = await OrganizationService.update_create_Organization(createdOrg);
                 if (result.success) {
-                    console.log("Updated org:", result.data);
-
                     if (data.session) {
                         router.push("/organization/application");
                         return;

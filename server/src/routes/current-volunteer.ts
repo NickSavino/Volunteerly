@@ -1,19 +1,11 @@
 import { Router } from "express";
-import { auth } from "../middleware/auth.js";
 import {createCurrentVolunteer, getCurrentVolunteer,updateCurrentVolunteer, getYourOpportunities, getVolunteerOrganizations, getMonthlyHours } from "../services/volunteer-service.js";
-
-type AuthenticatedRequest = {
-    auth?: {
-        userId: string;
-        email?: string;
-    };
-};
 
 export const currentVolunteerRouter = Router();
 
-currentVolunteerRouter.get("/opportunities", auth, async (req, res, next) => {
+currentVolunteerRouter.get("/opportunities", async (req, res, next) => {
     try {
-        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
         const opportunities = await getYourOpportunities(userId);
         res.status(200).json(opportunities);
@@ -22,9 +14,9 @@ currentVolunteerRouter.get("/opportunities", auth, async (req, res, next) => {
     }
 });
 
-currentVolunteerRouter.get("/organizations", auth, async (req, res, next) => {
+currentVolunteerRouter.get("/organizations", async (req, res, next) => {
     try {
-        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
         const organizations = await getVolunteerOrganizations(userId);
         res.status(200).json(organizations);
@@ -33,9 +25,9 @@ currentVolunteerRouter.get("/organizations", auth, async (req, res, next) => {
     }
 });
 
-currentVolunteerRouter.get("/monthly-hours", auth, async (req, res, next) => {
+currentVolunteerRouter.get("/monthly-hours", async (req, res, next) => {
     try {
-        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
         const monthlyHours = await getMonthlyHours(userId);
         res.status(200).json(monthlyHours);
@@ -44,10 +36,9 @@ currentVolunteerRouter.get("/monthly-hours", auth, async (req, res, next) => {
     }
 });
 
-currentVolunteerRouter.get("/", auth, async (req, res, next) => {
+currentVolunteerRouter.get("/", async (req, res, next) => {
     try {
-        const typedReq = req as typeof req & AuthenticatedRequest;
-        const userId = typedReq.auth?.userId;
+        const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
         const user = await getCurrentVolunteer(userId);
         if (!user) return res.status(404).json({ error: "Not Found", message: "Volunteer not found." });
@@ -57,12 +48,10 @@ currentVolunteerRouter.get("/", auth, async (req, res, next) => {
     }
 });
 
-currentVolunteerRouter.put("/", auth, async (req, res, next) => {
+currentVolunteerRouter.put("/", async (req, res, next) => {
     try {
-        const typedReq = req as typeof req & AuthenticatedRequest;
-        const userId = typedReq.auth?.userId;
+    const userId = req.auth!.userId;
         console.log("got req");
-        if (!userId) return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
         const { firstName, lastName, location, bio, availability, hourlyValue } = req.body;
         const user = await getCurrentVolunteer(userId);
         let modified_user;

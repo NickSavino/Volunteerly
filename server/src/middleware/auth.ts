@@ -1,15 +1,8 @@
 import { Request, Response, NextFunction } from "express"
 import { supabase } from "../lib/supabase.js";
 
-type AuthenticatedRequest = Request & {
-    auth?: {
-        userId: string;
-        email: string | undefined;
-    };
-};
-
 export async function auth(
-    req: AuthenticatedRequest,
+    req: Request,
     res: Response,
     next: NextFunction
 ) {
@@ -34,8 +27,8 @@ export async function auth(
     }
 
     req.auth = {
-        userId: data.user.id,
-        email: data.user.email
+        userId: data.user.id ?? "",
+        email: data.user.email ?? ""
     };
 
     next();

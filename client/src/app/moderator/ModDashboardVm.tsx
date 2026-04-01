@@ -4,14 +4,14 @@ import { UserService } from "@/services/UserService";
 import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
 import { useAuth } from "@/providers/auth-provider";
-import type { CurrentModerator, Organization } from "@volunteerly/shared";
+import type { CurrentModerator, ModeratorOrganizationList } from "@volunteerly/shared";
 
 export function useModDashboardViewModel() {
     const router = useRouter();
     const { session, user, loading, signOut } = useAuth();
     const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(undefined);
     const [pendingOrgsCount, setPendingOrgsCount] = useState(0);
-    const [recentPendingOrgs, setRecentPendingOrgs] = useState<Organization[]>([]);
+    const [recentPendingOrgs, setRecentPendingOrgs] = useState<ModeratorOrganizationList>([]);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -47,9 +47,9 @@ export function useModDashboardViewModel() {
                 setCurrentModerator(modResult.data);
 
                 const orgsResult = await OrganizationService.getAllOrganizations("APPLIED");
-                if (orgsResult.success) {
-                    setPendingOrgsCount(orgsResult.data.length);
-                    setRecentPendingOrgs(orgsResult.data.slice(0, 2));
+                if (orgsResult) {
+                    setPendingOrgsCount(orgsResult.length);
+                    setRecentPendingOrgs(orgsResult.slice(0, 2));
                 }
 
             } catch (err) {

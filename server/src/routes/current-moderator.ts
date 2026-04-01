@@ -1,31 +1,15 @@
 import { Router } from "express";
-import { auth } from "../middleware/auth.js";
 import {
     createCurrentModerator,
     getCurrentModerator,
     updateCurrentModerator,
 } from "../services/moderator-service.js";
 
-type AuthenticatedRequest = {
-    auth?: {
-        userId: string;
-        email?: string;
-    };
-};
-
 export const currentModeratorRouter = Router();
 
-currentModeratorRouter.get("/", auth, async (req, res, next) => {
+currentModeratorRouter.get("/", async (req, res, next) => {
     try {
-        const typedReq = req as typeof req & AuthenticatedRequest;
-        const userId = typedReq.auth?.userId;
-
-        if (!userId) {
-            return res.status(401).json({
-                error: "Unauthorized",
-                message: "User context missing.",
-            });
-        }
+        const userId = req.auth!.userId;
 
         const moderator = await getCurrentModerator(userId);
 
@@ -42,17 +26,9 @@ currentModeratorRouter.get("/", auth, async (req, res, next) => {
     }
 });
 
-currentModeratorRouter.put("/", auth, async (req, res, next) => {
+currentModeratorRouter.put("/", async (req, res, next) => {
     try {
-        const typedReq = req as typeof req & AuthenticatedRequest;
-        const userId = typedReq.auth?.userId;
-
-        if (!userId) {
-            return res.status(401).json({
-                error: "Unauthorized",
-                message: "User context missing.",
-            });
-        }
+        const userId = req.auth!.userId;
 
         const { firstName, lastName } = req.body;
 

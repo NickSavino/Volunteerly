@@ -7,344 +7,365 @@ datasource db {
 }
 
 model User {
-    id                  String              @id @default(uuid())
-    email               String              @unique
-    role                UserRole            @default(VOLUNTEER)
-    status              AccountState        @default(UNVERIFIED)
-    createdAt           DateTime            @default(now()) @map("created_at")
-    updatedAt           DateTime            @updatedAt @default(now()) @map("updated_at")
+  id        String       @id @default(uuid())
+  email     String       @unique
+  role      UserRole     @default(VOLUNTEER)
+  status    AccountState @default(UNVERIFIED)
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @default(now()) @updatedAt @map("updated_at")
 
-    moderator Moderator?
-    reviewsGiven        Review[]            @relation("ReviewIssuer")
-    reviewsRecvd        Review[]            @relation("ReviewReviewee")
-    progressUpdates     ProgressUpdate[]
-    ticketsIssued       Ticket[]            @relation("TicketIssuer")
-    ticketsReceived     Ticket[]            @relation("TicketTarget")
-    conversationsAsA    ChatConversation[]  @relation("ConversationUserA")
-    conversationsAsB    ChatConversation[]  @relation("ConversationUserB")
-    chatMessagesSent    ChatMessage[]       @relation("ChatMessageSender")
-    flagsIssued         Flag[]              @relation("FlagIssuer")
-    flagsReceived       Flag[]              @relation("FlaggedUser")
+  moderator    Moderator?
+  organization Organization?
+  volunteer    Volunteer?
 
-    @@map("users")
+  reportsFiled     VolunteerReport[]  @relation("ReportsFiled")
+  reportsReceived  VolunteerReport[]  @relation("ReportsReceived")
+  reviewsGiven     Review[]           @relation("ReviewIssuer")
+  reviewsRecvd     Review[]           @relation("ReviewReviewee")
+  progressUpdates  ProgressUpdate[]
+  ticketsIssued    Ticket[]           @relation("TicketIssuer")
+  ticketsReceived  Ticket[]           @relation("TicketTarget")
+  conversationsAsA ChatConversation[] @relation("ConversationUserA")
+  conversationsAsB ChatConversation[] @relation("ConversationUserB")
+  chatMessagesSent ChatMessage[]      @relation("ChatMessageSender")
+  flagsIssued      Flag[]             @relation("FlagIssuer")
+  flagsReceived    Flag[]             @relation("FlaggedUser")
+
+  @@map("users")
 }
 
 model Moderator {
-    id                  String              @id @map("id")
-    firstName           String              @default("") @map("first_name")
-    lastName            String              @default("") @map("last_name")
-    createdAt           DateTime            @default(now()) @map("created_at")
-    updatedAt           DateTime            @updatedAt @default(now()) @map("updated_at")
+  id        String   @id @map("id")
+  firstName String   @default("") @map("first_name")
+  lastName  String   @default("") @map("last_name")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-    user                User                @relation(fields: [id], references: [id])
+  user User @relation(fields: [id], references: [id])
 
-
-    @@map("moderators")
+  @@map("moderators")
 }
 
 model Organization {
-    id               String            @id @default(uuid())
-    orgName          String            @default("") @map("org_name")
-    status           OrganizationState @default(CREATED)
-    charityNum       Int               @default(0) @map("charity_num")
-    docId            String            @default("") @map("doc_id")
-    contactName      String            @default("") @map("contact_name")
-    contactEmail     String            @default("") @map("contact_email")
-    contactNum       String            @default("") @map("contact_num")
-    hqAdr            String            @default("") @map("hq_adr")
-    missionStatement String            @default("") @map("mission_statement")
-    causeCategory    String            @default("") @map("cause_category")
-    website          String            @default("") @map("website")
-    impactHighlights Json              @default("[]") @map("impact_highlights")
-    rejectionReason  String            @default("") @map("rejection_reason")
-    createdAt        DateTime          @default(now()) @map("created_at")
-    updatedAt        DateTime          @updatedAt @default(now()) @map("updated_at")
+  id               String            @id
+  orgName          String            @default("") @map("org_name")
+  status           OrganizationState @default(CREATED)
+  charityNum       Int               @default(0) @map("charity_num")
+  docId            String            @default("") @map("doc_id")
+  contactName      String            @default("") @map("contact_name")
+  contactEmail     String            @default("") @map("contact_email")
+  contactNum       String            @default("") @map("contact_num")
+  hqAdr            String            @default("") @map("hq_adr")
+  missionStatement String            @default("") @map("mission_statement")
+  causeCategory    String            @default("") @map("cause_category")
+  website          String            @default("") @map("website")
+  impactHighlights Json              @default("[]") @map("impact_highlights")
+  rejectionReason  String            @default("") @map("rejection_reason")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @default(now()) @updatedAt @map("updated_at")
 
+  user User @relation(fields: [id], references: [id])
 
-    opportunities Opportunity[]
+  opportunities Opportunity[]
 
-    @@map("organizations")
-
+  @@map("organizations")
 }
 
 model Volunteer {
-    id                    String   @id @default(uuid())
-    firstName             String   @default("") @map("first_name")
-    lastName              String   @default("") @map("last_name")
-    location              String   @default("") @map("location")
-    bio                   String   @default("") @map("bio")
-    availability          Json     @default("[]") @map("availability")
-    hourlyValue           Int      @default(0) @map("hourly_value")
-    organizationsAssisted Int      @default(0) @map("organizations_assisted")
-    createdAt             DateTime @default(now()) @map("created_at")
-    updatedAt             DateTime @updatedAt @default(now()) @map("updated_at")
+  id                    String         @id
+  firstName             String         @default("") @map("first_name")
+  lastName              String         @default("") @map("last_name")
+  status                VolunteerState @default(CLEAR)
+  location              String         @default("") @map("location")
+  bio                   String         @default("") @map("bio")
+  availability          Json           @default("[]") @map("availability")
+  hourlyValue           Int            @default(0) @map("hourly_value")
+  organizationsAssisted Int            @default(0) @map("organizations_assisted")
+  averageRating         Float          @default(0) @map("average_rating")
 
-    opportunities         Opportunity[]
-    skills                VolunteerSkill[]
-    applications   Application[]
-    skillTrees     SkillTree[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-    @@map("volunteers")
+  user User @relation(fields: [id], references: [id])
 
+  opportunities Opportunity[]
+  skills        VolunteerSkill[]
+  applications  Application[]
+  skillTrees    SkillTree[]
+
+  @@map("volunteers")
 }
 
-
 model Opportunity {
-    id              String           @id @default(uuid())
-    orgId           String           @map("org_id")
-    volId           String?          @map("vol_id")
-    status          OpportunityState @default(OPEN)
-    name            String           @default("") @map("name")
-    category        String           @default("") @map("category")
-    description     String           @default("") @map("description")
-    candidateDesc   String           @default("") @map("candidate_desc")
-    workType        WorkType         @default(IN_PERSON) @map("work_type")
-    commitmentLevel CommitmentLevel  @default(FLEXIBLE) @map("commitment_level")
-    hours           Float            @default(0) @map("hours")
-    length          String           @default("") @map("length")
-    deadlineDate    DateTime?        @map("deadline_date")
-    availability    Json             @default("[]") @map("availability")
-    postedDate      DateTime         @default(now()) @map("posted_date")
-    createdAt       DateTime         @default(now()) @map("created_at")
-    updatedAt       DateTime         @updatedAt @default(now()) @map("updated_at")
+  id              String           @id @default(uuid())
+  orgId           String           @map("org_id")
+  volId           String?          @map("vol_id")
+  status          OpportunityState @default(OPEN)
+  name            String           @default("") @map("name")
+  category        String           @default("") @map("category")
+  description     String           @default("") @map("description")
+  candidateDesc   String           @default("") @map("candidate_desc")
+  workType        WorkType         @default(IN_PERSON) @map("work_type")
+  commitmentLevel CommitmentLevel  @default(FLEXIBLE) @map("commitment_level")
+  hours           Float            @default(0) @map("hours")
+  length          String           @default("") @map("length")
+  deadlineDate    DateTime?        @map("deadline_date")
+  availability    Json             @default("[]") @map("availability")
+  postedDate      DateTime         @default(now()) @map("posted_date")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
 
-    organization    Organization     @relation(fields: [orgId], references: [id])
-    volunteer       Volunteer?       @relation(fields: [volId], references: [id])
-    progressUpdates ProgressUpdate[]
-    applications    Application[]
+  organization    Organization     @relation(fields: [orgId], references: [id])
+  volunteer       Volunteer?       @relation(fields: [volId], references: [id])
+  progressUpdates ProgressUpdate[]
+  applications    Application[]
 
-    @@map("opportunities")
+  @@map("opportunities")
 }
 
 model VolunteerSkill {
-    id              String           @id @default(uuid())
-    volId           String          @map("vol_id")
-    skillId         String          @map("skill_id")
+  id      String @id @default(uuid())
+  volId   String @map("vol_id")
+  skillId String @map("skill_id")
 
-    volunteer       Volunteer @relation(fields: [volId], references: [id])
-    skill           Skill     @relation(fields: [skillId], references: [id])
+  volunteer Volunteer @relation(fields: [volId], references: [id])
+  skill     Skill     @relation(fields: [skillId], references: [id])
 
-    @@unique([volId, skillId])
-    @@map("volunteer_skills")
-    
+  @@unique([volId, skillId])
+  @@map("volunteer_skills")
 }
-
 
 model Skill {
-    id         String           @id @default(uuid())
-    name       String
-    category   SkillCategory
-    createdAt  DateTime         @default(now()) @map("created_at")
+  id        String        @id @default(uuid())
+  name      String
+  category  SkillCategory
+  createdAt DateTime      @default(now()) @map("created_at")
 
-    volunteers VolunteerSkill[]
-    nodes      SkillNode[]
+  volunteers VolunteerSkill[]
+  nodes      SkillNode[]
 
-    @@map("skills")
+  @@map("skills")
 }
-
 
 model Review {
-    id              String           @id @default(uuid())
-    issuerId        String           @map("issuer_id")
-    revieweeId      String           @map("reviewee_id")
-    rating          Float          
-    title           String           @default("")
-    description     String           @default("")
-    createdAt       DateTime            @default(now()) @map("created_at")
+  id          String   @id @default(uuid())
+  issuerId    String   @map("issuer_id")
+  revieweeId  String   @map("reviewee_id")
+  rating      Float
+  title       String   @default("")
+  description String   @default("")
+  createdAt   DateTime @default(now()) @map("created_at")
 
-    issuer          User             @relation("ReviewIssuer",   fields: [issuerId],   references: [id])
-    reviewee        User             @relation("ReviewReviewee", fields: [revieweeId], references: [id])
+  issuer   User @relation("ReviewIssuer", fields: [issuerId], references: [id])
+  reviewee User @relation("ReviewReviewee", fields: [revieweeId], references: [id])
 
-    @@map("reviews")
-
+  @@map("reviews")
 }
-
 
 model ProgressUpdate {
-    id               String      @id @default(uuid())
-    opportunityId    String      @map("opportunity_id")
-    senderId         String      @map("sender_id")
-    senderRole       SenderRole  @map("sender_role")
-    title            String      
-    description      String      
-    hoursContributed Float       @default(0) @map("hours_contributed")
-    createdAt        DateTime    @default(now()) @map("created_at")
+  id               String     @id @default(uuid())
+  opportunityId    String     @map("opportunity_id")
+  senderId         String     @map("sender_id")
+  senderRole       SenderRole @map("sender_role")
+  title            String
+  description      String
+  hoursContributed Float      @default(0) @map("hours_contributed")
+  createdAt        DateTime   @default(now()) @map("created_at")
 
-    opportunity Opportunity @relation(fields: [opportunityId], references: [id])
-    sender      User        @relation(fields: [senderId], references: [id])
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id])
+  sender      User        @relation(fields: [senderId], references: [id])
 
-    @@map("progress_updates")
+  @@map("progress_updates")
 }
 
-
 model Ticket {
-    id               String         @id @default(uuid())
-    issuerId         String         @map("issuer_id")
-    targetId         String         @map("target_id")
-    category         TicketCategory
-    title            String
-    description      String
-    urgencyRating    UrgencyRating  @map("urgency_rating")
-    status           TicketStatus
-    createdAt        DateTime       @default(now()) @map("created_at")
+  id            String         @id @default(uuid())
+  issuerId      String         @map("issuer_id")
+  targetId      String         @map("target_id")
+  category      TicketCategory
+  title         String
+  description   String
+  urgencyRating UrgencyRating  @map("urgency_rating")
+  status        TicketStatus
+  createdAt     DateTime       @default(now()) @map("created_at")
 
+  issuer User @relation("TicketIssuer", fields: [issuerId], references: [id])
+  target User @relation("TicketTarget", fields: [targetId], references: [id])
 
-    issuer       User           @relation("TicketIssuer", fields: [issuerId], references: [id])
-    target       User           @relation("TicketTarget", fields: [targetId], references: [id])
-
-    @@map("tickets")
+  @@map("tickets")
 }
 
 model ChatMessage {
-    id               String           @id @default(uuid())
-    conversationId   String           @map("conversation_id")
-    senderId         String           @map("sender_id")
-    content          String
-    sentAt           DateTime         @default(now()) @map("sent_at")
+  id             String   @id @default(uuid())
+  conversationId String   @map("conversation_id")
+  senderId       String   @map("sender_id")
+  content        String
+  sentAt         DateTime @default(now()) @map("sent_at")
 
-    conversation   ChatConversation @relation(fields: [conversationId], references: [id])
-    sender         User             @relation("ChatMessageSender", fields: [senderId], references: [id])
+  conversation ChatConversation @relation(fields: [conversationId], references: [id])
+  sender       User             @relation("ChatMessageSender", fields: [senderId], references: [id])
 
-    @@map("chat_messages")
+  @@map("chat_messages")
 }
 
-model ChatConversation{
-    id               String        @id @default(uuid())
-    userAId          String        @map("user_a_id")
-    userBId          String        @map("user_b_id")
-    createdAt        DateTime      @default(now()) @map("created_at")
-    lastMessageAt    DateTime      @default(now()) @map("last_message_at")
+model ChatConversation {
+  id            String   @id @default(uuid())
+  userAId       String   @map("user_a_id")
+  userBId       String   @map("user_b_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  lastMessageAt DateTime @default(now()) @map("last_message_at")
 
-    userA            User          @relation("ConversationUserA", fields: [userAId], references: [id])
-    userB            User          @relation("ConversationUserB", fields: [userBId], references: [id])
-    messages         ChatMessage[]
+  userA    User          @relation("ConversationUserA", fields: [userAId], references: [id])
+  userB    User          @relation("ConversationUserB", fields: [userBId], references: [id])
+  messages ChatMessage[]
 
-    @@map("chat_conversations")
+  @@map("chat_conversations")
 }
 
 model Application {
-    id               String            @id @default(uuid())
-    oppId            String            @map("opp_id")
-    volId            String            @map("vol_id")
-    matchPercentage  Int               @default(0) @map("match_pct")
-    message          String            @default("")
-    dateApplied      DateTime          @default(now()) @map("date_applied")
+  id              String   @id @default(uuid())
+  oppId           String   @map("opp_id")
+  volId           String   @map("vol_id")
+  matchPercentage Int      @default(0) @map("match_pct")
+  message         String   @default("")
+  dateApplied     DateTime @default(now()) @map("date_applied")
 
-    opportunity      Opportunity       @relation(fields: [oppId], references: [id])
-    volunteer        Volunteer         @relation(fields: [volId], references: [id])
+  opportunity Opportunity @relation(fields: [oppId], references: [id])
+  volunteer   Volunteer   @relation(fields: [volId], references: [id])
 
-    @@unique([oppId, volId])
-    @@map("applications")
+  @@unique([oppId, volId])
+  @@map("applications")
 }
 
 model SkillTree {
-    id             String      @id @default(uuid())
-    volId          String      @map("vol_id")
-    typeOfTree     SkillCategory @map("type_of_tree")
-    totalXpNeeded  Int         @default(0) @map("total_xp_needed")
-    currentXp      Int         @default(0) @map("current_xp")
-    numOfNodesCompleted     Int         @default(0) @map("num_of_nodes_completed")
+  id                  String        @id @default(uuid())
+  volId               String        @map("vol_id")
+  typeOfTree          SkillCategory @map("type_of_tree")
+  totalXpNeeded       Int           @default(0) @map("total_xp_needed")
+  currentXp           Int           @default(0) @map("current_xp")
+  numOfNodesCompleted Int           @default(0) @map("num_of_nodes_completed")
 
-    volunteer      Volunteer   @relation(fields: [volId], references: [id])
-    nodes          SkillNode[]
+  volunteer Volunteer   @relation(fields: [volId], references: [id])
+  nodes     SkillNode[]
 
-    @@map("skill_trees")
+  @@map("skill_trees")
 }
 
 model SkillNode {
-    id          String    @id @default(uuid())
-    skillTreeId String    @map("skill_tree_id")
-    skillId     String    @map("skill_id")
-    xpRequired  Int       @default(0) @map("xp_required")
+  id          String @id @default(uuid())
+  skillTreeId String @map("skill_tree_id")
+  skillId     String @map("skill_id")
+  xpRequired  Int    @default(0) @map("xp_required")
 
-    skillTree   SkillTree @relation(fields: [skillTreeId], references: [id])
-    skill       Skill     @relation(fields: [skillId], references: [id])
+  skillTree SkillTree @relation(fields: [skillTreeId], references: [id])
+  skill     Skill     @relation(fields: [skillId], references: [id])
 
-    @@map("skill_nodes")
+  @@map("skill_nodes")
 }
-
 
 model Flag {
-    id            String   @id @default(uuid())
-    flagIssuerId  String   @map("flag_issuer_id")
-    flaggedUserId String   @map("flagged_user_id")
-    reason        String
-    createdAt     DateTime @default(now()) @map("created_at")
+  id            String   @id @default(uuid())
+  flagIssuerId  String   @map("flag_issuer_id")
+  flaggedUserId String   @map("flagged_user_id")
+  reason        String
+  createdAt     DateTime @default(now()) @map("created_at")
 
-    flagIssuer    User     @relation("FlagIssuer",  fields: [flagIssuerId],  references: [id])
-    flaggedUser   User     @relation("FlaggedUser", fields: [flaggedUserId], references: [id])
+  flagIssuer  User @relation("FlagIssuer", fields: [flagIssuerId], references: [id])
+  flaggedUser User @relation("FlaggedUser", fields: [flaggedUserId], references: [id])
 
-    @@map("flags")
+  @@map("flags")
 }
 
-
 enum TicketStatus {
-    OPEN
-    CLOSED
+  OPEN
+  CLOSED
 }
 
 enum UrgencyRating {
-    MINOR
-    MODERATE
-    SERIOUS
+  MINOR
+  MODERATE
+  SERIOUS
 }
 
 enum TicketCategory {
-    BUG
-    ABUSE
-    BILLING
-    OTHER
+  BUG
+  ABUSE
+  BILLING
+  OTHER
 }
-
 
 enum SkillCategory {
-    TECHNICAL
-    LEADERSHIP
-    SOFT
+  TECHNICAL
+  LEADERSHIP
+  SOFT
 }
 
-
 enum SenderRole {
-    VOLUNTEER
-    ORGANIZATION
+  VOLUNTEER
+  ORGANIZATION
 }
 
 enum UserRole {
-    VOLUNTEER
-    ORGANIZATION
-    MODERATOR
-    ADMIN
+  VOLUNTEER
+  ORGANIZATION
+  MODERATOR
+  ADMIN
 }
 
 enum AccountState {
-    VERIFIED
-    UNVERIFIED
-    FLAGGED
-    BANNED
+  VERIFIED
+  UNVERIFIED
+  FLAGGED
+  BANNED
+}
+
+enum VolunteerState {
+  CLEAR
+  FLAGGED
+  RESOLVED
+  CLOSED
 }
 
 enum OrganizationState {
-    CREATED
-    APPLIED
-    VERIFIED
-    REJECTED
+  CREATED
+  APPLIED
+  VERIFIED
+  REJECTED
 }
 
 enum OpportunityState {
-    OPEN
-    FILLED
-    CLOSED
-    CANCELLED
+  OPEN
+  FILLED
+  CLOSED
+  CANCELLED
 }
 
 enum WorkType {
-    IN_PERSON
-    REMOTE
-    HYBRID
+  IN_PERSON
+  REMOTE
+  HYBRID
 }
 
 enum CommitmentLevel {
-    FLEXIBLE
-    PART_TIME
-    FULL_TIME
+  FLEXIBLE
+  PART_TIME
+  FULL_TIME
+}
+
+model VolunteerReport {
+  id String @id @default(uuid())
+
+  reason String  @default("")
+  isOpen Boolean @default(true) @map("is_open")
+
+  reportedUser   User   @relation("ReportsReceived", fields: [reportedUserId], references: [id])
+  reportedUserId String @map("reported_user_id")
+
+  reportingUser   User   @relation("ReportsFiled", fields: [reportingUserId], references: [id])
+  reportingUserId String @map("reporting_user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("volunteer_reports")
 }

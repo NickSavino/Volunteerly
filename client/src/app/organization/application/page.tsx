@@ -14,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowLeft } from "lucide-react";
 
 export default function OrgApplicationPage() {
   const {        
@@ -23,11 +25,14 @@ export default function OrgApplicationPage() {
     currentOrg,
     file,
     isReadOnly,
+    router,
     setFile,
     setCurrentOrg,
     signOut,
     handleSubmit,
-    viewSubmittedDoc
+    viewSubmittedDoc,
+    address,
+    setAddress
   } = useOrgApplicationViewModel()
 
 
@@ -40,7 +45,18 @@ export default function OrgApplicationPage() {
           <title>Organization Application - Volunteerly</title>
           <Navbar avtImg={{src: ""}} name={currentOrg?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
         <main className="w-full items-center h-full flex flex-col p-8 ">
-          <div className="text-center pb-5">
+          <div className="w-full flex justify-start">
+          {isReadOnly && <Button
+                    variant="ghost"
+                    className="cursor-pointer"
+                    onClick={() => router.back()}
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back
+                    </Button>
+                    }
+          </div>
+          <div className="text-center pb-5">        
             <div className="text-foreground bg-warning mb-5 p-1 radius-2 rounded-sm">
                 <h2>{isReadOnly ? "Application Submitted":"Limited Functionality"}</h2>
                 <p className="text-sm text-center text-foreground bg-warning my-2 p-1 radius-2 rounded-sm">
@@ -66,6 +82,12 @@ export default function OrgApplicationPage() {
                       onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, orgName: e.target.value } : prev)} required/>
                     </Field>
                     <Field>
+                        <Label htmlFor="causeCategory">Cause Category<span className="text-destructive">*</span></Label>
+                        <Input id="causeCategory"  disabled={isReadOnly} type="text" placeholder="Education" value={currentOrg?.causeCategory}
+                          onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, causeCategory: e.target.value } : prev)} required/>
+                    </Field>
+                  </div>
+                    <Field>
                       <Label htmlFor="website">Website<span className="text-destructive">*</span></Label>
                       <InputGroup id="website">
                         <InputGroupInput id="website" disabled={isReadOnly} type="text" placeholder="example.org" value={currentOrg?.website}
@@ -75,18 +97,46 @@ export default function OrgApplicationPage() {
                         </InputGroupAddon>              
                       </InputGroup>
                     </Field>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
-                        <Label htmlFor="causeCategory">Cause Category<span className="text-destructive">*</span></Label>
-                        <Input id="causeCategory"  disabled={isReadOnly} type="text" placeholder="Education" value={currentOrg?.causeCategory}
-                          onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, causeCategory: e.target.value } : prev)} required/>
+                      <Label htmlFor="address">Street Address<span className="text-destructive">*</span></Label>
+                      <Input id="address" disabled={isReadOnly} type="text" placeholder="2500 University Dr NW" value={address.streetAdr}
+                          onChange={(e) => setAddress((prev) => prev ? { ...prev, streetAdr: e.target.value } : prev)} required/>
                     </Field>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Field>
-                      <Label htmlFor="address">Address<span className="text-destructive">*</span></Label>
-                      <Input id="address" disabled={isReadOnly} type="text" placeholder="2500 University Dr NW, Calgary, AB" value={currentOrg?.hqAdr}
-                          onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, hqAdr: e.target.value } : prev)} required/>
+                      <Label htmlFor="city">City<span className="text-destructive">*</span></Label>
+                      <Input id="city" disabled={isReadOnly} type="text" placeholder="Calgary" value={address.city}
+                          onChange={(e) => setAddress((prev) => prev ? { ...prev, city: e.target.value } : prev)} required/>
+                    </Field>
+
+                    <Field>
+                      <Label htmlFor="province">Province<span className="text-destructive">*</span></Label>
+                      <Select value={address.province} disabled={isReadOnly} onValueChange={(e) => setAddress((prev) => prev ? { ...prev, province: e } : prev)} required>
+                        <SelectTrigger id="province">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="AB">Alberta</SelectItem>
+                          <SelectItem value="BC">British Columbia</SelectItem>
+                          <SelectItem value="MB">Manitoba</SelectItem>
+                          <SelectItem value="NB">New Brunswick</SelectItem>
+                          <SelectItem value="NL">Newfoundland and Labrador</SelectItem>
+                          <SelectItem value="NS">Nova Scotia</SelectItem>
+                          <SelectItem value="ON">Ontario</SelectItem>
+                          <SelectItem value="PE">Prince Edward Island</SelectItem>
+                          <SelectItem value="QC">Quebec</SelectItem>
+                          <SelectItem value="SK">Saskatchewan</SelectItem>
+                          <SelectItem value="NT">Northwest Territories</SelectItem>
+                          <SelectItem value="NU">Nunavut</SelectItem>
+                          <SelectItem value="YT">Yukon</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </Field>
+                    
+                    <Field>
+                      <Label htmlFor="postalCode">Postal Code<span className="text-destructive">*</span></Label>
+                      <Input id="postalCode" disabled={isReadOnly} type="text" placeholder="T2N 1N4" value={address.postalCode}
+                          onChange={(e) => setAddress((prev) => prev ? { ...prev, postalCode: e.target.value } : prev)} required/>
                     </Field>
                   </div>
                   <Field>
@@ -151,14 +201,14 @@ export default function OrgApplicationPage() {
                 </CardContent>
 
                 <div className="px-6 pb-6">
-                  <Button type="submit" disabled={isReadOnly} className="w-full">
+                  <Button type="submit" disabled={isReadOnly} className="w-full pointer-cursor">
                     Submit
                   </Button>
                 </div>
               </form>
                 {isReadOnly && (                
                   <div className="px-6 pb-6">
-                    <Button type="button" onClick={viewSubmittedDoc} className="w-full">
+                    <Button type="button" onClick={viewSubmittedDoc} className="w-full pointer-cursor">
                       View Submitted Document
                     </Button>
                   </div>
