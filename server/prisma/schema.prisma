@@ -90,9 +90,9 @@ model Volunteer {
   user User @relation(fields: [id], references: [id])
 
   opportunities Opportunity[]
-  skills        VolunteerSkill[]
   applications  Application[]
   skillTrees    SkillTree[]
+  skillProfile  VolunteerSkillProfile?
 
   @@map("volunteers")
 }
@@ -124,29 +124,18 @@ model Opportunity {
   @@map("opportunities")
 }
 
-model VolunteerSkill {
-  id      String @id @default(uuid())
-  volId   String @map("vol_id")
-  skillId String @map("skill_id")
+model VolunteerSkillProfile {
+  volId      String   @id @map("vol_id")
+  technical  Json     @default("[]")
+  soft       Json     @default("[]")
+  leadership Json     @default("[]")
+  createdAt  DateTime @default(now()) @map("created_at")
 
   volunteer Volunteer @relation(fields: [volId], references: [id])
-  skill     Skill     @relation(fields: [skillId], references: [id])
 
-  @@unique([volId, skillId])
-  @@map("volunteer_skills")
+  @@map("volunteer_skill_profiles")
 }
 
-model Skill {
-  id        String        @id @default(uuid())
-  name      String
-  category  SkillCategory
-  createdAt DateTime      @default(now()) @map("created_at")
-
-  volunteers VolunteerSkill[]
-  nodes      SkillNode[]
-
-  @@map("skills")
-}
 
 model Review {
   id          String   @id @default(uuid())
@@ -255,11 +244,10 @@ model SkillTree {
 model SkillNode {
   id          String @id @default(uuid())
   skillTreeId String @map("skill_tree_id")
-  skillId     String @map("skill_id")
+  skillName   String @default("") @map("skill_name")
   xpRequired  Int    @default(0) @map("xp_required")
 
   skillTree SkillTree @relation(fields: [skillTreeId], references: [id])
-  skill     Skill     @relation(fields: [skillId], references: [id])
 
   @@map("skill_nodes")
 }
