@@ -1,4 +1,4 @@
-import { Prisma, OrganizationState } from "@prisma/client";
+import { Prisma, OrganizationState, CommitmentLevel, WorkType } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { supabase } from "../lib/supabase.js";
 import { callDocumentAnalysis } from "./azure-service.js";
@@ -205,6 +205,11 @@ export async function getAllOpportunities(organizationId: string) {
                     lastName: true
                 },
             },
+            _count: {
+                select: {
+                    applications:true
+                },
+            },
         },
     });
 }
@@ -217,7 +222,7 @@ export async function countAllOpportunities(organizationId: string) {
 
 export async function countActiveOpportunities(organizationId: string) {
     return prisma.opportunity.count({
-        where: { orgId: organizationId, status: "OPEN"}
+        where: { orgId: organizationId, status: "FILLED"}
     });
 }
 
@@ -232,15 +237,171 @@ export async function sumTotalOpportunityHours(organizationId: string) {
 
 export async function getActiveOpportunities(organizationId: string) {
     return prisma.opportunity.findMany({
-        where: { orgId: organizationId, status: "OPEN" },
+        where: { orgId: organizationId, status: {in: ["OPEN", "FILLED"]}},
         include: {
             volunteer: {
                 select: {
                     id: true,
                     firstName: true,
                     lastName: true
+                },                
+            },
+            _count: {
+                select: {
+                    applications:true
                 },
             },
         },
     });
+}
+
+export async function getOrgOpportunity(orgId: string, oppId: string) {
+    const org = await prisma.opportunity.findFirst({
+        where: { id: oppId, orgId:orgId },
+        include: {
+        volunteer: {
+            select: { id: true, firstName: true, lastName: true },
+        },
+        progressUpdates: {
+            select:{id:true, senderRole:true, title:true, description:true, hoursContributed:true, createdAt:true}
+        }
+    }
+    });
+    return org;
+}
+
+export async function getApplications(orgId: string, oppId: string) {
+    const org = await prisma.application.findMany({
+        where: { oppId: oppId, opportunity: {orgId: orgId} },
+        include: {
+        volunteer: {
+            select: { id: true, firstName: true, lastName: true, bio:true },
+        },       
+    }
+    });
+    return org;
+}
+
+export async function getOrgApplication(orgId: string, appId: string) {
+    const org = await prisma.application.findFirst({
+        where: { id: appId, opportunity:{orgId:orgId} },
+        include: {
+        volunteer: {
+            select: { id: true, firstName: true, lastName: true, bio:true, location:true, availability:true },
+        },       
+    }
+    });
+    return org;
+}
+
+export async function selectOppVolunteer(oppId:string, vltId:string) {
+    const organization = await prisma.opportunity.update({
+        where: { id: oppId },
+        data: {
+            volId: vltId,
+            status: "FILLED",
+            updatedAt: new Date()
+        },
+    });
+    if (!organization) {
+        throw new Error("Error selecting the Volunteer.");
+    }
+
+    return organization;
+}
+
+export async function completeOpportunity(oppId:string) {
+    const updateTotals = await prisma.progressUpdate.aggregate({
+        where: {
+            opportunityId: oppId,
+        },
+        _sum: {
+        hoursContributed: true,
+        },
+    });
+
+    const totalHours = updateTotals._sum.hoursContributed ?? 0
+
+    const organization = await prisma.opportunity.update({
+        where: { id: oppId },
+        data: {
+            status: "CLOSED",
+            updatedAt: new Date(),
+            hours: totalHours
+        },
+    });
+    if (!organization) {
+        throw new Error("Error completing Opportunity.");
+    }
+
+    return organization;
+}
+
+
+export async function getOpportunityAnalytics(organizationId: string, opportunityId:string) {
+  const opp = await prisma.opportunity.findFirst({
+    where: { orgId: organizationId, id: opportunityId},
+    select: {
+      hours: true,
+      volunteer: {
+        select: {
+          hourlyValue: true,
+        },
+      },
+    },
+  });
+
+    if (!opp) {
+        throw new Error("Error getting Opportunity Analytics.");
+    }
+
+  return {
+    hours: opp.hours,
+    value: opp.hours*(opp.volunteer?.hourlyValue || 0),
+  };
+}
+
+export async function createOrgProgressUpdate(orgId: string, oppId: string, title: string, description:string, hoursContributed:number) {
+    const org = await prisma.progressUpdate.create({
+            data: {
+                opportunityId:oppId,
+                senderId:orgId,
+                senderRole:"ORGANIZATION",
+                title: title,
+                description:description,
+                hoursContributed: hoursContributed,
+                createdAt: new Date()
+            },
+        });
+    if (!org) {
+        throw new Error("Error creating the Organization.");
+    }
+
+    return org;
+}
+
+export async function createOpportunity(orgId:string, name:string, category:string, description:string, candidateDesc:string, workType:WorkType,
+        commitmentLevel: CommitmentLevel, length:string, deadlineDate:Date, availability:Prisma.InputJsonValue) {
+    const org = await prisma.opportunity.create({
+            data: {
+                orgId:orgId,
+                name:name,
+                category:category,
+                status: "OPEN",
+                description:description,
+                candidateDesc:candidateDesc,
+                workType:workType,
+                commitmentLevel:commitmentLevel,
+                length:length,
+                deadlineDate:deadlineDate,
+                availability: availability,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+        });
+    if (!org) {
+        throw new Error("Error creating the Organization.");
+    }
+
+    return org;
 }

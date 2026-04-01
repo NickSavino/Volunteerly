@@ -12,6 +12,12 @@ export function useOrgApplicationViewModel() {
   const router = useRouter();
   const { session, user, loading, signOut } = useAuth();
   const [currentOrg, setCurrentOrg] = useState<CurrentOrganization>();
+  const [address, setAddress] = useState({
+    streetAdr: "",
+    city:"",
+    province: "AB",
+    postalCode: ""
+  })
   const [file, setFile] = useState<File | null>();
 
 
@@ -36,6 +42,8 @@ export function useOrgApplicationViewModel() {
             return;
         }
         console.log(org.data)
+        const adrData = org.data.hqAdr?.split(", ") || []
+        setAddress({streetAdr: adrData[0] || "", city: adrData[1] || "", province: adrData[2] || "AB", postalCode: adrData[3] || ""})
         setCurrentOrg(org.data)
         setSubmitting(false)
       }
@@ -49,14 +57,12 @@ export function useOrgApplicationViewModel() {
       e.preventDefault();
       setSubmitting(true);
       setError(null);
-
-      const createdOrg = CurrentOrganizationUpdateSchema.parse(currentOrg);
-
+      const createdOrg = CurrentOrganizationUpdateSchema.parse({...currentOrg, hqAdr: `${address.streetAdr}, ${address.city}, ${address.province}, ${address.postalCode}`});
       const formData = new FormData();
-      if (file && currentOrg){
+      if (file && createdOrg){
         formData.append("document", file);
 
-        Object.entries(currentOrg).forEach(([key, value]) => {
+        Object.entries(createdOrg).forEach(([key, value]) => {
           if (value !== undefined && value !== null) {
             formData.append(key, String(value));
           }
@@ -66,10 +72,10 @@ export function useOrgApplicationViewModel() {
 
       if (success) {
         if (data.status == "VERIFIED") {
-            toast.success("Application was automatically approved!")
+            toast.success("Application was automatically approved!", { position: "top-right" })
             router.replace("/organization");
         }else {
-          toast.success("Application submitted, Awaiting moderator review")
+          toast.success("Application submitted, Awaiting moderator review", { position: "top-right" })
           router.replace("/organization/appliedDashboard");
         }
       }else {
@@ -118,9 +124,12 @@ export function useOrgApplicationViewModel() {
         file,
         isReadOnly,
         setFile,
+        router,
         setCurrentOrg,
         signOut,
         handleSubmit,
-        viewSubmittedDoc
+        viewSubmittedDoc,
+        address, 
+        setAddress
     } 
 }

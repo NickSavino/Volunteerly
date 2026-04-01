@@ -3,20 +3,18 @@ import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
+import { Application, CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
-export function useOrgDashboardViewModel() {
+export function useOppApplicationViewModel(oppId: string, appId: string) {
   const router = useRouter();
   const { session, user, loading, signOut } = useAuth();
   const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([])
-  const [totalOpps, setTotalOpps] = useState(0)
-  const [activeVlt, setActiveVlt] = useState(0)
-  const [totalHours, setTotalHours] = useState(0)
-
+  const [application, setApplication] = useState<Application>()
+  const [fetching, setFetching] = useState(true)
 
   useEffect(() => {
     if (!loading && !session) {
@@ -65,31 +63,33 @@ export function useOrgDashboardViewModel() {
     }, [session, router]);
 
     useEffect(() => {
-      async function loadOpportunities() {
-
-        const opps = await OrganizationService.getActiveOpportunities()
-        if (!opps.success) { 
-          console.error(opps.error)
-          setError("Failed to load opportunities."); return; }
-        setOpportunities(opps.data);   
-        
-        const totalOpps = await OrganizationService.countAllOpportunities()
-        if (!totalOpps.success) { setError("Failed to get total opportunities."); return; }
-        setTotalOpps(totalOpps.data)
-        
-        const hours = await OrganizationService.sumTotalHours()
-        if (!hours.success) { setError("Failed to get hours total."); return; }
-        setTotalHours(hours.data._sum.hours || 0)
-
-        const actVolunteers = await OrganizationService.countActiveVolunteers()
-        if (!actVolunteers.success) { setError("Failed to get active volunteer count."); return; }
-        setActiveVlt(actVolunteers.data)
-        
+      async function loadApplication() {
+        setFetching(true)
+        const opp = await OrganizationService.getOpportunity(oppId)
+        if (!(opp.data?.status == "OPEN")) {
+          router.replace(`/organization/opportunities/${oppId}`);
+          return;
+        }
+        const app = await OrganizationService.getApplication(appId)
+        if (!app.success) { 
+          console.error(app.error)
+          setError("Failed to load application."); return; }
+        setApplication(app.data);   
+        setFetching(false)
       }
-      loadOpportunities()
-    }, [])
+      loadApplication()
+    }, [appId])
 
-
-
-    return {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} 
+    async function selectVolunteer() {
+      if (application?.volunteer?.id){
+        const updated_opp = await OrganizationService.selectOppVolunteer(oppId, application.volunteer.id)
+        if (updated_opp.success) {
+            toast.success("Volunteer Selected, Opportunity is now filled.")
+            router.replace(`/organization/opportunities/${oppId}`);
+            return;
+        }
+      }
+      setError("Cannot Select Volunteer")
+    }
+    return {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} 
 }

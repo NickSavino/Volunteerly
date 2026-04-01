@@ -7,16 +7,15 @@ import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 
-export function useOrgDashboardViewModel() {
+export function useOrgOpportunitiesViewModel() {
   const router = useRouter();
   const { session, user, loading, signOut } = useAuth();
   const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])
-  const [totalOpps, setTotalOpps] = useState(0)
-  const [activeVlt, setActiveVlt] = useState(0)
-  const [totalHours, setTotalHours] = useState(0)
-
+  const [currentTab, setCurrentTab] = useState("OPEN")
+  const filteredOpportunities = opportunities.filter(
+  (opp) => opp.status === currentTab);
 
   useEffect(() => {
     if (!loading && !session) {
@@ -67,29 +66,15 @@ export function useOrgDashboardViewModel() {
     useEffect(() => {
       async function loadOpportunities() {
 
-        const opps = await OrganizationService.getActiveOpportunities()
+        const opps = await OrganizationService.getAllOpportunities()
         if (!opps.success) { 
           console.error(opps.error)
           setError("Failed to load opportunities."); return; }
         setOpportunities(opps.data);   
         
-        const totalOpps = await OrganizationService.countAllOpportunities()
-        if (!totalOpps.success) { setError("Failed to get total opportunities."); return; }
-        setTotalOpps(totalOpps.data)
-        
-        const hours = await OrganizationService.sumTotalHours()
-        if (!hours.success) { setError("Failed to get hours total."); return; }
-        setTotalHours(hours.data._sum.hours || 0)
-
-        const actVolunteers = await OrganizationService.countActiveVolunteers()
-        if (!actVolunteers.success) { setError("Failed to get active volunteer count."); return; }
-        setActiveVlt(actVolunteers.data)
-        
       }
       loadOpportunities()
     }, [])
 
-
-
-    return {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} 
+    return {loading, session, signOut, router, user, error, currentUser, filteredOpportunities, currentTab, setCurrentTab} 
 }

@@ -1,0 +1,110 @@
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { UserService } from "@/services/UserService";
+import { useAuth } from "@/providers/auth-provider";
+import { CurrentOrganization, CurrentOrganizationUpdateSchema, CurrentUser, CurrentUserSchema, Opportunity, OpportunitySchema, UpdateOpportunitySchema } from "@volunteerly/shared";
+import { api } from "@/lib/api";
+import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
+
+export function useCreateOpportunityViewModel() {
+  const router = useRouter();
+  const { session, user, loading, signOut } = useAuth();
+  const [currentOrg, setCurrentOrg] = useState<CurrentOrganization>();
+  const [opportunity, setOpportunity] = useState<UpdateOpportunitySchema>(
+    {
+      orgId: "",
+      name: "",
+      category: "",
+      description: "",
+      candidateDesc: "",
+      workType: "IN_PERSON",   
+      commitmentLevel: "FLEXIBLE",
+      length: "Days",
+      deadlineDate: new Date(),    
+      availability: [],    
+    }
+  )  
+  const [deadlineDate, setDeadlineDate] = useState("")
+
+
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!loading && !session) {
+      router.replace("/login")
+    }
+    }, [loading, session, router]);
+
+  useEffect(() => {
+    async function loadCurrentUser() {
+        if (!session?.access_token || currentOrg) return;
+        setSubmitting(true)
+        const org = await OrganizationService.getCurrentOrganization()
+
+        if (!org.success) {
+            console.error(org.error);
+            setError("Received invalid user data from the server.");
+            return;
+        }
+        console.log(org.data)
+        setCurrentOrg(org.data)
+        setSubmitting(false)
+      }
+      loadCurrentUser()
+    },[session, router]);
+
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    if (opportunity && currentOrg) {
+        setSubmitting(true);
+        setError(null);
+
+        opportunity.orgId = currentOrg.id
+        opportunity.deadlineDate = new Date(deadlineDate)
+        const opp = UpdateOpportunitySchema.parse(opportunity);
+        const {data, error, success} = await OrganizationService.addOpportunity(opp)
+
+        if (success) {
+            toast.success("Opportunity Successfully Created!")
+            router.replace("/organization/opportunities");
+            return
+        }else {
+            setError("Error creating Opportunity.")
+            console.error(error)
+        }
+
+        setSubmitting(false);
+
+        if (error) {
+            setError(error.message);
+            return;
+        }
+    }
+    }
+    async function handleDayToggle(day: string) {
+      if (opportunity.availability.includes(day)){
+        const newAv = opportunity.availability.filter(d => d != day)
+        setOpportunity((prev) => prev ? { ...prev, availability: newAv}: prev)
+      }else {
+        const newAv = [...(opportunity.availability || []), day]
+        setOpportunity((prev) => prev ? { ...prev, availability: newAv}: prev)
+      }
+    }
+
+    return {
+        loading,
+        error,
+        submitting,
+        currentOrg,
+        router,
+        opportunity,
+        setOpportunity,
+        signOut,
+        handleSubmit,
+        deadlineDate, 
+        setDeadlineDate,
+        handleDayToggle
+    } 
+}

@@ -3,20 +3,15 @@ import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
+import { CurrentOrganization } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 
-export function useOrgDashboardViewModel() {
+export function useAppliedOrgDashboardViewModel() {
   const router = useRouter();
   const { session, user, loading, signOut } = useAuth();
   const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([])
-  const [totalOpps, setTotalOpps] = useState(0)
-  const [activeVlt, setActiveVlt] = useState(0)
-  const [totalHours, setTotalHours] = useState(0)
-
 
   useEffect(() => {
     if (!loading && !session) {
@@ -51,8 +46,8 @@ export function useOrgDashboardViewModel() {
         if (org.data.status == "CREATED") {
             router.replace("/organization/application");
             return;
-        } else if (org.data.status == "APPLIED") {
-            router.replace("/organization/appliedDashboard");
+        } else if (org.data.status == "VERIFIED") {
+            router.replace("/organization");
             return;
         }
         setCurrentUser(org.data);
@@ -64,32 +59,6 @@ export function useOrgDashboardViewModel() {
     loadCurrentUser();
     }, [session, router]);
 
-    useEffect(() => {
-      async function loadOpportunities() {
 
-        const opps = await OrganizationService.getActiveOpportunities()
-        if (!opps.success) { 
-          console.error(opps.error)
-          setError("Failed to load opportunities."); return; }
-        setOpportunities(opps.data);   
-        
-        const totalOpps = await OrganizationService.countAllOpportunities()
-        if (!totalOpps.success) { setError("Failed to get total opportunities."); return; }
-        setTotalOpps(totalOpps.data)
-        
-        const hours = await OrganizationService.sumTotalHours()
-        if (!hours.success) { setError("Failed to get hours total."); return; }
-        setTotalHours(hours.data._sum.hours || 0)
-
-        const actVolunteers = await OrganizationService.countActiveVolunteers()
-        if (!actVolunteers.success) { setError("Failed to get active volunteer count."); return; }
-        setActiveVlt(actVolunteers.data)
-        
-      }
-      loadOpportunities()
-    }, [])
-
-
-
-    return {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} 
+    return {loading, session, signOut, router, user, error, currentUser} 
 }

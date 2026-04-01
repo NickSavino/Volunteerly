@@ -1,6 +1,14 @@
 import { Router } from "express";
 import multer from "multer";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities } from "../services/organization-service.js";
+import { auth } from "../middleware/auth.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity } from "../services/organization-service.js";
+
+type AuthenticatedRequest = {
+    auth?: {
+        userId: string;
+        email?: string;
+    }
+}
 
 export const currentOrganizationRouter = Router();
 const storage = multer.memoryStorage();
@@ -95,12 +103,12 @@ currentOrganizationRouter.put("/apply", upload.single("document"),async (req, re
             });
             }
             const updated_org = await applyOrganization(userId, orgName, charityNum_int, "APPLIED" ,contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr, file);  
-                if (!updated_org) {
-                    return res.status(500).json({
-                        error: "Cannot update Organization",
-                        message: "Internal server error."
-                    });
-                }
+            if (!updated_org) {
+                return res.status(500).json({
+                    error: "Cannot update Organization",
+                    message: "Internal server error."
+                });
+            }
             res.status(200).json(updated_org);
         }
 
@@ -172,5 +180,271 @@ currentOrganizationRouter.get("/opportunities/activeTotal", async (req, res, nex
     } catch (error) {
         next(error);
     }
+});
+
+currentOrganizationRouter.get("/opportunity", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        }
+
+        const { opp_id } = req.query;
+        if (!opp_id || typeof opp_id !== "string") {
+            return res.status(401).json({ error: "Unavailable", message: "Opportunity context missing or invalid." });
+        }
+        const opportunity = await getOrgOpportunity(userId, opp_id);
+
+        if (!opportunity) {
+            return res.status(500).json({
+                error: "Cannot fetch Opportunity",
+                message: "Opportunity doesn't exist or not owned by this organization."
+            });
+        }
+
+        res.status(200).json(opportunity);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunity/applications", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        }
+
+        const { opp_id } = req.query;
+        if (!opp_id || typeof opp_id !== "string") {
+            return res.status(401).json({ error: "Unavailable", message: "Opportunity context missing or invalid." });
+        }
+        const applications = await getApplications(userId, opp_id);
+
+        if (!applications) {
+            return res.status(500).json({
+                error: "Cannot fetch Applications",
+                message: "Opportunity doesn't exist or not owned by this organization."
+            });
+        }
+
+        res.status(200).json(applications);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunity/application", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        }
+
+        const { app_id } = req.query;
+        if (!app_id || typeof app_id !== "string") {
+            return res.status(401).json({ error: "Unavailable", message: "Application context missing or invalid." });
+        }
+        const application = await getOrgApplication(userId, app_id);
+
+        if (!application) {
+            return res.status(500).json({
+                error: "Cannot fetch Application",
+                message: "Application doesn't exist or opportunity not owned by this organization."
+            });
+        }
+
+        res.status(200).json(application);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { oppId, vltId } = req.body;
+
+        const opportunity = await getOrgOpportunity(userId, oppId);
+
+        if (!opportunity) {
+            return res.status(500).json({
+                error: "Cannot fetch Opportunity",
+                message: "Opportunity doesn't exist or not owned by this organization."
+            });
+        }
+
+        const selected_vlt = await selectOppVolunteer(oppId, vltId);
+        if (!selected_vlt) {
+            return res.status(500).json({
+                error: "Cannot Select Volunteer",
+                message: "Error selecting Volunteer for this opportunity."
+            });
+        }
+        
+        res.status(200).json(selected_vlt);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+currentOrganizationRouter.put("/opportunity/complete", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { oppId } = req.body;
+
+        const opportunity = await getOrgOpportunity(userId, oppId);
+
+        if (!opportunity) {
+            return res.status(500).json({
+                error: "Cannot fetch Opportunity",
+                message: "Opportunity doesn't exist or not owned by this organization."
+            });
+        } 
+
+        if (!(opportunity.status == "FILLED")){
+            return res.status(500).json({
+                error: "Cannot Complete Opportunity",
+                message: "Opportunity must be filled status to complete."
+            });
+        }
+
+        const completed_opp = await completeOpportunity(oppId);
+        if (!completed_opp) {
+            return res.status(500).json({
+                error: "Cannot Complete Opportunity",
+                message: "Error completing this opportunity."
+            });
+        }
+        
+        res.status(200).json(completed_opp);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/opportunity/analytics", auth, async (req, res, next) => {
+    try {
+        const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { oppId } = req.query;
+        if (!oppId || typeof oppId !== "string") {
+            return res.status(401).json({ error: "Unavailable", message: "Application context missing or invalid." });
+        }
+
+        const analytics = await getOpportunityAnalytics(userId, oppId);
+
+        if (!analytics) {
+            return res.status(500).json({
+                error: "Cannot get Opportunity Analytics",
+                message: "Ensure opportunity owned by this organization."
+            });
+        }
+
+        res.status(200).json(analytics);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.put("/opportunity/progressUpdate", auth, async (req, res, next) => {
+  try {
+    const typedReq = req as typeof req & AuthenticatedRequest;
+
+    const userId = typedReq.auth?.userId;
+
+    if (!userId) {
+        return res.status(401).json({
+            error: "Unauthorized",
+            message: "User context missing."
+        });
+    }
+    const { opportunityId, title, description, hoursContributed} = req.body;
+
+    if (!opportunityId || !title || !description || !hoursContributed){
+        return res.status(404).json({
+            error: "Not Enought Information",
+            message: "Ensure proper parameters are given."
+        });
+    }
+    const opp = await getOrgOpportunity(userId, opportunityId);
+    
+    if (!opp) {
+        return res.status(404).json({
+            error: "Not Found",
+            message: "Opportunity not found, or not owned by organization"
+        });
+    }
+    
+    else {
+        if (!(opp.status == "FILLED")) {
+            return res.status(500).json({
+                error: "Cannot add progress update.",
+                message: "Opportunity is not eligible for progress update."
+            });
+
+        } else {
+            const added_update = await createOrgProgressUpdate(userId, opportunityId, title, description, Number(hoursContributed))
+            if (!added_update){
+                return res.status(404).json({
+                    error: "Error Adding Update",
+                    message: "Cannot Add Update."
+                });
+            }
+            res.status(200).json(added_update);
+        }
+
+    }
+
+  } catch (error) {
+    console.error(error);
+    next(error);
+    }
+
+});
+
+currentOrganizationRouter.put("/opportunity", auth, async (req, res, next) => {
+  try {
+    const typedReq = req as typeof req & AuthenticatedRequest;
+
+    const userId = typedReq.auth?.userId;
+
+    if (!userId) {
+        return res.status(401).json({
+            error: "Unauthorized",
+            message: "User context missing."
+        });
+    }
+    const { name, category, description, candidateDesc, workType,
+        commitmentLevel, length, deadlineDate, availability } = req.body;
+
+    const created_opp = await createOpportunity(userId, name, category, description, candidateDesc, workType,
+        commitmentLevel, length, deadlineDate, availability as string[]);
+    
+    if (!created_opp){
+        return res.status(404).json({
+            error: "Error Creating Opportunity",
+            message: "Cannot Create."
+        });
+    }
+    res.status(200).json(created_opp);
+  } catch (error) {
+    console.error(error);
+    next(error);
+    }
+
 });
 
