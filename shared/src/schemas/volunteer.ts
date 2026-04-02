@@ -38,14 +38,24 @@ export type UpdateCurrentVolunteer = z.infer<typeof UpdateCurrentVolunteerSchema
 
 export const ExtractedSkillsSchema = z.object({
   technical: z.array(z.string()),
-  soft: z.array(z.string()),
-  leadership: z.array(z.string()),
+  nonTechnical: z.array(z.string()),
 });
 export type ExtractedSkills = z.infer<typeof ExtractedSkillsSchema>;
 
 export const ConfirmSkillsSchema = z.object({
   technical: z.array(z.string()),
-  soft: z.array(z.string()),
-  leadership: z.array(z.string()),
+  nonTechnical: z.array(z.string()),
+  workExperiences: z.array(z.object({
+    jobTitle: z.string(),
+    company: z.string(),
+    startDate: z.string(),
+    endDate: z.string(),
+    responsibilities: z.string(),
+  })),
+  educations: z.array(z.object({
+    institution: z.string(),
+    degree: z.string(),
+    graduationYear: z.string(),
+  })),
 });
 export type ConfirmSkills = z.infer<typeof ConfirmSkillsSchema>;
