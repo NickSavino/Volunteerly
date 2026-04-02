@@ -41,7 +41,7 @@ export function useExperienceInputViewModel() {
     const [errors, setErrors] = useState<FormErrors>({});
     const [submitting, setSubmitting] = useState(false);
 
-
+    //redirect away if already verified
     useEffect(() => {
         async function checkVerified() {
             if (loading || !session) return;
@@ -53,7 +53,6 @@ export function useExperienceInputViewModel() {
         }
         checkVerified();
     }, [session, loading, router]);
-
 
     function addWorkExperience() {
         setWorkExperiences((prev) => [
@@ -129,8 +128,10 @@ export function useExperienceInputViewModel() {
                 return;
             }
 
-            //Pass skills to the review screen
             sessionStorage.setItem("extractedSkills", JSON.stringify(result.data));
+            sessionStorage.setItem("workExperiences", JSON.stringify(workExperiences));
+            sessionStorage.setItem("educations", JSON.stringify(educations));
+
             router.push("/volunteer/skill-extraction");
         } catch (err) {
             console.error(err);
