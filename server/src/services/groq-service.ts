@@ -2,34 +2,29 @@ import { env } from "../lib/env.js";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-export type SkillCategory = "technical" | "soft" | "leadership";
-
 export type ExtractedSkills = {
     technical: string[];
-    soft: string[];
-    leadership: string[];
+    nonTechnical: string[];
 };
 
 export async function extractSkillsFromResumeText(resumeText: string): Promise<ExtractedSkills> {
     const prompt = `
-You are a professional resume analyst. Carefully read the entire resume text provided and extract the top 5 skills from each of these three categories: technical, soft skills, and leadership.
+You are a professional resume analyst. Carefully read the entire resume text provided and extract the top 10 skills from each of these two categories: technical skills and non-technical skills (which includes skills in the domain of soft skills and leadership skills).
 
 Guidelines:
-1. Scan the ENTIRE RESUME before choosing any skills. Consider repeated mentions or mentions of skills in work history as higher confidence.
-2. For technical skills, list the skills in **order of most mentioned or most emphasized in the resume to least**. Include programming languages, frameworks, tools, and other specific skills, but keep them high-level enough to map to job descriptions. Do not group unrelated skills together.
-    And ensure you arent choosing skills simply because they appear first in the resume.
-3. For soft skills, choose skills that demonstrate communication, collaboration, adaptability, and other interpersonal abilities.
-4. For leadership, include skills that demonstrate team management, mentoring, project ownership, or strategic thinking.
-5. Return **ONLY valid JSON** with this exact shape and nothing else:
+1. Scan the ENTIRE RESUME before choosing any skills. Consider repeated mentions or mentions of skills in work history or education as higher confidence, and should therefore be ranked higher.
+2. For technical skills: list programming languages, frameworks, tools, platforms, and domain-specific technical knowledge in order of most emphasized. Keep them high-level enough to map to job descriptions.
+3. For non-technical skills: combine soft skills and leadership skills into one list. Examples include communication, collaboration, adaptability, team management, mentoring, project ownership, strategic thinking, and interpersonal abilities.
+4. Return ONLY valid JSON with this exact shape and nothing else:
 
 {
-  "technical": ["skill1", "skill2", "skill3", "skill4", "skill5"],
-  "soft": ["skill1", "skill2", "skill3", "skill4", "skill5"],
-  "leadership": ["skill1", "skill2", "skill3", "skill4", "skill5"]
+  "technical": ["skill1", "skill2", "skill3", "skill4", "skill5", "skill6", "skill7", "skill8", "skill9", "skill10"],
+  "nonTechnical": ["skill1", "skill2", "skill3", "skill4", "skill5", "skill6", "skill7", "skill8", "skill9", "skill10"]
 }
 
-6. If fewer than 5 skills are found for a category, return as many as you can confidently extract.
-7. Do not invent skills not supported by the resume text.
+5. If fewer than 10 skills are found for a category, return as many as you can confidently extract.
+6. Do not invent skills not supported by the resume text.
+7. Please ensure the skills are returned in the order of most confidence, with the first being the most confident. THis is to ensure we are getting the best top 10 skills.
 
 Resume text:
 ${resumeText}`;
@@ -44,7 +39,7 @@ ${resumeText}`;
             model: "llama-3.3-70b-versatile",
             messages: [{ role: "user", content: prompt }],
             temperature: 0.2,
-            max_tokens: 512,
+            max_tokens: 1024,
         }),
     });
 
@@ -64,8 +59,7 @@ ${resumeText}`;
         const parsed = JSON.parse(cleaned) as ExtractedSkills;
         return {
             technical: parsed.technical ?? [],
-            soft: parsed.soft ?? [],
-            leadership: parsed.leadership ?? [],
+            nonTechnical: parsed.nonTechnical ?? [],
         };
     } catch {
         throw new Error(`Failed to parse Groq response as JSON: ${content}`);
