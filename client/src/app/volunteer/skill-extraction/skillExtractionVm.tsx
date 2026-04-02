@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { api } from "@/lib/api";
 import { CurrentUserSchema, ExtractedSkills } from "@volunteerly/shared";
 import { VolunteerService } from "@/services/VolunteerService";
+import { WorkExperience, Education } from "@/app/volunteer/experience-input/experienceInputVm";
 
 export function useSkillExtractionViewModel() {
     const router = useRouter();
@@ -14,6 +15,7 @@ export function useSkillExtractionViewModel() {
     const [confirming, setConfirming] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    //Redirect away if already verified
     useEffect(() => {
         async function checkVerified() {
             if (loading || !session) return;
@@ -26,6 +28,7 @@ export function useSkillExtractionViewModel() {
         checkVerified();
     }, [session, loading, router]);
 
+    //Load skills from session storage
     useEffect(() => {
         const stored = sessionStorage.getItem("extractedSkills");
         if (!stored) {
@@ -54,8 +57,19 @@ export function useSkillExtractionViewModel() {
         setConfirming(true);
         setError(null);
         try {
-            await VolunteerService.confirmSkills(skills);
+            const workExperiences: WorkExperience[] = JSON.parse(
+                sessionStorage.getItem("workExperiences") ?? "[]"
+            );
+            const educations: Education[] = JSON.parse(
+                sessionStorage.getItem("educations") ?? "[]"
+            );
+
+            await VolunteerService.confirmSkills(skills, workExperiences, educations);
+
             sessionStorage.removeItem("extractedSkills");
+            sessionStorage.removeItem("workExperiences");
+            sessionStorage.removeItem("educations");
+
             router.replace("/volunteer");
         } catch (err) {
             console.error(err);
@@ -65,16 +79,11 @@ export function useSkillExtractionViewModel() {
         }
     }
 
-    function handleBack() {
-        router.replace("/volunteer/experience-input");
-    }
-
     return {
         skills,
         confirming,
         error,
         removeSkill,
         handleConfirm,
-        handleBack,
     };
 }
