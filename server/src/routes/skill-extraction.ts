@@ -20,7 +20,7 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-//take in pdf and parse
+
 skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) => {
     try {
         const file = req.file;
@@ -42,7 +42,7 @@ skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) 
             });
         }
 
-        //attach work and job experience
+        //add work experience and education
         const workExperience = req.body.workExperience ?? "";
         const education = req.body.education ?? "";
 
@@ -52,7 +52,7 @@ skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) 
             education ? `Education:\n${education}` : "",
         ].filter(Boolean).join("\n\n");
 
-        //get the top 5 skills from groq
+        //make groq call to extract skills
         const skills = await extractSkillsFromResumeText(fullContext);
 
         res.status(200).json(skills);
@@ -61,52 +61,92 @@ skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) 
     }
 });
 
-//confirm which skills the user wants
+
 skillExtractionRouter.post("/confirm", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
 
-        const { technical, soft, leadership } = req.body as {
+        const {
+            technical,
+            nonTechnical,
+            workExperiences,
+            educations,
+        } = req.body as {
             technical: string[];
-            soft: string[];
-            leadership: string[];
+            nonTechnical: string[];
+            workExperiences: {
+                jobTitle: string;
+                company: string;
+                startDate: string;
+                endDate: string;
+                responsibilities: string;
+            }[];
+            educations: {
+                institution: string;
+                degree: string;
+                graduationYear: string;
+            }[];
         };
 
-        if (!Array.isArray(technical) || !Array.isArray(soft) || !Array.isArray(leadership)) {
+        if (!Array.isArray(technical) || !Array.isArray(nonTechnical)) {
             return res.status(400).json({
                 error: "Bad Request",
-                message: "technical, soft, and leadership must be arrays of strings.",
+                message: "technical and nonTechnical must be arrays of strings.",
             });
         }
 
-        //add skills to the db
+        //make skills record
         await prisma.volunteerSkillProfile.upsert({
             where: { volId: userId },
             create: {
                 volId: userId,
                 technical,
-                soft,
-                leadership,
+                nonTechnical,
             },
             update: {
                 technical,
-                soft,
-                leadership,
+                nonTechnical,
             },
         });
 
-        //embed all skills as one vector using Gemini
-        const allSkills = [...technical, ...soft, ...leadership].join(", ");
+        //save work experience
+        if (Array.isArray(workExperiences) && workExperiences.length > 0) {
+            await prisma.volunteerWorkExperience.createMany({
+                data: workExperiences.map((w) => ({
+                    volId: userId,
+                    jobTitle: w.jobTitle,
+                    company: w.company,
+                    startDate: w.startDate,
+                    endDate: w.endDate,
+                    responsibilities: w.responsibilities,
+                })),
+            });
+        }
+
+        //save education
+        if (Array.isArray(educations) && educations.length > 0) {
+            await prisma.volunteerEducation.createMany({
+                data: educations.map((e) => ({
+                    volId: userId,
+                    institution: e.institution,
+                    degree: e.degree,
+                    graduationYear: e.graduationYear,
+                })),
+            });
+        }
+
+        //embed all skills as one vector via Gemini
+        const allSkills = [...technical, ...nonTechnical].join(", ");
         const vector = await embedText(allSkills);
 
-        //save vector embedding
+        //save vector to volunteer row
         await prisma.$executeRaw`
             UPDATE volunteers
             SET skill_vector = ${JSON.stringify(vector)}::vector
             WHERE id = ${userId}
         `;
 
-        //mark the vol as verified now
+        //mark user as VERIFIED
         await prisma.user.update({
             where: { id: userId },
             data: { status: "VERIFIED" },
