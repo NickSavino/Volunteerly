@@ -4,10 +4,10 @@ import {
     CurrentVolunteerSchema,
     UpdateCurrentVolunteer,
     OpportunitiesSchema,
-    OrganizationSchema,
     ExtractedSkills,
     ExtractedSkillsSchema,
 } from "@volunteerly/shared";
+import { WorkExperience, Education } from "@/app/volunteer/experience-input/experienceInputVm";
 
 const PartnerOrgSchema = z.object({
     id: z.string().uuid(),
@@ -69,10 +69,19 @@ export class VolunteerService {
         return ExtractedSkillsSchema.safeParse(response);
     }
 
-    static async confirmSkills(skills: ExtractedSkills) {
+    static async confirmSkills(
+        skills: ExtractedSkills,
+        workExperiences: WorkExperience[],
+        educations: Education[]
+    ) {
         const response = await api<{ success: boolean }>("/current-volunteer/extract-skills/confirm", {
             method: "POST",
-            body: JSON.stringify(skills),
+            body: JSON.stringify({
+                technical: skills.technical,
+                nonTechnical: skills.nonTechnical,
+                workExperiences,
+                educations,
+            }),
         });
         return response;
     }
