@@ -14,6 +14,7 @@ export function useOrgOpportunitiesViewModel() {
   const [error, setError] = useState<string | null>(null);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])
   const [currentTab, setCurrentTab] = useState("OPEN")
+  const [fetching, setFetching] = useState(true)
   const filteredOpportunities = opportunities.filter(
   (opp) => opp.status === currentTab);
 
@@ -67,14 +68,17 @@ export function useOrgOpportunitiesViewModel() {
       async function loadOpportunities() {
 
         const opps = await OrganizationService.getAllOpportunities()
-        if (!opps.success) { 
+        if (!opps.success) {         
           console.error(opps.error)
-          setError("Failed to load opportunities."); return; }
-        setOpportunities(opps.data);   
-        
+          setError("Failed to load opportunities."); 
+          setFetching(false)
+          return; 
+        }
+        setOpportunities(opps.data);  
+        setFetching(false)
       }
       loadOpportunities()
     }, [])
 
-    return {loading, session, signOut, router, user, error, currentUser, filteredOpportunities, currentTab, setCurrentTab} 
+    return {loading, session,fetching, signOut, router, user, error, currentUser, filteredOpportunities, currentTab, setCurrentTab} 
 }

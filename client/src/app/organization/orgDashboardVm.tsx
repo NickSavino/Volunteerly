@@ -12,6 +12,7 @@ export function useOrgDashboardViewModel() {
   const { session, user, loading, signOut } = useAuth();
   const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
+  const [fetching, setFetching] = useState(true)
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])
   const [totalOpps, setTotalOpps] = useState(0)
   const [activeVlt, setActiveVlt] = useState(0)
@@ -70,26 +71,38 @@ export function useOrgDashboardViewModel() {
         const opps = await OrganizationService.getActiveOpportunities()
         if (!opps.success) { 
           console.error(opps.error)
-          setError("Failed to load opportunities."); return; }
-        setOpportunities(opps.data);   
+          setError("Failed to load opportunities."); 
+        }else {
+          setOpportunities(opps.data);   
+        }
         
         const totalOpps = await OrganizationService.countAllOpportunities()
-        if (!totalOpps.success) { setError("Failed to get total opportunities."); return; }
-        setTotalOpps(totalOpps.data)
+        if (!totalOpps.success) { 
+          setError("Failed to get total opportunities."); 
+        }else{
+          setTotalOpps(totalOpps.data)
+        }
         
         const hours = await OrganizationService.sumTotalHours()
-        if (!hours.success) { setError("Failed to get hours total."); return; }
-        setTotalHours(hours.data._sum.hours || 0)
+        if (!hours.success) { 
+          setError("Failed to get hours total.")
+        }else {
+          setTotalHours(hours.data._sum.hours || 0)
+        }
 
         const actVolunteers = await OrganizationService.countActiveVolunteers()
-        if (!actVolunteers.success) { setError("Failed to get active volunteer count."); return; }
-        setActiveVlt(actVolunteers.data)
-        
+        if (!actVolunteers.success) { 
+          setError("Failed to get active volunteer count.");
+        }else {
+          setActiveVlt(actVolunteers.data)
+        }
+
+        setFetching(false)        
       }
       loadOpportunities()
     }, [])
 
 
 
-    return {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} 
+    return {loading, session,fetching, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} 
 }

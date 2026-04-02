@@ -24,6 +24,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { OrganizationLoadingPage } from "../../organization_loading";
 
 
 export default function ViewOpportunityPage({
@@ -35,7 +36,7 @@ export default function ViewOpportunityPage({
     const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate} = useOrgViewOpportunityViewModel(id)
 
     if (loading || !session || fetching) {
-        return <main className="p-6">Loading...</main>
+        return (<OrganizationLoadingPage />)
     }
 
   return (
@@ -130,7 +131,7 @@ export default function ViewOpportunityPage({
                                         <AlarmClockCheck className="w-9 h-9"/> 
                                         <div className="flex flex-col">
                                             <span className="text-xs">Availability</span>
-                                            <span>{opportunity?.availability.join(", ")}</span>
+                                            <span className="text-sm">{opportunity?.availability.join(", ")}</span>
                                         </div>
                                     </span>
 
@@ -138,7 +139,7 @@ export default function ViewOpportunityPage({
                                         <Handshake className="w-9 h-9"/> 
                                         <div className="flex flex-col">
                                             <span className="text-xs">Commitment</span>
-                                            <span>{opportunity?.commitmentLevel}</span>
+                                            <span className="text-sm">{opportunity?.commitmentLevel}</span>
                                         </div>
                                     </span>
                                 </CardContent>
@@ -200,7 +201,7 @@ export default function ViewOpportunityPage({
                     (
                         <div> 
                             <Card className="mb-5">
-                                <CardHeader>
+                                <CardHeader >
                                     <CardTitle>Opportunity Overview</CardTitle>
                                     <CardDescription>{opportunity?.description}</CardDescription>
                                     {opportunity?.status == "FILLED" &&
@@ -305,7 +306,7 @@ export default function ViewOpportunityPage({
                                             </CardContent>                                                                        
                                                 ) : (                        
                                                     <CardContent className="space-y-4">
-                                                        <div className="border-l-2 pl-4 space-y-4">
+                                                        <div className="border-l-2 pl-4 space-y-4 max-h-40 overflow-y-auto">
                                                             {opportunity?.progressUpdates?.map((update) => (
                                                                 <div key={update.id}>
                                                                     <span className="absolute -left-3 top-1 w-3 h-3 rounded-full bg-primary" />

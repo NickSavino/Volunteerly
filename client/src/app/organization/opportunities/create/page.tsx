@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCreateOpportunityViewModel } from "./orgCreateOpportunityVm";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Toggle } from "@/components/ui/toggle";
+import { OrganizationLoadingPage } from "../../organization_loading";
 
 export default function OppCreatePage() {
   const {        
@@ -35,7 +36,7 @@ export default function OppCreatePage() {
 
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   if (loading || submitting) {
-    return <main className="p-6">Loading...</main>
+    return <OrganizationLoadingPage />
   }
 
   return (

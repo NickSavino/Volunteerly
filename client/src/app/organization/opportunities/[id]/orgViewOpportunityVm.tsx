@@ -114,7 +114,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
       if (opportunity?.status == "FILLED"){
         const completed_opp = await OrganizationService.completeOpportunity(opportunity.id)
         if (completed_opp.success) {
-            toast.success("Opportunity completed!")
+            toast.success("Opportunity completed!", { position: "top-right" })
             setReload(true)
             return
         }
@@ -127,7 +127,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
         progressUpdate.opportunityId = opportunity?.id
         const updated = await OrganizationService.addProgressUpdate(progressUpdate)
         if (updated.success){
-          toast.success("Progress Updated Added!")
+          toast.success("Progress Updated Added!", { position: "top-right" })
           setProgressUpdate({
             title: "",
             description: "",

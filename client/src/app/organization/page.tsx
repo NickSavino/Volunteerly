@@ -17,13 +17,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
 import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { OrgStatCard } from "@/components/custom/org_stat_card";
+import { OrganizationLoadingPage } from "./organization_loading";
 
 
 export default function HomePage() {
-  const {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} = useOrgDashboardViewModel()
+  const {loading, session, fetching, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} = useOrgDashboardViewModel()
 
-  if (loading || !session ) {
-    return <main className="p-6">Loading...</main>
+  if (loading || !session || fetching) {
+    return (<OrganizationLoadingPage />)
   }
 
   return (

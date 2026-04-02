@@ -84,7 +84,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
       if (application?.volunteer?.id){
         const updated_opp = await OrganizationService.selectOppVolunteer(oppId, application.volunteer.id)
         if (updated_opp.success) {
-            toast.success("Volunteer Selected, Opportunity is now filled.")
+            toast.success("Volunteer Selected, Opportunity is now filled.", { position: "top-right" })
             router.replace(`/organization/opportunities/${oppId}`);
             return;
         }

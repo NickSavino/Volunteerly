@@ -67,10 +67,10 @@ export function useCreateOpportunityViewModel() {
         const {data, error, success} = await OrganizationService.addOpportunity(opp)
 
         if (success) {
-            toast.success("Opportunity Successfully Created!")
+            toast.success("Opportunity Successfully Created!", { position: "top-right" })
             router.replace("/organization/opportunities");
             return
-        }else {
+        }else {          
             setError("Error creating Opportunity.")
             console.error(error)
         }
