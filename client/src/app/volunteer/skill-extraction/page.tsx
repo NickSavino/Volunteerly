@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExtractedSkills } from "@volunteerly/shared";
 
 export default function SkillExtractionPage() {
-    const { skills, confirming, error, removeSkill, handleConfirm, handleBack } =
+    const { skills, confirming, error, removeSkill, handleConfirm } =
         useSkillExtractionViewModel();
 
     if (!skills) {
@@ -17,20 +17,18 @@ export default function SkillExtractionPage() {
         <div className="min-h-screen">
             <title>Volunteer - Skill Extraction</title>
 
-            {/* Navbar */}
             <nav className="flex items-center justify-between px-8 py-4 border-b">
                 <span className="font-semibold text-lg">Volunteerly</span>
             </nav>
 
             <main className="flex flex-col items-center px-8 py-10 gap-8 max-w-4xl mx-auto">
 
-                {/* Header card */}
                 <Card className="w-full">
                     <CardContent className="pt-6">
                         <h1 className="text-2xl font-bold">Extraction Complete</h1>
                         <p className="text-muted-foreground mt-1">
-                            We've finished extracting your skills from your profile,
-                            please verify skills before proceeding.
+                            We've finished extracting your skills from your profile.<br />
+                            Please verify your skills before proceeding. Click the × to remove any incorrect skills.
                         </p>
                         {error && (
                             <p className="text-destructive text-sm mt-3">{error}</p>
@@ -38,10 +36,9 @@ export default function SkillExtractionPage() {
                     </CardContent>
                 </Card>
 
-                {/* The 3 Skill categories */}
                 <div className="w-full">
                     <h2 className="text-lg font-semibold mb-4">Extracted Skills</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <SkillCard
                             title="Technical Skills"
                             icon=""
@@ -49,25 +46,15 @@ export default function SkillExtractionPage() {
                             onRemove={(skill) => removeSkill("technical", skill)}
                         />
                         <SkillCard
-                            title="Soft Skills"
+                            title="Non-Technical Skills"
                             icon=""
-                            skills={skills.soft}
-                            onRemove={(skill) => removeSkill("soft", skill)}
-                        />
-                        <SkillCard
-                            title="Leadership Skills"
-                            icon=""
-                            skills={skills.leadership}
-                            onRemove={(skill) => removeSkill("leadership", skill)}
+                            skills={skills.nonTechnical}
+                            onRemove={(skill) => removeSkill("nonTechnical", skill)}
                         />
                     </div>
                 </div>
 
-                {/* Footer actions */}
-                <div className="w-full flex items-center justify-between">
-                    <Button variant="ghost" onClick={handleBack}>
-                        Back to Experience Input
-                    </Button>
+                <div className="w-full flex justify-end">
                     <Button onClick={handleConfirm} disabled={confirming}>
                         {confirming ? "Saving..." : "Confirm & Continue"}
                     </Button>
