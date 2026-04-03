@@ -314,7 +314,7 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
 						Hi, \n
 					</p>
                     <p>
-						We're pleased to let you know that you have been selected for the volunteer opportunity "${selected_vlt.name}".
+						We're pleased to let you know that you have been selected for the volunteer opportunity "${selected_vlt.name}". \n
 					</p>
                     <p>
 						Please log in to your Volunteerly account to review the opportunity details. \n
