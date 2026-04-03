@@ -13,13 +13,18 @@ type ApplyModalProps = {
 export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps) {
     const [message, setMessage] = useState("");
     const [submitting, setSubmitting] = useState(false);
+    const [touched, setTouched] = useState(false);
+
+    const isEmpty = message.trim().length === 0;
 
     async function handleSubmit() {
-        if (submitting) return;
+        setTouched(true);
+        if (submitting || isEmpty) return;
         setSubmitting(true);
         try {
             await onSubmit(message);
             setMessage("");
+            setTouched(false);
         } finally {
             setSubmitting(false);
         }
@@ -28,6 +33,7 @@ export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps
     function handleClose() {
         if (submitting) return;
         setMessage("");
+        setTouched(false);
         onClose();
     }
 
@@ -66,8 +72,15 @@ export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps
                     placeholder="Explain why you should be selected ..."
                     rows={5}
                     disabled={submitting}
-                    className="w-full rounded-xl border border-border bg-muted px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 resize-none"
+                    className={`w-full rounded-xl border bg-muted px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 resize-none ${
+                        touched && isEmpty ? "border-destructive" : "border-border"
+                    }`}
                 />
+                {touched && isEmpty && (
+                    <p className="text-xs text-destructive">
+                        Please write a message before applying.
+                    </p>
+                )}
             </div>
         </AppModal>
     );

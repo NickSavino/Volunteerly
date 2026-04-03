@@ -132,7 +132,7 @@ export default function OpportunitiesPage() {
 
                     <div className="mb-6">
                         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Tech Roles
+                            Roles
                         </p>
                         <div className="space-y-2">
                             {OPPORTUNITY_CATEGORIES.map((cat) => (
