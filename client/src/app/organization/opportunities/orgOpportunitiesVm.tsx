@@ -7,17 +7,16 @@ import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 
-export function useOrgDashboardViewModel() {
+export function useOrgOpportunitiesViewModel() {
   const router = useRouter();
   const { session, user, loading, signOut } = useAuth();
   const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
-  const [fetching, setFetching] = useState(true)
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])
-  const [totalOpps, setTotalOpps] = useState(0)
-  const [activeVlt, setActiveVlt] = useState(0)
-  const [totalHours, setTotalHours] = useState(0)
-
+  const [currentTab, setCurrentTab] = useState("OPEN")
+  const [fetching, setFetching] = useState(true)
+  const filteredOpportunities = opportunities.filter(
+  (opp) => opp.status === currentTab);
 
   useEffect(() => {
     if (!loading && !session) {
@@ -68,41 +67,18 @@ export function useOrgDashboardViewModel() {
     useEffect(() => {
       async function loadOpportunities() {
 
-        const opps = await OrganizationService.getActiveOpportunities()
-        if (!opps.success) { 
+        const opps = await OrganizationService.getAllOpportunities()
+        if (!opps.success) {         
           console.error(opps.error)
           setError("Failed to load opportunities."); 
-        }else {
-          setOpportunities(opps.data);   
+          setFetching(false)
+          return; 
         }
-        
-        const totalOpps = await OrganizationService.countAllOpportunities()
-        if (!totalOpps.success) { 
-          setError("Failed to get total opportunities."); 
-        }else{
-          setTotalOpps(totalOpps.data)
-        }
-        
-        const hours = await OrganizationService.sumTotalHours()
-        if (!hours.success) { 
-          setError("Failed to get hours total.")
-        }else {
-          setTotalHours(hours.data._sum.hours || 0)
-        }
-
-        const actVolunteers = await OrganizationService.countActiveVolunteers()
-        if (!actVolunteers.success) { 
-          setError("Failed to get active volunteer count.");
-        }else {
-          setActiveVlt(actVolunteers.data)
-        }
-
-        setFetching(false)        
+        setOpportunities(opps.data);  
+        setFetching(false)
       }
       loadOpportunities()
     }, [])
 
-
-
-    return {loading, session,fetching, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} 
+    return {loading, session,fetching, signOut, router, user, error, currentUser, filteredOpportunities, currentTab, setCurrentTab} 
 }

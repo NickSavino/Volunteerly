@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FolderKanban, PersonStanding, Hourglass, UserRoundPen, LogOut, MessageCircleQuestionMark} from "lucide-react";
+import { FolderKanban, PersonStanding, Hourglass, UserRoundPen, LogOut, MessageCircleQuestionMark, Users, Calendar, CalendarCheck, Briefcase} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
 import { useAuth } from "../../providers/auth-provider";
 import { Button } from "../../components/ui/button";
@@ -16,13 +16,15 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
 import volunteerly_logo from "@/assets/volunteerly_logo.png"
+import { OrgStatCard } from "@/components/custom/org_stat_card";
+import { OrganizationLoadingPage } from "./organization_loading";
 
 
 export default function HomePage() {
-  const {loading, session, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} = useOrgDashboardViewModel()
+  const {loading, session, fetching, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} = useOrgDashboardViewModel()
 
-  if (loading || !session ) {
-    return <main className="p-6">Loading...</main>
+  if (loading || !session || fetching) {
+    return (<OrganizationLoadingPage />)
   }
 
   return (
@@ -54,21 +56,24 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                <div className="md:flex items-center md:justify-around gap-5">
-                    <ModStatCard
-                        icon={FolderKanban}
-                        label="Total Projects"
-                        count={totalOpps}
-                    />
-                    <ModStatCard
+                <div className="md:flex md:justify-around md:grid md:gap-3 md:grid-cols-3">
+                    <OrgStatCard
                         icon={PersonStanding}
                         label="Active Volunteers"
                         count={activeVlt}
+                        money={false}
                     />
-                    <ModStatCard
+                    <OrgStatCard
+                        icon={FolderKanban}
+                        label="All-Time Projects"
+                        count={totalOpps}
+                        money={false}
+                    />
+                    <OrgStatCard
                         icon={Hourglass}
-                        label="Hours Contribuited"
+                        label="All-Time Hours"
                         count={totalHours}
+                        money={false}
                     />
                 </div>
 
@@ -98,9 +103,36 @@ export default function HomePage() {
                                             <Item variant="outline">
                                                 <ItemContent>
                                                     <ItemTitle>{opp.name} <Badge>{opp.status}</Badge> </ItemTitle>
-                                                    <ItemDescription>
-                                                        Posted: {opp.postedDate} | Due: {opp.deadlineDate} | Work Type: {opp.workType}
-                                                    </ItemDescription>
+                                                    {opp.status == "OPEN" ? (
+                                                        <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                            <span className="flex items-center gap-1">
+                                                                <Users/> {opp._count?.applications} Applicant(s)
+                                                            </span>
+
+                                                            <span className="flex items-center gap-1">
+                                                                <Calendar/> Posted {opp.postedDate.toLocaleDateString()}
+                                                            </span>
+
+                                                            <span className="flex items-center gap-1">
+                                                                <Hourglass/> Due {opp.deadlineDate?.toLocaleDateString()}
+                                                            </span>
+                                                        </ItemDescription>
+                                                    ): 
+                                                        (<ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                            <span className="flex items-center gap-1">
+                                                                <PersonStanding/> {opp.volunteer?.firstName} {opp.volunteer?.lastName} 
+                                                            </span>
+
+                                                            <span className="flex items-center gap-1">
+                                                                <CalendarCheck/> {opp.length}
+                                                            </span>
+
+                                                            <span className="flex items-center gap-1">
+                                                                <Briefcase/> {opp.workType}
+                                                            </span>
+                                                        </ItemDescription>   
+                                                        )                                                                                                                                             
+                                                }
                                                 </ItemContent>
                                                 <ItemActions>
                                                     <Button variant="outline" className="cursor-pointer" size="sm" onClick={async () => { router.push(`/organization/opportunities/${opp.id}`);}}>
@@ -114,7 +146,7 @@ export default function HomePage() {
                     </Card>
                 </div>
             </div>
-            <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 min-h-full">
+            <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 min-h-full flex flex-col justify-center">
                 <Card className="mx-5">
                     <CardContent className="text-center">
                         <div className="flex justify-center mb-4">
