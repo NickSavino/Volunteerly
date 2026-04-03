@@ -7,9 +7,26 @@ import {
     getVolunteerOrganizations,
     getMonthlyHours,
     browseOpportunities,
+    applyToOpportunity,
 } from "../services/volunteer-service.js";
 
 export const currentVolunteerRouter = Router();
+
+currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const { message } = req.body;
+        await applyToOpportunity(userId, oppId, message ?? "");
+        res.status(201).json({ success: true });
+    } catch (error: any) {
+        if (error?.message === "ALREADY_APPLIED") {
+            return res.status(409).json({ error: "Already applied to this opportunity." });
+        }
+        next(error);
+    }
+});
 
 currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
     try {
