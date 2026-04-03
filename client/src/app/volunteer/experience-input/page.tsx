@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { UnverifiedNavbar } from "../unverified_volunteer_navbar";
+import { useVltDashboardViewModel, ChartRange } from "../vltDashboardVm";
 
 export default function ExperienceInputPage() {
     const {
@@ -21,17 +23,18 @@ export default function ExperienceInputPage() {
         updateEducation,
         handleSubmit,
         signOut,
+        fullName
     } = useExperienceInputViewModel();
+
 
     return (
         <div className="min-h-screen">
             <title>Volunteer - Experience Input</title>
-
-            {/* Navbar */}
-            <nav className="flex items-center justify-between px-8 py-4 border-b">
-                <span className="font-semibold text-lg">Volunteerly</span>
-                <Button variant="ghost" onClick={signOut}>Log out</Button>
-            </nav>
+        
+        <UnverifiedNavbar
+            fullName={fullName}
+            onSignOut={signOut}
+        />
 
             <main className="flex flex-col items-center px-8 py-10 gap-6 max-w-3xl mx-auto">
                 <div className="text-center">
