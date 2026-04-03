@@ -34,7 +34,7 @@ export default function VolunteerDashboardPage() {
     const {
         loading, session, error, currentVolunteer, opportunities, partnerOrgs,
         handleSignOut, firstName, totalHours, economicValue, impactScore,
-        orgsAssisted, chartLabels, chartData, chartRange, setChartRange, router,
+        orgsAssisted, chartLabels, chartData, chartRange, setChartRange, router,hourlyRate
     } = useVltDashboardViewModel();
 
     const pathname = usePathname();
@@ -86,7 +86,7 @@ export default function VolunteerDashboardPage() {
                         icon={<DollarSign className="h-5 w-5 text-gray-700" />}
                         label="Economic Value"
                         value={`$${economicValue.toLocaleString()}`}
-                        sub="Calculated at $25.00/hr"
+                        sub={`Calculated at $${currentVolunteer?.hourlyValue}/hr`}
                         trend={null}
                     />
                     <StatCard

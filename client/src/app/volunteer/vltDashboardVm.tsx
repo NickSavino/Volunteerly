@@ -76,7 +76,8 @@ export function useVltDashboardViewModel() {
         opportunities.reduce((sum, opp) => sum + opp.hours, 0),
     [opportunities]);
 
-    const economicValue = useMemo(() => Math.round(totalHours * 25), [totalHours]);
+    const hourlyRate = currentVolunteer?.hourlyValue ?? 0;
+    const economicValue = useMemo(() => Math.round(totalHours * hourlyRate), [totalHours, hourlyRate]);
     const orgsAssisted = partnerOrgs.length;
     const impactScore = useMemo(() => Math.round(economicValue * orgsAssisted), [economicValue, orgsAssisted]);
 
@@ -164,5 +165,6 @@ export function useVltDashboardViewModel() {
         chartData,
         chartRange,
         setChartRange,
+        hourlyRate,
     };
 }

@@ -147,7 +147,6 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
             SET skill_vector = ${JSON.stringify(vector)}::vector
             WHERE id = ${userId}
         `;
-        console.log("hourlyRate received:", hourlyRate, typeof hourlyRate);
         //update the volunteers hourly rate
         await prisma.volunteer.update({
             where: { id: userId },
