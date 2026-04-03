@@ -83,6 +83,33 @@ Guideline:
 4. Return ONLY a single integer number representing the hourly rate in CAD. No text, no symbols, no explanation, just the number.
 5. if you know the yearly salary please divide it by 2080
 
+list of base canadian dollar rates for different professional roles:
+  [ role: "Software Developer", rate: 50 ,
+  role: "Frontend Developer", rate: 45 ,
+  role: "Backend Developer", rate: 52 ,
+  role: "Full Stack Developer", rate: 55 ,
+  role: "Data Analyst", rate: 37 ,
+  role: "Data Scientist", rate: 55 ,
+  role: "Machine Learning Engineer", rate: 60 ,
+  role: "Cybersecurity Analyst", rate: 48 ,
+  role: "DevOps Engineer", rate: 58 ,
+  role: "Cloud Engineer", rate: 62 ,
+  role: "Technical Project Manager", rate: 48 ,
+  role: "Project Manager", rate: 45 ,
+  role: "Software Project Manager", rate: 50 ,
+  role: "Business Analyst", rate: 46 ,
+  role: "Product Manager", rate: 55 ,
+  role: "Scrum Master", rate: 50 ,
+  role: "Technical Program Manager", rate: 65 ,
+  role: "UX/UI Designer", rate: 45 ,
+  role: "QA Engineer", rate: 35 ,
+  role: "Systems Administrator", rate: 40 ,
+  role: "IT Support Specialist", rate: 30 ,
+  role: "Database Administrator", rate: 55 ,
+  role: "Solutions Architect", rate: 80 ,
+  role: "Junior Developer", rate: 30 ,
+  role: "Junior Data Analyst", rate: 28 ,
+  role: "Project Coordinator", rate: 32 ]
 
 Work Experience:
 ${workExperience}
