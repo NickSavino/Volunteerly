@@ -5,6 +5,7 @@ const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 export type ExtractedSkills = {
     technical: string[];
     nonTechnical: string[];
+    hourlyRate: number;
 };
 
 export async function extractSkillsFromResumeText(resumeText: string): Promise<ExtractedSkills> {
@@ -60,8 +61,65 @@ ${resumeText}`;
         return {
             technical: parsed.technical ?? [],
             nonTechnical: parsed.nonTechnical ?? [],
+            hourlyRate: parsed.hourlyRate ?? []
         };
     } catch {
         throw new Error(`Failed to parse Groq response as JSON: ${content}`);
     }
+}
+
+
+export async function calculateHourlyRate(
+    workExperience: string,
+    education: string
+): Promise<number> {
+    const prompt = `
+You are a hourly rate guesser in Alberta, Canada. Based on the following work experience and education, calculate a reasonable hourly rate in Canadian dollars (CAD) for this person, consider their base salary rom their work experience and add or subtract slightly based on additional responsibilities or education.
+
+Guideline:
+1. given the list of base rates try and find a similar role and base the base rate on that
+2. Consider Alberta's cost of living, typical salaries in the province, and the person's experience level. 
+3. Return only realistic wages that you have evidence for, and are accuracte with facts on the internet or the provided list
+4. Return ONLY a single integer number representing the hourly rate in CAD. No text, no symbols, no explanation, just the number.
+5. if you know the yearly salary please divide it by 2080
+
+
+Work Experience:
+${workExperience}
+
+Education:
+${education}`;
+
+
+    const response = await fetch(GROQ_API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${env.GROQ_API_KEY}`,
+        },
+        body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.1,
+            max_tokens: 10,
+        }),
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Groq API error: ${response.status} ${errorText}`);
+    }
+
+    const data = await response.json() as {
+        choices: { message: { content: string } }[];
+    };
+
+    const content = data.choices[0]?.message?.content ?? "";
+    const rate = parseInt(content.trim(), 10);
+
+    if (isNaN(rate)) {
+        throw new Error(`Failed to parse hourly rate from Groq response: ${content}`);
+    }
+
+    return rate;
 }
