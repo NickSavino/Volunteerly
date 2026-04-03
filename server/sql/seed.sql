@@ -129,7 +129,7 @@ INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, de
 VALUES
     (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',   'Web Dev',       'Create a website for our charity',          'Must have relevant seng experience.',  'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]'),
     (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',    'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',       'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]'),
-    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis', 'Data Science',  'Predict our Q3 donation amounts.',          'Programming experience required.',     'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
+    (opp3_id::text, org3_id::text, vol2_id::text, 'FILLED',   'Future Trend Analysis', 'Data Science',  'Predict our Q3 donation amounts.',          'Programming experience required.',     'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
 
 --Applications
 INSERT INTO public.applications (id, opp_id, vol_id, match_pct, message, date_applied)
