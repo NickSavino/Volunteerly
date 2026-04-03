@@ -10,10 +10,11 @@ import { WorkExperience, Education } from "@/app/volunteer/experience-input/expe
 
 export function useSkillExtractionViewModel() {
     const router = useRouter();
-    const { session, loading } = useAuth();
+    const { session, loading, signOut } = useAuth();
     const [skills, setSkills] = useState<ExtractedSkills | null>(null);
     const [confirming, setConfirming] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [fullName, setFullName] = useState("Volunteer");
 
     //Redirect away if already verified
     useEffect(() => {
@@ -31,6 +32,7 @@ export function useSkillExtractionViewModel() {
     //Load skills from session storage
     useEffect(() => {
         const stored = sessionStorage.getItem("extractedSkills");
+        
         if (!stored) {
             router.replace("/volunteer/experience-input");
             return;
@@ -40,8 +42,20 @@ export function useSkillExtractionViewModel() {
         } catch {
             router.replace("/volunteer/experience-input");
         }
-    }, [router]);
+    }, []);
 
+    useEffect(() => {
+        async function loadName() {
+            if (!session) return;
+            const result = await VolunteerService.getCurrentVolunteer();
+            if (result.success) {
+                setFullName(`${result.data.firstName} ${result.data.lastName}`.trim());
+            }
+        }
+        loadName();
+    }, [session]);
+
+    
     function removeSkill(category: keyof ExtractedSkills, skill: string) {
         setSkills((prev) => {
             if (!prev) return prev;
@@ -50,6 +64,10 @@ export function useSkillExtractionViewModel() {
                 [category]: prev[category].filter((s) => s !== skill),
             };
         });
+    }
+
+    function handleBack() {
+    router.replace("/volunteer/experience-input");
     }
 
     async function handleConfirm() {
@@ -85,5 +103,8 @@ export function useSkillExtractionViewModel() {
         error,
         removeSkill,
         handleConfirm,
+        signOut,
+        fullName,
+        handleBack
     };
 }
