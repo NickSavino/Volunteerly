@@ -1,9 +1,17 @@
 "use client";
 
 import { use } from "react";
-import { Globe, MapPin, Users, DollarSign } from "lucide-react";
+import { Globe, MapPin, Users, Briefcase } from "lucide-react";
 import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
 import { useOrgPublicProfileViewModel } from "./orgPublicProfileVm";
+
+function formatStatValue(value: number): string {
+    if (value >= 1000) {
+        const shortened = value / 1000;
+        return shortened % 1 === 0 ? `${shortened}k` : `${shortened.toFixed(1)}k`;
+    }
+    return value.toString();
+}
 
 export default function OrgPublicProfilePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -51,27 +59,41 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                             </div>
                         </div>
 
-                        <div className="mb-6 grid grid-cols-2 gap-4">
+                        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
                             <div className="rounded-xl border bg-white p-5 shadow-sm">
-                                <div className="mb-3 flex items-center justify-between">
-                                    <div className="rounded-md bg-gray-100 p-2">
+                                <div className="mb-3">
+                                    <div className="rounded-md bg-gray-100 p-2 w-fit">
                                         <Users className="h-5 w-5 text-gray-700" />
                                     </div>
                                 </div>
-                                <p className="text-xs text-gray-500">Total Volunteers Hired</p>
-                                <p className="mt-1 text-2xl font-bold text-gray-900">{org.totalVolunteersHired}</p>
-                                <p className="mt-1 text-xs text-gray-400">Completed opportunities</p>
+                                <p className="text-xs text-gray-500">Total Volunteers</p>
+                                <p className="mt-1 text-2xl font-bold text-gray-900">{formatStatValue(org.totalVolunteersHired)}</p>
+                                <p className="mt-1 text-xs text-gray-400">Hired across all opportunities</p>
                             </div>
+
                             <div className="rounded-xl border bg-white p-5 shadow-sm">
-                                <div className="mb-3 flex items-center justify-between">
-                                    <div className="rounded-md bg-gray-100 p-2">
-                                        <DollarSign className="h-5 w-5 text-gray-700" />
+                                <div className="mb-3">
+                                    <div className="rounded-md bg-gray-100 p-2 w-fit">
+                                        <Briefcase className="h-5 w-5 text-gray-700" />
                                     </div>
                                 </div>
-                                <p className="text-xs text-gray-500">Economic Impact</p>
-                                <p className="mt-1 text-2xl font-bold text-gray-900">${org.economicImpact.toLocaleString()}</p>
-                                <p className="mt-1 text-xs text-gray-400">Volunteer hours × hourly rate</p>
+                                <p className="text-xs text-gray-500">Active Postings</p>
+                                <p className="mt-1 text-2xl font-bold text-gray-900">{org.activeOpportunities}</p>
+                                <p className="mt-1 text-xs text-gray-400">Open opportunities now</p>
                             </div>
+
+                            {org.impactHighlights.slice(0, 2).map((highlight, i) => (
+                                <div key={i} className="rounded-xl border bg-white p-5 shadow-sm">
+                                    <div className="mb-3">
+                                        <div className="rounded-md bg-gray-100 p-2 w-fit">
+                                            <span className="text-base leading-none">✦</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500 capitalize">{highlight.label}</p>
+                                    <p className="mt-1 text-2xl font-bold text-gray-900">{formatStatValue(highlight.value)}</p>
+                                    <p className="mt-1 text-xs text-gray-400">Organization metric</p>
+                                </div>
+                            ))}
                         </div>
 
                         <div className="rounded-xl border bg-white p-6 shadow-sm">

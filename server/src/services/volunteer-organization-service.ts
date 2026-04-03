@@ -16,34 +16,26 @@ export async function getPublicOrgProfile(orgId: string) {
 
     if (!org) return null;
 
-    const totalVolunteersHired = await prisma.opportunity.count({
+    const totalVolunteersHired = await prisma.application.count({
         where: {
-            orgId,
-            status: { in: ["FILLED", "CLOSED"] },
-        },
-    });
-
-    const progressUpdates = await prisma.progressUpdate.findMany({
-        where: {
-            opportunity: { orgId },
-        },
-        select: {
-            hoursContributed: true,
             opportunity: {
-                select: {
-                    volunteer: {
-                        select: {
-                            hourlyValue: true,
-                        },
-                    },
-                },
+                orgId,
+                status: { in: ["FILLED", "CLOSED"] },
             },
         },
     });
 
-    const economicImpact = progressUpdates.reduce((sum, update) => {
-        return sum + update.hoursContributed * (update.opportunity.volunteer?.hourlyValue ?? 0);
-    }, 0);
+    const activeOpportunities = await prisma.opportunity.count({
+        where: {
+            orgId,
+            status: "OPEN",
+        },
+    });
+
+    const rawHighlights = Array.isArray(org.impactHighlights) ? org.impactHighlights : [];
+    const impactHighlights = rawHighlights
+        .filter((h: any) => h && typeof h.value === "number" && typeof h.label === "string")
+        .slice(0, 2);
 
     return {
         id: org.id,
@@ -52,8 +44,8 @@ export async function getPublicOrgProfile(orgId: string) {
         causeCategory: org.causeCategory,
         website: org.website,
         hqAdr: org.hqAdr,
-        impactHighlights: org.impactHighlights,
+        impactHighlights,
         totalVolunteersHired,
-        economicImpact,
+        activeOpportunities,
     };
 }
