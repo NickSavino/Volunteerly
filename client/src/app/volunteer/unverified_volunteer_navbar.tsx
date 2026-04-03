@@ -43,7 +43,7 @@ export function UnverifiedNavbar({ fullName, onSignOut }: UnverifiedNavbarProps)
                             </NavigationMenuTrigger>
                             <NavigationMenuContent className="w-56 p-3">
                                 <button
-                                    className="w-full text-sm font-medium text-center text-gray-600 transition-colors hover:text-yellow-500 cursor-pointer"
+                                    className="w-full md:w-40 text-sm font-medium text-center text-gray-600 transition-colors hover:text-yellow-500 cursor-pointer"
                                     onClick={onSignOut}
                                 >
                                     Log Out
