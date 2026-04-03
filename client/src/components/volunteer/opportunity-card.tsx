@@ -69,7 +69,14 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                         <p className="text-xs text-muted-foreground">{opp.organization?.orgName ?? "—"}</p>
                     </div>
                 </div>
-                <MatchBadge pct={matchPct} />
+                <div className="flex flex-col items-end gap-1.5">
+                    <MatchBadge pct={matchPct} />
+                    {hasApplied && (
+                        <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+                            ✓ Applied
+                        </span>
+                    )}
+                </div>
             </div>
 
             <div className="mb-3 flex flex-wrap gap-1.5">

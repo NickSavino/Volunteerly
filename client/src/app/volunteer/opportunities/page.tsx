@@ -301,6 +301,7 @@ export default function OpportunitiesPage() {
             <OpportunityDetailModal
                 opp={selectedOpp}
                 matchPct={selectedOpp ? getMatchPct(selectedOpp) : 0}
+                hasApplied={selectedOpp ? appliedOppIds.has(selectedOpp.id) : false}
                 onClose={() => setSelectedOpp(null)}
                 onApply={handleApply}
             />

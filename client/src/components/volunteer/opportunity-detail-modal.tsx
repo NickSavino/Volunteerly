@@ -20,6 +20,7 @@ const COMMITMENT_LABELS: Record<string, string> = {
 type OppDetailModalProps = {
     opp: Opportunity | null;
     matchPct: number;
+    hasApplied: boolean;
     onClose: () => void;
     onApply: () => void;
 };
@@ -33,7 +34,7 @@ function DetailRow({ label, value }: { label: string; value: string }) {
     );
 }
 
-export function OpportunityDetailModal({ opp, matchPct, onClose, onApply }: OppDetailModalProps) {
+export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onApply }: OppDetailModalProps) {
     if (!opp) return null;
 
     const matchCls =
@@ -56,12 +57,18 @@ export function OpportunityDetailModal({ opp, matchPct, onClose, onApply }: OppD
                     >
                         Close
                     </button>
-                    <button
-                        onClick={onApply}
-                        className="h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90"
-                    >
-                        Apply Now
-                    </button>
+                    {hasApplied ? (
+                        <span className="flex h-11 min-w-36 items-center justify-center rounded-xl bg-green-100 px-5 text-sm font-semibold text-green-700">
+                            ✓ Applied
+                        </span>
+                    ) : (
+                        <button
+                            onClick={onApply}
+                            className="h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90"
+                        >
+                            Apply Now
+                        </button>
+                    )}
                 </>
             }
         >
@@ -74,9 +81,16 @@ export function OpportunityDetailModal({ opp, matchPct, onClose, onApply }: OppD
                         <p className="font-semibold text-foreground">{opp.organization?.orgName ?? "—"}</p>
                         <p className="text-sm text-muted-foreground">{opp.organization?.hqAdr ?? ""}</p>
                     </div>
-                    <span className={cn("ml-auto rounded-full px-3 py-1 text-sm font-semibold", matchCls)}>
-                        {matchPct}% Match
-                    </span>
+                    <div className="flex flex-col items-end gap-1.5 ml-auto">
+                        <span className={cn("rounded-full px-3 py-1 text-sm font-semibold", matchCls)}>
+                            {matchPct}% Match
+                        </span>
+                        {hasApplied && (
+                            <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700">
+                                ✓ Applied
+                            </span>
+                        )}
+                    </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
