@@ -15,14 +15,6 @@ import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
 import { VolunteerNavbar } from "./volunteer_navbar";
 
 
-const NAV_LINKS = [
-    { label: "Dashboard",     href: "/volunteer" },
-    { label: "Activity Log",  href: "/volunteer/activity" },
-    { label: "Certificates",  href: "/volunteer/certificates" },
-    { label: "Organizations", href: "/volunteer/organizations" },
-    { label: "Settings",      href: "/volunteer/settings" },
-] as const;
-
 const STATUS_STYLES: Record<string, string> = {
     OPEN:      "bg-green-50 text-green-700",
     FILLED:    "bg-blue-50 text-blue-700",
