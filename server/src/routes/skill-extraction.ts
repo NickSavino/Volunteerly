@@ -3,7 +3,7 @@ import multer from "multer";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const pdfParse = require("pdf-parse");
-import { extractSkillsFromResumeText } from "../services/groq-service.js";
+import { extractSkillsFromResumeText, calculateHourlyRate } from "../services/groq-service.js";
 import { embedText } from "../services/gemini-service.js";
 import { prisma } from "../lib/prisma.js";
 
@@ -54,8 +54,8 @@ skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) 
 
         //make groq call to extract skills
         const skills = await extractSkillsFromResumeText(fullContext);
-
-        res.status(200).json(skills);
+        const hourlyRate = await calculateHourlyRate(workExperience, education);
+        res.status(200).json({ ...skills, hourlyRate });
     } catch (error) {
         next(error);
     }
@@ -71,6 +71,7 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
             nonTechnical,
             workExperiences,
             educations,
+            hourlyRate,
         } = req.body as {
             technical: string[];
             nonTechnical: string[];
@@ -86,6 +87,7 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
                 degree: string;
                 graduationYear: string;
             }[];
+            hourlyRate: number;
         };
 
         if (!Array.isArray(technical) || !Array.isArray(nonTechnical)) {
@@ -145,6 +147,12 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
             SET skill_vector = ${JSON.stringify(vector)}::vector
             WHERE id = ${userId}
         `;
+        console.log("hourlyRate received:", hourlyRate, typeof hourlyRate);
+        //update the volunteers hourly rate
+        await prisma.volunteer.update({
+            where: { id: userId },
+            data: { hourlyValue: hourlyRate},
+        });
 
         //mark user as VERIFIED
         await prisma.user.update({
