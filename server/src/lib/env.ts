@@ -9,7 +9,9 @@ const envSchema = z.object({
     SUPABASE_URL: z.string().min(1),
     SUPABASE_SERVICE_ROLE_KEY: z.string(),
     AZURE_DI_ENDPOINT: z.string(),
-    AZURE_DI_KEY: z.string()
+    AZURE_DI_KEY: z.string(),
+    AZURE_ACS_CONNECTION_STRING: z.string().optional(),
+    AZURE_ACS_SENDER_EMAIL: z.string().optional()
 })
 
 export const env = envSchema.parse(process.env);
