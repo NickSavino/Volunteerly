@@ -48,6 +48,7 @@ export function useOpportunitiesViewModel() {
     const [error, setError] = useState<string | null>(null);
     const [loadingData, setLoadingData] = useState(true);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | null>(null);
+    const [applyModalOpen, setApplyModalOpen] = useState(false);
 
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [workType, setWorkType] = useState<WorkTypeFilter>("ALL");
@@ -130,12 +131,25 @@ export function useOpportunitiesViewModel() {
         return getMatchPctStatic(opp);
     }
 
-    async function handleApply() {
+    function handleApply() {
         if (!selectedOpp) return;
-        appToast.success("Application Submitted", {
-            message: `You applied to ${selectedOpp.name}`,
-        });
-        setSelectedOpp(null);
+        setApplyModalOpen(true);
+    }
+
+    async function submitApplication(message: string) {
+        if (!selectedOpp) return;
+        try {
+            await VolunteerService.applyToOpportunity(selectedOpp.id, message);
+            appToast.success("Applied to Opportunity", {
+                message: `Successfully applied to ${selectedOpp.name}`,
+            });
+            setApplyModalOpen(false);
+            setSelectedOpp(null);
+        } catch {
+            appToast.error("Application Failed", {
+                message: "Could not submit your application. You may have already applied.",
+            });
+        }
     }
 
     const handleSignOut = async () => {
@@ -169,5 +183,8 @@ export function useOpportunitiesViewModel() {
         applyFilters,
         getMatchPct,
         handleApply,
+        applyModalOpen,
+        setApplyModalOpen,
+        submitApplication,
     };
 }

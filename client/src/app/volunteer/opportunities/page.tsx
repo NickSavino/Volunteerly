@@ -6,6 +6,7 @@ import { ArrowUpDown } from "lucide-react";
 import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
 import { OpportunityCard } from "@/components/volunteer/opportunity-card";
 import { OpportunityDetailModal } from "@/components/volunteer/opportunity-detail-modal";
+import { ApplyModal } from "@/components/volunteer/apply-modal";
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { cn } from "@/lib/utils";
 import {
@@ -74,6 +75,9 @@ export default function OpportunitiesPage() {
         applyFilters,
         getMatchPct,
         handleApply,
+        applyModalOpen,
+        setApplyModalOpen,
+        submitApplication,
     } = useOpportunitiesViewModel();
 
     const mapWidthRef = useRef<number>(MAP_DEFAULT_WIDTH);
@@ -297,6 +301,12 @@ export default function OpportunitiesPage() {
                 matchPct={selectedOpp ? getMatchPct(selectedOpp) : 0}
                 onClose={() => setSelectedOpp(null)}
                 onApply={handleApply}
+            />
+            <ApplyModal
+                open={applyModalOpen}
+                oppName={selectedOpp?.name ?? ""}
+                onClose={() => setApplyModalOpen(false)}
+                onSubmit={submitApplication}
             />
         </div>
     );
