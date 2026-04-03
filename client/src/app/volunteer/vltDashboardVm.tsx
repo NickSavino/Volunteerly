@@ -4,6 +4,8 @@ import { UserService } from "@/services/UserService";
 import { VolunteerService, PartnerOrg } from "@/services/VolunteerService";
 import { useAuth } from "@/providers/auth-provider";
 import { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
+import { api } from "@/lib/api";
+import { CurrentUserSchema} from "@volunteerly/shared";
 
 export type ChartRange = "last_month" | "last_6_months" | "last_year" | "this_year" | "total";
 
@@ -16,6 +18,20 @@ export function useVltDashboardViewModel() {
     const [monthlyHoursMap, setMonthlyHoursMap] = useState<Record<string, number>>({});
     const [chartRange, setChartRange] = useState<ChartRange>("last_6_months");
     const [error, setError] = useState<string | null>(null);
+
+
+    //Redirect away if unverified
+    useEffect(() => {
+        async function checkVerified() {
+            if (loading || !session) return;
+            const json = await api<unknown>("/current-user");
+            const parsed = CurrentUserSchema.safeParse(json);
+            if (parsed.success && parsed.data.status === "UNVERIFIED") {
+                router.replace("/volunteer/experience-input");
+            }
+        }
+        checkVerified();
+    }, [session, loading, router]);
 
     useEffect(() => {
         if (!loading && !session) router.replace("/login");
