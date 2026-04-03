@@ -50,6 +50,13 @@ export class VolunteerService {
         return MonthlyHoursSchema.safeParse(response);
     }
 
+    static async applyToOpportunity(oppId: string, message: string) {
+        return api<{ success: boolean }>(`/current-volunteer/opportunities/${oppId}/apply`, {
+            method: "POST",
+            body: JSON.stringify({ message }),
+        });
+    }
+
     static async browseOpportunities(filters: OpportunityFilters = {}) {
         const params = new URLSearchParams();
         if (filters.search) params.set("search", filters.search);
