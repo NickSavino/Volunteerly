@@ -126,3 +126,14 @@ export async function browseOpportunities(filters: OpportunityFilters) {
         orderBy: { postedDate: "desc" },
     });
 }
+
+export async function applyToOpportunity(volId: string, oppId: string, message: string) {
+    const existing = await prisma.application.findUnique({
+        where: { oppId_volId: { oppId, volId } },
+    });
+    if (existing) throw new Error("ALREADY_APPLIED");
+
+    return prisma.application.create({
+        data: { oppId, volId, message, matchPercentage: 0 },
+    });
+}
