@@ -79,6 +79,7 @@ export class VolunteerService {
             body: JSON.stringify({
                 technical: skills.technical,
                 nonTechnical: skills.nonTechnical,
+                hourlyRate: skills.hourlyRate,
                 workExperiences,
                 educations,
             }),

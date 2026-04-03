@@ -39,6 +39,7 @@ export type UpdateCurrentVolunteer = z.infer<typeof UpdateCurrentVolunteerSchema
 export const ExtractedSkillsSchema = z.object({
   technical: z.array(z.string()),
   nonTechnical: z.array(z.string()),
+  hourlyRate: z.number().int(),
 });
 export type ExtractedSkills = z.infer<typeof ExtractedSkillsSchema>;
 
