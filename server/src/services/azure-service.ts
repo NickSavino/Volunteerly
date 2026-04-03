@@ -1,6 +1,6 @@
 import { env } from "../lib/env.js";
 import DocumentIntelligence, { getLongRunningPoller, isUnexpected } from "@azure-rest/ai-document-intelligence";
-import { EmailClient, EmailMessage } from "@azure/communication-email";
+import { EmailClient } from "@azure/communication-email";
 
 export async function callDocumentAnalysis(file:Express.Multer.File) {
     const endpoint = env.AZURE_DI_ENDPOINT
@@ -28,7 +28,7 @@ export async function callDocumentAnalysis(file:Express.Multer.File) {
     return analyzeResult.paragraphs
 }
 
-export async function sendEmail(vltEmail: string, vltName: string, orgEmail: string, orgName: string, subject:string, content: string) {
+export async function sendEmail(vltEmail: string, subject:string, content: string, html: string) {
     if (env.AZURE_ACS_CONNECTION_STRING && env.AZURE_ACS_SENDER_EMAIL){
         var emailClient = new EmailClient(env.AZURE_ACS_CONNECTION_STRING);
 
@@ -37,27 +37,21 @@ export async function sendEmail(vltEmail: string, vltName: string, orgEmail: str
         content: {
             subject: subject,
             plainText: content,
+            html:html
         },
         recipients: {
             to: [
             {
-                address: vltEmail,
-                displayName: vltName,
+                address: vltEmail
             },
             ],
-            cc: [
-                {
-                    address: orgEmail,
-                    displayName: orgName,
-                }
-            ]
         },
         };
-
+        
         const poller = await emailClient.beginSend(message);
         const response = await poller.pollUntilDone();
         return response.status
+    }else{
+        return "Email not Sent."
     }
-
-    return "Email not Sent."
 }

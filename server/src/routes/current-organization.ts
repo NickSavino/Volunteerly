@@ -2,6 +2,8 @@ import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
 import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity, updateOpportunity, getOppVltApplication } from "../services/organization-service.js";
+import { getCurrentUser } from "../services/user-service.js";
+import { sendEmail } from "../services/azure-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -288,6 +290,43 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
                 error: "Cannot Select Volunteer",
                 message: "Error selecting Volunteer for this opportunity."
             });
+        }
+
+        const vltDetails = await getCurrentUser(vltId)
+
+        if (vltDetails)
+        {
+            const emailSubject = "Volunteerly - Opportunity Confirmation"
+            const emailContentPlain = 
+            `Hi,
+            We're pleased to let you know that you have been selected for the volunteer opportunity "${selected_vlt.name}".
+        
+            Please log in to your Volunteerly account to review the opportunity details.
+
+            Best regards,
+            Volunteerly Team
+            `
+            const emailContentHTML =
+            `
+            <html>
+				<body>
+					<p>
+						Hi, \n
+					</p>
+                    <p>
+						We're pleased to let you know that you have been selected for the volunteer opportunity "${selected_vlt.name}".
+					</p>
+                    <p>
+						Please log in to your Volunteerly account to review the opportunity details. \n
+					</p>
+                    <p>
+                        Best regards, \n
+                        Volunteerly Team
+                    </p>
+				</body>
+			</html>`;            
+            const emailResult = await sendEmail(vltDetails.email, emailSubject, emailContentPlain, emailContentHTML)
+            console.log(emailResult)
         }
         
         res.status(200).json(selected_vlt);
