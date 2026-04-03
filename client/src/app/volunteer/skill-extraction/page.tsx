@@ -96,9 +96,9 @@ function SkillCard({
                 {skills.length === 0 ? (
                     <p className="text-muted-foreground text-sm">No skills extracted.</p>
                 ) : (
-                    skills.map((skill) => (
+                    skills.map((skill, index) => (
                         <span
-                            key={skill}
+                            key={`${skill}-${index}`}
                             className="flex items-center gap-1 bg-secondary text-secondary-foreground text-sm px-3 py-1 rounded-full"
                         >
                             {skill}

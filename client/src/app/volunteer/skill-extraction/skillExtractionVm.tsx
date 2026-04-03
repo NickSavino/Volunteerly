@@ -56,7 +56,7 @@ export function useSkillExtractionViewModel() {
     }, [session]);
 
     
-    function removeSkill(category: keyof ExtractedSkills, skill: string) {
+    function removeSkill(category: "technical" | "nonTechnical", skill: string) {
         setSkills((prev) => {
             if (!prev) return prev;
             return {
