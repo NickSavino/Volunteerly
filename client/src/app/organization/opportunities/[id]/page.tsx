@@ -103,7 +103,10 @@ export default function ViewOpportunityPage({
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Project Description</CardTitle>
-                                </CardHeader>
+                                    <CardAction>
+                                        <Button variant={"outline"} className="cursor-pointer" onClick={() => router.replace(`/organization/opportunities/${id}/update`)} >Edit</Button>
+                                    </CardAction>
+                                </CardHeader>                                
                                 <CardContent>{opportunity?.description}</CardContent>
                                 <CardHeader>
                                     <CardTitle>Ideal Candidate</CardTitle>

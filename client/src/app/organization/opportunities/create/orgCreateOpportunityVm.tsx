@@ -8,7 +8,7 @@ import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 import { toast } from "sonner";
 
-export function useCreateOpportunityViewModel() {
+export function useCreateOpportunityViewModel(oppId?: string) {
   const router = useRouter();
   const { session, user, loading, signOut } = useAuth();
   const [currentOrg, setCurrentOrg] = useState<CurrentOrganization>();
@@ -27,8 +27,6 @@ export function useCreateOpportunityViewModel() {
     }
   )  
   const [deadlineDate, setDeadlineDate] = useState("")
-
-
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -51,6 +49,13 @@ export function useCreateOpportunityViewModel() {
         }
         console.log(org.data)
         setCurrentOrg(org.data)
+
+        if (oppId) {
+          const opp = await OrganizationService.getOpportunity(oppId)
+          setOpportunity(opp.data as UpdateOpportunitySchema)
+          setDeadlineDate(opp.data?.deadlineDate?.toLocaleDateString('en-CA') || "")
+        }
+
         setSubmitting(false)
       }
       loadCurrentUser()
@@ -60,27 +65,36 @@ export function useCreateOpportunityViewModel() {
     if (opportunity && currentOrg) {
         setSubmitting(true);
         setError(null);
+        
+        if (oppId){
+          opportunity.orgId = currentOrg.id
+          opportunity.deadlineDate = new Date(deadlineDate)
+          const opp = UpdateOpportunitySchema.parse(opportunity);
+          const {data, error, success} = await OrganizationService.updateOpportunity(oppId, opp)
 
-        opportunity.orgId = currentOrg.id
-        opportunity.deadlineDate = new Date(deadlineDate)
-        const opp = UpdateOpportunitySchema.parse(opportunity);
-        const {data, error, success} = await OrganizationService.addOpportunity(opp)
-
-        if (success) {
-            toast.success("Opportunity Successfully Created!", { position: "top-right" })
-            router.replace("/organization/opportunities");
-            return
-        }else {          
-            setError("Error creating Opportunity.")
-            console.error(error)
+          if (success) {
+              toast.success("Opportunity Successfully Updated!", { position: "top-right" })
+              router.replace(`/organization/opportunities/${oppId}`);
+              return
+          }else {          
+              setError("Error updating Opportunity.")
+              console.error(error)
+          }
+        } else {
+          opportunity.orgId = currentOrg.id
+          opportunity.deadlineDate = new Date(deadlineDate)
+          const opp = UpdateOpportunitySchema.parse(opportunity);
+          const {data, error, success} = await OrganizationService.addOpportunity(opp)
+          if (success) {
+              toast.success("Opportunity Successfully Created!", { position: "top-right" })
+              router.replace("/organization/opportunities");
+              return
+          }else {          
+              setError("Error creating Opportunity.")
+              console.error(error)
+          }
         }
-
         setSubmitting(false);
-
-        if (error) {
-            setError(error.message);
-            return;
-        }
     }
     }
     async function handleDayToggle(day: string) {
