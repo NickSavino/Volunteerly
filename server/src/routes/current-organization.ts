@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity, updateOpportunity } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity, updateOpportunity, getOppVltApplication } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -273,12 +273,12 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
 
         const { oppId, vltId } = req.body;
 
-        const opportunity = await getOrgOpportunity(userId, oppId);
+        const application = await getOppVltApplication(userId, oppId, vltId);
 
-        if (!opportunity) {
+        if (!application) {
             return res.status(500).json({
-                error: "Cannot fetch Opportunity",
-                message: "Opportunity doesn't exist or not owned by this organization."
+                error: "Cannot fetch Application",
+                message: "Either Volunteer hasn't applied, or Opportunity doesn't exist, or not owned by Organization."
             });
         }
 
