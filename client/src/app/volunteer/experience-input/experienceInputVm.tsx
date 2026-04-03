@@ -40,6 +40,8 @@ export function useExperienceInputViewModel() {
     ]);
     const [errors, setErrors] = useState<FormErrors>({});
     const [submitting, setSubmitting] = useState(false);
+    const [fullName, setFullName] = useState("Volunteer");
+
 
     //redirect away if already verified
     useEffect(() => {
@@ -53,6 +55,22 @@ export function useExperienceInputViewModel() {
         }
         checkVerified();
     }, [session, loading, router]);
+
+    useEffect(() => {
+    async function loadName() {
+        if (!session) return;
+        const result = await VolunteerService.getCurrentVolunteer();
+        if (result.success) {
+            setFullName(`${result.data.firstName} ${result.data.lastName}`.trim());
+        }
+    }
+    loadName();
+    }, [session]);
+
+
+    useEffect(() => {
+    if (!loading && !session) router.replace("/login");
+    }, [loading, session, router]);
 
     function addWorkExperience() {
         setWorkExperiences((prev) => [
@@ -153,6 +171,7 @@ export function useExperienceInputViewModel() {
         addEducation,
         updateEducation,
         handleSubmit,
+        fullName,
         signOut,
     };
 }
