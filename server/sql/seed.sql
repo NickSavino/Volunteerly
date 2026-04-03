@@ -57,6 +57,7 @@ DECLARE
 
     app1_id      UUID := 'a0000000-0000-4000-8000-000000000301';
     app2_id      UUID := 'a0000000-0000-4000-8000-000000000302';
+    app3_id      UUID := 'a0000000-0000-4000-8000-000000000303';
 
     tree1_id     UUID := 'a0000000-0000-4000-8000-000000000401';
     node1_id     UUID := 'a0000000-0000-4000-8000-000000000501';
@@ -118,11 +119,11 @@ INSERT INTO public.moderators (id, first_name, last_name)
 VALUES (mod1_id::text, 'Admin', 'Moderator');
 
 --Insert Organizations
-INSERT INTO public.organizations (id, org_name, status, charity_num, doc_id, contact_name, contact_email, contact_num, hq_adr, mission_statement, cause_category, website)
+INSERT INTO public.organizations (id, org_name, status, charity_num, doc_id, contact_name, contact_email, contact_num, hq_adr, mission_statement, cause_category, website, impact_highlights)
 VALUES
-    (org1_id::text, 'Red Cross International', 'VERIFIED', 123456, 'doc-red-cross',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '2609 15 St NE, Calgary, AB, Canada',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org'),
-    (org2_id::text, 'World United',  'VERIFIED', 654321, 'doc-world-united', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org'),
-    (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012, 'doc-tms',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org');
+    (org1_id::text, 'Red Cross International', 'VERIFIED', 123456, 'doc-red-cross',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '2609 15 St NE, Calgary, AB, Canada',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org',   '[{"value": 42, "label": "countries served"}, {"value": 12400, "label": "people helped"}]'),
+    (org2_id::text, 'World United',  'VERIFIED', 654321, 'doc-world-united', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"value": 12, "label": "countries operated in"}, {"value": 3800, "label": "students helped"}]'),
+    (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012, 'doc-tms',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org',         '[{"value": 5200, "label": "meals served"}, {"value": 300, "label": "families housed"}]');
 
 
 --Insert Volunteers
@@ -159,7 +160,8 @@ VALUES
 INSERT INTO public.applications (id, opp_id, vol_id, match_pct, message, date_applied)
 VALUES
     (app1_id::text, opp3_id::text, vol1_id::text, 85, 'I have 5 years data science experience at google.', '2026-03-05'),
-    (app2_id::text, opp1_id::text, vol2_id::text, 70, 'I have a degree in software engineering.',             '2026-01-20');
+    (app2_id::text, opp1_id::text, vol2_id::text, 70, 'I have a degree in software engineering.',             '2026-01-20'),
+    (app3_id::text, opp2_id::text, vol1_id::text, 90, 'I have extensive experience in data analytics.',       '2026-02-01');
 
 
 --Progress Updates
