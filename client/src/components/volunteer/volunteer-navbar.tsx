@@ -35,7 +35,7 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
         : "Loading...";
 
     return (
-        <header className="w-full flex-shrink-0 border-b bg-card px-6 py-3">
+        <header className="w-full flex-shrink-0 border-b bg-card px-6 py-3 relative z-[999]">
             <div className="mx-auto flex max-w-full items-center justify-between">
                 <Link href="/volunteer" className="flex-shrink-0">
                     <Image src={logo} alt="Volunteerly" width={140} height={40} priority />
