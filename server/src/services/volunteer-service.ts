@@ -126,7 +126,6 @@ export async function browseOpportunities(filters: OpportunityFilters) {
         orderBy: { postedDate: "desc" },
     });
 }
-
 export async function applyToOpportunity(volId: string, oppId: string, message: string) {
     const existing = await prisma.application.findUnique({
         where: { oppId_volId: { oppId, volId } },
@@ -136,4 +135,12 @@ export async function applyToOpportunity(volId: string, oppId: string, message: 
     return prisma.application.create({
         data: { oppId, volId, message, matchPercentage: 0 },
     });
+}
+
+export async function getAppliedOppIds(volId: string): Promise<string[]> {
+    const applications = await prisma.application.findMany({
+        where: { volId },
+        select: { oppId: true },
+    });
+    return applications.map((a) => a.oppId);
 }

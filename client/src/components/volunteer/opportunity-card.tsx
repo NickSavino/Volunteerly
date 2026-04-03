@@ -27,6 +27,7 @@ type OppCardProps = {
     opp: Opportunity;
     matchPct: number;
     isSelected: boolean;
+    hasApplied: boolean;
     onClick: () => void;
 };
 
@@ -43,7 +44,7 @@ function MatchBadge({ pct }: { pct: number }) {
     );
 }
 
-export function OpportunityCard({ opp, matchPct, isSelected, onClick }: OppCardProps) {
+export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick }: OppCardProps) {
     const avatarColor = getAvatarColor(opp.organization?.orgName ?? "O");
     const initials = opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG";
 

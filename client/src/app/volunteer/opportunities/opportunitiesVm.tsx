@@ -49,6 +49,7 @@ export function useOpportunitiesViewModel() {
     const [loadingData, setLoadingData] = useState(true);
     const [selectedOpp, setSelectedOpp] = useState<Opportunity | null>(null);
     const [applyModalOpen, setApplyModalOpen] = useState(false);
+    const [appliedOppIds, setAppliedOppIds] = useState<Set<string>>(new Set());
 
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [workType, setWorkType] = useState<WorkTypeFilter>("ALL");
@@ -102,6 +103,9 @@ export function useOpportunitiesViewModel() {
                 const volResult = await VolunteerService.getCurrentVolunteer();
                 if (volResult.success) setCurrentVolunteer(volResult.data);
 
+                const appliedIds = await VolunteerService.getAppliedOppIds();
+                setAppliedOppIds(new Set(appliedIds));
+
                 await fetchOpportunities([], "ALL", "ALL", 40, "", "RELEVANT");
             } catch (err) {
                 console.error(err);
@@ -140,6 +144,7 @@ export function useOpportunitiesViewModel() {
         if (!selectedOpp) return;
         try {
             await VolunteerService.applyToOpportunity(selectedOpp.id, message);
+            setAppliedOppIds((prev) => new Set(prev).add(selectedOpp.id));
             appToast.success("Applied to Opportunity", {
                 message: `Successfully applied to ${selectedOpp.name}`,
             });
@@ -186,5 +191,6 @@ export function useOpportunitiesViewModel() {
         applyModalOpen,
         setApplyModalOpen,
         submitApplication,
+        appliedOppIds,
     };
 }

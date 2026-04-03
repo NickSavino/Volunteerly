@@ -50,6 +50,11 @@ export class VolunteerService {
         return MonthlyHoursSchema.safeParse(response);
     }
 
+    static async getAppliedOppIds(): Promise<string[]> {
+        const response = await api<unknown>("/current-volunteer/opportunities/applied-ids");
+        return Array.isArray(response) ? (response as string[]) : [];
+    }
+
     static async applyToOpportunity(oppId: string, message: string) {
         return api<{ success: boolean }>(`/current-volunteer/opportunities/${oppId}/apply`, {
             method: "POST",

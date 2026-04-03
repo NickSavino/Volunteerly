@@ -78,6 +78,7 @@ export default function OpportunitiesPage() {
         applyModalOpen,
         setApplyModalOpen,
         submitApplication,
+        appliedOppIds,
     } = useOpportunitiesViewModel();
 
     const mapWidthRef = useRef<number>(MAP_DEFAULT_WIDTH);
@@ -271,6 +272,7 @@ export default function OpportunitiesPage() {
                                         opp={opp}
                                         matchPct={getMatchPct(opp)}
                                         isSelected={selectedOpp?.id === opp.id}
+                                        hasApplied={appliedOppIds.has(opp.id)}
                                         onClick={() => setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)}
                                     />
                                 ))
