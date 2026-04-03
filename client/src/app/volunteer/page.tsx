@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Clock, Star, DollarSign, Building2, Search } from "lucide-react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     NavigationMenu, NavigationMenuContent, NavigationMenuItem,
@@ -41,6 +42,8 @@ export default function VolunteerDashboardPage() {
     const fullName = currentVolunteer
         ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
         : "Loading...";
+
+    const [showAllPartners, setShowAllPartners] = useState(false);
 
     if (loading || !session) return <main className="p-6">Loading...</main>;
 
@@ -174,13 +177,49 @@ export default function VolunteerDashboardPage() {
                             </div>
                         )}
                         <button
-                            className="mt-5 w-full rounded-lg border py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
-                            onClick={() => router.push("/volunteer/organizations")}
+                            className="mt-5 w-full border py-2 rounded-lg"
+                            onClick={() => setShowAllPartners(true)}
                         >
-                            View All {partnerOrgs.length} Partners
+                            Expand All
                         </button>
                     </div>
                 </div>
+
+                {showAllPartners && (
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                        onClick={() => setShowAllPartners(false)}
+                    >
+                        <div
+                            className="w-full max-w-2xl bg-white rounded-xl p-6"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="flex justify-between mb-4">
+                                <h2 className="text-lg font-semibold">All Partner Organizations</h2>
+                                <button onClick={() => setShowAllPartners(false)}>✕</button>
+                            </div>
+
+                            <div className="max-h-[400px] overflow-y-auto space-y-2">
+                                {partnerOrgs.map((org) => (
+                                    <button
+                                        key={org.id}
+                                        className="flex w-full items-center gap-3 hover:bg-gray-50 p-2 rounded"
+                                        onClick={() => {
+                                            setShowAllPartners(false);
+                                            router.push(`/volunteer/organizations/${org.id}`);
+                                        }}
+                                    >
+                                        <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                                            {org.orgName.slice(0, 2).toUpperCase()}
+                                        </div>
+                                        <p className="flex-1 text-left">{org.orgName}</p>
+                                        <p>{org.totalHours}h</p>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )} 
 
                 {/* Your Opportunities */}
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
