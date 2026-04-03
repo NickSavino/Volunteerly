@@ -6,6 +6,7 @@ import { currentOrganizationRouter } from "./current-organization.js";
 import { OrganizationRouter } from "./organization.js";
 import { currentModeratorRouter } from "./current-moderator.js";
 import { moderatorRouter } from "./moderator/index.js";
+import { volunteerOrganizationRouter } from "./volunteer-organization.js";
 import { requireRole } from "../middleware/require-role.js";
 import { auth } from "../middleware/auth.js";
 
@@ -26,3 +27,4 @@ apiRouter.use("/current-moderator", auth, requireRole("MODERATOR"), currentModer
 
 apiRouter.use("/moderator", auth, requireRole("MODERATOR"), moderatorRouter);
 apiRouter.use("/organization", auth, OrganizationRouter);
+apiRouter.use("/volunteer-organization", auth, requireRole("VOLUNTEER"), volunteerOrganizationRouter);
