@@ -4,10 +4,12 @@ import { useSkillExtractionViewModel } from "./skillExtractionVm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExtractedSkills } from "@volunteerly/shared";
+import { UnverifiedNavbar } from "../unverified_volunteer_navbar";
 
 export default function SkillExtractionPage() {
-    const { skills, confirming, error, removeSkill, handleConfirm } =
+    const { skills, confirming, error, removeSkill, handleConfirm, signOut, fullName, handleBack } =
         useSkillExtractionViewModel();
+
 
     if (!skills) {
         return <main className="p-6">Loading...</main>;
@@ -17,9 +19,11 @@ export default function SkillExtractionPage() {
         <div className="min-h-screen">
             <title>Volunteer - Skill Extraction</title>
 
-            <nav className="flex items-center justify-between px-8 py-4 border-b">
-                <span className="font-semibold text-lg">Volunteerly</span>
-            </nav>
+            <UnverifiedNavbar
+                fullName={fullName}
+                onSignOut={signOut}
+            />
+
 
             <main className="flex flex-col items-center px-8 py-10 gap-8 max-w-4xl mx-auto">
 
@@ -54,13 +58,19 @@ export default function SkillExtractionPage() {
                     </div>
                 </div>
 
-                <div className="w-full flex justify-end">
+                
+                <div className="w-full flex items-center justify-between">
+                    <Button variant="ghost" onClick={handleBack}>
+                        Back to Experience Input
+                    </Button>
                     <Button onClick={handleConfirm} disabled={confirming}>
                         {confirming ? "Saving..." : "Confirm & Continue"}
                     </Button>
                 </div>
+                
             </main>
         </div>
+        
     );
 }
 
