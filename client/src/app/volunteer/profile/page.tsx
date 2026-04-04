@@ -3,13 +3,29 @@
 import { useProfileViewModel } from "./profileVm";
 import { VolunteerNavbar } from "../volunteer_navbar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Settings } from "lucide-react";
 import avtImg from "@/assets/avatarImg.png";
 
 export default function ProfilePage() {
-    const { currentVolunteer, signOut, memberSince, editing, saving, errors, handleEdit, handleCancel, handleSave, DAYS } = useProfileViewModel();
-
+    const {
+        currentVolunteer,
+        editing,
+        saving,
+        errors,
+        firstName, setFirstName,
+        lastName, setLastName,
+        location, setLocation,
+        bio, setBio,
+        memberSince,
+        handleEdit,
+        handleCancel,
+        handleSave,
+        signOut,
+    } = useProfileViewModel();
 
     if (!currentVolunteer) {
         return <main className="p-6">Loading...</main>;
@@ -52,11 +68,8 @@ export default function ProfilePage() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-4 w-full">
-                    </div>
 
-                </div>
-                <div className="flex flex-col gap-4 w-full">
+            <div className="flex flex-col gap-4 w-full">
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
                     <div className="flex items-start justify-between">
                         <div>
@@ -81,7 +94,60 @@ export default function ProfilePage() {
                         </div>
                     </div>
                 </div>
-</div>
+
+                        <div className="rounded-xl border bg-white p-6 shadow-sm">
+                            <h2 className="font-semibold text-gray-800 text-lg mb-5">General Information</h2>
+                            <div className="flex flex-col gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="flex flex-col gap-1">
+                                        <Label>First Name</Label>
+                                        <Input
+                                            value={firstName}
+                                            disabled={!editing}
+                                            onChange={(e) => setFirstName(e.target.value)}
+                                            placeholder="First name"
+                                            className={!editing ? "text-gray-700" : ""}
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                        <Label>Last Name</Label>
+                                        <Input
+                                            value={lastName}
+                                            disabled={!editing}
+                                            onChange={(e) => setLastName(e.target.value)}
+                                            placeholder="Last name"
+                                            className={!editing ? "text-gray-700" : ""}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-1">
+                                    <Label>Location</Label>
+                                    <Input
+                                        value={location}
+                                        disabled={!editing}
+                                        onChange={(e) => setLocation(e.target.value)}
+                                        placeholder="Calgary, AB"
+                                        className={!editing ? "text-gray-700" : ""}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col gap-1">
+                                    <Label>Bio / About Me</Label>
+                                    <Textarea
+                                        value={bio}
+                                        disabled={!editing}
+                                        onChange={(e) => setBio(e.target.value)}
+                                        placeholder="Describe your passion for volunteering and what you hope to achieve..."
+                                        rows={4}
+                                        className={!editing ? "text-gray-700" : ""}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </main>
         </div>
     );
