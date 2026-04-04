@@ -38,7 +38,7 @@ export async function updateCurrentVolunteer(userId: string, firstName: string, 
 
 export async function getYourOpportunities(volunteerId: string) {
     return prisma.opportunity.findMany({
-        where: { volId: volunteerId },
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] }},
         include: {
             organization: {
                 select: {
@@ -52,7 +52,7 @@ export async function getYourOpportunities(volunteerId: string) {
 
 export async function getVolunteerOrganizations(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
-        where: { volId: volunteerId },
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] }},
         select: {
             orgId: true,
             hours: true,
@@ -85,7 +85,7 @@ export async function getVolunteerOrganizations(volunteerId: string) {
 
 export async function getMonthlyHours(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
-        where: { volId: volunteerId },
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
         select: {
             hours: true,
             postedDate: true,

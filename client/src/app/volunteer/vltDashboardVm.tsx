@@ -4,6 +4,8 @@ import { UserService } from "@/services/UserService";
 import { VolunteerService, PartnerOrg } from "@/services/VolunteerService";
 import { useAuth } from "@/providers/auth-provider";
 import { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
+import { api } from "@/lib/api";
+import { CurrentUserSchema} from "@volunteerly/shared";
 
 export type ChartRange = "last_month" | "last_6_months" | "last_year" | "this_year" | "total";
 
@@ -16,6 +18,20 @@ export function useVltDashboardViewModel() {
     const [monthlyHoursMap, setMonthlyHoursMap] = useState<Record<string, number>>({});
     const [chartRange, setChartRange] = useState<ChartRange>("last_6_months");
     const [error, setError] = useState<string | null>(null);
+
+
+    //Redirect away if unverified
+    useEffect(() => {
+        async function checkVerified() {
+            if (loading || !session) return;
+            const json = await api<unknown>("/current-user");
+            const parsed = CurrentUserSchema.safeParse(json);
+            if (parsed.success && parsed.data.status === "UNVERIFIED") {
+                router.replace("/volunteer/experience-input");
+            }
+        }
+        checkVerified();
+    }, [session, loading, router]);
 
     useEffect(() => {
         if (!loading && !session) router.replace("/login");
@@ -55,20 +71,20 @@ export function useVltDashboardViewModel() {
 
     const handleSignOut = async () => { await signOut(); router.push("/"); };
 
-    // KPIs
+    //KPI cards
     const totalHours = useMemo(() =>
         opportunities.reduce((sum, opp) => sum + opp.hours, 0),
     [opportunities]);
 
-    const economicValue = useMemo(() => Math.round(totalHours * 25), [totalHours]);
+    const hourlyRate = currentVolunteer?.hourlyValue ?? 0;
+    const economicValue = useMemo(() => Math.round(totalHours * hourlyRate), [totalHours, hourlyRate]);
     const orgsAssisted = partnerOrgs.length;
     const impactScore = useMemo(() => Math.round(economicValue * orgsAssisted), [economicValue, orgsAssisted]);
 
-    // Chart
     const { chartLabels, chartData } = useMemo(() => {
         const now = new Date();
 
-        // helper to build a fixed sequence of N months ending at current month
+        //helper func to get N months
         function buildMonthRange(monthCount: number): { labels: string[]; data: number[] } {
             const labels: string[] = [];
             const data: number[] = [];
@@ -82,7 +98,6 @@ export function useVltDashboardViewModel() {
         }
 
         if (chartRange === "last_month") {
-            // exactly 1 bar: the previous calendar month
             const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
             const key = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, "0")}`;
             return {
@@ -97,12 +112,19 @@ export function useVltDashboardViewModel() {
         }
 
         if (chartRange === "last_year") {
-            const { labels, data } = buildMonthRange(12);
+            const lastYear = now.getFullYear() - 1;
+            const labels: string[] = [];
+            const data: number[] = [];
+            for (let m = 0; m < 12; m++) {
+                const d = new Date(lastYear, m, 1);
+                const key = `${lastYear}-${String(m + 1).padStart(2, "0")}`;
+                labels.push(d.toLocaleString("default", { month: "short" }).toUpperCase());
+                data.push(monthlyHoursMap[key] ?? 0);
+            }
             return { chartLabels: labels, chartData: data };
         }
 
         if (chartRange === "this_year") {
-            // Jan 1 to Dec 31 of current calendar year, all 12 months
             const labels: string[] = [];
             const data: number[] = [];
             for (let m = 0; m < 12; m++) {
@@ -114,7 +136,6 @@ export function useVltDashboardViewModel() {
             return { chartLabels: labels, chartData: data };
         }
 
-        // total — aggregate all keys across all years by month label
         const allKeys = Object.keys(monthlyHoursMap).sort();
         if (allKeys.length === 0) {
             const { labels, data } = buildMonthRange(6);
@@ -144,5 +165,6 @@ export function useVltDashboardViewModel() {
         chartData,
         chartRange,
         setChartRange,
+        hourlyRate,
     };
 }
