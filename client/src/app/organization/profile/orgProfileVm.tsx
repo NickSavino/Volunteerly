@@ -70,7 +70,7 @@ export function useOrgProfileViewModel() {
         setOriginalOrg(org.data)
         const adrData = org.data.hqAdr?.split(", ") || []
         setAddress({streetAdr: adrData[0] || "", city: adrData[1] || "", province: adrData[2] || "AB", postalCode: adrData[3] || ""})
-        if (org.data.impactHighlights){
+        if (org.data.impactHighlights && org.data.impactHighlights.length > 2){
           setImpactHighlights({
             first: { label: Object.keys(org.data.impactHighlights[0])[0], value: org.data.impactHighlights[0][Object.keys(org.data.impactHighlights[0])[0]] },
             second: { label: Object.keys(org.data.impactHighlights[1])[0], value: org.data.impactHighlights[1][Object.keys(org.data.impactHighlights[1])[0]] },

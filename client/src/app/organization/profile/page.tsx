@@ -53,7 +53,7 @@ export default function OrgProfilePage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900" />
                 <div className="absolute bottom-4 left-6 flex items-end gap-4">
                     <div className="relative">
-                        <Avatar className="h-auto w-20">
+                        <Avatar className="h-20 w-20">
                             <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")}/>
                             <AvatarFallback> {currentOrg?.orgName.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
