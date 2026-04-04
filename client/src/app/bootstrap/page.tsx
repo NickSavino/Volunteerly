@@ -29,10 +29,14 @@ export default function BootstrapPage() {
                     router.replace("/login");
                     return;
                 }
-                
+
                 switch (parsed.data.role) {
                     case "VOLUNTEER":
-                        router.replace("/volunteer");
+                        if (parsed.data.status === "UNVERIFIED") {
+                            router.replace("/volunteer/experience-input");
+                        } else {
+                            router.replace("/volunteer");
+                        }
                         break;
                     case "ORGANIZATION":
                         const org = await OrganizationService.getCurrentOrganization()

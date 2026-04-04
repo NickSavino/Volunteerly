@@ -53,7 +53,7 @@ export function useSignUpViewModel() {
                     console.log("Updated user:", result.data);
 
                     if (data.session) {
-                        router.push("/volunteer");
+                        router.push("/bootstrap");
                         return;
                     }
 
