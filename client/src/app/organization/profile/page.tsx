@@ -1,6 +1,6 @@
 "use client";
 
-import { UserRoundPen, LogOut, MessageCircleQuestionMark, ArrowLeft} from "lucide-react";
+import { UserRoundPen, LogOut, MessageCircleQuestionMark, ArrowLeft, Pencil} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { OrganizationNavbar } from "../organization_navbar";
@@ -22,7 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export default function OrgProfilePage() {
   const {loading, session, fetching, signOut, router, currentOrg,setCurrentOrg, 
-    address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit, impactHighlights, setImpactHighlights} = useOrgProfileViewModel()
+    address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange} = useOrgProfileViewModel()
 
   if (loading || !session || fetching) {
     return (<OrganizationLoadingPage />)
@@ -30,7 +30,7 @@ export default function OrgProfilePage() {
 
   return (
     <div className="min-h-screen">
-        <title>Organization Dashboard - Volunteerly</title>
+        <title>Organization Profile - Volunteerly</title>
         <OrganizationNavbar
                     currentOrg={currentOrg}
                     onSignOut={async () => {
@@ -51,8 +51,21 @@ export default function OrgProfilePage() {
             <div className="relative mb-6 h-40 w-full overflow-hidden rounded-xl bg-gray-800">
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900" />
                 <div className="absolute bottom-4 left-6 flex items-end gap-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-white text-lg font-bold text-gray-800 shadow">
-                        {currentOrg?.orgName.slice(0, 2).toUpperCase()}
+                    <div className="relative">
+                        <Avatar className="h-20 w-20">
+                            <AvatarImage src={avtImg.src}/>
+                            <AvatarFallback> {currentOrg?.orgName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <Button className="absolute bottom-0 right-0 bg-white rounded-full p-1 text-gray-700 text-xs cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                            <Pencil />
+                        </Button>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            accept="image/jpeg"
+                            onChange={handleAvatarChange}
+                        />                    
                     </div>
                     <div>
                         <h1 className="text-xl font-bold text-white">{currentOrg?.orgName}</h1>
@@ -202,7 +215,7 @@ export default function OrgProfilePage() {
                     </Card>
                 </div>
                 <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 h-full ">
-                    <Card className="ml-5">
+                    <Card className="md:ml-5">
                          <CardHeader>
                             <CardTitle className="text-xl">Private Details</CardTitle>
                         </CardHeader>

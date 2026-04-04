@@ -8,7 +8,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
   storage,
   fileFilter: (_req, file, cb) => {
-    const allowedTypes = ["image/*"];
+    const allowedTypes = ["image/jpeg"];
 
     if (!allowedTypes.includes(file.mimetype)) {
       return cb(new Error("Only Images are allowed!"));

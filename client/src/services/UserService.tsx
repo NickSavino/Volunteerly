@@ -21,5 +21,11 @@ export class UserService {
 
         return parsed
     }
-
+    static async uploadAvatar(formData: FormData) {
+        const response = await api<unknown>("/current-user/avatar", {
+            method: "POST",
+            body: formData
+        });
+        return response;
+    }
 }

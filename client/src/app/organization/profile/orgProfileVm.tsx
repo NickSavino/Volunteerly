@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 import { UserService } from "@/services/UserService";
@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentOrganizationUpdate, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+
 
 export function useOrgProfileViewModel() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export function useOrgProfileViewModel() {
     postalCode: ""
   })
   const [editing, setEditing] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
 
   useEffect(() => {
@@ -134,10 +136,20 @@ export function useOrgProfileViewModel() {
           })
         }
       }
-      setEditing(false)
-      
+      setEditing(false)   
     }
-  
 
-    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights} 
+    async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+      const newAvatar = e.target.files?.[0]
+      setFetching(true)
+      if (!newAvatar) {return}
+      
+      const formData = new FormData();
+      formData.append("image", newAvatar)
+
+      const path = await UserService.uploadAvatar(formData)
+
+      setFetching(false)
+    }
+    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange} 
 }
