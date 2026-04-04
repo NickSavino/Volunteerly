@@ -42,8 +42,7 @@ export async function updateCurrentUser(userId: string, userRole: string, email:
 }
 
 export async function saveAvatar(userId:string, file:Express.Multer.File){
-    const extension = file.originalname.split(".").pop();
-    const fileName = `${userId}.${extension}`;
+    const fileName = `${userId}.jpeg`;
 
     const { data, error } = await supabase.storage
     .from("avatars")

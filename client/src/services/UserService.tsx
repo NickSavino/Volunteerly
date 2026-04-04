@@ -29,6 +29,7 @@ export class UserService {
     }
     static getAvatarURL(userID: string) {
         const {data: {publicUrl}} = supabase.storage.from('avatars').getPublicUrl(`${userID}.jpeg`)
-        return publicUrl
+        console.log(publicUrl)
+        return `${publicUrl}?t=${Date.now()}`
     }
 }
