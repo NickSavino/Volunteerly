@@ -29,6 +29,7 @@ export function useProfileViewModel() {
     const [lastName, setLastName] = useState("");
     const [location, setLocation] = useState("");
     const [bio, setBio] = useState("");
+    const [availability, setAvailability] = useState<string[]>([]);
 
     useEffect(() => {
         if (!loading && !session) router.replace("/login");
@@ -45,6 +46,7 @@ export function useProfileViewModel() {
                 setLastName(vol.lastName);
                 setLocation(vol.location);
                 setBio(vol.bio);
+                setAvailability((vol.availability as string[]) ?? []);
             }
         }
         loadData();
@@ -61,8 +63,15 @@ export function useProfileViewModel() {
         setLastName(currentVolunteer.lastName);
         setLocation(currentVolunteer.location);
         setBio(currentVolunteer.bio);
+        setAvailability((currentVolunteer.availability as string[]) ?? []);
         setEditing(false);
         setErrors({});
+    }
+
+    function toggleDay(day: string) {
+        setAvailability((prev) =>
+            prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+        );
     }
 
     const memberSince = currentVolunteer
@@ -81,6 +90,8 @@ export function useProfileViewModel() {
         lastName, setLastName,
         location, setLocation,
         bio, setBio,
+        availability,
+        toggleDay,
         memberSince,
         handleEdit,
         handleCancel,
