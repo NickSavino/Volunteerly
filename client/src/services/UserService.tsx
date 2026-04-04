@@ -4,7 +4,6 @@ import { CurrentUser, CurrentUserSchema, CurrentUserUpdateSchema } from "@volunt
 
 
 export class UserService {
-
     static async getCurrentUser() {
         const response = await api<unknown>("/current-user");
         const parsed = CurrentUserSchema.safeParse(response)
@@ -27,5 +26,9 @@ export class UserService {
             body: formData
         });
         return response;
+    }
+    static getAvatarURL(userID: string) {
+        const {data: {publicUrl}} = supabase.storage.from('avatars').getPublicUrl(`${userID}.jpeg`)
+        return publicUrl
     }
 }

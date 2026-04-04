@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { UserService } from "@/services/UserService";
 
 
 
@@ -52,8 +53,8 @@ export default function OrgProfilePage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900" />
                 <div className="absolute bottom-4 left-6 flex items-end gap-4">
                     <div className="relative">
-                        <Avatar className="h-20 w-20">
-                            <AvatarImage src={avtImg.src}/>
+                        <Avatar className="h-auto w-20">
+                            <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")}/>
                             <AvatarFallback> {currentOrg?.orgName.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <Button className="absolute bottom-0 right-0 bg-white rounded-full p-1 text-gray-700 text-xs cursor-pointer" onClick={() => fileInputRef.current?.click()}>
