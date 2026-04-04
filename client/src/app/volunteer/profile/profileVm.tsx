@@ -16,11 +16,16 @@ export type ProfileErrors = {
     availability?: string;
 };
 
+
 export function useProfileViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
-
     const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
+    const [editing, setEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [errors, setErrors] = useState<ProfileErrors>({});
+
+
 
     useEffect(() => {
         if (!loading && !session) router.replace("/login");
@@ -44,9 +49,27 @@ export function useProfileViewModel() {
       })
     : "";
 
+    function handleEdit() {
+        setEditing(true);
+        setErrors({});
+    }
+
+    function handleCancel() {
+        if (!currentVolunteer) return;
+        setEditing(false);
+        setErrors({});
+    }
+
+
     return {
         currentVolunteer,
+        editing,
+        saving,
+        errors,
         memberSince,
+        handleEdit,
+        handleCancel,
+        handleSave: async () => {},
         signOut,
         DAYS,
     };

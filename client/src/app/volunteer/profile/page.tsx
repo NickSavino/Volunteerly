@@ -8,7 +8,8 @@ import { Settings } from "lucide-react";
 import avtImg from "@/assets/avatarImg.png";
 
 export default function ProfilePage() {
-    const { currentVolunteer, signOut, memberSince } = useProfileViewModel();
+    const { currentVolunteer, signOut, memberSince, editing, saving, errors, handleEdit, handleCancel, handleSave, DAYS } = useProfileViewModel();
+
 
     if (!currentVolunteer) {
         return <main className="p-6">Loading...</main>;
@@ -55,6 +56,32 @@ export default function ProfilePage() {
                     </div>
 
                 </div>
+                <div className="flex flex-col gap-4 w-full">
+                <div className="rounded-xl border bg-white p-6 shadow-sm">
+                    <div className="flex items-start justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
+                            <p className="text-sm text-gray-500 mt-1">
+                                A complete profile increases your chances of being selected by organizations.
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                            {editing && (
+                                <Button variant="ghost" onClick={handleCancel} disabled={saving}>
+                                    Cancel
+                                </Button>
+                            )}
+                            <Button
+                                className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl px-6"
+                                onClick={editing ? handleSave : handleEdit}
+                                disabled={saving}
+                            >
+                                {saving ? "Saving..." : editing ? "Save Edits" : "Edit Profile"}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+</div>
             </main>
         </div>
     );
