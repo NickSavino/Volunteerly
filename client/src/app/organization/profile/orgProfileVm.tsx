@@ -3,13 +3,14 @@ import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
+import { CurrentOrganization, CurrentOrganizationUpdate, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 
 export function useOrgProfileViewModel() {
   const router = useRouter();
   const { session, user, loading, signOut } = useAuth();
+  const [originalOrg, setOriginalOrg] = useState<CurrentOrganization | undefined>(undefined);
   const [currentOrg, setCurrentOrg] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
   const [fetching, setFetching] = useState(true)
@@ -19,6 +20,7 @@ export function useOrgProfileViewModel() {
     province: "AB",
     postalCode: ""
   })
+  const [editing, setEditing] = useState(false)
 
 
   useEffect(() => {
@@ -59,9 +61,9 @@ export function useOrgProfileViewModel() {
             return;
         }
         setCurrentOrg(org.data);
+        setOriginalOrg(org.data)
         const adrData = org.data.hqAdr?.split(", ") || []
         setAddress({streetAdr: adrData[0] || "", city: adrData[1] || "", province: adrData[2] || "AB", postalCode: adrData[3] || ""})
-        console.log(org.data.impactHighlights)
         setFetching(false)
       } catch (error) {
         console.error(error);
@@ -69,7 +71,7 @@ export function useOrgProfileViewModel() {
       }
     }
     loadCurrentUser();
-    }, [session, router]);
+    }, [session, router, fetching]);
 
     async function viewSubmittedDoc() {
     if (currentOrg?.docId) {
@@ -91,6 +93,29 @@ export function useOrgProfileViewModel() {
     }
     return
    }
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+      if (!editing) {return}
+      e.preventDefault()
 
-    return {loading, session,fetching, signOut, router, user, error, currentOrg, address, viewSubmittedDoc} 
+      setFetching(true)
+      const updateOrg = currentOrg as CurrentOrganizationUpdate
+      updateOrg.hqAdr = `${address.streetAdr}, ${address.city}, ${address.province}, ${address.postalCode}`
+      const updated = await OrganizationService.update_create_Organization(updateOrg)
+
+      if (updated.success){
+        setEditing(false)
+      } else {
+        setError("Could Not Update Organization.")
+      }
+      setFetching(false)
+      return
+    }
+
+    async function resetEdit() {
+      setCurrentOrg(originalOrg)
+      setEditing(false)
+    }
+  
+
+    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit} 
 }
