@@ -50,14 +50,14 @@ currentOrganizationRouter.put("/", async (req, res, next) => {
   try {
     const userId = req.auth!.userId;
 
-    const { orgName, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights} = req.body;
+    const { orgName, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, impactHighlights, hqAdr} = req.body;
 
     const user = await getCurrentOrganization(userId);
     let modified_user;
     if (!user) {
         modified_user = await createCurrentOrganization(userId, orgName);
     } else {
-        modified_user = await updateCurrentOrganization(userId, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights);    
+        modified_user = await updateCurrentOrganization(userId, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, impactHighlights, hqAdr);    
     }
     if (!modified_user) {
         return res.status(500).json({

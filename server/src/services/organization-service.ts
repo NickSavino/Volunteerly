@@ -27,7 +27,7 @@ export async function createCurrentOrganization(orgId: string, orgName: string) 
     return org;
 }
 
-export async function updateCurrentOrganization(orgId: string, contactName: string, contactEmail: string, contactNum: string, missionStmt: string, causeCat: string, website:string, impactHighlights: Prisma.InputJsonValue) {
+export async function updateCurrentOrganization(orgId: string, contactName: string, contactEmail: string, contactNum: string, missionStmt: string, causeCat: string, website:string, impactHighlights: Prisma.InputJsonValue, hqAdr: string) {
     const organization = await prisma.organization.update({
         where: { id: orgId },
         data: {
@@ -37,7 +37,8 @@ export async function updateCurrentOrganization(orgId: string, contactName: stri
             missionStatement: missionStmt,
             causeCategory: causeCat,
             website: website,
-            impactHighlights: impactHighlights
+            impactHighlights: impactHighlights,
+            hqAdr:hqAdr
         },
     });
     if (!organization) {
