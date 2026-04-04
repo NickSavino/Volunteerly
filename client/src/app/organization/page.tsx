@@ -18,6 +18,7 @@ import avtImg from "@/assets/avatarImg.png"
 import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { OrgStatCard } from "@/components/custom/org_stat_card";
 import { OrganizationLoadingPage } from "./organization_loading";
+import { UserService } from "@/services/UserService";
 
 
 export default function HomePage() {
@@ -150,9 +151,9 @@ export default function HomePage() {
                 <Card className="mx-5">
                     <CardContent className="text-center">
                         <div className="flex justify-center mb-4">
-                            <Avatar size="lg">
-                                <AvatarImage src={avtImg.src} />
-                                <AvatarFallback>ORG</AvatarFallback>
+                            <Avatar className="h-auto w-20">
+                                <AvatarImage src={UserService.getAvatarURL(currentUser?.id || "")} />
+                                <AvatarFallback> {currentUser?.orgName.slice(0, 2).toUpperCase()}</AvatarFallback>
                             </Avatar>
                         </div>
                         <h3>{currentUser?.orgName}</h3>

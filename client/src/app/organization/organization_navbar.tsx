@@ -14,6 +14,7 @@ import {
 import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
 import { CurrentOrganization } from "@volunteerly/shared";
+import { UserService } from "@/services/UserService";
 
 type OrganizationNavbarProps = {
     currentOrg: CurrentOrganization | undefined;
@@ -70,8 +71,8 @@ export function OrganizationNavbar({ currentOrg, onSignOut }: OrganizationNavbar
                                         <p className="text-bright text-sm truncate">{currentOrg?.status === "VERIFIED" ? "VERIFIED" : "UNVERIFIED"}</p>
                                     </div>
                                     <Avatar>
-                                        <AvatarImage src={avtImg.src} />
-                                        <AvatarFallback>MOD</AvatarFallback>
+                                        <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")} />
+                                        <AvatarFallback> {currentOrg?.orgName.slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
                             </NavigationMenuTrigger>
