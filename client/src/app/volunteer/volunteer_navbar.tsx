@@ -29,6 +29,7 @@ const NAV_LINKS = [
     { label: "Opportunities", href: "/volunteer/opportunity" },
     { label: "Skill Tree", href: "/volunteer/skills" },
     { label: "Messages", href: "/volunteer/messages" },
+    { label: "Profile", href: "/volunteer/profile" },
 ] as const;
 
 export function VolunteerNavbar({
