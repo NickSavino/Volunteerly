@@ -37,9 +37,18 @@ export function useProfileViewModel() {
         loadData();
     }, [session]);
 
+    const memberSince = currentVolunteer
+    ? new Date(currentVolunteer.createdAt).toLocaleDateString("en-US", {
+          month: "long",
+          year: "numeric",
+      })
+    : "";
+
     return {
         currentVolunteer,
+        memberSince,
         signOut,
         DAYS,
     };
+
 }
