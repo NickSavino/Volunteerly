@@ -21,7 +21,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 
 export default function OrgProfilePage() {
-  const {loading, session, fetching, signOut, router, currentOrg,setCurrentOrg, address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit} = useOrgProfileViewModel()
+  const {loading, session, fetching, signOut, router, currentOrg,setCurrentOrg, 
+    address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit, impactHighlights, setImpactHighlights} = useOrgProfileViewModel()
 
   if (loading || !session || fetching) {
     return (<OrganizationLoadingPage />)
@@ -37,10 +38,10 @@ export default function OrgProfilePage() {
                         router.push("/");
                     }}
                 />    
-        <main className="md:h-[calc(100vh-64px)] px-6">
+        <main className="md:h-[calc(100vh-64px)] px-10 py-5">
             <Button
                 variant="ghost"
-                className="cursor-pointer py-3"
+                className="cursor-pointer pb-8"
                 onClick={() => router.back()}
                 >
                     <ArrowLeft className="w-4 h-4" />
@@ -162,14 +163,34 @@ export default function OrgProfilePage() {
                                 <hr className="mx-2 border-gray-300" />
                                 <CardTitle className="text-xl">Impact Highlights</CardTitle>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {currentOrg?.impactHighlights?.map((item, index) => {
-                                        const [[key, value]] = Object.entries(item);
-                                        return (<Field key={index}>
-                                            <Label className="text-muted-foreground text-lg">{key}</Label>
-                                            <Label className="text-md">{value as string}</Label>
-                                        </Field>)
-                                    }
-                                    )}                      
+                                    {!editing?  
+                                        <>
+                                            {currentOrg?.impactHighlights?.map((item, index) => {
+                                                const [[key, value]] = Object.entries(item);
+                                                return (<Field key={index}>
+                                                    <Label className="text-muted-foreground text-lg">{key}</Label>
+                                                    <Label className="text-md">{value as string}</Label>
+                                                </Field>)
+                                            }
+                                            )}   
+                                        </>
+                                    :
+                                        <>
+                                            <Field>
+                                                <Input id="impact1Label" type="text" value={impactHighlights.first.label}
+                                                    onChange={(e) => setImpactHighlights((prev) => prev ? { ...prev, first: { ...prev.first, label: e.target.value } } : prev)} required/>
+                                                <Input id="impact1Value" type="text" value={impactHighlights.first.value}
+                                                    onChange={(e) => setImpactHighlights((prev) => prev ? { ...prev, first: { ...prev.first, value: e.target.value } } : prev)} required/>
+                                            </Field>
+
+                                            <Field>
+                                                <Input id="impact2Label" type="text" value={impactHighlights.second.label}
+                                                    onChange={(e) => setImpactHighlights((prev) => prev ? { ...prev, second: { ...prev.second, label: e.target.value } } : prev)} required/>
+                                                <Input id="impact2Value" type="text" value={impactHighlights.second.value}
+                                                    onChange={(e) => setImpactHighlights((prev) => prev ? { ...prev, second: { ...prev.second, value: e.target.value } } : prev)} required/>
+                                            </Field>
+                                        </>
+                                    }                                                   
                                 </div>
                         </CardContent>
                         {editing && 
@@ -181,7 +202,7 @@ export default function OrgProfilePage() {
                     </Card>
                 </div>
                 <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 h-full ">
-                    <Card className="mx-5">
+                    <Card className="ml-5">
                          <CardHeader>
                             <CardTitle className="text-xl">Private Details</CardTitle>
                         </CardHeader>

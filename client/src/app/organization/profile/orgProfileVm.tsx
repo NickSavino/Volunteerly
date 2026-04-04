@@ -14,6 +14,10 @@ export function useOrgProfileViewModel() {
   const [currentOrg, setCurrentOrg] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
   const [fetching, setFetching] = useState(true)
+  const [impactHighlights, setImpactHighlights] = useState({
+    first: { label: "", value: "" },
+    second: { label: "", value: "" },
+  });
   const [address, setAddress] = useState({
     streetAdr: "",
     city:"",
@@ -64,6 +68,12 @@ export function useOrgProfileViewModel() {
         setOriginalOrg(org.data)
         const adrData = org.data.hqAdr?.split(", ") || []
         setAddress({streetAdr: adrData[0] || "", city: adrData[1] || "", province: adrData[2] || "AB", postalCode: adrData[3] || ""})
+        if (org.data.impactHighlights){
+          setImpactHighlights({
+            first: { label: Object.keys(org.data.impactHighlights[0])[0], value: org.data.impactHighlights[0][Object.keys(org.data.impactHighlights[0])[0]] },
+            second: { label: Object.keys(org.data.impactHighlights[1])[0], value: org.data.impactHighlights[1][Object.keys(org.data.impactHighlights[1])[0]] },
+          })
+        }
         setFetching(false)
       } catch (error) {
         console.error(error);
@@ -94,12 +104,13 @@ export function useOrgProfileViewModel() {
     return
    }
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-      if (!editing) {return}
+      if (!editing || !currentOrg) {return}
       e.preventDefault()
 
       setFetching(true)
+      currentOrg.hqAdr = `${address.streetAdr}, ${address.city}, ${address.province}, ${address.postalCode}`
+      currentOrg.impactHighlights = [{[impactHighlights.first.label]:impactHighlights.first.value}, {[impactHighlights.second.label]:impactHighlights.second.value}]
       const updateOrg = currentOrg as CurrentOrganizationUpdate
-      updateOrg.hqAdr = `${address.streetAdr}, ${address.city}, ${address.province}, ${address.postalCode}`
       const updated = await OrganizationService.update_create_Organization(updateOrg)
 
       if (updated.success){
@@ -112,10 +123,21 @@ export function useOrgProfileViewModel() {
     }
 
     async function resetEdit() {
-      setCurrentOrg(originalOrg)
+      if (originalOrg){
+        setCurrentOrg(originalOrg)
+        const adrData = originalOrg.hqAdr?.split(", ") || []
+        setAddress({streetAdr: adrData[0] || "", city: adrData[1] || "", province: adrData[2] || "AB", postalCode: adrData[3] || ""})
+        if (originalOrg.impactHighlights){
+          setImpactHighlights({
+            first: { label: Object.keys(originalOrg.impactHighlights[0])[0], value: originalOrg.impactHighlights[0][Object.keys(originalOrg.impactHighlights[0])[0]] },
+            second: { label: Object.keys(originalOrg.impactHighlights[1])[0], value: originalOrg.impactHighlights[1][Object.keys(originalOrg.impactHighlights[1])[0]] },
+          })
+        }
+      }
       setEditing(false)
+      
     }
   
 
-    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit} 
+    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights} 
 }
