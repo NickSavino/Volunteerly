@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { VolunteerService } from "@/services/VolunteerService";
 import { CurrentVolunteer } from "@volunteerly/shared";
+import { toast } from "sonner";
 
 export const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -74,6 +75,48 @@ export function useProfileViewModel() {
         );
     }
 
+    function validate(): boolean {
+        const newErrors: ProfileErrors = {};
+        if (!firstName.trim()) newErrors.firstName = "First name is required.";
+        if (!lastName.trim()) newErrors.lastName = "Last name is required.";
+        if (!location.trim()) newErrors.location = "Location is required.";
+        if (!bio.trim()) newErrors.bio = "Bio is required.";
+        if (availability.length === 0) newErrors.availability = "Please select at least one day.";
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    }
+
+    async function handleSave() {
+        if (!validate()) return;
+        setSaving(true);
+        setErrors({});
+        try {
+            const result = await VolunteerService.update_create_Volunteer({
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                location: location.trim(),
+                bio: bio.trim(),
+                availability,
+                hourlyValue: currentVolunteer?.hourlyValue,
+            });
+            if (result.success) {
+                setCurrentVolunteer(result.data);
+                setEditing(false);
+                toast.success("Account Changes Saved", {
+                    description: "Your profile has been updated.",
+                    position: "top-right",
+                });
+            } else {
+                setErrors({ firstName: "Failed to save profile. Please try again." });
+            }
+        } catch (err) {
+            console.error(err);
+            setErrors({ firstName: "Something went wrong. Please try again." });
+        } finally {
+            setSaving(false);
+        }
+    }
+
     const memberSince = currentVolunteer
         ? new Date(currentVolunteer.createdAt).toLocaleDateString("en-US", {
               month: "long",
@@ -95,7 +138,7 @@ export function useProfileViewModel() {
         memberSince,
         handleEdit,
         handleCancel,
-        handleSave: async () => {},
+        handleSave,
         signOut,
         DAYS,
     };

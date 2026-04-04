@@ -60,7 +60,6 @@ export default function ProfilePage() {
 
                         <div className="rounded-xl border bg-white p-6 shadow-sm">
                             <div className="flex items-center gap-2 mb-3">
-                                <Settings className="h-5 w-5 text-gray-600" />
                                 <p className="font-semibold text-gray-800">Technical Issues?</p>
                             </div>
                             <Button
@@ -109,8 +108,11 @@ export default function ProfilePage() {
                                             disabled={!editing}
                                             onChange={(e) => setFirstName(e.target.value)}
                                             placeholder="First name"
-                                            className={!editing ? "text-gray-700" : ""}
+                                            className={`${!editing ? "text-gray-700" : ""} ${errors.firstName ? "border-destructive" : ""}`}
                                         />
+                                        {errors.firstName && (
+                                            <p className="text-destructive text-xs mt-1">{errors.firstName}</p>
+                                        )}
                                     </div>
                                     <div className="flex flex-col gap-1">
                                         <Label>Last Name</Label>
@@ -119,8 +121,11 @@ export default function ProfilePage() {
                                             disabled={!editing}
                                             onChange={(e) => setLastName(e.target.value)}
                                             placeholder="Last name"
-                                            className={!editing ? "text-gray-700" : ""}
+                                            className={`${!editing ? "text-gray-700" : ""} ${errors.lastName ? "border-destructive" : ""}`}
                                         />
+                                        {errors.lastName && (
+                                            <p className="text-destructive text-xs mt-1">{errors.lastName}</p>
+                                        )}
                                     </div>
                                 </div>
 
@@ -130,9 +135,12 @@ export default function ProfilePage() {
                                         value={location}
                                         disabled={!editing}
                                         onChange={(e) => setLocation(e.target.value)}
-                                        placeholder="Calgary, AB"
-                                        className={!editing ? "text-gray-700" : ""}
+                                        placeholder="Your Location"
+                                        className={`${!editing ? "text-gray-700" : ""} ${errors.location ? "border-destructive" : ""}`}
                                     />
+                                    {errors.location && (
+                                        <p className="text-destructive text-xs mt-1">{errors.location}</p>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col gap-1">
@@ -141,10 +149,13 @@ export default function ProfilePage() {
                                         value={bio}
                                         disabled={!editing}
                                         onChange={(e) => setBio(e.target.value)}
-                                        placeholder="Describe your passion for volunteering and what you hope to achieve..."
+                                        placeholder="Describe your passion for volunteering and what your interests"
                                         rows={4}
-                                        className={!editing ? "text-gray-700" : ""}
+                                        className={`${!editing ? "text-gray-700" : ""} ${errors.bio ? "border-destructive" : ""}`}
                                     />
+                                    {errors.bio && (
+                                        <p className="text-destructive text-xs mt-1">{errors.bio}</p>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col gap-2">
@@ -166,6 +177,9 @@ export default function ProfilePage() {
                                             </Toggle>
                                         ))}
                                     </div>
+                                    {errors.availability && (
+                                        <p className="text-destructive text-xs mt-1">{errors.availability}</p>
+                                    )}
                                 </div>
                             </div>
                         </div>
