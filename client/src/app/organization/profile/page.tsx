@@ -64,7 +64,7 @@ export default function OrgProfilePage() {
                             type="file"
                             ref={fileInputRef}
                             className="hidden"
-                            accept="image/jpeg"
+                            accept=".jpg,.jpeg,.png,.webp"
                             onChange={handleAvatarChange}
                         />                    
                     </div>

@@ -10,8 +10,8 @@ const envSchema = z.object({
     SUPABASE_SERVICE_ROLE_KEY: z.string(),
     AZURE_DI_ENDPOINT: z.string().optional().default(""),
     AZURE_DI_KEY: z.string().optional().default(""), 
-    GROQ_API_KEY: z.string(),
-    GEMINI_API_KEY: z.string().min(1)
+    GROQ_API_KEY: z.string().optional().default(""),
+    GEMINI_API_KEY: z.string().min(1).optional().default("")
 })
 
 export const env = envSchema.parse(process.env);
