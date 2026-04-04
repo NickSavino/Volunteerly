@@ -1,8 +1,25 @@
 import { Router } from "express";
-import { createCurrentUser, getCurrentUser, updateCurrentUser } from "../services/user-service.js";
+import { createCurrentUser, getCurrentUser, saveAvatar, updateCurrentUser } from "../services/user-service.js";
+import multer from "multer";
 
 
 export const currentUserRouter = Router();
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage,
+  fileFilter: (_req, file, cb) => {
+    const allowedTypes = ["image/*"];
+
+    if (!allowedTypes.includes(file.mimetype)) {
+      return cb(new Error("Only Images are allowed!"));
+    }
+
+    cb(null, true);
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
 
 currentUserRouter.get("/", async (req, res, next) => {
     try {
@@ -43,6 +60,33 @@ currentUserRouter.put("/", async (req, res, next) => {
     }
 
     res.status(200).json(modified_user);
+  } catch (error) {
+    console.error(error);
+    next(error);
+    }
+});
+
+currentUserRouter.post("/avatar", upload.single("image") ,async (req, res, next) => {
+  try {
+    const userId = req.auth!.userId;
+
+    const avatar = req.file
+
+    if (!avatar){
+        return res.status(400).json({
+            error: "No Image.",
+            message: "Must Attach Image to Update Avatar."})
+    }
+
+    const avatarPath = await saveAvatar(userId, avatar)
+
+    if (!avatarPath) {
+        return res.status(500).json({
+            error: "Error Saving Avatar.",
+            message: "Error saving avatar to storage."})
+    }
+
+    res.status(200).json(avatarPath);
   } catch (error) {
     console.error(error);
     next(error);
