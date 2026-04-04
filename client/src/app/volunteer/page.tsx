@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Clock, Star, DollarSign, Building2, Search } from "lucide-react";
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     NavigationMenu, NavigationMenuContent, NavigationMenuItem,
@@ -12,14 +13,8 @@ import {
 import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
 import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
+import { VolunteerNavbar } from "./volunteer_navbar";
 
-const NAV_LINKS = [
-    { label: "Dashboard",     href: "/volunteer" },
-    { label: "Activity Log",  href: "/volunteer/activity" },
-    { label: "Certificates",  href: "/volunteer/certificates" },
-    { label: "Organizations", href: "/volunteer/organizations" },
-    { label: "Settings",      href: "/volunteer/settings" },
-] as const;
 
 const STATUS_STYLES: Record<string, string> = {
     OPEN:      "bg-green-50 text-green-700",
@@ -40,13 +35,15 @@ export default function VolunteerDashboardPage() {
     const {
         loading, session, error, currentVolunteer, opportunities, partnerOrgs,
         handleSignOut, firstName, totalHours, economicValue, impactScore,
-        orgsAssisted, chartLabels, chartData, chartRange, setChartRange, router,
+        orgsAssisted, chartLabels, chartData, chartRange, setChartRange, router,hourlyRate
     } = useVltDashboardViewModel();
 
     const pathname = usePathname();
     const fullName = currentVolunteer
         ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
         : "Loading...";
+
+    const [showAllPartners, setShowAllPartners] = useState(false);
 
     if (loading || !session) return <main className="p-6">Loading...</main>;
 
@@ -55,65 +52,10 @@ export default function VolunteerDashboardPage() {
     return (
         <div className="min-h-screen bg-gray-50">
 
-            {/* Navbar */}
-            <header className="w-full border-b bg-white px-6 py-3">
-                <div className="mx-auto flex max-w-7xl items-center justify-between">
-                    <Link href="/volunteer" className="flex-shrink-0">
-                        <Image src={logo} alt="Volunteerly" width={140} height={40} priority />
-                    </Link>
-                    <NavigationMenu className="hidden md:flex">
-                        <NavigationMenuList className="flex gap-6">
-                            {NAV_LINKS.map(({ label, href }) => (
-                                <NavigationMenuItem key={href}>
-                                    <Link
-                                        href={href}
-                                        className={`text-sm font-medium transition-colors hover:text-yellow-500 ${
-                                            pathname === href
-                                                ? "border-b-2 border-yellow-400 text-yellow-500"
-                                                : "text-gray-600"
-                                        }`}
-                                    >
-                                        {label}
-                                    </Link>
-                                </NavigationMenuItem>
-                            ))}
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                    <div className="flex items-center gap-3">
-                        <div className="hidden items-center gap-2 rounded-full border bg-gray-50 px-3 py-1.5 text-sm text-gray-400 sm:flex">
-                            <Search className="h-4 w-4" /><span>Search activities...</span>
-                        </div>
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                                <NavigationMenuItem>
-                                    <NavigationMenuTrigger className="p-0">
-                                        <Avatar className="h-9 w-9">
-                                            <AvatarImage src={avtImg.src} />
-                                            <AvatarFallback>
-                                                {currentVolunteer?.firstName?.[0] ?? "V"}
-                                                {currentVolunteer?.lastName?.[0] ?? ""}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent>
-                                        <div className="w-40 p-1">
-                                            <p className="px-2 py-1 text-sm font-medium text-gray-800">{fullName}</p>
-                                            <p className="px-2 pb-2 text-xs text-gray-400">Volunteer</p>
-                                            <hr className="mb-1" />
-                                            <button
-                                                className="w-full rounded px-2 py-1 text-left text-sm text-gray-600 hover:bg-gray-100"
-                                                onClick={handleSignOut}
-                                            >
-                                                Log Out
-                                            </button>
-                                        </div>
-                                    </NavigationMenuContent>
-                                </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
-                    </div>
-                </div>
-            </header>
+        <VolunteerNavbar
+        currentVolunteer={currentVolunteer}
+        onSignOut={handleSignOut}
+        />
 
             <main className="mx-auto max-w-7xl px=4 py-8 sm:px-6 lg:px-8">
 
@@ -147,7 +89,7 @@ export default function VolunteerDashboardPage() {
                         icon={<DollarSign className="h-5 w-5 text-gray-700" />}
                         label="Economic Value"
                         value={`$${economicValue.toLocaleString()}`}
-                        sub="Calculated at $25.00/hr"
+                        sub={`Calculated at $${currentVolunteer?.hourlyValue}/hr`}
                         trend={null}
                     />
                     <StatCard
@@ -235,13 +177,49 @@ export default function VolunteerDashboardPage() {
                             </div>
                         )}
                         <button
-                            className="mt-5 w-full rounded-lg border py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
-                            onClick={() => router.push("/volunteer/organizations")}
+                            className="mt-5 w-full border py-2 rounded-lg"
+                            onClick={() => setShowAllPartners(true)}
                         >
-                            View All {partnerOrgs.length} Partners
+                            Expand All
                         </button>
                     </div>
                 </div>
+
+                {showAllPartners && (
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                        onClick={() => setShowAllPartners(false)}
+                    >
+                        <div
+                            className="w-full max-w-2xl bg-white rounded-xl p-6"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="flex justify-between mb-4">
+                                <h2 className="text-lg font-semibold">All Partner Organizations</h2>
+                                <button onClick={() => setShowAllPartners(false)}>✕</button>
+                            </div>
+
+                            <div className="max-h-[400px] overflow-y-auto space-y-2">
+                                {partnerOrgs.map((org) => (
+                                    <button
+                                        key={org.id}
+                                        className="flex w-full items-center gap-3 hover:bg-gray-50 p-2 rounded"
+                                        onClick={() => {
+                                            setShowAllPartners(false);
+                                            router.push(`/volunteer/organizations/${org.id}`);
+                                        }}
+                                    >
+                                        <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                                            {org.orgName.slice(0, 2).toUpperCase()}
+                                        </div>
+                                        <p className="flex-1 text-left">{org.orgName}</p>
+                                        <p>{org.totalHours}h</p>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )} 
 
                 {/* Your Opportunities */}
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
