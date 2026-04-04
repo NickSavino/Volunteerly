@@ -140,7 +140,7 @@ export default function OrgApplicationPage() {
                     </Field>
                   </div>
                   <Field>
-                    <Label htmlFor="mission_statement">Mission Statment<span className="text-destructive">*</span></Label>
+                    <Label htmlFor="mission_statement">Mission Statement<span className="text-destructive">*</span></Label>
                     <Textarea id="mission_statement" disabled={isReadOnly} placeholder="Briefly describe your organization's core mission and goals." value={currentOrg?.missionStatement}
                           onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, missionStatement: e.target.value } : prev)} required/>
                   </Field>
