@@ -1,6 +1,5 @@
 "use client";
 
-import { OrganizationNavbar } from "../../organization_navbar";
 import { useCreateOpportunityViewModel } from "./orgCreateOpportunityVm";
 import { OrganizationLoadingPage } from "../../organization_loading";
 import OpportunityForm from "../opportunityForm";
@@ -28,13 +27,6 @@ export default function OppCreatePage() {
   return (
       <div className="min-h-screen">
           <title>Organization Application - Volunteerly</title>
-            <OrganizationNavbar
-                currentOrg={currentOrg}
-                onSignOut={async () => {
-                    await signOut();
-                    router.push("/");
-                }}
-            />            
         <main className="w-full items-center h-full flex flex-col p-8 ">       
           <OpportunityForm
             opportunity={opportunity}

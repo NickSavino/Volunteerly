@@ -2,14 +2,12 @@
 
 import { Building2, Flag, Ticket } from "lucide-react";
 import { useModDashboardViewModel } from "./ModDashboardVm";
-import { ModeratorNavbar } from "./moderator_navbar";
 import { ModStatCard } from "@/components/custom/mod_stat_card";
 
 export default function ModeratorDashboardPage() {
     const {
         loading,
         session,
-        signOut,
         router,
         currentModerator,
         pendingOrgsCount,
@@ -23,13 +21,6 @@ export default function ModeratorDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <ModeratorNavbar
-                currentModerator={currentModerator}
-                onSignOut={async () => {
-                    await signOut();
-                    router.push("/");
-                }}
-            />
 
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <div className="mb-8">

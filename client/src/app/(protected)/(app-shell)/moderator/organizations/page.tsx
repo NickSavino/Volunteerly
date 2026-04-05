@@ -2,7 +2,6 @@
 
 import { Building2, X, CheckSquare, Square, BuildingIcon, } from "lucide-react";
 import { SortKey, useOrgListViewModel, type TabKey } from "./orgListVm";
-import { ModeratorNavbar } from "../moderator_navbar";
 import { AppModal } from "@/components/common/app-modal";
 import { ConfirmActionDialog } from "@/components/common/confirm-action-dialog";
 import { ModeratorFilterBar } from "@/components/moderator/moderator-filter-bar";
@@ -27,13 +26,6 @@ export default function ModeratorOrganizationsPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <ModeratorNavbar
-                currentModerator={auth.currentModerator}
-                onSignOut={async () => {
-                    await auth.signOut();
-                    auth.router.push("/");
-                }}
-            />
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <ModeratorPageHeader 
                     title={page.title}

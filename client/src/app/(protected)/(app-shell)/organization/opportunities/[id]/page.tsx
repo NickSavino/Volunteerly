@@ -8,7 +8,6 @@ import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
 import { api } from "@/lib/api";
-import { OrganizationNavbar } from "../../organization_navbar";
 import { OrgStatCard } from "@/components/custom/org_stat_card";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
@@ -42,13 +41,6 @@ export default function ViewOpportunityPage({
   return (
     <div className="min-h-screen">
         <title>Organization View Opportunity - Volunteerly</title>       
-        <OrganizationNavbar
-            currentOrg={currentUser}
-            onSignOut={async () => {
-                await signOut();
-                router.push("/");
-            }}
-        />    
 
         <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 mx-10">
 

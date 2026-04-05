@@ -17,14 +17,7 @@ import {
 import { User, Upload, Merge, HandHeart, HouseHeart } from "lucide-react";
 
 export default function LandingPage() {
-  const router = useRouter();
-  const { session, loading } = useAuth();
-
-  useEffect(() => {
-    if (!loading && session) {
-      router.replace("/bootstrap");
-    }
-  }, [loading, session, router])
+  const { loading } = useAuth();
 
   if (loading) {
     return <main className="p-6">Loading...</main>

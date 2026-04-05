@@ -13,8 +13,6 @@ import {
 import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
 import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
-import { VolunteerNavbar } from "./volunteer_navbar";
-
 
 const STATUS_STYLES: Record<string, string> = {
     OPEN:      "bg-green-50 text-green-700",
@@ -51,12 +49,6 @@ export default function VolunteerDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-
-        <VolunteerNavbar
-        currentVolunteer={currentVolunteer}
-        onSignOut={handleSignOut}
-        />
-
             <main className="mx-auto max-w-7xl px=4 py-8 sm:px-6 lg:px-8">
 
                 <div className="mb-8">

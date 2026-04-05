@@ -29,30 +29,11 @@ export function useOrgProfileViewModel() {
   const [editing, setEditing] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-
-  useEffect(() => {
-    if (!loading && !session) {
-      router.replace("/login")
-    }
-  }, [loading, session, router]);
-
+  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
       try {
-        const user = await UserService.getCurrentUser()
-
-        if (!user.success) {
-            console.error(user.error);
-            setError("Received invalid user data from the server.");
-            return;
-        }
-
-        if (user.data.role !== "ORGANIZATION") {
-            router.replace("/bootstrap");
-            return;
-        }
-
         const org = await OrganizationService.getCurrentOrganization()
         
         if (!org.success) {
@@ -112,13 +93,25 @@ export function useOrgProfileViewModel() {
     return
    }
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-      if (!editing || !currentOrg) {return}
       e.preventDefault()
+      if (!editing || !currentOrg) {return}
 
       setFetching(true)
-      currentOrg.hqAdr = `${address.streetAdr}, ${address.city}, ${address.province}, ${address.postalCode}`
-      currentOrg.impactHighlights = [{[impactHighlights.first.label]:impactHighlights.first.value}, {[impactHighlights.second.label]:impactHighlights.second.value}]
-      const updateOrg = currentOrg as CurrentOrganizationUpdate
+      setError(null)
+
+      const hqAdr = `${address.streetAdr}, ${address.city}, ${address.province}, ${address.postalCode}`
+      const updateOrg: CurrentOrganizationUpdate = {
+        ...currentOrg,
+        hqAdr: hqAdr,
+        impactHighlights: [
+        {
+          [impactHighlights.first.label]:impactHighlights.first.value
+        }, 
+        {
+          [impactHighlights.second.label]:impactHighlights.second.value
+        }]
+      }
+      
       const updated = await OrganizationService.update_create_Organization(updateOrg)
 
       if (updated.success){

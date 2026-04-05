@@ -40,20 +40,10 @@ export function useTicketListViewModel() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    if (!loading && !session) router.replace("/login");
-  }, [loading, session, router]);
-
-  useEffect(() => {
     async function load() {
       if (!session?.access_token) return;
 
       try {
-        const userResult = await UserService.getCurrentUser();
-        if (!userResult.success || userResult.data.role !== "MODERATOR") {
-          router.replace("/bootstrap");
-          return;
-        }
-
         const modResult = await ModeratorService.getCurrentModerator();
         if (modResult.success) setCurrentModerator(modResult.data);
 

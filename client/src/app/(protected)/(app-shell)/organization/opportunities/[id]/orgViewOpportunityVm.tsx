@@ -25,29 +25,11 @@ export function useOrgViewOpportunityViewModel(id: string) {
     hoursContributed: 0
   })
 
-  useEffect(() => {
-    if (!loading && !session) {
-      router.replace("/login")
-    }
-  }, [loading, session, router]);
-
+  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
       try {
-        const user = await UserService.getCurrentUser()
-
-        if (!user.success) {
-            console.error(user.error);
-            setError("Received invalid user data from the server.");
-            return;
-        }
-
-        if (user.data.role !== "ORGANIZATION") {
-            router.replace("/bootstrap");
-            return;
-        }
-
         const org = await OrganizationService.getCurrentOrganization()
         
         if (!org.success) {
@@ -124,8 +106,11 @@ export function useOrgViewOpportunityViewModel(id: string) {
     async function addUpdate() {
       if (progressUpdate){
         setFetching(true)
-        progressUpdate.opportunityId = opportunity?.id
-        const updated = await OrganizationService.addProgressUpdate(progressUpdate)
+        const payload = {
+          ...progressUpdate,
+          opportunityId: opportunity?.id
+        }
+        const updated = await OrganizationService.addProgressUpdate(payload)
         if (updated.success){
           toast.success("Progress Updated Added!", { position: "top-right" })
           setProgressUpdate({

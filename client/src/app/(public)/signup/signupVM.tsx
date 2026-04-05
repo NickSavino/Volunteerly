@@ -52,7 +52,7 @@ export function useSignUpViewModel() {
                     console.log("Updated user:", result.data);
 
                     if (data.session) {
-                        router.push("/bootstrap");
+                        router.replace("/");
                         return;
                     }
 
@@ -81,7 +81,7 @@ export function useSignUpViewModel() {
         }
 
 
-        router.push("/login")
+        router.replace("/")
     }
     return {
         email,

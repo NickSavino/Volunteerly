@@ -31,12 +31,6 @@ export function useCreateOpportunityViewModel(oppId?: string) {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!loading && !session) {
-      router.replace("/login")
-    }
-    }, [loading, session, router]);
-
-  useEffect(() => {
     async function loadCurrentUser() {
         if (!session?.access_token || currentOrg) return;
         setSubmitting(true)
@@ -67,9 +61,13 @@ export function useCreateOpportunityViewModel(oppId?: string) {
         setError(null);
         
         if (oppId){
-          opportunity.orgId = currentOrg.id
-          opportunity.deadlineDate = new Date(deadlineDate)
-          const opp = UpdateOpportunitySchema.parse(opportunity);
+          const orgId = currentOrg.id
+          const deadlineDate = new Date(opportunity.deadlineDate)
+          const opp: UpdateOpportunitySchema = {
+            ...opportunity,
+            orgId: orgId,
+            deadlineDate: deadlineDate
+          }
           const {data, error, success} = await OrganizationService.updateOpportunity(oppId, opp)
 
           if (success) {
@@ -81,9 +79,13 @@ export function useCreateOpportunityViewModel(oppId?: string) {
               console.error(error)
           }
         } else {
-          opportunity.orgId = currentOrg.id
-          opportunity.deadlineDate = new Date(deadlineDate)
-          const opp = UpdateOpportunitySchema.parse(opportunity);
+          const orgId = currentOrg.id
+          const deadlineDate = new Date(opportunity.deadlineDate)
+          const opp: UpdateOpportunitySchema = {
+            ...opportunity,
+            orgId: orgId,
+            deadlineDate: deadlineDate
+          }
           const {data, error, success} = await OrganizationService.addOpportunity(opp)
           if (success) {
               toast.success("Opportunity Successfully Created!", { position: "top-right" })

@@ -18,6 +18,7 @@ type UnverifiedNavbarProps = {
     onSignOut: () => void;
 };
 
+// TODO: Remove in favour of navbar in layout
 export function UnverifiedNavbar({ fullName, onSignOut }: UnverifiedNavbarProps) {
     return (
         <header className="w-full border-b bg-white px-6 py-3">

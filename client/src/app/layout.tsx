@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../providers/auth-provider";
 import { Toaster } from "sonner";
+import { AppSessionProvider } from "../providers/app-session-provider";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <AppSessionProvider>
+            {children}
+          </AppSessionProvider>
+        </AuthProvider>
         <Toaster position="bottom-right" expand={false} richColors={false} />
       </body>
     </html>

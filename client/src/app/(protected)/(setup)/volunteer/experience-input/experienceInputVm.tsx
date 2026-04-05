@@ -67,11 +67,6 @@ export function useExperienceInputViewModel() {
     loadName();
     }, [session]);
 
-
-    useEffect(() => {
-    if (!loading && !session) router.replace("/login");
-    }, [loading, session, router]);
-
     function addWorkExperience() {
         setWorkExperiences((prev) => [
             ...prev,

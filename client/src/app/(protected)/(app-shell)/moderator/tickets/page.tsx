@@ -1,7 +1,6 @@
 "use client";
 
 import { MessageSquareText } from "lucide-react";
-import { ModeratorNavbar } from "../moderator_navbar";
 import {
   TICKET_TABS,
   TicketSortKey,
@@ -64,14 +63,6 @@ export default function ModeratorTicketsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <ModeratorNavbar
-        currentModerator={auth.currentModerator}
-        onSignOut={async () => {
-          await auth.signOut();
-          auth.router.push("/");
-        }}
-      />
-
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <ModeratorPageHeader
           title={page.title}
