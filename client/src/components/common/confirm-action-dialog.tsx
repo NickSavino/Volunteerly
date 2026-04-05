@@ -3,7 +3,7 @@
 import { ReactNode } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from "../ui/alert-dialog";
 import { Check, X } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 
 
