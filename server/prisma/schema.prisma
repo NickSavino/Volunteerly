@@ -142,8 +142,8 @@ model VolunteerWorkExperience {
   volId            String    @map("vol_id")
   jobTitle         String    @default("") @map("job_title")
   company          String    @default("") @map("company")
-  startDate        String    @default("") @map("start_date")
-  endDate          String    @default("") @map("end_date")
+  startDate        DateTime? @map("start_date")
+  endDate          DateTime? @map("end_date")
   responsibilities String    @default("") @map("responsibilities")
   createdAt        DateTime  @default(now()) @map("created_at")
 
