@@ -126,6 +126,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                         </p>
                                         <p className="mt-0.5 font-semibold text-gray-900">{update.title}</p>
                                         <p className="mt-1 text-sm text-gray-500">{update.description}</p>
+                                        {update.senderRole && (
+                                            <p className="mt-1 text-xs text-gray-400">{update.senderRole}</p>
+                                        )}
                                     </li>
                                 );
                             })}
@@ -200,7 +203,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     </div>
                     <p className="text-sm text-gray-600">Are you sure you want to request to complete?</p>
                     <p className="text-sm text-gray-400">
-                        This will email the organization letting them know they must review and mark as completed.
+                        This will inform the organization they must review and mark as completed.
                     </p>
                 </div>
             </AppModal>
