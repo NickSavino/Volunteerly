@@ -8,7 +8,6 @@ import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
 import { api } from "@/lib/api";
-import { OrganizationNavbar } from "../organization_navbar";
 import { ModStatCard } from "@/components/custom/mod_stat_card";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
@@ -30,13 +29,6 @@ export default function OrgOpportunitiesPage() {
   return (
     <div className="min-h-screen">
         <title>Organization Opportunities - Volunteerly</title>
-        <OrganizationNavbar
-                    currentOrg={currentUser}
-                    onSignOut={async () => {
-                        await signOut();
-                        router.push("/");
-                    }}
-                />    
         <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 ">
     
             <div className="w-full mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
@@ -44,7 +36,7 @@ export default function OrgOpportunitiesPage() {
                     <div>
                         <h1 className="text-2x1 font-bold">Opportunities</h1>
                         <p>
-                            Manage and track your organization's volunteer projects.
+                            Manage and track your organization&apos;s volunteer projects.
                         </p>                    
                     </div>
 

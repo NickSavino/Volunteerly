@@ -16,7 +16,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { UserService } from "@/services/UserService";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { OrganizationLoadingPage } from "@/app/(protected)/(app-shell)/organization/organization_loading";
-import { OrganizationNavbar } from "@/app/(protected)/(app-shell)/organization/organization_navbar";
 
 const awardIcons: Record<string, LucideIcon> = {
   "First Step": Rocket,
@@ -36,13 +35,6 @@ export default function OrgProfilePage() {
   return (
     <div className="min-h-screen">
         <title>Organization Profile - Volunteerly</title>
-        <OrganizationNavbar
-                    currentOrg={currentOrg}
-                    onSignOut={async () => {
-                        await signOut();
-                        router.push("/");
-                    }}
-                />    
         <main className="md:h-[calc(100vh-64px)] px-10 py-5">
             <Button
                 variant="ghost"
