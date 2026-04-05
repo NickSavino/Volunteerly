@@ -88,7 +88,7 @@ export default function OrgProfilePage() {
                     {Object.entries(awards).map(([title, description]) => {
                         const Icon = awardIcons[title] || Award
                         return (
-                        <HoverCard>
+                        <HoverCard key={title}>
                             <HoverCardTrigger asChild>
                                 <Button className="cursor-pointer"><Icon /></Button>
                             </HoverCardTrigger>
