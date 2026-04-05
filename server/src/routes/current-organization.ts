@@ -52,14 +52,14 @@ currentOrganizationRouter.put("/", async (req, res, next) => {
   try {
     const userId = req.auth!.userId;
 
-    const { orgName, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights} = req.body;
+    const { orgName, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, impactHighlights, hqAdr} = req.body;
 
     const user = await getCurrentOrganization(userId);
     let modified_user;
     if (!user) {
         modified_user = await createCurrentOrganization(userId, orgName);
     } else {
-        modified_user = await updateCurrentOrganization(userId, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights);    
+        modified_user = await updateCurrentOrganization(userId, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, impactHighlights, hqAdr);    
     }
     if (!modified_user) {
         return res.status(500).json({
@@ -160,6 +160,35 @@ currentOrganizationRouter.get("/opportunities/totalCount", async (req, res, next
 });
 
 
+currentOrganizationRouter.get("/awards", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const awards: Record<string, string> = {};
+
+        const org = await getCurrentOrganization(userId)
+        if (Array.isArray(org?.impactHighlights) && org?.impactHighlights?.length >= 2) {
+            awards["Strong Presence"] = "Completed all organization profile details!";
+        }
+
+        const opportunities = await countAllOpportunities(userId);
+        if (opportunities > 1) {
+            awards["First Step"] = "Post first opportunity!";
+        }
+        if (opportunities > 100){
+            awards["Community Builder"] = "100 Opportunities on Volunteerly";
+        } else if (opportunities > 50){
+            awards["Community Builder"] = "50 Opportunities on Volunteerly";
+        } else if (opportunities > 10) {
+            awards["Community Builder"] = "10 Opportunities on Volunteerly";
+        }
+
+        res.status(200).json(awards);
+    } catch (error) {
+        next(error);
+    }
+});
 currentOrganizationRouter.get("/opportunities/hoursTotal", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;

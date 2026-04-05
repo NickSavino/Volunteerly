@@ -18,7 +18,8 @@ import {
     ProgressUpdate,
     ProgressUpdateSchema,
     Opportunity,
-    UpdateOpportunitySchema
+    UpdateOpportunitySchema,
+    organizationAwardsSchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -45,6 +46,11 @@ export class OrganizationService {
         });
         const parsed = CurrentOrganizationSchema.safeParse(response);
         return parsed;
+    }
+    static async getOrgAwards() {
+        const response = await api<unknown>("/current-organization/awards");
+        const parsed = organizationAwardsSchema.safeParse(response)
+        return parsed
     }
 
     static async getAllOrganizations(status?: "APPLIED") : Promise<ModeratorOrganizationList> {
