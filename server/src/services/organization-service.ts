@@ -295,6 +295,14 @@ export async function getOrgApplication(orgId: string, appId: string) {
     return org;
 }
 
+export async function getOppVltApplication(orgId:string, oppId: string, vltId: string) {
+    const app = await prisma.application.findFirst({
+        where: { oppId: oppId, volId:vltId, opportunity:{orgId: orgId} },
+    });
+    return app;
+}
+
+
 export async function selectOppVolunteer(oppId:string, vltId:string) {
     const organization = await prisma.opportunity.update({
         where: { id: oppId },

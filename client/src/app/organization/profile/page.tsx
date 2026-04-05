@@ -1,6 +1,6 @@
 "use client";
 
-import { UserRoundPen, LogOut, MessageCircleQuestionMark, ArrowLeft, Pencil} from "lucide-react";
+import { UserRoundPen, LogOut, MessageCircleQuestionMark, ArrowLeft, Pencil, Trophy, Rocket, ShieldCheck, LucideIcon, Award} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { OrganizationNavbar } from "../organization_navbar";
@@ -18,12 +18,18 @@ import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserService } from "@/services/UserService";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
-
+const awardIcons: Record<string, LucideIcon> = {
+  "First Step": Rocket,
+  "Community Builder": Trophy,
+  "Strong Presence": ShieldCheck,
+};
 
 export default function OrgProfilePage() {
   const {loading, session, fetching, signOut, router, currentOrg,setCurrentOrg, 
-    address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange} = useOrgProfileViewModel()
+    address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit, 
+    impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} = useOrgProfileViewModel()
 
   if (loading || !session || fetching) {
     return (<OrganizationLoadingPage />)
@@ -70,12 +76,29 @@ export default function OrgProfilePage() {
                     </div>
                     <div>
                         <h1 className="text-xl font-bold text-white">{currentOrg?.orgName}</h1>
+                        <p className="text-sm font-bold text-white">Member Since {new Date(currentOrg?.createdAt || "").toLocaleDateString()}</p>
                         {currentOrg?.causeCategory && (
                             <span className="inline-flex items-center gap-1 rounded-full bg-yellow-400 px-2.5 py-0.5 text-xs font-medium text-black">
                                 {currentOrg?.causeCategory}
                             </span>
                         )}
                     </div>
+                </div>  
+                <div className="absolute bottom-4 right-6 flex flex-row gap-2">
+                    {Object.entries(awards).map(([title, description]) => {
+                        const Icon = awardIcons[title] || Award
+                        return (
+                        <HoverCard key={title}>
+                            <HoverCardTrigger asChild>
+                                <Button className="cursor-pointer"><Icon /></Button>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
+                                <div className="font-semibold">{title}</div>
+                                <div>{description}</div>
+                            </HoverCardContent>
+                        </HoverCard>
+                        )
+                    })}
                 </div>
             </div>            
 

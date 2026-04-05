@@ -82,14 +82,18 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
 
     async function selectVolunteer() {
       if (application?.volunteer?.id){
+        setFetching(true)
         const updated_opp = await OrganizationService.selectOppVolunteer(oppId, application.volunteer.id)
         if (updated_opp.success) {
-            toast.success("Volunteer Selected, Opportunity is now filled.", { position: "top-right" })
+            toast.success("Opportunity is now filled. Selected Volunteer has been notified.", { position: "top-right" })
+            setFetching(false)
             router.replace(`/organization/opportunities/${oppId}`);
             return;
         }
+        setFetching(false)
       }
       setError("Cannot Select Volunteer")
     }
     return {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} 
-}
+
+  }
