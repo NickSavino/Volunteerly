@@ -18,7 +18,7 @@ import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { use } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useOppApplicationViewModel } from "./oppApplicationVm";
-import { OrganizationLoadingPage } from "@/app/organization/organization_loading";
+import { OrganizationLoadingPage } from "../../../../organization_loading";
 
 
 export default function ViewApplicationPage({

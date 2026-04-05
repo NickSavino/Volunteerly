@@ -4,7 +4,7 @@ import { useSkillExtractionViewModel } from "./skillExtractionVm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExtractedSkills } from "@volunteerly/shared";
-import { UnverifiedNavbar } from "../unverified_volunteer_navbar";
+import { UnverifiedNavbar } from "../../../(app-shell)/volunteer/unverified_volunteer_navbar";
 
 export default function SkillExtractionPage() {
     const { skills, confirming, error, removeSkill, handleConfirm, signOut, fullName, handleBack } =

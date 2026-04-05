@@ -1,29 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Navbar } from "../../../(app-shell)/organization/application/navbar";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
-  FieldGroup,
-  FieldLabel,
 } from "@/components/ui/field"
-import { useOrgApplicationViewModel } from "../../../(app-shell)/organization/application/orgApplicationVm";
+import { useOrgApplicationViewModel } from "./orgApplicationVm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
+import { Navbar } from "@/app/(protected)/(setup)/organization/application/navbar";
 
 export default function OrgApplicationPage() {
   const {        
     loading,
-    error,
     submitting,
     currentOrg,
-    file,
     isReadOnly,
     router,
     setFile,

@@ -5,7 +5,7 @@ import { UserService } from "@/services/UserService";
 import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
 import type { CurrentModerator, ModeratorOrganizationList, ModeratorOrganizationListItem, Organization } from "@volunteerly/shared";
-import { appToast } from "../../../components/common/app-toast";
+import { appToast } from "@/components/common/app-toast";
 
 export type TabKey = "ALL" | "APPLIED" | "VERIFIED" | "REJECTED";
 export type SortKey = "alphabetical" | "newest" | "oldest";

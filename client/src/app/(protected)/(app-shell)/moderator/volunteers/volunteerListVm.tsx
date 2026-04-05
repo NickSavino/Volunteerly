@@ -1,8 +1,8 @@
 import { useRouter } from "next/navigation";
-import { useAuth } from "../../../providers/auth-provider";
 import { useEffect, useMemo, useState } from "react";
 import { ModeratorVolunteerListItem, VolunteerModerationTab } from "@volunteerly/shared";
-import { ModeratorService } from "../../../services/ModeratorService";
+import { useAuth } from "@/providers/auth-provider";
+import { ModeratorService } from "@/services/ModeratorService";
 
 export type VolunteerSortKey = "alphabetical" | "highest-flags" | "highest-rating";
 

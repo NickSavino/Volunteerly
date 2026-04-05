@@ -1,16 +1,12 @@
 "use client";
 
-import { UserRoundPen, LogOut, MessageCircleQuestionMark, ArrowLeft, Pencil, Trophy, Rocket, ShieldCheck, LucideIcon, Award} from "lucide-react";
+import { MessageCircleQuestionMark, ArrowLeft, Pencil, Trophy, Rocket, ShieldCheck, LucideIcon, Award} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { OrganizationNavbar } from "../../../../(app-shell)/organization/organization_navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import avtImg from "@/assets/avatarImg.png"
-import { OrganizationLoadingPage } from "../../../../(app-shell)/organization/organization_loading";
 import { useOrgProfileViewModel } from "./orgProfileVm";
 import {
   Field,
-  FieldDescription,
 } from "@/components/ui/field"
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -19,6 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserService } from "@/services/UserService";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { OrganizationLoadingPage } from "@/app/(protected)/(app-shell)/organization/organization_loading";
+import { OrganizationNavbar } from "@/app/(protected)/(app-shell)/organization/organization_navbar";
 
 const awardIcons: Record<string, LucideIcon> = {
   "First Step": Rocket,

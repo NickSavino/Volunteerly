@@ -1,13 +1,13 @@
 "use client"
 
-import { ModeratorTabs } from "../../../components/moderator/moderator-tabs";
-import { ModeratorPageHeader } from "../../../components/moderator/moderator-page-header";
-import { ModeratorFilterBar } from "../../../components/moderator/moderator-filter-bar";
-import { ModeratorListContainer } from "../../../components/moderator/moderator-list-container";
 import Image from "next/image";
 import { ExternalLink, Star } from "lucide-react";
-import { ModeratorPagination } from "../../../components/moderator/moderator-pagination";
 import { useVolunteerListViewModel, VOLUNTEER_TABS, VolunteerSortKey } from "./volunteerListVm";
+import { ModeratorFilterBar } from "@/components/moderator/moderator-filter-bar";
+import { ModeratorListContainer } from "@/components/moderator/moderator-list-container";
+import { ModeratorPageHeader } from "@/components/moderator/moderator-page-header";
+import { ModeratorPagination } from "@/components/moderator/moderator-pagination";
+import { ModeratorTabs } from "@/components/moderator/moderator-tabs";
 
 function getSeverity(pastFlagsCount: number) {
     return pastFlagsCount >= 3 ? "HIGH": "MEDIUM";

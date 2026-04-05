@@ -1,16 +1,15 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Label } from "../../../components/ui/label";
-import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
 import Link from "next/link";
 import tms from "@/assets/tms.png"
 import avtImg from "@/assets/avatarImg.png"
 import { Navbar } from "@/components/custom/login_navbar";
-import { useLoginViewModel } from "./loginVM";
-import Image from "next/image";
+import { useLoginViewModel } from "@/app/(public)/login/loginVM";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
     const {email, setEmail, password, setPassword, submitting, error, handleSubmit} = useLoginViewModel()
@@ -21,7 +20,7 @@ export default function LoginPage() {
             <Navbar></Navbar>
             <main className="flex flex-col md:flex-row h-screen md:h-[calc(100vh-64px)]">
                 <div className="hidden md:flex w-full md:w-1/2 relative h-screen md:h-full overflow-hidden flex-col">
-                    <Image
+                    <img
                         src={tms.src}
                         alt="Preview"
                         className="w-full h-auto md:h-full"

@@ -7,7 +7,7 @@ import {
     ExtractedSkills,
     ExtractedSkillsSchema,
 } from "@volunteerly/shared";
-import { WorkExperience, Education } from "@/app/volunteer/experience-input/experienceInputVm";
+import { WorkExperience, Education } from "@/app/(protected)/(setup)/volunteer/experience-input/experienceInputVm";
 
 const PartnerOrgSchema = z.object({
     id: z.string().uuid(),

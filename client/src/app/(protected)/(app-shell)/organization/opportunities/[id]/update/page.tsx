@@ -1,8 +1,8 @@
 "use client";
 
-import { OrganizationLoadingPage } from "@/app/organization/organization_loading";
+import { OrganizationLoadingPage } from "../../../organization_loading";
+import { OrganizationNavbar } from "../../../organization_navbar";
 import { useCreateOpportunityViewModel } from "../../create/orgCreateOpportunityVm";
-import { OrganizationNavbar } from "@/app/organization/organization_navbar";
 import OpportunityForm from "../../opportunityForm";
 import { use } from "react";
 

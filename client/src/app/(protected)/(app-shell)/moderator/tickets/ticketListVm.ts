@@ -7,7 +7,6 @@ import { UserService } from "@/services/UserService";
 import { ModeratorService } from "@/services/ModeratorService";
 import type {
   CurrentModerator,
-  ModeratorTicket,
   ModeratorTicketList,
   ModeratorTicketStatus,
 } from "@volunteerly/shared";

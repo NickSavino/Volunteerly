@@ -1,9 +1,7 @@
 "use client";
 
-import { Button } from "../components/ui/button";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../providers/auth-provider";
+import { useAuth } from "../../providers/auth-provider";
 import { useEffect } from "react";
 import { Navbar } from "@/components/custom/login_navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,7 +14,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item"
-import { InboxIcon, User, Upload, Merge, HandHeart, HouseHeart } from "lucide-react";
+import { User, Upload, Merge, HandHeart, HouseHeart } from "lucide-react";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -51,7 +49,7 @@ export default function LandingPage() {
               AI-Powered Matching for Skilled Volunteering
             </h3>
             <p className="text-muted text-lg">
-              "Through Volunteerly, we were able to find volunteers for our most complex tasks, allowing us to devote more funds to hepling our cause."
+              &quot;Through Volunteerly, we were able to find volunteers for our most complex tasks, allowing us to devote more funds to hepling our cause.&quot;
             </p>
             <div className="flex items-center gap-3">
               <Avatar>
@@ -141,7 +139,7 @@ export default function LandingPage() {
                 <ItemContent>
                   <ItemTitle>GROW YOUR IMPACT</ItemTitle>
                   <ItemDescription>
-                    Successfully complete projects and scale your organization's reach.
+                    Successfully complete projects and scale your organization&apos;s reach.
                   </ItemDescription>
                 </ItemContent>
               </Item>

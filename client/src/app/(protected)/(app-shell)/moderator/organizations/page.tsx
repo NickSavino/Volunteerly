@@ -3,13 +3,13 @@
 import { Building2, X, CheckSquare, Square, BuildingIcon, } from "lucide-react";
 import { SortKey, useOrgListViewModel, type TabKey } from "./orgListVm";
 import { ModeratorNavbar } from "../moderator_navbar";
-import { ModeratorPageHeader } from "../../../components/moderator/moderator-page-header";
-import { ModeratorFilterBar } from "../../../components/moderator/moderator-filter-bar";
-import { ModeratorTabs } from "../../../components/moderator/moderator-tabs";
-import { ModeratorListContainer } from "../../../components/moderator/moderator-list-container";
-import { ModeratorPagination } from "../../../components/moderator/moderator-pagination";
-import { AppModal } from "../../../components/common/app-modal";
-import { ConfirmActionDialog } from "../../../components/common/confirm-action-dialog";
+import { AppModal } from "@/components/common/app-modal";
+import { ConfirmActionDialog } from "@/components/common/confirm-action-dialog";
+import { ModeratorFilterBar } from "@/components/moderator/moderator-filter-bar";
+import { ModeratorListContainer } from "@/components/moderator/moderator-list-container";
+import { ModeratorPageHeader } from "@/components/moderator/moderator-page-header";
+import { ModeratorPagination } from "@/components/moderator/moderator-pagination";
+import { ModeratorTabs } from "@/components/moderator/moderator-tabs";
 
 const TABS: { key: TabKey; label: string }[] = [
     { key: "ALL", label: "All Organizations" },

@@ -2,17 +2,17 @@
 
 import { MessageSquareText } from "lucide-react";
 import { ModeratorNavbar } from "../moderator_navbar";
-import { ModeratorPageHeader } from "../../../components/moderator/moderator-page-header";
-import { ModeratorFilterBar } from "../../../components/moderator/moderator-filter-bar";
-import { ModeratorTabs } from "../../../components/moderator/moderator-tabs";
-import { ModeratorListContainer } from "../../../components/moderator/moderator-list-container";
-import { ModeratorPagination } from "../../../components/moderator/moderator-pagination";
 import {
   TICKET_TABS,
   TicketSortKey,
   useTicketListViewModel,
 } from "./ticketListVm";
 import type { ModeratorTicket } from "@volunteerly/shared";
+import { ModeratorFilterBar } from "@/components/moderator/moderator-filter-bar";
+import { ModeratorListContainer } from "@/components/moderator/moderator-list-container";
+import { ModeratorPageHeader } from "@/components/moderator/moderator-page-header";
+import { ModeratorPagination } from "@/components/moderator/moderator-pagination";
+import { ModeratorTabs } from "@/components/moderator/moderator-tabs";
 
 function formatCategory(category: ModeratorTicket["category"]) {
   switch (category) {

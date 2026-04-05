@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
 import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";

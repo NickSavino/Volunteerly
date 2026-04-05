@@ -6,7 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { api } from "@/lib/api";
 import { CurrentUserSchema, ExtractedSkills } from "@volunteerly/shared";
 import { VolunteerService } from "@/services/VolunteerService";
-import { Education, WorkExperience } from "../../../(setup)/volunteer/experience-input/experienceInputVm";
+import { Education, WorkExperience } from "../experience-input/experienceInputVm";
 
 export function useSkillExtractionViewModel() {
     const router = useRouter();
