@@ -3,8 +3,10 @@ import { z } from "zod";
 import {
     CurrentVolunteerSchema,
     OpportunitiesSchema,
+    OpportunitySchema,
     type OpportunityFilters,
     type UpdateCurrentVolunteer,
+    type ProgressUpdate,
 } from "@volunteerly/shared";
 
 const PartnerOrgSchema = z.object({
@@ -37,6 +39,31 @@ export class VolunteerService {
         const response = await api<unknown>("/current-volunteer/opportunities");
         const asArray = Array.isArray(response) ? response : [response];
         return OpportunitiesSchema.safeParse(asArray);
+    }
+
+    static async getOpportunityById(oppId: string) {
+        const response = await api<unknown>(`/current-volunteer/opportunities/${oppId}`);
+        return OpportunitySchema.safeParse(response);
+    }
+
+    static async addProgressUpdate(oppId: string, input: { title: string; description: string; hoursContributed: number }) {
+        return api<{ success: boolean }>(`/current-volunteer/opportunities/${oppId}/progress`, {
+            method: "POST",
+            body: JSON.stringify(input),
+        });
+    }
+
+    static async requestCompletion(oppId: string) {
+        return api<{ success: boolean }>(`/current-volunteer/opportunities/${oppId}/request-completion`, {
+            method: "POST",
+        });
+    }
+
+    static async postReview(orgUserId: string, input: { rating: number; title: string; description: string }) {
+        return api<{ success: boolean }>(`/current-volunteer/reviews`, {
+            method: "POST",
+            body: JSON.stringify({ revieweeId: orgUserId, ...input }),
+        });
     }
 
     static async getVolunteerOrganizations() {
