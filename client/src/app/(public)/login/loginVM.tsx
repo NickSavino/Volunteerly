@@ -24,7 +24,7 @@ export function useLoginViewModel() {
             return;
         }
 
-        router.push("/bootstrap");
+        router.replace("/");
     }
     return {
         email,
