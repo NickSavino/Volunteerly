@@ -49,6 +49,79 @@ export async function getYourOpportunities(volunteerId: string) {
     });
 }
 
+export async function getOpportunityById(volunteerId: string, oppId: string) {
+    return prisma.opportunity.findFirst({
+        where: { id: oppId, volId: volunteerId },
+        include: {
+            organization: {
+                select: { id: true, orgName: true, hqAdr: true, causeCategory: true },
+            },
+            progressUpdates: {
+                orderBy: { createdAt: "desc" },
+                select: {
+                    id: true,
+                    senderRole: true,
+                    title: true,
+                    description: true,
+                    hoursContributed: true,
+                    createdAt: true,
+                },
+            },
+        },
+    });
+}
+
+export async function addProgressUpdate(
+    userId: string,
+    oppId: string,
+    input: { title: string; description: string; hoursContributed: number },
+) {
+    return prisma.progressUpdate.create({
+        data: {
+            opportunityId: oppId,
+            senderId: userId,
+            senderRole: "VOLUNTEER",
+            title: input.title,
+            description: input.description,
+            hoursContributed: input.hoursContributed,
+        },
+    });
+}
+
+export async function requestCompletion(volunteerId: string, oppId: string) {
+    const opp = await prisma.opportunity.findFirst({
+        where: { id: oppId, volId: volunteerId },
+    });
+    if (!opp) throw new Error("Opportunity not found.");
+
+    await prisma.progressUpdate.create({
+        data: {
+            opportunityId: oppId,
+            senderId: volunteerId,
+            senderRole: "VOLUNTEER",
+            title: "Completion Requested",
+            description: "Volunteer has requested this opportunity be marked as complete.",
+            hoursContributed: 0,
+        },
+    });
+}
+
+export async function postReview(
+    issuerId: string,
+    revieweeId: string,
+    input: { rating: number; title: string; description: string },
+) {
+    return prisma.review.create({
+        data: {
+            issuerId,
+            revieweeId,
+            rating: input.rating,
+            title: input.title,
+            description: input.description,
+        },
+    });
+}
+
 export async function getVolunteerOrganizations(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
         where: { volId: volunteerId },
@@ -126,6 +199,7 @@ export async function browseOpportunities(filters: OpportunityFilters) {
         orderBy: { postedDate: "desc" },
     });
 }
+
 export async function applyToOpportunity(volId: string, oppId: string, message: string) {
     const existing = await prisma.application.findUnique({
         where: { oppId_volId: { oppId, volId } },
