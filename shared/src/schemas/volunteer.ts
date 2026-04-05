@@ -60,3 +60,5 @@ export const ConfirmSkillsSchema = z.object({
   })),
 });
 export type ConfirmSkills = z.infer<typeof ConfirmSkillsSchema>;
+
+export const volunteerAwardsSchema = z.record(z.string(), z.string());
