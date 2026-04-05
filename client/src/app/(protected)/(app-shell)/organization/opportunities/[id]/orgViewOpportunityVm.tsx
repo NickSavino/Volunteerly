@@ -43,11 +43,6 @@ export function useOrgViewOpportunityViewModel(id: string) {
             return;
         }
 
-        if (user.data.role !== "ORGANIZATION") {
-            router.replace("/bootstrap");
-            return;
-        }
-
         const org = await OrganizationService.getCurrentOrganization()
         
         if (!org.success) {
@@ -124,8 +119,11 @@ export function useOrgViewOpportunityViewModel(id: string) {
     async function addUpdate() {
       if (progressUpdate){
         setFetching(true)
-        progressUpdate.opportunityId = opportunity?.id
-        const updated = await OrganizationService.addProgressUpdate(progressUpdate)
+        const payload = {
+          ...progressUpdate,
+          opportunityId: opportunity?.id
+        }
+        const updated = await OrganizationService.addProgressUpdate(payload)
         if (updated.success){
           toast.success("Progress Updated Added!", { position: "top-right" })
           setProgressUpdate({

@@ -48,12 +48,6 @@ export function useTicketListViewModel() {
       if (!session?.access_token) return;
 
       try {
-        const userResult = await UserService.getCurrentUser();
-        if (!userResult.success || userResult.data.role !== "MODERATOR") {
-          router.replace("/bootstrap");
-          return;
-        }
-
         const modResult = await ModeratorService.getCurrentModerator();
         if (modResult.success) setCurrentModerator(modResult.data);
 

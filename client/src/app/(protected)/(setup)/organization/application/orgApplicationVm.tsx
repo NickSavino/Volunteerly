@@ -91,7 +91,7 @@ export function useOrgApplicationViewModel() {
       }
       }
 
-      router.push("/bootstrap");
+      router.replace("/");
   }
 
   async function viewSubmittedDoc() {

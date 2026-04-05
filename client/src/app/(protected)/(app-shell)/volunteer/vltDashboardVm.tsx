@@ -43,7 +43,6 @@ export function useVltDashboardViewModel() {
             try {
                 const userResult = await UserService.getCurrentUser();
                 if (!userResult.success) { setError("Received invalid user data from the server."); return; }
-                if (userResult.data.role !== "VOLUNTEER") { router.replace("/bootstrap"); return; }
 
                 const volResult = await VolunteerService.getCurrentVolunteer();
                 if (!volResult.success) { setError("Failed to load volunteer."); return; }

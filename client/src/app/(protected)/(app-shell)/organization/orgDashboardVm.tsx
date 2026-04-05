@@ -36,11 +36,6 @@ export function useOrgDashboardViewModel() {
             return;
         }
 
-        if (user.data.role !== "ORGANIZATION") {
-            router.replace("/bootstrap");
-            return;
-        }
-
         const org = await OrganizationService.getCurrentOrganization()
         
         if (!org.success) {
