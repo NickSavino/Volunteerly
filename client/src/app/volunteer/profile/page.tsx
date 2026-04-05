@@ -11,6 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
 import { Settings, Pencil } from "lucide-react";
 import { VolunteerLoadingPage } from "../volunteer_loading";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award } from "lucide-react";
 
 export default function ProfilePage() {
     const {
@@ -35,7 +37,8 @@ export default function ProfilePage() {
         DAYS,
         loading,
         session,
-        fetching
+        fetching,
+        awards
     } = useProfileViewModel();
 
     if (loading || !session || fetching) {
@@ -47,7 +50,20 @@ export default function ProfilePage() {
         return <main className="p-6">Loading...</main>;
     }
     const fullName = `${currentVolunteer.firstName} ${currentVolunteer.lastName}`;
+    
+    const awardIcons: Record<string, any> = {
+        "Profile Pro": Star,
+        
+        "First Step": Rocket,
+        "Active Volunteer": Rocket,
+        "Master Volunteer": Rocket,
+        "Legendary Volunteer": Rocket,
 
+        "Helping Hand": Handshake,
+        "Connector": Handshake,
+        "Community Pillar": Handshake,
+        "Changemaker": Handshake,
+    };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -85,6 +101,33 @@ export default function ProfilePage() {
                             <div className="text-center">
                                 <p className="font-bold text-lg text-gray-900">{fullName}</p>
                                 <p className="text-sm text-gray-400">Member since {memberSince}</p>
+                            </div>
+                        </div>
+
+                        {/* milestones*/}
+                        <div className="rounded-xl border bg-white p-6 shadow-sm flex flex-col items-center gap-3">
+                            <h2 className="font-semibold text-gray-800 text-lg mb-3">Milestones</h2>
+                            <div className="flex flex-wrap gap-2 justify-center">
+                                {Object.entries(awards).length > 0 ? (
+                                    Object.entries(awards).map(([title, description]) => {
+                                        const Icon = awardIcons[title] || Award;
+                                        return (
+                                            <HoverCard key={title}>
+                                                <HoverCardTrigger asChild>
+                                                    <Button className="cursor-pointer">
+                                                        <Icon className="w-5 h-5" />
+                                                    </Button>
+                                                </HoverCardTrigger>
+                                                <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
+                                                    <div className="font-semibold">{title}</div>
+                                                    <div>{description}</div>
+                                                </HoverCardContent>
+                                            </HoverCard>
+                                        );
+                                    })
+                                ) : (
+                                    <p className="text-gray-500 text-sm">No milestones reached yet.</p>
+                                )}
                             </div>
                         </div>
 

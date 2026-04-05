@@ -34,6 +34,7 @@ export function useProfileViewModel() {
     const [availability, setAvailability] = useState<string[]>([]);
     const [errors, setErrors] = useState<ProfileErrors>({});
     const [fetching, setFetching] = useState(true);
+    const [awards, setAwards] = useState<Record<string, string>>({});
 
 
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -55,6 +56,12 @@ export function useProfileViewModel() {
                     setLocation(vol.location);
                     setBio(vol.bio);
                     setAvailability((vol.availability as string[]) ?? []);
+                
+                    const awardsResult = await VolunteerService.getVolAwards();
+                    if (awardsResult.success) {
+                        setAwards(awardsResult.data); // assume it's a Record<string, string>
+                    }
+                
                 }
             } catch (err) {
                 console.error(err);
@@ -167,7 +174,8 @@ export function useProfileViewModel() {
         DAYS,
         loading,
         session,
-        fetching
+        fetching,
+        awards
         
     };
 }
