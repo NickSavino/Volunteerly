@@ -1,7 +1,6 @@
 "use client";
 
 import { useProfileViewModel } from "./profileVm";
-import { VolunteerNavbar } from "../volunteer_navbar";
 import { UserService } from "@/services/UserService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,9 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
 import { Settings, Pencil } from "lucide-react";
-import { VolunteerLoadingPage } from "../volunteer_loading";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award } from "lucide-react";
+import { OrganizationLoadingPage } from "../../organization/organization_loading";
 
 export default function ProfilePage() {
     const {
@@ -42,7 +41,7 @@ export default function ProfilePage() {
     } = useProfileViewModel();
 
     if (loading || !session || fetching) {
-        return (<VolunteerLoadingPage />)
+        return (<OrganizationLoadingPage />)
     }
 
 
@@ -68,7 +67,6 @@ export default function ProfilePage() {
     return (
         <div className="min-h-screen bg-gray-50">
             <title>Volunteer - Profile</title>
-            <VolunteerNavbar currentVolunteer={currentVolunteer} onSignOut={signOut} />
             <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
 

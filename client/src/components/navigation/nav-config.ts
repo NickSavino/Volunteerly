@@ -41,6 +41,7 @@ export const NAV_CONFIG: Record<AppNavbarRole, AppNavConfig> = {
       { label: "Opportunities", href: "/volunteer/opportunity" },
       { label: "Skill Tree", href: "/volunteer/skills" },
       { label: "Messages", href: "/volunteer/messages" },
+      { label: "Profile", href: "/volunteer/profile" }
     ],
   },
 };

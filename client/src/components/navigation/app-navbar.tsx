@@ -76,7 +76,7 @@ export function AppNavbar({
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className="w-56">
+              <NavigationMenuTrigger className="w-45">
                 <div className="flex w-full min-w-0 items-center gap-2">
                   <div className="flex min-w-0 flex-col text-left">
                     <p className="truncate text-sm text-primary">{displayName}</p>
@@ -90,7 +90,7 @@ export function AppNavbar({
                 </div>
               </NavigationMenuTrigger>
 
-              <NavigationMenuContent className="w-56 p-3">
+              <NavigationMenuContent className="w-45 p-3">
                 <NavigationMenuList className="flex flex-col gap-2 md:hidden">
                   {items.map(({ label, href }) => {
                     const isActive = isNavItemActive(pathname, href);
@@ -115,7 +115,7 @@ export function AppNavbar({
                 <hr className="my-3 border-gray-300 md:hidden" />
 
                 <button
-                  className="w-full cursor-pointer text-center text-sm font-medium text-gray-600 transition-colors hover:text-yellow-500"
+                  className="w-40 cursor-pointer text-sm font-medium text-gray-600 transition-colors hover:text-yellow-500"
                   onClick={onSignOut}
                 >
                   Log Out
