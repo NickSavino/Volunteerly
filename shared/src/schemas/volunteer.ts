@@ -49,8 +49,8 @@ export const ConfirmSkillsSchema = z.object({
   workExperiences: z.array(z.object({
     jobTitle: z.string(),
     company: z.string(),
-    startDate: z.string(),
-    endDate: z.string(),
+    startDate: z.coerce.date(),
+    endDate: z.coerce.date(),
     responsibilities: z.string(),
   })),
   educations: z.array(z.object({
