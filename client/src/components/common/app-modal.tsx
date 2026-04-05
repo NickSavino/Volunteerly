@@ -2,8 +2,8 @@
 
 import { X } from "lucide-react";
 import { ReactNode } from "react";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type AppModalProps = {
     open: boolean;

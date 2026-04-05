@@ -58,11 +58,19 @@ DECLARE
     node2_id     UUID := 'a0000000-0000-4000-8000-000000000502';
 
     conv1_id     UUID := 'a0000000-0000-4000-8000-000000000601';
+
     ticket1_id   UUID := 'a0000000-0000-4000-8000-000000000701';
+    ticket2_id   UUID := 'a0000000-0000-4000-8000-000000000702';
+    ticket3_id   UUID := 'a0000000-0000-4000-8000-000000000703';
+    ticket4_id   UUID := 'a0000000-0000-4000-8000-000000000704';
+    ticket5_id   UUID := 'a0000000-0000-4000-8000-000000000705';
+    ticket6_id   UUID := 'a0000000-0000-4000-8000-000000000706';
+    
     review1_id   UUID := 'a0000000-0000-4000-8000-000000000801';
     flag1_id     UUID := 'a0000000-0000-4000-8000-000000000901';
     progress1_id UUID := 'a0000000-0000-4000-8000-000000001001';
 
+<<<<<<< HEAD
     work_exp1_id  UUID := 'a0000000-0000-4000-8000-000000001002';
     work_exp2_id  UUID := 'a0000000-0000-4000-8000-000000001003';
     work_exp3_id  UUID := 'a0000000-0000-4000-8000-000000001004';
@@ -71,6 +79,9 @@ DECLARE
     education2_id UUID := 'a0000000-0000-4000-8000-000000001006';
     education3_id UUID := 'a0000000-0000-4000-8000-000000001007';
     
+=======
+
+>>>>>>> development
 BEGIN
 
 --Auth Users
@@ -190,9 +201,85 @@ VALUES
     (gen_random_uuid()::text, conv1_id::text, org1_id::text, 'Great! We would love to have you.');
 
 --Tickets
-INSERT INTO public.tickets (id, issuer_id, target_id, category, title, description, urgency_rating, status)
+--Tickets
+INSERT INTO public.tickets (
+    id,
+    issuer_id,
+    target_id,
+    category,
+    title,
+    description,
+    urgency_rating,
+    status,
+    created_at
+)
 VALUES
-    (ticket1_id::text, vol1_id::text, mod1_id::text, 'BUG', 'Cannot upload profile photo', 'The upload button does nothing on Firefox.', 'MODERATE', 'OPEN');
+    (
+        ticket1_id::text,
+        vol1_id::text,
+        mod1_id::text,
+        'BUG',
+        'Cannot upload profile photo',
+        'The upload button does nothing on Firefox.',
+        'MODERATE',
+        'OPEN',
+        '2026-03-26 09:15:00'
+    ),
+    (
+        ticket2_id::text,
+        vol2_id::text,
+        mod1_id::text,
+        'ABUSE',
+        'Organization sent inappropriate messages',
+        'I received messages that were unprofessional and made me uncomfortable.',
+        'SERIOUS',
+        'OPEN',
+        '2026-03-27 14:30:00'
+    ),
+    (
+        ticket3_id::text,
+        org1_id::text,
+        mod1_id::text,
+        'OTHER',
+        'Need help updating private organization details',
+        'We need our primary contact information updated and cannot edit it from the profile page.',
+        'MINOR',
+        'OPEN',
+        '2026-03-28 11:00:00'
+    ),
+    (
+        ticket4_id::text,
+        org2_id::text,
+        mod1_id::text,
+        'BILLING',
+        'Question about premium analytics charges',
+        'We were expecting the monthly report to be included. Please clarify the current billing status.',
+        'MODERATE',
+        'CLOSED',
+        '2026-03-20 10:45:00'
+    ),
+    (
+        ticket5_id::text,
+        vol1_id::text,
+        mod1_id::text,
+        'BUG',
+        'Dashboard stats are not updating',
+        'My completed opportunity hours have not changed since last week even after refreshing.',
+        'MINOR',
+        'CLOSED',
+        '2026-03-18 16:20:00'
+    ),
+    (
+        ticket6_id::text,
+        org3_id::text,
+        mod1_id::text,
+        'OTHER',
+        'Volunteer application page is confusing',
+        'The applicant review flow is unclear and our staff is not sure how to proceed after opening an application.',
+        'MINOR',
+        'OPEN',
+        '2026-03-29 08:10:00'
+    );
 
 --Flags
 INSERT INTO public.flags (id, flag_issuer_id, flagged_user_id, reason)
