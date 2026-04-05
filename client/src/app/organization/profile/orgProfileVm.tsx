@@ -135,11 +135,16 @@ export function useOrgProfileViewModel() {
         setCurrentOrg(originalOrg)
         const adrData = originalOrg.hqAdr?.split(", ") || []
         setAddress({streetAdr: adrData[0] || "", city: adrData[1] || "", province: adrData[2] || "AB", postalCode: adrData[3] || ""})
-        if (originalOrg.impactHighlights){
+        if (originalOrg.impactHighlights && originalOrg.impactHighlights.length >=2){
           setImpactHighlights({
             first: { label: Object.keys(originalOrg.impactHighlights[0])[0], value: originalOrg.impactHighlights[0][Object.keys(originalOrg.impactHighlights[0])[0]] },
             second: { label: Object.keys(originalOrg.impactHighlights[1])[0], value: originalOrg.impactHighlights[1][Object.keys(originalOrg.impactHighlights[1])[0]] },
           })
+        } else {
+          setImpactHighlights({
+            first: { label: "", value: "" },
+            second: { label: "", value: "" },
+          }) 
         }
       }
       setEditing(false)   

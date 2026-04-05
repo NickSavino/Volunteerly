@@ -200,6 +200,9 @@ export default function OrgProfilePage() {
                                 <hr className="mx-2 border-gray-300" />
                                 <CardTitle className="text-xl">Impact Highlights</CardTitle>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {((!currentOrg?.impactHighlights) ||  (currentOrg?.impactHighlights.length == 0)) && !editing &&
+                                        <p>No Highlights</p>
+                                    }
                                     {!editing?  
                                         <>
                                             {currentOrg?.impactHighlights?.map((item, index) => {
@@ -209,7 +212,7 @@ export default function OrgProfilePage() {
                                                     <Label className="text-md">{value as string}</Label>
                                                 </Field>)
                                             }
-                                            )}   
+                                            )}
                                         </>
                                     :
                                         <>

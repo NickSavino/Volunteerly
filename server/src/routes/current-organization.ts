@@ -173,14 +173,14 @@ currentOrganizationRouter.get("/awards", async (req, res, next) => {
         }
 
         const opportunities = await countAllOpportunities(userId);
-        if (opportunities > 1) {
+        if (opportunities >= 1) {
             awards["First Step"] = "Post first opportunity!";
         }
-        if (opportunities > 100){
+        if (opportunities >= 100){
             awards["Community Builder"] = "100 Opportunities on Volunteerly";
-        } else if (opportunities > 50){
+        } else if (opportunities >= 50){
             awards["Community Builder"] = "50 Opportunities on Volunteerly";
-        } else if (opportunities > 10) {
+        } else if (opportunities >= 10) {
             awards["Community Builder"] = "10 Opportunities on Volunteerly";
         }
 
