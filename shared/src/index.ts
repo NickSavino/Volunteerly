@@ -10,4 +10,4 @@ export * from "./schemas/application.js"
 
 export * from "./schemas/opportunity.js";
 
-export * from "./schemas/moderator"
+export * from "./schemas/moderator/index.js"
