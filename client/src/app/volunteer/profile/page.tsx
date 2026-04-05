@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
 import { Settings, Pencil } from "lucide-react";
+import { VolunteerLoadingPage } from "../volunteer_loading";
 
 export default function ProfilePage() {
     const {
@@ -32,13 +33,21 @@ export default function ProfilePage() {
         avatarKey,
         signOut,
         DAYS,
+        loading,
+        session,
+        fetching
     } = useProfileViewModel();
+
+    if (loading || !session || fetching) {
+        return (<VolunteerLoadingPage />)
+    }
+
 
     if (!currentVolunteer) {
         return <main className="p-6">Loading...</main>;
     }
-
     const fullName = `${currentVolunteer.firstName} ${currentVolunteer.lastName}`;
+
 
     return (
         <div className="min-h-screen bg-gray-50">

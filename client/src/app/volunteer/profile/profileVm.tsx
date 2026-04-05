@@ -33,6 +33,8 @@ export function useProfileViewModel() {
     const [bio, setBio] = useState("");
     const [availability, setAvailability] = useState<string[]>([]);
     const [errors, setErrors] = useState<ProfileErrors>({});
+    const [fetching, setFetching] = useState(true);
+
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -42,16 +44,22 @@ export function useProfileViewModel() {
 
     useEffect(() => {
         async function loadData() {
-            if (!session) return;
-            const result = await VolunteerService.getCurrentVolunteer();
-            if (result.success) {
-                const vol = result.data;
-                setCurrentVolunteer(vol);
-                setFirstName(vol.firstName);
-                setLastName(vol.lastName);
-                setLocation(vol.location);
-                setBio(vol.bio);
-                setAvailability((vol.availability as string[]) ?? []);
+            if (!session?.access_token) return;
+            try {
+                const result = await VolunteerService.getCurrentVolunteer();
+                if (result.success) {
+                    const vol = result.data;
+                    setCurrentVolunteer(vol);
+                    setFirstName(vol.firstName);
+                    setLastName(vol.lastName);
+                    setLocation(vol.location);
+                    setBio(vol.bio);
+                    setAvailability((vol.availability as string[]) ?? []);
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+            setFetching(false);
             }
         }
         loadData();
@@ -157,5 +165,9 @@ export function useProfileViewModel() {
         avatarKey,
         signOut,
         DAYS,
+        loading,
+        session,
+        fetching
+        
     };
 }
