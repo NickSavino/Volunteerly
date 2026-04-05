@@ -8,7 +8,6 @@ export default function ModeratorDashboardPage() {
     const {
         loading,
         session,
-        signOut,
         router,
         currentModerator,
         pendingOrgsCount,

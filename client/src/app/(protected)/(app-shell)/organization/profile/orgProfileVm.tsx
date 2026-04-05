@@ -29,13 +29,7 @@ export function useOrgProfileViewModel() {
   const [editing, setEditing] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-
-  useEffect(() => {
-    if (!loading && !session) {
-      router.replace("/login")
-    }
-  }, [loading, session, router]);
-
+  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;

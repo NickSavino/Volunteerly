@@ -25,12 +25,6 @@ export function useOrgApplicationViewModel() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!loading && !session) {
-      router.replace("/login")
-    }
-    }, [loading, session, router]);
-
-  useEffect(() => {
     async function loadCurrentUser() {
         if (!session?.access_token || currentOrg) return;
         setSubmitting(true)

@@ -16,29 +16,11 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
   const [application, setApplication] = useState<Application>()
   const [fetching, setFetching] = useState(true)
 
-  useEffect(() => {
-    if (!loading && !session) {
-      router.replace("/login")
-    }
-  }, [loading, session, router]);
-
+  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
       try {
-        const user = await UserService.getCurrentUser()
-
-        if (!user.success) {
-            console.error(user.error);
-            setError("Received invalid user data from the server.");
-            return;
-        }
-
-        if (user.data.role !== "ORGANIZATION") {
-            router.replace("/bootstrap");
-            return;
-        }
-
         const org = await OrganizationService.getCurrentOrganization()
         
         if (!org.success) {

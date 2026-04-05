@@ -52,10 +52,6 @@ export function useOrgListViewModel() {
     const allChecked = Object.values(checks).every(Boolean);
 
     useEffect(() => {
-        if (!loading && !session) router.replace("/login");
-    }, [loading, session, router]);
-
-    useEffect(() => {
         async function load() {
             if (!session?.access_token) return;
             try {

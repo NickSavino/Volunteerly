@@ -34,10 +34,6 @@ export function useVltDashboardViewModel() {
     }, [session, loading, router]);
 
     useEffect(() => {
-        if (!loading && !session) router.replace("/login");
-    }, [loading, session, router]);
-
-    useEffect(() => {
         async function loadData() {
             if (!session?.access_token) return;
             try {

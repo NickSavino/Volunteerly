@@ -17,13 +17,7 @@ export function useOrgDashboardViewModel() {
   const [activeVlt, setActiveVlt] = useState(0)
   const [totalHours, setTotalHours] = useState(0)
 
-
-  useEffect(() => {
-    if (!loading && !session) {
-      router.replace("/login")
-    }
-  }, [loading, session, router]);
-
+  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;

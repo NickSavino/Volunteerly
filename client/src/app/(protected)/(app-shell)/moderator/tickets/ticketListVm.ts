@@ -40,10 +40,6 @@ export function useTicketListViewModel() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    if (!loading && !session) router.replace("/login");
-  }, [loading, session, router]);
-
-  useEffect(() => {
     async function load() {
       if (!session?.access_token) return;
 

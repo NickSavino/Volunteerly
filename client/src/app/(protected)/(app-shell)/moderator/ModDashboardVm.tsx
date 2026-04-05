@@ -14,12 +14,7 @@ export function useModDashboardViewModel() {
     const [recentPendingOrgs, setRecentPendingOrgs] = useState<ModeratorOrganizationList>([]);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!loading && !session) {
-            router.replace("/login");
-        }
-    }, [loading, session, router]);
-
+    // TODO: remove this logic and tie it to useAppSession()
     useEffect(() => {
         async function loadAndVerify() {
             if (!session?.access_token) return;
