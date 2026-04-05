@@ -37,7 +37,7 @@ export class ModeratorService {
                 return parsed.data;
         }
 
-    static async getModeratorTikcets(): Promise<ModeratorTicketList> {
+    static async getModeratorTickets(): Promise<ModeratorTicketList> {
         const json = await api<unknown>("/moderator/tickets")
         const parsed = ModeratorTicketListSchema.safeParse(json);
 
