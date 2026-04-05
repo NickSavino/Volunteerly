@@ -160,6 +160,35 @@ currentOrganizationRouter.get("/opportunities/totalCount", async (req, res, next
 });
 
 
+currentOrganizationRouter.get("/awards", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const awards: Record<string, string> = {};
+
+        const org = await getCurrentOrganization(userId)
+        if (org?.impactHighlights) {
+            awards["Strong Presence"] = "Completed all organization profile details!";
+        }
+
+        const opportunities = await countAllOpportunities(userId);
+        if (opportunities > 1) {
+            awards["Starter Organization"] = "Post first opportunity!";
+        }
+        if (opportunities > 100){
+            awards["Community Builder"] = "100 Opportunities on Volunteerly";
+        } else if (opportunities > 50){
+            awards["Community Builder"] = "50 Opportunities on Volunteerly";
+        } else if (opportunities > 10) {
+            awards["Community Builder"] = "10 Opportunities on Volunteerly";
+        }
+
+        res.status(200).json(awards);
+    } catch (error) {
+        next(error);
+    }
+});
 currentOrganizationRouter.get("/opportunities/hoursTotal", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
