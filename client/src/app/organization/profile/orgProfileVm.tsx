@@ -15,6 +15,7 @@ export function useOrgProfileViewModel() {
   const [currentOrg, setCurrentOrg] = useState<CurrentOrganization | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
   const [fetching, setFetching] = useState(true)
+  const [awards, setAwards] = useState<Record<string, string>>({})
   const [impactHighlights, setImpactHighlights] = useState({
     first: { label: "", value: "" },
     second: { label: "", value: "" },
@@ -75,6 +76,11 @@ export function useOrgProfileViewModel() {
             first: { label: Object.keys(org.data.impactHighlights[0])[0], value: org.data.impactHighlights[0][Object.keys(org.data.impactHighlights[0])[0]] },
             second: { label: Object.keys(org.data.impactHighlights[1])[0], value: org.data.impactHighlights[1][Object.keys(org.data.impactHighlights[1])[0]] },
           })
+        }
+
+        const awardsFetch = await OrganizationService.getOrgAwards()
+        if (awardsFetch.success){
+          setAwards(awardsFetch.data)
         }
         setFetching(false)
       } catch (error) {
@@ -151,5 +157,5 @@ export function useOrgProfileViewModel() {
 
       setFetching(false)
     }
-    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange} 
+    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} 
 }
