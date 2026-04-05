@@ -23,7 +23,9 @@ export default function ExperienceInputPage() {
         updateEducation,
         handleSubmit,
         signOut,
-        fullName
+        fullName,
+        removeEducation,
+        removeWorkExperience
     } = useExperienceInputViewModel();
 
 
@@ -94,7 +96,12 @@ export default function ExperienceInputPage() {
                     </CardHeader>
                     <CardContent className="flex flex-col gap-6">
                         {workExperiences.map((work, i) => (
-                            <div key={i} className="flex flex-col gap-3">
+                            <div key={i} className="flex flex-col gap-3 relative">
+                                {i > 0 && (
+                                    <Button variant="ghost" size="sm" className="absolute top-0 right-0 text-destructive" onClick={() => removeWorkExperience(i)}>
+                                        Remove
+                                    </Button>
+                                )}
                                 {i > 0 && <hr className="border-muted" />}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                     <div className="flex flex-col gap-1">
@@ -130,10 +137,11 @@ export default function ExperienceInputPage() {
                                         <Label>End Date</Label>
                                         <Input
                                             type="date"
-                                            value={work.endDate}
-                                            onChange={(e) => updateWorkExperience(i, "endDate", e.target.value)}
-                                            className={errors.workExperience && !work.endDate ? "border-destructive" : ""}
-                                        />
+                                            value={work.endDate || ""}
+                                            onChange={(e) => updateWorkExperience(i, "endDate", e.target.value)}                                        />
+                                        <p className="text-xs text-muted-foreground">
+                                            leave blank if this is your current role.
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-1">
@@ -165,7 +173,12 @@ export default function ExperienceInputPage() {
                     </CardHeader>
                     <CardContent className="flex flex-col gap-6">
                         {educations.map((edu, i) => (
-                            <div key={i} className="flex flex-col gap-3">
+                            <div key={i} className="flex flex-col gap-3 relative">
+                                {i > 0 && (
+                                    <Button variant="ghost" size="sm" className="absolute top-0 right-0 text-destructive" onClick={() => removeEducation(i)}>
+                                        Remove
+                                    </Button>
+                                )}
                                 {i > 0 && <hr className="border-muted" />}
                                 <div className="flex flex-col gap-1">
                                     <Label>Institution Name</Label>
