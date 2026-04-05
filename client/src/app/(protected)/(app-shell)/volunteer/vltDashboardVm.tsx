@@ -41,9 +41,6 @@ export function useVltDashboardViewModel() {
         async function loadData() {
             if (!session?.access_token) return;
             try {
-                const userResult = await UserService.getCurrentUser();
-                if (!userResult.success) { setError("Received invalid user data from the server."); return; }
-
                 const volResult = await VolunteerService.getCurrentVolunteer();
                 if (!volResult.success) { setError("Failed to load volunteer."); return; }
                 setCurrentVolunteer(volResult.data);

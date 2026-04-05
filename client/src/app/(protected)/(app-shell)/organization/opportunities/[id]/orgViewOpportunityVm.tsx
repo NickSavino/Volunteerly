@@ -35,14 +35,6 @@ export function useOrgViewOpportunityViewModel(id: string) {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
       try {
-        const user = await UserService.getCurrentUser()
-
-        if (!user.success) {
-            console.error(user.error);
-            setError("Received invalid user data from the server.");
-            return;
-        }
-
         const org = await OrganizationService.getCurrentOrganization()
         
         if (!org.success) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSession } from "@/providers/app-session-provider";
 import { resolveDefaultAppRoute } from "@/lib/utils";
@@ -42,7 +42,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     currentOrganization,
   } = useAppSession();
 
-  useEffect(() => {
+  const redirectTarget = useMemo(() => {
     if (!initialized || loading) return;
 
     if (!isAuthenticated || !currentUser) {
@@ -108,6 +108,8 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         return;
       }
     }
+
+    return null;
   }, [
     initialized,
     loading,
@@ -117,6 +119,12 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     pathname,
     router,
   ]);
+
+  useEffect(() => {
+    if (redirectTarget) {
+      router.replace(redirectTarget)
+    }
+  }, [redirectTarget, router])
 
   if (!initialized || loading || !currentUser) {
     return <main className="p-6">Loading...</main>;
