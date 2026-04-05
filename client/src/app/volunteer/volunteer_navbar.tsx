@@ -13,14 +13,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
+import { CurrentVolunteer  } from "@volunteerly/shared";
+import { UserService } from "@/services/UserService";
 
 type VolunteerNavbarProps = {
-    currentVolunteer:
-        | {
-              firstName: string;
-              lastName: string;
-          }
-        | undefined;
+    currentVolunteer: CurrentVolunteer | undefined;
     onSignOut: () => void;
 };
 
@@ -83,8 +80,8 @@ export function VolunteerNavbar({
                                         <p className="text-xs text-gray-400">VOLUNTEER</p>
                                     </div>
                                     <Avatar>
-                                        <AvatarImage src={avtImg.src} />
-                                        <AvatarFallback>VLT</AvatarFallback>
+                                        <AvatarImage src={UserService.getAvatarURL(currentVolunteer?.id || "")} />
+                                        <AvatarFallback> {currentVolunteer?.firstName.slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
                             </NavigationMenuTrigger>
