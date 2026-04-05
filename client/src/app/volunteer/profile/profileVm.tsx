@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { VolunteerService } from "@/services/VolunteerService";
+import { UserService } from "@/services/UserService";
 import { CurrentVolunteer } from "@volunteerly/shared";
 import { toast } from "sonner";
 
@@ -24,13 +25,16 @@ export function useProfileViewModel() {
     const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
     const [editing, setEditing] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [errors, setErrors] = useState<ProfileErrors>({});
+    const [avatarKey, setAvatarKey] = useState(Date.now());
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [location, setLocation] = useState("");
     const [bio, setBio] = useState("");
     const [availability, setAvailability] = useState<string[]>([]);
+    const [errors, setErrors] = useState<ProfileErrors>({});
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         if (!loading && !session) router.replace("/login");
@@ -52,6 +56,15 @@ export function useProfileViewModel() {
         }
         loadData();
     }, [session]);
+
+    async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const formData = new FormData();
+        formData.append("image", file);
+        await UserService.uploadAvatar(formData);
+        setAvatarKey(Date.now());
+    }
 
     function handleEdit() {
         setEditing(true);
@@ -139,6 +152,9 @@ export function useProfileViewModel() {
         handleEdit,
         handleCancel,
         handleSave,
+        handleAvatarChange,
+        fileInputRef,
+        avatarKey,
         signOut,
         DAYS,
     };

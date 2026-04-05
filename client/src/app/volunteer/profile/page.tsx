@@ -2,14 +2,14 @@
 
 import { useProfileViewModel } from "./profileVm";
 import { VolunteerNavbar } from "../volunteer_navbar";
+import { UserService } from "@/services/UserService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
-import { Settings } from "lucide-react";
-import avtImg from "@/assets/avatarImg.png";
+import { Settings, Pencil } from "lucide-react";
 
 export default function ProfilePage() {
     const {
@@ -27,6 +27,9 @@ export default function ProfilePage() {
         handleEdit,
         handleCancel,
         handleSave,
+        handleAvatarChange,
+        fileInputRef,
+        avatarKey,
         signOut,
         DAYS,
     } = useProfileViewModel();
@@ -46,12 +49,30 @@ export default function ProfilePage() {
 
                     <div className="flex flex-col gap-4 w-full lg:w-72 flex-shrink-0">
                         <div className="rounded-xl border bg-white p-6 flex flex-col items-center gap-3 shadow-sm">
-                            <Avatar className="w-24 h-24">
-                                <AvatarImage src={avtImg.src} />
-                                <AvatarFallback className="text-2xl">
-                                    {currentVolunteer.firstName[0]}{currentVolunteer.lastName[0]}
-                                </AvatarFallback>
-                            </Avatar>
+                            <div className="relative">
+                                <Avatar className="w-24 h-24">
+                                    <AvatarImage
+                                        key={avatarKey}
+                                        src={UserService.getAvatarURL(currentVolunteer.id)}
+                                    />
+                                    <AvatarFallback className="text-2xl">
+                                        {currentVolunteer.firstName[0]}{currentVolunteer.lastName[0]}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <Button
+                                    className="absolute bottom-0 right-0 bg-white rounded-full p-1 text-gray-700 text-xs cursor-pointer h-7 w-7"
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    <Pencil className="h-3 w-3" />
+                                </Button>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="hidden"
+                                    accept=".jpg,.jpeg,.png,.webp"
+                                    onChange={handleAvatarChange}
+                                />
+                            </div>
                             <div className="text-center">
                                 <p className="font-bold text-lg text-gray-900">{fullName}</p>
                                 <p className="text-sm text-gray-400">Member since {memberSince}</p>
@@ -60,6 +81,7 @@ export default function ProfilePage() {
 
                         <div className="rounded-xl border bg-white p-6 shadow-sm">
                             <div className="flex items-center gap-2 mb-3">
+                                <Settings className="h-5 w-5 text-gray-600" />
                                 <p className="font-semibold text-gray-800">Technical Issues?</p>
                             </div>
                             <Button
@@ -135,7 +157,7 @@ export default function ProfilePage() {
                                         value={location}
                                         disabled={!editing}
                                         onChange={(e) => setLocation(e.target.value)}
-                                        placeholder="Your Location"
+                                        placeholder="Calgary, AB"
                                         className={`${!editing ? "text-gray-700" : ""} ${errors.location ? "border-destructive" : ""}`}
                                     />
                                     {errors.location && (
@@ -149,7 +171,7 @@ export default function ProfilePage() {
                                         value={bio}
                                         disabled={!editing}
                                         onChange={(e) => setBio(e.target.value)}
-                                        placeholder="Describe your passion for volunteering and what your interests"
+                                        placeholder="Describe your passion for volunteering and what you hope to achieve..."
                                         rows={4}
                                         className={`${!editing ? "text-gray-700" : ""} ${errors.bio ? "border-destructive" : ""}`}
                                     />
