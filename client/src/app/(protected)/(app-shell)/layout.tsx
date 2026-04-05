@@ -1,12 +1,13 @@
 "use client";
 
 import { ReactNode } from "react";
-import { AppNavbar, getAvatarFallback } from "@/components/navigation/app-navbar";
+import { AppNavbar } from "@/components/navigation/app-navbar";
 import { AppNavItem, NAV_CONFIG } from "@/components/navigation/nav-config";
 import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
-import { useAppSession } from "../../../providers/app-session-provider";
 import { useRouter } from "next/navigation";
+import { useAppSession } from "@/providers/app-session-provider";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
 
 export default function AppShellLayout({ children }: { children: ReactNode }) {
   const router = useRouter()

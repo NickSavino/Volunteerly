@@ -105,6 +105,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
 
       if (isSetupRoute) {
         router.replace("/moderator");
+        return;
       }
     }
   }, [
