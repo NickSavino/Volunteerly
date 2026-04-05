@@ -1,6 +1,8 @@
 import { api } from "@/lib/api";
 import {
     CurrentModeratorSchema,
+    ModeratorTicketList,
+    ModeratorTicketListSchema,
     ModeratorVolunteerList,
     ModeratorVolunteerListSchema,
     UpdateCurrentModerator,
@@ -34,4 +36,15 @@ export class ModeratorService {
                 
                 return parsed.data;
         }
+
+    static async getModeratorTikcets(): Promise<ModeratorTicketList> {
+        const json = await api<unknown>("/moderator/tickets")
+        const parsed = ModeratorTicketListSchema.safeParse(json);
+
+        if (!parsed.success) {
+            throw new Error("Error fetching tickets.");
+        }
+
+        return parsed.data;
+    }
 }
