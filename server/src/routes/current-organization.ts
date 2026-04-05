@@ -168,7 +168,7 @@ currentOrganizationRouter.get("/awards", async (req, res, next) => {
         const awards: Record<string, string> = {};
 
         const org = await getCurrentOrganization(userId)
-        if (org?.impactHighlights) {
+        if (Array.isArray(org?.impactHighlights) && org?.impactHighlights?.length >= 2) {
             awards["Strong Presence"] = "Completed all organization profile details!";
         }
 
