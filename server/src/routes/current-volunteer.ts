@@ -4,11 +4,15 @@ import {
     getCurrentVolunteer,
     updateCurrentVolunteer,
     getYourOpportunities,
+    getOpportunityById,
     getVolunteerOrganizations,
     getMonthlyHours,
     browseOpportunities,
     applyToOpportunity,
     getAppliedOppIds,
+    addProgressUpdate,
+    requestCompletion,
+    postReview,
 } from "../services/volunteer-service.js";
 
 export const currentVolunteerRouter = Router();
@@ -25,6 +29,43 @@ currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next
         if (error?.message === "ALREADY_APPLIED") {
             return res.status(409).json({ error: "Already applied to this opportunity." });
         }
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/:oppId/progress", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const { title, description, hoursContributed } = req.body;
+        await addProgressUpdate(userId, oppId, { title, description, hoursContributed });
+        res.status(201).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/:oppId/request-completion", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        await requestCompletion(userId, oppId);
+        res.status(200).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/reviews", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { revieweeId, rating, title, description } = req.body;
+        await postReview(userId, revieweeId, { rating, title, description });
+        res.status(201).json({ success: true });
+    } catch (error) {
         next(error);
     }
 });
@@ -56,6 +97,19 @@ currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
         });
 
         res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/:oppId", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const opp = await getOpportunityById(userId, oppId);
+        if (!opp) return res.status(404).json({ error: "Not Found" });
+        res.status(200).json(opp);
     } catch (error) {
         next(error);
     }
