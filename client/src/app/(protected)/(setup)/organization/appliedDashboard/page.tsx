@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/providers/auth-provider";
 import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
 import { Button } from "@/components/ui/button";
-import { useAppliedOrgDashboardViewModel } from "./appliedDashboardVm";
-import { OrganizationNavbar } from "../organization_navbar";
+import { useAppliedOrgDashboardViewModel } from "../../../(app-shell)/organization/appliedDashboard/appliedDashboardVm";
+import { OrganizationNavbar } from "../../../(app-shell)/organization/organization_navbar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import avtImg from "@/assets/avatarImg.png"
 import { Avatar, AvatarFallback, AvatarImage,  } from "@/components/ui/avatar";
 import { LogOut, MessageCircleQuestionMark, UserRoundPen, FileText } from "lucide-react";
-import { Navbar } from "../application/navbar";
+import { Navbar } from "../../../(app-shell)/organization/application/navbar";
 import volunteerly_logo from "@/assets/volunteerly_logo.png"
 
 export default function HomePage() {

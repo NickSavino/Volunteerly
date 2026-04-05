@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Navbar } from "./navbar";
+import { Navbar } from "../../../(app-shell)/organization/application/navbar";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
@@ -9,7 +9,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { useOrgApplicationViewModel } from "./orgApplicationVm";
+import { useOrgApplicationViewModel } from "../../../(app-shell)/organization/application/orgApplicationVm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";

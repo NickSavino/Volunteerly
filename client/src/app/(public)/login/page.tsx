@@ -1,18 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { supabase } from "../../lib/supabase";
-import { Card, CardContent, CardFooter, CardHeader } from "../../components/ui/card";
+import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Label } from "../../components/ui/label";
-import { Input } from "../../components/ui/input";
-import { Button } from "../../components/ui/button";
+import { Label } from "../../../components/ui/label";
+import { Input } from "../../../components/ui/input";
+import { Button } from "../../../components/ui/button";
 import Link from "next/link";
-import { useLoginViewModel } from "./loginVM";
 import tms from "@/assets/tms.png"
 import avtImg from "@/assets/avatarImg.png"
 import { Navbar } from "@/components/custom/login_navbar";
+import { useLoginViewModel } from "./loginVM";
+import Image from "next/image";
 
 export default function LoginPage() {
     const {email, setEmail, password, setPassword, submitting, error, handleSubmit} = useLoginViewModel()
@@ -23,10 +21,10 @@ export default function LoginPage() {
             <Navbar></Navbar>
             <main className="flex flex-col md:flex-row h-screen md:h-[calc(100vh-64px)]">
                 <div className="hidden md:flex w-full md:w-1/2 relative h-screen md:h-full overflow-hidden flex-col">
-                    <img
+                    <Image
                         src={tms.src}
                         alt="Preview"
-                        className="w-full w-full h-auto md:h-full"
+                        className="w-full h-auto md:h-full"
                     />
                     <div className="absolute inset-0 w-full bg-black/50"></div>
                     <div className="absolute bottom-20 left-12 text-left">
@@ -37,7 +35,7 @@ export default function LoginPage() {
                         AI-Powered Matching for Skilled Volunteering
                         </h3>
                         <p className="text-muted text-lg">
-                        "Through Volunteerly, we were able to find volunteers for our most complex tasks, allowing us to devote more funds to hepling our cause."
+                        &quot;Through Volunteerly, we were able to find volunteers for our most complex tasks, allowing us to devote more funds to hepling our cause.&quot;
                         </p>
                         <div className="flex items-center gap-3">
                             <Avatar>

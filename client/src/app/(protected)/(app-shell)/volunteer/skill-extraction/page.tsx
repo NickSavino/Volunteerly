@@ -31,7 +31,7 @@ export default function SkillExtractionPage() {
                     <CardContent className="pt-6">
                         <h1 className="text-2xl font-bold">Extraction Complete</h1>
                         <p className="text-muted-foreground mt-1">
-                            We've finished extracting your skills from your profile.<br />
+                            We&apos;ve finished extracting your skills from your profile.<br />
                             Please verify your skills before proceeding. Click the × to remove any incorrect skills.
                         </p>
                         {error && (

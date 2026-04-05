@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
-import { toast } from "sonner";
 
 export function useLoginViewModel() {
     const router = useRouter();
@@ -17,7 +15,7 @@ export function useLoginViewModel() {
         setSubmitting(true);
         setError(null);
 
-        const {data, error} = await AuthService.loginUserWithEmailPass(email, password)
+        const {error} = await AuthService.loginUserWithEmailPass(email, password)
 
         setSubmitting(false);
 

@@ -3,10 +3,10 @@
 import { UserRoundPen, LogOut, MessageCircleQuestionMark, ArrowLeft, Pencil, Trophy, Rocket, ShieldCheck, LucideIcon, Award} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { OrganizationNavbar } from "../organization_navbar";
+import { OrganizationNavbar } from "../../../../(app-shell)/organization/organization_navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
-import { OrganizationLoadingPage } from "../organization_loading";
+import { OrganizationLoadingPage } from "../../../../(app-shell)/organization/organization_loading";
 import { useOrgProfileViewModel } from "./orgProfileVm";
 import {
   Field,
