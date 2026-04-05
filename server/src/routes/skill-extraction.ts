@@ -119,7 +119,7 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
                     jobTitle: w.jobTitle,
                     company: w.company,
                     startDate: new Date(w.startDate),
-                    endDate: new Date(w.endDate),
+                    endDate: w.endDate ? new Date(w.endDate) : null,
                     responsibilities: w.responsibilities,
                 })),
             });
