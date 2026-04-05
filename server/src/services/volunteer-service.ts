@@ -49,9 +49,9 @@ export async function getYourOpportunities(volunteerId: string) {
     });
 }
 
-export async function getOpportunityById(volunteerId: string, oppId: string) {
+export async function getOpportunityById(_volunteerId: string, oppId: string) {
     return prisma.opportunity.findFirst({
-        where: { id: oppId, volId: volunteerId },
+        where: { id: oppId },
         include: {
             organization: {
                 select: { id: true, orgName: true, hqAdr: true, causeCategory: true },
