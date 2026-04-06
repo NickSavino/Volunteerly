@@ -26,7 +26,7 @@ const awardIcons: Record<string, LucideIcon> = {
 export default function OrgProfilePage() {
   const {loading, session, fetching, signOut, router, currentOrg,setCurrentOrg, 
     address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit, 
-    impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} = useOrgProfileViewModel()
+    impactHighlights, setImpactHighlights, reviewSummary, fileInputRef, handleAvatarChange, awards} = useOrgProfileViewModel()
 
   if (loading || !session || fetching) {
     return (<LoadingScreen />)
@@ -74,21 +74,50 @@ export default function OrgProfilePage() {
                         )}
                     </div>
                 </div>  
-                <div className="absolute bottom-4 right-6 flex flex-row gap-2">
-                    {Object.entries(awards).map(([title, description]) => {
-                        const Icon = awardIcons[title] || Award
-                        return (
-                        <HoverCard key={title}>
+                <div className="absolute bottom-4 right-6 flex flex-col gap-2 text-center">
+                    <div className="flex flex-row gap-2 justify-end">
+                        {Object.entries(awards).map(([title, description]) => {
+                            const Icon = awardIcons[title] || Award
+                            return (
+                            <HoverCard key={title}>
+                                <HoverCardTrigger asChild>
+                                    <Button className="cursor-pointer"><Icon /></Button>
+                                </HoverCardTrigger>
+                                <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
+                                    <div className="font-semibold">{title}</div>
+                                    <div>{description}</div>
+                                </HoverCardContent>
+                            </HoverCard>
+                            )
+                        })}
+                    </div>
+
+                    {(reviewSummary.totalReviews || 0) > 0 &&
+                        <HoverCard>
                             <HoverCardTrigger asChild>
-                                <Button className="cursor-pointer"><Icon /></Button>
+                                <Button className="cursor-pointer" variant={"ghost"}>
+                                    {[1, 2, 3, 4, 5].map((star) => {
+                                        const fill = Math.min(1, Math.max(0, (reviewSummary.avgRating ?? 0) - (star - 1)));
+                                        const pct = Math.round(fill * 100);
+                                        return (
+                                            <span key={star} className="relative text-2xl leading-none">
+                                                <span className="text-gray-500">★</span>
+                                                <span
+                                                    className="absolute inset-0 overflow-hidden text-primary"
+                                                    style={{ width: `${pct}%` }}
+                                                >★</span>
+                                            </span>
+                                        );
+                                    })}
+
+                                </Button>
                             </HoverCardTrigger>
                             <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
-                                <div className="font-semibold">{title}</div>
-                                <div>{description}</div>
+                                <div className="font-semibold">Rating {reviewSummary.avgRating || 0} / 5</div>
+                                <div>Based on {reviewSummary.totalReviews} Review(s)</div>
                             </HoverCardContent>
                         </HoverCard>
-                        )
-                    })}
+                    }
                 </div>
             </div>            
 
