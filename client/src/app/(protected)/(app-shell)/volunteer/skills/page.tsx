@@ -36,13 +36,13 @@ const ICON_PATHS: Record<string, string> = {
   Code: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
   Table: "M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18",
   Zap: "M13 2L3 14h9l-1 8 10-12h-9l1-8z",
-  Database: "M12 2C6.477 2 2 4.477 2 7v10c0 2.523 4.477 5 10 5s10-2.477 10-5V7c0-2.523-4.477-5-10-5zm0 0c5.523 0 10 2.477 10 5M2 7c0 2.523 4.477 5 10 5s10-2.523 10-5M2 12c0 2.523 4.477 5 10 5s10-2.523 10-5",
+  Database: "M12 2C6.477 2 2 4.477 2 7s4.477 5 10 5 10-2.477 10-5S17.523 2 12 2zM2 7v5c0 2.523 4.477 5 10 5s10-2.477 10-5V7M2 12v5c0 2.523 4.477 5 10 5s10-2.477 10-5v-5",
   BarChart2: "M18 20V10M12 20V4M6 20v-6",
   Globe: "M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0c-3 4-3 12 0 20m0-20c3 4 3 12 0 20M2 12h20",
   Smartphone: "M17 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2zm-5 17a1 1 0 110-2 1 1 0 010 2z",
   TrendingUp: "M23 6l-9.5 9.5-5-5L1 18M17 6h6v6",
   Settings: "M12 15a3 3 0 100-6 3 3 0 000 6zm6.9-3a6.9 6.9 0 01-.07 1l1.57 1.23a.4.4 0 01.09.49l-1.5 2.6a.4.4 0 01-.48.17l-1.85-.74a7 7 0 01-1.73 1l-.28 1.96a.39.39 0 01-.39.34h-3a.39.39 0 01-.39-.34l-.28-1.97a7 7 0 01-1.73-1l-1.85.75a.4.4 0 01-.48-.17l-1.5-2.6a.39.39 0 01.09-.49l1.57-1.22A6.9 6.9 0 015.1 12a6.9 6.9 0 01.07-1L3.6 9.77a.4.4 0 01-.09-.49l1.5-2.6a.4.4 0 01.48-.17l1.85.74a7 7 0 011.73-1l.28-1.96A.39.39 0 019.74 4h3c.2 0 .36.14.39.34l.28 1.97a7 7 0 011.73 1l1.85-.75a.4.4 0 01.48.17l1.5 2.6a.39.39 0 01-.09.49L17.83 11A6.9 6.9 0 0118.9 12z",
-  Lock: "M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-7 4v3M12 11V7a4 4 0 00-8 0",
+  Lock: "M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zM12 15v3M12 11V7a4 4 0 00-8 0",
   Bot: "M12 2a2 2 0 012 2v2h4a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2h4V4a2 2 0 012-2zM8 13a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0zM9 17h6",
   Cloud: "M18 10a6 6 0 00-11.94-.9A5 5 0 006 19h12a4 4 0 000-8z",
   Trophy: "M8 21h8m-4-4v4M6 3H3v5a6 6 0 006 6 6 6 0 006-6V3h-3M6 3h12",
@@ -55,7 +55,7 @@ const ICON_PATHS: Record<string, string> = {
   DollarSign: "M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6",
   Calendar: "M3 4h18v18H3zM16 2v4M8 2v4M3 10h18",
   ClipboardList: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4",
-  Megaphone: "M3 11l19-9-9 19-2-8-8-2z",
+  Megaphone: "M21 13V6a1 1 0 00-1.447-.894L13 8.5V5a1 1 0 00-1-1H8a1 1 0 00-1 1v10a1 1 0 001 1h4a1 1 0 001-1v-3.5l6.553 3.394A1 1 0 0021 15v-2zm-9 4H8m1 4h2",
   Star: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z",
   ChevronUp: "M18 15l-6-6-6 6",
   Award: "M12 15a7 7 0 100-14 7 7 0 000 14zm0 0v6m-3-3h6",
@@ -64,9 +64,11 @@ const ICON_PATHS: Record<string, string> = {
   PieChart: "M21.21 15.89A10 10 0 118 2.83M22 12A10 10 0 0012 2v10z",
 };
 
+const ALL_NODE_LABELS: Record<string, string> = {};
+
 const TECH_NODES: SkillNodeDef[] = [
   {
-    id: "javascript", label: "JavaScript", iconKey: "Zap", icon: Zap,
+    id: "javascript", label: "JS Basics", iconKey: "Zap", icon: Zap,
     tier: 1, col: 0,
     trackedSkills: ["JavaScript", "TypeScript"],
     threshold: 2, requiresAny: [],
@@ -74,7 +76,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Log JavaScript or TypeScript in 2 opportunities",
   },
   {
-    id: "python", label: "Python", iconKey: "Code", icon: Code,
+    id: "python", label: "Python Basics", iconKey: "Code", icon: Code,
     tier: 1, col: 1,
     trackedSkills: ["Python"],
     threshold: 2, requiresAny: [],
@@ -82,7 +84,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Python in 2 opportunities",
   },
   {
-    id: "accounting", label: "Accounting", iconKey: "BookOpen", icon: BookOpen,
+    id: "accounting", label: "Bookkeeping", iconKey: "BookOpen", icon: BookOpen,
     tier: 1, col: 2,
     trackedSkills: ["Accounting", "Bookkeeping"],
     threshold: 2, requiresAny: [],
@@ -90,7 +92,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Accounting or Bookkeeping in 2 opportunities",
   },
   {
-    id: "excel", label: "Excel", iconKey: "Table", icon: Table,
+    id: "excel", label: "Spreadsheets", iconKey: "Table", icon: Table,
     tier: 1, col: 3,
     trackedSkills: ["Excel"],
     threshold: 2, requiresAny: [],
@@ -112,7 +114,7 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["JavaScript", "TypeScript", "React", "Node.js", "UI/UX Design"],
     threshold: 3, requiresAny: [["javascript"]],
     description: "Build web interfaces and full-stack apps for nonprofits.",
-    requirementLabel: "Unlock JavaScript, then log any web dev skills in 3 opportunities",
+    requirementLabel: "Unlock JS Basics, then log any web dev skills in 3 opportunities",
   },
   {
     id: "sql", label: "SQL / DBs", iconKey: "Database", icon: Database,
@@ -120,7 +122,7 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["SQL", "Databases"],
     threshold: 2, requiresAny: [["python"]],
     description: "Write SQL queries and work with databases in volunteer systems.",
-    requirementLabel: "Unlock Python, then log SQL or Databases in 2 opportunities",
+    requirementLabel: "Unlock Python Basics, then log SQL or Databases in 2 opportunities",
   },
   {
     id: "finance", label: "Finance", iconKey: "Briefcase", icon: Briefcase,
@@ -128,7 +130,7 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["Finance", "Budgeting"],
     threshold: 2, requiresAny: [["accounting"]],
     description: "Manage budgets and financial planning for nonprofit organisations.",
-    requirementLabel: "Unlock Accounting, then log Finance or Budgeting in 2 opportunities",
+    requirementLabel: "Unlock Bookkeeping, then log Finance or Budgeting in 2 opportunities",
   },
   {
     id: "powerbi", label: "Power BI", iconKey: "BarChart2", icon: BarChart2,
@@ -136,66 +138,66 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["Excel", "Data Analysis"],
     threshold: 3, requiresAny: [["excel"]],
     description: "Build dashboards and BI reports to drive org decisions.",
-    requirementLabel: "Unlock Excel, then log Excel + Data Analysis across 3 combined opportunities",
+    requirementLabel: "Unlock Spreadsheets, then log Excel + Data Analysis across 3 combined opportunities",
   },
   {
-    id: "cybersecurity", label: "Cybersecurity", iconKey: "Lock", icon: Lock,
+    id: "cybersecurity", label: "Cyber Basics", iconKey: "Lock", icon: Lock,
     tier: 2, col: 4,
     trackedSkills: ["Cybersecurity"],
-    threshold: 2, requiresAny: [["mobile", "javascript"]],
+    threshold: 2, requiresAny: [["javascript", "python"]],
     description: "Apply security best practices across volunteer systems.",
-    requirementLabel: "Unlock Mobile Dev or JavaScript, then log Cybersecurity in 2 opportunities",
+    requirementLabel: "Unlock JS Basics or Python Basics, then log Cybersecurity in 2 opportunities",
   },
 
   {
-    id: "devops", label: "DevOps", iconKey: "Settings", icon: Settings,
+    id: "devops", label: "DevOps & CI/CD", iconKey: "Settings", icon: Settings,
     tier: 3, col: 0,
     trackedSkills: ["DevOps", "Cloud (AWS/GCP/Azure)"],
-    threshold: 3, requiresAny: [["webdev"]],
+    threshold: 3, requiresAny: [["webdev", "sql"]],
     description: "CI/CD pipelines, infrastructure, and deployment for volunteer tech.",
-    requirementLabel: "Unlock Web Dev, then log DevOps or Cloud in 3 opportunities",
+    requirementLabel: "Unlock Web Dev or SQL/DBs, then log DevOps or Cloud in 3 opportunities",
   },
   {
-    id: "data_analysis", label: "Data Analysis", iconKey: "TrendingUp", icon: TrendingUp,
+    id: "data_analysis", label: "Data Analyst", iconKey: "TrendingUp", icon: TrendingUp,
     tier: 3, col: 1,
     trackedSkills: ["Data Analysis", "Python", "SQL", "Excel"],
     threshold: 4,
     requiresAny: [["sql", "powerbi"]],
     description: "Full data analysis — reachable via Python/SQL or Excel/Power BI.",
-    requirementLabel: "Unlock SQL/DBs OR Power BI, then log any data skills in 4 total opportunities",
+    requirementLabel: "Unlock SQL/DBs or Power BI, then log Data Analysis, Python, SQL, or Excel in 4 total opportunities",
   },
   {
-    id: "financial_analysis", label: "Financial Analysis", iconKey: "PieChart", icon: PieChart,
+    id: "financial_analysis", label: "Finance Analyst", iconKey: "PieChart", icon: PieChart,
     tier: 3, col: 2,
     trackedSkills: ["Financial Analysis", "Excel", "Data Analysis"],
     threshold: 3, requiresAny: [["finance", "powerbi"]],
     description: "Analyse financial data and produce reports to guide org decisions.",
-    requirementLabel: "Unlock Finance or Power BI, then log Financial Analysis skills in 3 opportunities",
+    requirementLabel: "Unlock Finance or Power BI, then log Financial Analysis, Excel, or Data Analysis in 3 opportunities",
   },
   {
-    id: "networking_infra", label: "Networking", iconKey: "Globe", icon: Globe,
+    id: "networking_infra", label: "IT & Networks", iconKey: "Globe", icon: Globe,
     tier: 3, col: 3,
     trackedSkills: ["Networking", "IT Support", "Cybersecurity"],
-    threshold: 3, requiresAny: [["cybersecurity", "sql"]],
+    threshold: 3, requiresAny: [["cybersecurity"]],
     description: "Manage IT infrastructure and networking for volunteer organisations.",
-    requirementLabel: "Unlock Cybersecurity or SQL/DBs, then log Networking or IT Support in 3 opportunities",
+    requirementLabel: "Unlock Cyber Basics, then log Networking, IT Support, or Cybersecurity in 3 opportunities",
   },
   {
     id: "mobile_advanced", label: "App Dev", iconKey: "Smartphone", icon: Smartphone,
     tier: 3, col: 4,
     trackedSkills: ["Mobile Development", "JavaScript", "TypeScript", "React"],
-    threshold: 3, requiresAny: [["mobile", "webdev"]],
+    threshold: 3, requiresAny: [["webdev"]],
     description: "Build advanced cross-platform applications for nonprofits.",
-    requirementLabel: "Unlock Mobile Dev or Web Dev, then log app dev skills in 3 opportunities",
+    requirementLabel: "Unlock Web Dev, then log Mobile Development, JavaScript, TypeScript, or React in 3 opportunities",
   },
 
   {
     id: "cloud", label: "Cloud Arch.", iconKey: "Cloud", icon: Cloud,
     tier: 4, col: 0,
     trackedSkills: ["Cloud (AWS/GCP/Azure)", "DevOps"],
-    threshold: 4, requiresAny: [["devops"]],
+    threshold: 4, requiresAny: [["devops", "networking_infra"]],
     description: "Design and manage scalable cloud-based systems for nonprofits.",
-    requirementLabel: "Unlock DevOps, then log Cloud or DevOps in 4 total opportunities",
+    requirementLabel: "Unlock DevOps or IT & Networks, then log Cloud or DevOps in 4 total opportunities",
   },
   {
     id: "machine_learning", label: "ML / AI", iconKey: "Bot", icon: Bot,
@@ -203,7 +205,7 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["Machine Learning"],
     threshold: 3, requiresAny: [["data_analysis"]],
     description: "Apply machine learning and AI in real nonprofit projects.",
-    requirementLabel: "Unlock Data Analysis, then log Machine Learning in 3 opportunities",
+    requirementLabel: "Unlock Data Analyst, then log Machine Learning in 3 opportunities",
   },
   {
     id: "business_intelligence", label: "Business Intel.", iconKey: "BarChart2", icon: BarChart2,
@@ -211,7 +213,7 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["Financial Analysis", "Data Analysis", "Excel"],
     threshold: 4, requiresAny: [["financial_analysis", "data_analysis"]],
     description: "Drive data-informed decisions across finance and operations.",
-    requirementLabel: "Unlock Financial Analysis or Data Analysis, then log BI skills in 4 opportunities",
+    requirementLabel: "Unlock Finance Analyst or Data Analyst, then log Financial Analysis, Data Analysis, or Excel in 4 opportunities",
   },
   {
     id: "it_management", label: "IT Management", iconKey: "Settings", icon: Settings,
@@ -219,7 +221,7 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["DevOps", "Cybersecurity", "Networking", "IT Support"],
     threshold: 4, requiresAny: [["networking_infra", "devops"]],
     description: "Oversee IT systems, security, and infrastructure for organisations.",
-    requirementLabel: "Unlock Networking or DevOps, then log IT management skills in 4 opportunities",
+    requirementLabel: "Unlock IT & Networks or DevOps, then log DevOps, Cybersecurity, Networking, or IT Support in 4 opportunities",
   },
   {
     id: "product_dev", label: "Product Dev", iconKey: "Trophy", icon: Trophy,
@@ -227,7 +229,7 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["Mobile Development", "JavaScript", "TypeScript", "React", "UI/UX Design"],
     threshold: 4, requiresAny: [["mobile_advanced"]],
     description: "Lead end-to-end product development for nonprofit digital tools.",
-    requirementLabel: "Unlock App Dev, then log product development skills in 4 opportunities",
+    requirementLabel: "Unlock App Dev, then log Mobile Development, JavaScript, TypeScript, React, or UI/UX Design in 4 opportunities",
   },
 
   {
@@ -236,13 +238,13 @@ const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["Machine Learning", "Cloud (AWS/GCP/Azure)", "DevOps", "Data Analysis", "Financial Analysis", "Cybersecurity"],
     threshold: 6, requiresAny: [["machine_learning", "cloud", "business_intelligence", "it_management", "product_dev"]],
     description: "Recognised technical leader across engineering, data, and business paths.",
-    requirementLabel: "Unlock any tier-4 node, then log 6 total advanced tech skills",
+    requirementLabel: "Unlock any tier-4 node, then log Machine Learning, Cloud, DevOps, Data Analysis, Financial Analysis, or Cybersecurity in 6 total opportunities",
   },
 ];
 
 const NT_NODES: SkillNodeDef[] = [
   {
-    id: "nt_communication", label: "Communication", iconKey: "MessageCircle", icon: MessageCircle,
+    id: "nt_communication", label: "Clear Comms", iconKey: "MessageCircle", icon: MessageCircle,
     tier: 1, col: 1,
     trackedSkills: ["Communication"],
     threshold: 2, requiresAny: [],
@@ -250,7 +252,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Communication in 2 opportunities",
   },
   {
-    id: "nt_writing", label: "Writing", iconKey: "PenLine", icon: PenLine,
+    id: "nt_writing", label: "Written Comms", iconKey: "PenLine", icon: PenLine,
     tier: 1, col: 3,
     trackedSkills: ["Writing"],
     threshold: 2, requiresAny: [],
@@ -258,7 +260,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Writing in 2 opportunities",
   },
   {
-    id: "nt_teamwork", label: "Teamwork", iconKey: "Users", icon: Users,
+    id: "nt_teamwork", label: "Team Player", iconKey: "Users", icon: Users,
     tier: 1, col: 0,
     trackedSkills: ["Teamwork", "Adaptability"],
     threshold: 2, requiresAny: [],
@@ -272,31 +274,31 @@ const NT_NODES: SkillNodeDef[] = [
     trackedSkills: ["Public Speaking", "Communication"],
     threshold: 3, requiresAny: [["nt_communication"]],
     description: "Present, pitch, or speak on behalf of organisations.",
-    requirementLabel: "Unlock Communication, then log Public Speaking in 2 opportunities",
+    requirementLabel: "Unlock Clear Comms, then log Public Speaking in 2 opportunities",
   },
   {
-    id: "nt_research", label: "Research", iconKey: "Search", icon: Search,
+    id: "nt_research", label: "Researcher", iconKey: "Search", icon: Search,
     tier: 2, col: 3,
     trackedSkills: ["Research", "Critical Thinking"],
     threshold: 2, requiresAny: [["nt_writing"]],
     description: "Conduct structured research and produce insights for nonprofits.",
-    requirementLabel: "Unlock Writing, then log Research in 2 opportunities",
+    requirementLabel: "Unlock Written Comms, then log Research in 2 opportunities",
   },
   {
-    id: "nt_mentoring", label: "Mentoring", iconKey: "GraduationCap", icon: GraduationCap,
+    id: "nt_mentoring", label: "Mentor", iconKey: "GraduationCap", icon: GraduationCap,
     tier: 2, col: 0,
     trackedSkills: ["Mentoring", "Teaching"],
     threshold: 2, requiresAny: [["nt_teamwork"]],
     description: "Guide and develop other volunteers or community members.",
-    requirementLabel: "Unlock Teamwork, then log Mentoring or Teaching in 2 opportunities",
+    requirementLabel: "Unlock Team Player, then log Mentoring or Teaching in 2 opportunities",
   },
   {
-    id: "nt_fundraising", label: "Fundraising", iconKey: "DollarSign", icon: DollarSign,
+    id: "nt_fundraising", label: "Fundraiser", iconKey: "DollarSign", icon: DollarSign,
     tier: 2, col: 4,
     trackedSkills: ["Fundraising", "Networking"],
     threshold: 2, requiresAny: [["nt_communication"]],
     description: "Drive fundraising efforts and build donor or sponsor networks.",
-    requirementLabel: "Unlock Communication, then log Fundraising or Networking in 2 opportunities",
+    requirementLabel: "Unlock Clear Comms, then log Fundraising or Networking in 2 opportunities",
   },
 
   {
@@ -304,34 +306,34 @@ const NT_NODES: SkillNodeDef[] = [
     tier: 3, col: 1,
     trackedSkills: ["Event Planning", "Time Management"],
     threshold: 3,
-    requiresAny: [["nt_public_speaking", "nt_mentoring"]],
+    requiresAny: [["nt_public_speaking", "nt_mentoring", "nt_fundraising"]],
     description: "Organise and run volunteer events end-to-end.",
-    requirementLabel: "Unlock Public Speaking OR Mentoring, then log Event Planning in 3 opportunities",
+    requirementLabel: "Unlock Public Speaking, Mentor, or Fundraiser, then log Event Planning or Time Management in 3 opportunities",
   },
   {
     id: "nt_project_mgmt", label: "Project Mgmt", iconKey: "ClipboardList", icon: ClipboardList,
     tier: 3, col: 3,
     trackedSkills: ["Project Management", "Problem Solving"],
-    threshold: 3, requiresAny: [["nt_research"]],
+    threshold: 3, requiresAny: [["nt_research", "nt_mentoring"]],
     description: "Deliver projects on time with clear ownership and accountability.",
-    requirementLabel: "Unlock Research, then log Project Management in 3 opportunities",
+    requirementLabel: "Unlock Researcher or Mentor, then log Project Management or Problem Solving in 3 opportunities",
   },
   {
-    id: "nt_marketing", label: "Marketing", iconKey: "Megaphone", icon: Megaphone,
+    id: "nt_marketing", label: "Marketer", iconKey: "Megaphone", icon: Megaphone,
     tier: 3, col: 4,
     trackedSkills: ["Marketing", "Social Media"],
     threshold: 2, requiresAny: [["nt_fundraising"]],
     description: "Promote causes and grow audiences using marketing and social media.",
-    requirementLabel: "Unlock Fundraising, then log Marketing or Social Media in 2 opportunities",
+    requirementLabel: "Unlock Fundraiser, then log Marketing or Social Media in 2 opportunities",
   },
 
   {
-    id: "nt_leadership", label: "Leadership", iconKey: "Star", icon: Star,
+    id: "nt_leadership", label: "Team Leader", iconKey: "Star", icon: Star,
     tier: 4, col: 2,
     trackedSkills: ["Leadership"],
-    threshold: 3, requiresAny: [["nt_event_planning"]],
+    threshold: 3, requiresAny: [["nt_event_planning", "nt_project_mgmt"]],
     description: "Lead volunteers, coordinate multi-person teams, own outcomes.",
-    requirementLabel: "Unlock Event Planning, then log Leadership in 3 opportunities",
+    requirementLabel: "Unlock Event Planning or Project Mgmt, then log Leadership in 3 opportunities",
   },
   {
     id: "nt_strategy", label: "Strategy", iconKey: "ChevronUp", icon: ChevronUp,
@@ -340,7 +342,7 @@ const NT_NODES: SkillNodeDef[] = [
     threshold: 5,
     requiresAny: [["nt_project_mgmt", "nt_marketing"]],
     description: "Strategic planning and high-level decision-making for organisations.",
-    requirementLabel: "Unlock Project Mgmt AND Marketing, then log strategic skills in 5 total opportunities",
+    requirementLabel: "Unlock Project Mgmt or Marketer, then log Problem Solving, Critical Thinking, or Project Management in 5 total opportunities",
   },
 
   {
@@ -348,18 +350,20 @@ const NT_NODES: SkillNodeDef[] = [
     tier: 5, col: 2,
     trackedSkills: ["Leadership", "Project Management", "Communication"],
     threshold: 8,
-    requiresAny: [["nt_leadership", "nt_strategy"]],
+    requiresAny: [["nt_leadership"], ["nt_strategy"]],
     description: "Recognised community leader with broad impact across people, projects, and organisations.",
-    requirementLabel: "Unlock Leadership AND Strategy, then log 8 total leadership skills",
+    requirementLabel: "Unlock both Team Leader and Strategy, then log Leadership, Project Management, or Communication in 8 total opportunities",
   },
 ];
 
-const NODE_W = 72;
-const NODE_H = 72;
-const COL_GAP = 92;
-const ROW_GAP = 116;
-const PAD_X = 36;
-const PAD_Y = 40;
+[...TECH_NODES, ...NT_NODES].forEach((n) => { ALL_NODE_LABELS[n.id] = n.label; });
+
+const NODE_W = 90;
+const NODE_H = 90;
+const COL_GAP = 114;
+const ROW_GAP = 140;
+const PAD_X = 44;
+const PAD_Y = 48;
 const COLS = 5;
 const MAX_TIER = 5;
 
@@ -380,8 +384,7 @@ function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, number>)
   const map: Record<string, SkillNode> = {};
 
   for (const def of defs) {
-    const current = def.trackedSkills.reduce((s, k) => s + (skillCounts[k] ?? 0), 0);
-    map[def.id] = { ...def, status: "locked", current };
+    map[def.id] = { ...def, status: "locked", current: 0 };
   }
 
   let changed = true;
@@ -391,19 +394,23 @@ function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, number>)
       const node = map[id];
       const unlocked = prereqsMet(node, map);
 
+      const current = unlocked
+        ? defs.find((d) => d.id === id)!.trackedSkills.reduce((s, k) => s + (skillCounts[k] ?? 0), 0)
+        : 0;
+
       let status: NodeStatus;
       if (!unlocked) {
         status = "locked";
-      } else if (node.current >= node.threshold) {
+      } else if (current >= node.threshold) {
         status = "mastered";
-      } else if (node.current > 0) {
+      } else if (current > 0) {
         status = "in_progress";
       } else {
         status = "locked";
       }
 
-      if (map[id].status !== status) {
-        map[id] = { ...map[id], status };
+      if (map[id].status !== status || map[id].current !== current) {
+        map[id] = { ...map[id], status, current };
         changed = true;
       }
     }
@@ -425,6 +432,7 @@ function buildEdges(
       for (const reqId of orGroup) {
         const req = byId[reqId];
         if (!req) continue;
+        if (node.tier - req.tier !== 1) continue;
         const from = getPos(req.tier, req.col, svgH);
         edges.push({
           x1: from.x,
@@ -493,7 +501,7 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
   const line2 = words.slice(mid).join(" ");
   const hasTwo = line2.length > 0;
 
-  const scale = 20 / 24;
+  const scale = 26 / 24;
   const iconPath = ICON_PATHS[node.iconKey] ?? "";
 
   return (
@@ -519,12 +527,12 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
       >
         <path d={iconPath} />
       </g>
-      <text textAnchor="middle" fontSize={7} fontWeight="700"
+      <text textAnchor="middle" fontSize={9} fontWeight="700"
         fill="var(--node-text)" opacity={dimmed ? 0.32 : 1}
         fontFamily="'DM Sans', sans-serif" letterSpacing="0.04em"
         pointerEvents="none">
-        <tspan x={w / 2} y={hasTwo ? h - 16 : h - 11}>{line1}</tspan>
-        {hasTwo && <tspan x={w / 2} dy={9}>{line2}</tspan>}
+        <tspan x={w / 2} y={hasTwo ? h - 17 : h - 12}>{line1}</tspan>
+        {hasTwo && <tspan x={w / 2} dy={10}>{line2}</tspan>}
       </text>
       {node.status === "mastered" && (
         <g transform={`translate(${w - 14}, -4)`} pointerEvents="none">
@@ -542,8 +550,9 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
   const statusColor = node.status === "mastered" ? "#16A34A" : node.status === "in_progress" ? "var(--accent-stroke)" : "var(--locked-stroke)";
   const barColor = node.status === "mastered" ? "#16A34A" : node.status === "in_progress" ? "var(--accent)" : "var(--locked-stroke)";
 
-  const prereqIds = [...new Set(node.requiresAny.flat())];
   const Icon = node.icon;
+
+  const getLabel = (id: string) => ALL_NODE_LABELS[id] ?? id.replace(/^nt_/, "").replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
 
   return (
     <div className="st-panel" onClick={(e) => e.stopPropagation()}>
@@ -591,14 +600,21 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
         </div>
       </div>
 
-      {prereqIds.length > 0 && (
+      {node.requiresAny.length > 0 && (
         <div className="st-section">
           <div className="st-section-label">Requires</div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
             {node.requiresAny.map((orGroup, i) => (
-              <span key={i} className="st-tag">
-                {orGroup.map((id) => id.replace(/^nt_/, "").replace(/_/g, " ")).join(" or ")}
-              </span>
+              <React.Fragment key={i}>
+                {i > 0 && <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 600 }}>AND</span>}
+                {orGroup.map((id, j) => (
+                  <React.Fragment key={id}>
+                    {j > 0 && <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>or</span>}
+                    {/* FIX 3: show actual node label */}
+                    <span className="st-tag">{getLabel(id)}</span>
+                  </React.Fragment>
+                ))}
+              </React.Fragment>
             ))}
           </div>
         </div>
@@ -653,7 +669,7 @@ export default function SkillTreePage() {
           --text-muted: #64748B;
         }
         .st-page { min-height: 100vh; background: var(--bg); font-family: 'DM Sans','Segoe UI',sans-serif; }
-        .st-header { max-width: 640px; margin: 0 auto; padding: 24px 20px 0; }
+        .st-header { max-width: 1100px; margin: 0 auto; padding: 24px 20px 0; }
         .st-header h1 { font-size: 1.55rem; font-weight: 800; color: var(--text); margin: 0 0 4px; letter-spacing: -0.025em; }
         .st-header p { font-size: 0.83rem; color: var(--text-muted); margin: 0 0 18px; line-height: 1.5; }
         .st-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
@@ -662,13 +678,14 @@ export default function SkillTreePage() {
         .st-tabs { display: flex; gap: 4px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 4px; width: fit-content; }
         .st-tab { padding: 7px 18px; border-radius: 9px; border: none; background: transparent; font-size: 0.82rem; font-weight: 700; cursor: pointer; color: var(--text-muted); transition: all 0.18s; white-space: nowrap; }
         .st-tab.active { background: #0F172A; color: #fff; }
-        .st-canvas { position: relative; max-width: 640px; margin: 0 auto; padding-top: 12px; }
+        .st-body { display: flex; align-items: flex-start; gap: 20px; max-width: 1100px; margin: 0 auto; padding: 0 20px 40px; }
+        .st-canvas { position: relative; flex-shrink: 0; padding-top: 12px; }
         .st-legend { position: absolute; top: 20px; right: 20px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 0.73rem; z-index: 10; display: flex; flex-direction: column; gap: 6px; }
         .st-legend-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-weight: 500; }
         .st-legend-swatch { width: 13px; height: 13px; border-radius: 4px; flex-shrink: 0; }
-        .st-panel-wrap { max-width: 640px; margin: 0 auto; padding: 0 20px 40px; }
+        .st-panel-wrap { flex: 1; min-width: 260px; max-width: 320px; padding-top: 12px; }
         .st-panel { background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 24px; position: relative; box-shadow: 0 4px 28px rgba(0,0,0,0.07); animation: stIn 0.18s ease; }
-        @keyframes stIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes stIn { from { opacity:0; transform:translateX(8px); } to { opacity:1; transform:translateX(0); } }
         .st-panel-close { position: absolute; top: 14px; right: 14px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.73rem; color: var(--text-muted); }
         .st-section { margin-bottom: 14px; }
         .st-section-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 6px; }
@@ -676,12 +693,14 @@ export default function SkillTreePage() {
         .st-bar-bg { height: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 99px; overflow: hidden; }
         .st-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
         .st-tag { padding: 3px 10px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 99px; font-size: 0.72rem; font-weight: 600; color: var(--text); white-space: nowrap; }
-        .st-hint { text-align: center; font-size: 0.74rem; color: var(--text-muted); padding: 4px 20px 12px; max-width: 640px; margin: 0 auto; }
+        .st-hint { text-align: center; font-size: 0.74rem; color: var(--text-muted); padding: 4px 20px 12px; max-width: 1100px; margin: 0 auto; }
         .st-loading { text-align: center; padding: 56px 20px; font-size: 0.85rem; color: var(--text-muted); }
         .st-error { text-align: center; padding: 56px 20px; font-size: 0.85rem; color: #EF4444; }
-        @media (max-width: 480px) {
-          .st-header h1 { font-size: 1.25rem; }
+        @media (max-width: 760px) {
+          .st-body { flex-direction: column; align-items: stretch; }
+          .st-panel-wrap { max-width: 100%; }
           .st-legend { display: none; }
+          .st-header h1 { font-size: 1.25rem; }
         }
       `}</style>
 
@@ -715,32 +734,33 @@ export default function SkillTreePage() {
 
         {!loading && !error && (
           <>
-            <div className="st-canvas">
-              <div className="st-legend">
-                <div className="st-legend-item">
-                  <div className="st-legend-swatch" style={{ background: "var(--mastered-fill)", border: "2px solid var(--mastered-stroke)" }} />Mastered
-                </div>
-                <div className="st-legend-item">
-                  <div className="st-legend-swatch" style={{ background: "var(--progress-fill)", border: "2px solid var(--accent)" }} />In Progress
-                </div>
-                <div className="st-legend-item">
-                  <div className="st-legend-swatch" style={{ background: "var(--locked-fill)", border: "2px solid var(--locked-stroke)" }} />Locked
-                </div>
-              </div>
-              <SkillTree
-                nodes={nodes}
-                onSelect={(n) => setSelected((p) => p?.id === n.id ? null : n)}
-                selectedId={selected?.id ?? null}
-              />
-            </div>
-
             {!selected && <p className="st-hint">Tap any node to see requirements and your progress</p>}
-
-            {selected && (
-              <div className="st-panel-wrap" onClick={(e) => e.stopPropagation()}>
-                <DetailPanel node={selected} onClose={() => setSelected(null)} />
+            <div className="st-body">
+              <div className="st-canvas">
+                <div className="st-legend">
+                  <div className="st-legend-item">
+                    <div className="st-legend-swatch" style={{ background: "var(--mastered-fill)", border: "2px solid var(--mastered-stroke)" }} />Mastered
+                  </div>
+                  <div className="st-legend-item">
+                    <div className="st-legend-swatch" style={{ background: "var(--progress-fill)", border: "2px solid var(--accent)" }} />In Progress
+                  </div>
+                  <div className="st-legend-item">
+                    <div className="st-legend-swatch" style={{ background: "var(--locked-fill)", border: "2px solid var(--locked-stroke)" }} />Locked
+                  </div>
+                </div>
+                <SkillTree
+                  nodes={nodes}
+                  onSelect={(n) => setSelected((p) => p?.id === n.id ? null : n)}
+                  selectedId={selected?.id ?? null}
+                />
               </div>
-            )}
+
+              {selected && (
+                <div className="st-panel-wrap" onClick={(e) => e.stopPropagation()}>
+                  <DetailPanel node={selected} onClose={() => setSelected(null)} />
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>
