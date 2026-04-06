@@ -56,27 +56,52 @@ export default function ViewApplicationPage({
                                 </Avatar>
                             </div>
 
-                            <div className="md:col-span-4 flex flex-col gap-3">
-                                <h3>{application?.volunteer?.firstName} {application?.volunteer?.lastName}</h3>
-                                <p>Applied {application?.dateApplied?.toLocaleDateString()}</p>
+                            <div className="md:col-span-4 flex flex-col gap-1">
+                                <div className="md:flex gap-3">
+                                    <h3>{application?.volunteer?.firstName} {application?.volunteer?.lastName}
+                                    </h3>
+                                    <Badge   className={
+                                        (application?.matchPercentage || 0) >= 80
+                                        ? "bg-green-500"
+                                        : (application?.matchPercentage || 0) >= 50
+                                        ? "bg-yellow-500"
+                                        : "bg-red-500"
+                                    }>
+                                    {application?.matchPercentage}% Match</Badge>   
+                                </div>
+                                {(application?.volunteer?.workExperiences) && 
+                                <h4>{application?.volunteer?.workExperiences[0].jobTitle}</h4>}
+                                <p className="text-sm">Applied {application?.dateApplied?.toLocaleDateString()}</p>
                                 <p className="text-sm">{application?.volunteer?.bio}</p>
                             </div>
 
-                            <div className="md:col-span-2 flex flex-col items-center gap-3">
-                                <Badge   className={
-                                    (application?.matchPercentage || 0) >= 80
-                                    ? "bg-green-500"
-                                    : (application?.matchPercentage || 0) >= 50
-                                    ? "bg-yellow-500"
-                                    : "bg-red-500"
-                                }>
-                                {application?.matchPercentage}% Match</Badge>                                
+                            <div className="pt-3 md:pt-0 md:col-span-2 flex flex-col items-center gap-3">                                                             
                                 <span className="flex flex-1 items-center gap-3 justify-center md:justify-start">
-                                    <MapPin/> 
+                                    <MapPin className="text-primary"/> 
                                     <div className="flex flex-col">
-                                        <span className="text-sm">{application?.volunteer?.location}</span>
+                                        <span className="text-sm text-muted-foreground">{application?.volunteer?.location}</span>
                                     </div>
                                 </span>
+                                {(application?.volunteer?.averageRating || 0) > 0 &&
+                                    <>
+                                    <div className="flex items-center gap-0.5">
+                                        {[1, 2, 3, 4, 5].map((star) => {
+                                            const fill = Math.min(1, Math.max(0, (application?.volunteer?.averageRating ?? 0) - (star - 1)));
+                                            const pct = Math.round(fill * 100);
+                                            return (
+                                                <span key={star} className="relative text-2xl leading-none">
+                                                    <span className="text-gray-500">★</span>
+                                                    <span
+                                                        className="absolute inset-0 overflow-hidden text-primary"
+                                                        style={{ width: `${pct}%` }}
+                                                    >★</span>
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">{(application?.volunteer?.averageRating || 0).toFixed(1)} / 5.0</p>
+                                    </>
+                                }
                             </div>
                         </div>
                     </CardContent>
