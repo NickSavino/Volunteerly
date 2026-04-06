@@ -491,3 +491,146 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
     </div>
   );
 }
+
+export default function SkillTreePage() {
+  const [tab, setTab] = useState<"technical" | "nontechnical">("technical");
+  const [selected, setSelected] = useState<SkillNode | null>(null);
+  const [skillCounts, setSkillCounts] = useState<Record<string, number> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+ 
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    api<Record<string, number>>("/current-volunteer/skill-counts")
+      .then((data) => { if (!cancelled) { setSkillCounts(data); setLoading(false); } })
+      .catch((err) => { if (!cancelled) { setError(err?.message ?? "Failed to load skill data"); setLoading(false); } });
+    return () => { cancelled = true; };
+  }, []);
+ 
+  const counts = skillCounts ?? {};
+  const techNodes = computeNodes(TECH_NODES, counts);
+  const ntNodes = computeNodes(NT_NODES, counts);
+  const nodes = tab === "technical" ? techNodes : ntNodes;
+ 
+  const mastered = nodes.filter((n) => n.status === "mastered").length;
+  const inProg = nodes.filter((n) => n.status === "in_progress").length;
+ 
+  return (
+    <>
+      <style>{`
+        :root {
+          --accent: #F5C842;
+          --accent-stroke: #D4A017;
+          --mastered-fill: #F5C842;
+          --mastered-stroke: #D4A017;
+          --mastered-glow: rgba(245,200,66,0.5);
+          --progress-fill: #FEFCE8;
+          --progress-glow: rgba(245,200,66,0.3);
+          --locked-fill: #F1F5F9;
+          --locked-stroke: #CBD5E1;
+          --line-locked: #CBD5E1;
+          --node-text: #1E293B;
+          --selected: #3B82F6;
+          --bg: #F8FAFC;
+          --card: #FFFFFF;
+          --border: #E2E8F0;
+          --text: #0F172A;
+          --text-muted: #64748B;
+        }
+        .st-page { min-height: 100vh; background: var(--bg); font-family: 'DM Sans','Segoe UI',sans-serif; }
+        .st-header { max-width: 640px; margin: 0 auto; padding: 24px 20px 0; }
+        .st-header h1 { font-size: 1.55rem; font-weight: 800; color: var(--text); margin: 0 0 4px; letter-spacing: -0.025em; }
+        .st-header p { font-size: 0.83rem; color: var(--text-muted); margin: 0 0 18px; line-height: 1.5; }
+        .st-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+        .st-chip { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; font-size: 0.77rem; font-weight: 600; border: 1.5px solid var(--border); background: var(--card); color: var(--text); }
+        .st-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+        .st-tabs { display: flex; gap: 4px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 4px; width: fit-content; }
+        .st-tab { padding: 7px 18px; border-radius: 9px; border: none; background: transparent; font-size: 0.82rem; font-weight: 700; cursor: pointer; color: var(--text-muted); transition: all 0.18s; white-space: nowrap; }
+        .st-tab.active { background: #0F172A; color: #fff; }
+        .st-canvas { position: relative; max-width: 640px; margin: 0 auto; padding-top: 12px; }
+        .st-legend { position: absolute; top: 20px; right: 20px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 0.73rem; z-index: 10; display: flex; flex-direction: column; gap: 6px; }
+        .st-legend-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-weight: 500; }
+        .st-legend-swatch { width: 13px; height: 13px; border-radius: 4px; flex-shrink: 0; }
+        .st-panel-wrap { max-width: 640px; margin: 0 auto; padding: 0 20px 40px; }
+        .st-panel { background: var(--card); border: 1.5px solid var(--border); border-radius: 20px; padding: 24px; position: relative; box-shadow: 0 4px 28px rgba(0,0,0,0.07); animation: stIn 0.18s ease; }
+        @keyframes stIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        .st-panel-close { position: absolute; top: 14px; right: 14px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 8px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.73rem; color: var(--text-muted); }
+        .st-section { margin-bottom: 14px; }
+        .st-section-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 6px; }
+        .st-req-box { font-size: 0.82rem; font-weight: 600; color: var(--text); background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; line-height: 1.4; }
+        .st-bar-bg { height: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 99px; overflow: hidden; }
+        .st-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+        .st-tag { padding: 3px 10px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 99px; font-size: 0.72rem; font-weight: 600; color: var(--text); white-space: nowrap; }
+        .st-hint { text-align: center; font-size: 0.74rem; color: var(--text-muted); padding: 4px 20px 12px; max-width: 640px; margin: 0 auto; }
+        .st-loading { text-align: center; padding: 56px 20px; font-size: 0.85rem; color: var(--text-muted); }
+        .st-error { text-align: center; padding: 56px 20px; font-size: 0.85rem; color: #EF4444; }
+        @media (max-width: 480px) {
+          .st-header h1 { font-size: 1.25rem; }
+          .st-legend { display: none; }
+        }
+      `}</style>
+ 
+      <div className="st-page" onClick={() => setSelected(null)}>
+        <div className="st-header">
+          <h1>Skill Tree</h1>
+          <p>Skills unlock as you log what you use across completed opportunities. Start at the bottom — work your way up.</p>
+ 
+          {!loading && !error && (
+            <div className="st-stats">
+              <div className="st-chip"><div className="st-dot" style={{ background: "#D4A017" }} />{mastered} Mastered</div>
+              <div className="st-chip"><div className="st-dot" style={{ background: "#F5C842" }} />{inProg} In Progress</div>
+              <div className="st-chip"><div className="st-dot" style={{ background: "#CBD5E1" }} />{nodes.length - mastered - inProg} Locked</div>
+            </div>
+          )}
+ 
+          <div className="st-tabs">
+            <button className={`st-tab${tab === "technical" ? " active" : ""}`}
+              onClick={(e) => { e.stopPropagation(); setTab("technical"); setSelected(null); }}>
+              ⚡ Technical
+            </button>
+            <button className={`st-tab${tab === "nontechnical" ? " active" : ""}`}
+              onClick={(e) => { e.stopPropagation(); setTab("nontechnical"); setSelected(null); }}>
+              🌱 Non-Technical
+            </button>
+          </div>
+        </div>
+ 
+        {loading && <div className="st-loading">Loading your skills…</div>}
+        {error && <div className="st-error">{error}</div>}
+ 
+        {!loading && !error && (
+          <>
+            <div className="st-canvas">
+              <div className="st-legend">
+                <div className="st-legend-item">
+                  <div className="st-legend-swatch" style={{ background: "#F5C842", border: "2px solid #D4A017" }} />Mastered
+                </div>
+                <div className="st-legend-item">
+                  <div className="st-legend-swatch" style={{ background: "#FEFCE8", border: "2px solid #F5C842" }} />In Progress
+                </div>
+                <div className="st-legend-item">
+                  <div className="st-legend-swatch" style={{ background: "#F1F5F9", border: "2px solid #CBD5E1" }} />Locked
+                </div>
+              </div>
+              <SkillTree
+                nodes={nodes}
+                onSelect={(n) => setSelected((p) => p?.id === n.id ? null : n)}
+                selectedId={selected?.id ?? null}
+              />
+            </div>
+ 
+            {!selected && <p className="st-hint">Tap any node to see requirements and your progress</p>}
+ 
+            {selected && (
+              <div className="st-panel-wrap" onClick={(e) => e.stopPropagation()}>
+                <DetailPanel node={selected} onClose={() => setSelected(null)} />
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
+  );
+}
