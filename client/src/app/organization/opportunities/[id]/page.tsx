@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { AppModal } from "@/components/common/app-modal";
 import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft, MessageSquareCheck, MessageCircleMore, UserStar, CircleDollarSign, Clock4} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/providers/auth-provider";
@@ -32,13 +33,14 @@ export default function ViewOpportunityPage({
   params: Promise<{ id: string }>
 }) {
     const { id } = use(params);
-    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate} = useOrgViewOpportunityViewModel(id)
+    const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate, reviewModalOpen, setReviewModalOpen, submitting, submitReview} = useOrgViewOpportunityViewModel(id)
 
     if (loading || !session || fetching) {
         return <main className="p-6">Loading...</main>
     }
 
   return (
+    <>
     <div className="min-h-screen">
         <title>Organization View Opportunity - Volunteerly</title>       
         <OrganizationNavbar
@@ -249,7 +251,7 @@ export default function ViewOpportunityPage({
                                         </div>
 
                                         <div className="md:col-span-2 flex flex-col gap-3">
-                                            <Button variant="outline" data-icon="inline-end" className="cursor-pointer"> <UserStar/> Review</Button>
+                                            <Button variant="outline" data-icon="inline-end" className="cursor-pointer" onClick={() => setReviewModalOpen(true)}> <UserStar/> Review</Button>
                                             <Button variant="outline" data-icon="inline-end" className="cursor-pointer"> <MessageCircleMore/> Message</Button>
                                         </div>
                                     </div>
@@ -328,5 +330,129 @@ export default function ViewOpportunityPage({
             </div>
         </main>
     </div>
+
+    <ReviewModal
+        open={reviewModalOpen}
+        volunteerName={`${opportunity?.volunteer?.firstName ?? ""} ${opportunity?.volunteer?.lastName ?? ""}`.trim()}
+        submitting={submitting}
+        onClose={() => setReviewModalOpen(false)}
+        onSubmit={submitReview}
+    />
+    </>
+    );
+}
+
+function ReviewModal({
+    open,
+    volunteerName,
+    submitting,
+    onClose,
+    onSubmit,
+}: {
+    open: boolean;
+    volunteerName: string;
+    submitting: boolean;
+    onClose: () => void;
+    onSubmit: (input: { rating: number; flagged: boolean; flagReason?: string }) => Promise<void>;
+}) {
+    const [rating, setRating] = useState(0);
+    const [hovered, setHovered] = useState(0);
+    const [flagged, setFlagged] = useState(false);
+    const [flagReason, setFlagReason] = useState("");
+    const [touched, setTouched] = useState(false);
+
+    const ratingMissing = rating === 0;
+    const flagReasonEmpty = flagged && flagReason.trim().length === 0;
+
+    async function handleSubmit() {
+        setTouched(true);
+        if (ratingMissing || flagReasonEmpty || submitting) return;
+        await onSubmit({ rating, flagged, flagReason: flagged ? flagReason : undefined });
+        setRating(0); setFlagged(false); setFlagReason(""); setTouched(false);
+    }
+
+    function handleClose() {
+        if (submitting) return;
+        setRating(0); setFlagged(false); setFlagReason(""); setTouched(false);
+        onClose();
+    }
+
+    return (
+        <AppModal
+            open={open}
+            onClose={handleClose}
+            title="Post Review"
+            maxWidthClassName="sm:max-w-lg"
+            footer={
+                <>
+                    <button
+                        onClick={handleClose}
+                        disabled={submitting}
+                        className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={handleSubmit}
+                        disabled={submitting}
+                        className="h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90 disabled:opacity-50"
+                    >
+                        {submitting ? "Posting..." : "Post"}
+                    </button>
+                </>
+            }
+        >
+            <div className="space-y-4">
+                <p className="text-sm text-foreground">
+                    Reviewing: <span className="font-semibold">{volunteerName}</span>
+                </p>
+
+                <div>
+                    <label className="mb-1 block text-sm font-medium text-foreground">Rating</label>
+                    <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                                key={star}
+                                type="button"
+                                disabled={submitting}
+                                onClick={() => setRating(star)}
+                                onMouseEnter={() => setHovered(star)}
+                                onMouseLeave={() => setHovered(0)}
+                                className="text-2xl leading-none disabled:opacity-50"
+                            >
+                                <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"}>★</span>
+                            </button>
+                        ))}
+                    </div>
+                    {touched && ratingMissing && <p className="mt-1 text-xs text-destructive">Please select a rating.</p>}
+                </div>
+
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                        type="checkbox"
+                        checked={flagged}
+                        onChange={(e) => setFlagged(e.target.checked)}
+                        disabled={submitting}
+                        className="h-4 w-4 rounded border-gray-300 accent-yellow-400"
+                    />
+                    <span className="text-sm text-foreground">Flag this volunteer</span>
+                </label>
+
+                {flagged && (
+                    <div>
+                        <label className="mb-1 block text-sm font-medium text-foreground">Reason for flagging:</label>
+                        <textarea
+                            value={flagReason}
+                            onChange={(e) => setFlagReason(e.target.value)}
+                            placeholder="Describe why you are flagging this volunteer..."
+                            rows={4}
+                            disabled={submitting}
+                            className={`w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
+                        />
+                        {touched && flagReasonEmpty && <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>}
+                    </div>
+                )}
+            </div>
+        </AppModal>
     );
 }
