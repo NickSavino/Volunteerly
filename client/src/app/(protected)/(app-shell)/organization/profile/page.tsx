@@ -35,7 +35,7 @@ export default function OrgProfilePage() {
   return (
     <div className="min-h-screen">
         <title>Organization Profile - Volunteerly</title>
-        <main className="md:h-[calc(100vh-64px)] px-10 py-5">
+        <main className="md:h-[calc(100vh-64px)] md:px-10 py-5">
             <Button
                 variant="ghost"
                 className="cursor-pointer pb-8"
@@ -45,9 +45,9 @@ export default function OrgProfilePage() {
                     Back
             </Button>
 
-            <div className="relative mb-6 h-40 w-full overflow-hidden rounded-xl bg-gray-800">
+            <div className="relative mb-6 min-h-48 w-full overflow-hidden rounded-xl bg-gray-800 md:h-40">
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900" />
-                <div className="absolute bottom-4 left-6 flex items-end gap-4">
+                <div className="absolute md:bottom-4 top-4 left-6 flex items-end gap-4">
                     <div className="relative">
                         <Avatar className="h-20 w-20">
                             <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")}/>
@@ -155,7 +155,7 @@ export default function OrgProfilePage() {
                                     <Field>
                                     <Label className="text-muted-foreground text-lg">Website</Label>
                                         {!editing ? 
-                                        <Label className="text-md"><a href={currentOrg?.website}>{currentOrg?.website}</a></Label>: 
+                                        <Label className="text-md"><a href={currentOrg?.website} className="hover:underline text-blue-600" >{currentOrg?.website}</a></Label>: 
                                         <InputGroup id="website">
                                             <InputGroupInput id="website" type="text" placeholder="example.org" value={currentOrg?.website}
                                             onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, website: e.target.value } : prev)} required/>

@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentOrganizationUpdate, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
 
 export function useOrgProfileViewModel() {
@@ -125,8 +126,10 @@ export function useOrgProfileViewModel() {
 
       if (updated.success){
         setEditing(false)
+        toast.success("Profile Updated!", { position: "top-right" })
       } else {
         setError("Could Not Update Organization.")
+        toast.error("Error updating Profile.", { position: "top-right" })
       }
       setFetching(false)
       return
@@ -161,7 +164,9 @@ export function useOrgProfileViewModel() {
       formData.append("image", newAvatar)
 
       const path = await UserService.uploadAvatar(formData)
-
+      if (path){
+        toast.success("Avatar Updated!", { position: "top-right" })
+      }
       setFetching(false)
     }
     return {loading, session,fetching, signOut, router, user, error, reviewSummary, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} 
