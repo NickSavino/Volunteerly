@@ -343,6 +343,24 @@ export async function completeOpportunity(oppId:string) {
         throw new Error("Error completing Opportunity.");
     }
 
+    const opp = await prisma.opportunity.findUnique({
+        where: { id: oppId },
+        select: { orgId: true },
+    });
+
+    if (opp?.orgId) {
+        await prisma.progressUpdate.create({
+            data: {
+                opportunityId: oppId,
+                senderId: opp.orgId,
+                senderRole: "ORGANIZATION",
+                title: "Opportunity Completed",
+                description: "The organization has marked this opportunity as complete.",
+                hoursContributed: 0,
+            },
+        });
+    }
+
     return organization;
 }
 
