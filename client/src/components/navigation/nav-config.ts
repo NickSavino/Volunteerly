@@ -38,7 +38,7 @@ export const NAV_CONFIG: Record<AppNavbarRole, AppNavConfig> = {
     profileSubtitle: "Volunteer",
     items: [
       { label: "Dashboard", href: "/volunteer" },
-      { label: "Opportunities", href: "/volunteer/opportunity" },
+      { label: "Opportunities", href: "/volunteer/opportunities" },
       { label: "Skill Tree", href: "/volunteer/skills" },
       { label: "Messages", href: "/volunteer/messages" },
       { label: "Profile", href: "/volunteer/profile" }
