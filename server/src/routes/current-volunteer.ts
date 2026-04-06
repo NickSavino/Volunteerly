@@ -16,9 +16,21 @@ import {
     postFlag,
     logOpportunitySkills,
     getOpportunitySkills,
+    getVolunteerSkillCounts
 } from "../services/volunteer-service.js";
 
 export const currentVolunteerRouter = Router();
+
+currentVolunteerRouter.get("/skill-counts", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const counts = await getVolunteerSkillCounts(userId);
+        res.status(200).json(counts);
+    } catch (error) {
+        next(error);
+    }
+});
 
 currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next) => {
     try {

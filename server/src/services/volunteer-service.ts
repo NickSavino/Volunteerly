@@ -280,3 +280,16 @@ export async function getOpportunitySkills(volId: string, oppId: string): Promis
     });
     return skills.map((s) => s.skillName);
 }
+
+export async function getVolunteerSkillCounts(volId: string): Promise<Record<string, number>> {
+    const skills = await prisma.opportunitySkill.findMany({
+        where: { volId },
+        select: { skillName: true },
+    });
+ 
+    const counts: Record<string, number> = {};
+    for (const { skillName } of skills) {
+        counts[skillName] = (counts[skillName] ?? 0) + 1;
+    }
+    return counts;
+}
