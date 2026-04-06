@@ -286,7 +286,7 @@ export default function OpportunitiesPage() {
 
                     <div
                         ref={mapPanelRef}
-                        className="hidden lg:block flex-shrink-0 overflow-hidden border-l"
+                        className="hidden lg:block flex-shrink-0 overflow-hidden border-l isolate"
                         style={{ width: MAP_DEFAULT_WIDTH }}
                     >
                         <OpportunitiesMap opportunities={opportunities} />
@@ -294,19 +294,21 @@ export default function OpportunitiesPage() {
                 </div>
             </div>
 
-            <OpportunityDetailModal
-                opp={selectedOpp}
-                matchPct={selectedOpp ? getMatchPct(selectedOpp) : 0}
-                hasApplied={selectedOpp ? appliedOppIds.has(selectedOpp.id) : false}
-                onClose={() => setSelectedOpp(null)}
-                onApply={handleApply}
-            />
-            <ApplyModal
-                open={applyModalOpen}
-                oppName={selectedOpp?.name ?? ""}
-                onClose={() => setApplyModalOpen(false)}
-                onSubmit={submitApplication}
-            />
+            <div className="relative z-50">
+                <OpportunityDetailModal
+                    opp={selectedOpp}
+                    matchPct={selectedOpp ? getMatchPct(selectedOpp) : 0}
+                    hasApplied={selectedOpp ? appliedOppIds.has(selectedOpp.id) : false}
+                    onClose={() => setSelectedOpp(null)}
+                    onApply={handleApply}
+                />
+                <ApplyModal
+                    open={applyModalOpen}
+                    oppName={selectedOpp?.name ?? ""}
+                    onClose={() => setApplyModalOpen(false)}
+                    onSubmit={submitApplication}
+                />
+            </div>
         </div>
     );
 }
