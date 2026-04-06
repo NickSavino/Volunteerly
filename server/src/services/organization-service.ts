@@ -288,7 +288,26 @@ export async function getOrgApplication(orgId: string, appId: string) {
         where: { id: appId, opportunity:{orgId:orgId} },
         include: {
         volunteer: {
-            select: { id: true, firstName: true, lastName: true, bio:true, location:true, availability:true },
+            select: { id: true, firstName: true, lastName: true, bio:true, location:true, availability:true,
+            workExperiences: {
+                select: {
+                id: true,
+                jobTitle: true,
+                company: true,
+                startDate: true,
+                endDate: true,
+                responsibilities: true,
+                },
+            },
+            educations: {
+                select: {
+                id: true,
+                institution: true,
+                degree: true,
+                graduationYear: true,
+                },
+            },
+            },            
         },       
     }
     });
