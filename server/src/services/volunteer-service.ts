@@ -6,7 +6,11 @@ export async function getCurrentVolunteer(volunteerId: string) {
     const volunteer = await prisma.volunteer.findUnique({
         where: { id: volunteerId },
     });
-    return volunteer;
+    if (!volunteer) return null;
+    const reviewCount = await prisma.review.count({
+        where: { revieweeId: volunteerId },
+    });
+    return { ...volunteer, reviewCount };
 }
 
 export async function createCurrentVolunteer(userId: string, firstName: string, lastName: string) {
