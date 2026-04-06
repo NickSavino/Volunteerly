@@ -39,5 +39,8 @@ export function resolveDefaultAppRoute({
       
     case "MODERATOR":
       return "/moderator";
+
+    case "ADMIN":
+      return "/admin"
   }
 }
