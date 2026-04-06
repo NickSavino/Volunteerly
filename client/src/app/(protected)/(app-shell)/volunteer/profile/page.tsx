@@ -70,6 +70,7 @@ export default function ProfilePage() {
             <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row gap-6 items-stretch">
 
+                    {/* Left sidebar */}
                     <div className="flex flex-col gap-4 w-full lg:w-72 flex-shrink-0">
                         <div className="rounded-xl border bg-white p-6 flex flex-col items-center gap-3 shadow-sm">
                             <div className="relative">
