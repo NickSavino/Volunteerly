@@ -38,7 +38,7 @@ type AppSessionContextValue = {
 const AppSessionContext = createContext<AppSessionContextValue | undefined>(undefined);
 
 export function AppSessionProvider({ children }: { children: ReactNode }) {
-  const { session, loading: authLoading } = useAuth();
+  const { session, loading: authLoading, signOut} = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
@@ -134,7 +134,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Failed to initialize app session", error);
-
+      signOut()
       if (requestId !== requestIdRef.current) return;
       clear();
     } finally {

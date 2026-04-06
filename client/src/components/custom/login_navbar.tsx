@@ -24,19 +24,19 @@ export function Navbar() {
           <NavigationMenuList className="flex gap-2">
             <NavigationMenuItem>
               <Link href="/" passHref>
-                <Button variant={usePathname() === "/" ? "default" : "ghost"}>Home</Button>
+                <Button variant={usePathname() === "/" ? "default" : "ghost"} className="cursor-pointer">Home</Button>
               </Link>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <Link href="/login" passHref>
-                <Button variant={usePathname() === "/login" ? "default" : "ghost"}>Login</Button>
+                <Button variant={usePathname() === "/login" ? "default" : "ghost"} className="cursor-pointer">Login</Button>
               </Link>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
               <Link href="/signup" passHref>
-                <Button variant={usePathname() === "/signup" ? "default" : "ghost"}>Sign Up</Button>
+                <Button variant={usePathname() === "/signup" ? "default" : "ghost"} className="cursor-pointer">Sign Up</Button>
               </Link>
             </NavigationMenuItem>
           </NavigationMenuList>
