@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
 import { Settings, Pencil } from "lucide-react";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
-import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award } from "lucide-react";
+import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award, LucideIcon } from "lucide-react";
 import { OrganizationLoadingPage } from "../../organization/organization_loading";
 
 export default function ProfilePage() {
@@ -50,7 +50,7 @@ export default function ProfilePage() {
     }
     const fullName = `${currentVolunteer.firstName} ${currentVolunteer.lastName}`;
     
-    const awardIcons: Record<string, any> = {
+    const awardIcons: Record<string, LucideIcon> = {
         "Profile Pro": Star,
         
         "First Step": Rocket,
@@ -100,6 +100,38 @@ export default function ProfilePage() {
                                 <p className="font-bold text-lg text-gray-900">{fullName}</p>
                                 <p className="text-sm text-gray-400">Member since {memberSince}</p>
                             </div>
+                        </div>
+
+                        {/* Average Rating Card */}
+                        <div className="rounded-xl border bg-white p-6 shadow-sm flex flex-col items-center gap-2">
+                            <h2 className="font-semibold text-gray-800 text-lg">Your Rating</h2>
+                            {currentVolunteer.reviewCount > 0 ? (
+                                <>
+                                    <div className="flex items-center gap-0.5 mt-1">
+                                        {[1, 2, 3, 4, 5].map((star) => {
+                                            const fill = Math.min(1, Math.max(0, currentVolunteer.averageRating - (star - 1)));
+                                            const pct = Math.round(fill * 100);
+                                            return (
+                                                <span key={star} className="relative text-2xl leading-none">
+                                                    <span className="text-gray-300">★</span>
+                                                    <span
+                                                        className="absolute inset-0 overflow-hidden text-yellow-400"
+                                                        style={{ width: `${pct}%` }}
+                                                    >★</span>
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                    <p className="text-sm font-semibold text-gray-800">
+                                        {currentVolunteer.averageRating.toFixed(1)} / 5.0
+                                    </p>
+                                    <p className="text-xs text-gray-400">
+                                        Based on {currentVolunteer.reviewCount} {currentVolunteer.reviewCount === 1 ? "review" : "reviews"}
+                                    </p>
+                                </>
+                            ) : (
+                                <p className="text-sm text-gray-400 text-center">No reviews yet.</p>
+                            )}
                         </div>
 
                         {/* milestones*/}
