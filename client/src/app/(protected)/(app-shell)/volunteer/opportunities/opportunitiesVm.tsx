@@ -11,15 +11,16 @@ export type CommitmentFilter = "ALL" | "FLEXIBLE" | "PART_TIME" | "FULL_TIME";
 export type SortOption = "RELEVANT" | "MATCH_HIGH" | "MATCH_LOW" | "HOURS_LOW" | "HOURS_HIGH" | "NEWEST";
 
 export const OPPORTUNITY_CATEGORIES = [
-    "Frontend Developer",
-    "Backend Developer",
-    "Data Science",
-    "UI/UX Design",
-    "Mobile App Dev",
+    "Frontend",
+    "Backend",
+    "Data",
+    "UI/UX",
+    "Mobile App",
     "Web Dev",
-    "Data Analytics",
-    "Humanitarian",
-    "Poverty",
+    "Accounting",
+    "Finance",
+    "Marketing",
+    "HR",
 ] as const;
 
 function getMatchPctStatic(opp: Opportunity): number {
