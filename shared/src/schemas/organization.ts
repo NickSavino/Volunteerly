@@ -14,6 +14,10 @@ export const TotalHoursSchema = z.object({
   }),
 })
 export const organizationAwardsSchema = z.record(z.string(), z.string());
+export const OrganizationReviewStatsSchema = z.object({
+  avgRating: z.number(),
+  totalReviews: z.number(),
+});
 
 export const OrganizationSchema = z.object({
   id: z.uuid(),

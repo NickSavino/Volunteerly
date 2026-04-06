@@ -38,7 +38,7 @@ type AppSessionContextValue = {
 const AppSessionContext = createContext<AppSessionContextValue | undefined>(undefined);
 
 export function AppSessionProvider({ children }: { children: ReactNode }) {
-  const { session, loading: authLoading } = useAuth();
+  const { session, loading: authLoading, signOut } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
@@ -55,6 +55,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
     setCurrentVolunteer(null);
     setCurrentOrganization(null);
     setCurrentModerator(null);
+    signOut()
   }, []);
 
   const refresh = useCallback(async () => {

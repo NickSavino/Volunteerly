@@ -29,10 +29,10 @@ export default function OrgOpportunitiesPage() {
   return (
     <div className="min-h-screen">
         <title>Organization Opportunities - Volunteerly</title>
-        <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 ">
+        <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] md:p-6 py-6">
     
             <div className="w-full mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
-                <div className="md:flex items-center justify-between">
+                <div className="md:flex items-center justify-between mx-3 md:mx-0">
                     <div>
                         <h1 className="text-2x1 font-bold">Opportunities</h1>
                         <p>
@@ -53,7 +53,7 @@ export default function OrgOpportunitiesPage() {
                         <CardContent className="h-full flex flex-col">
                             <Tabs defaultValue="OPEN" value={currentTab} onValueChange={setCurrentTab} className="flex flex-col h-full">
                                 <div className="w-full border-b border-gray-300 mb-5">
-                                    <TabsList className="flex w-1/2" variant="line">
+                                    <TabsList className="flex md:w-1/2" variant="line">
                                         <TabsTrigger value="OPEN" className="cursor-pointer">Posted</TabsTrigger>
                                         <TabsTrigger value="FILLED" className="cursor-pointer">In-Progress</TabsTrigger>
                                         <TabsTrigger value="CLOSED" className="cursor-pointer">Completed</TabsTrigger>

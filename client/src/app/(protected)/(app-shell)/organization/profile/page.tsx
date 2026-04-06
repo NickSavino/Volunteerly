@@ -26,7 +26,7 @@ const awardIcons: Record<string, LucideIcon> = {
 export default function OrgProfilePage() {
   const {loading, session, fetching, signOut, router, currentOrg,setCurrentOrg, 
     address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit, 
-    impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} = useOrgProfileViewModel()
+    impactHighlights, setImpactHighlights, reviewSummary, fileInputRef, handleAvatarChange, awards} = useOrgProfileViewModel()
 
   if (loading || !session || fetching) {
     return (<LoadingScreen />)
@@ -35,7 +35,7 @@ export default function OrgProfilePage() {
   return (
     <div className="min-h-screen">
         <title>Organization Profile - Volunteerly</title>
-        <main className="md:h-[calc(100vh-64px)] px-10 py-5">
+        <main className="md:h-[calc(100vh-64px)] md:px-10 py-5">
             <Button
                 variant="ghost"
                 className="cursor-pointer pb-8"
@@ -45,9 +45,9 @@ export default function OrgProfilePage() {
                     Back
             </Button>
 
-            <div className="relative mb-6 h-40 w-full overflow-hidden rounded-xl bg-gray-800">
+            <div className="relative mb-6 min-h-48 w-full overflow-hidden rounded-xl bg-gray-800 md:h-40">
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900" />
-                <div className="absolute bottom-4 left-6 flex items-end gap-4">
+                <div className="absolute md:bottom-4 top-4 left-6 flex items-end gap-4">
                     <div className="relative">
                         <Avatar className="h-20 w-20">
                             <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")}/>
@@ -74,21 +74,50 @@ export default function OrgProfilePage() {
                         )}
                     </div>
                 </div>  
-                <div className="absolute bottom-4 right-6 flex flex-row gap-2">
-                    {Object.entries(awards).map(([title, description]) => {
-                        const Icon = awardIcons[title] || Award
-                        return (
-                        <HoverCard key={title}>
+                <div className="absolute bottom-4 right-6 flex flex-col gap-2 text-center">
+                    <div className="flex flex-row gap-2 justify-end">
+                        {Object.entries(awards).map(([title, description]) => {
+                            const Icon = awardIcons[title] || Award
+                            return (
+                            <HoverCard key={title}>
+                                <HoverCardTrigger asChild>
+                                    <Button className="cursor-pointer"><Icon /></Button>
+                                </HoverCardTrigger>
+                                <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
+                                    <div className="font-semibold">{title}</div>
+                                    <div>{description}</div>
+                                </HoverCardContent>
+                            </HoverCard>
+                            )
+                        })}
+                    </div>
+
+                    {(reviewSummary.totalReviews || 0) > 0 &&
+                        <HoverCard>
                             <HoverCardTrigger asChild>
-                                <Button className="cursor-pointer"><Icon /></Button>
+                                <Button className="cursor-pointer" variant={"ghost"}>
+                                    {[1, 2, 3, 4, 5].map((star) => {
+                                        const fill = Math.min(1, Math.max(0, (reviewSummary.avgRating ?? 0) - (star - 1)));
+                                        const pct = Math.round(fill * 100);
+                                        return (
+                                            <span key={star} className="relative text-2xl leading-none">
+                                                <span className="text-gray-500">★</span>
+                                                <span
+                                                    className="absolute inset-0 overflow-hidden text-primary"
+                                                    style={{ width: `${pct}%` }}
+                                                >★</span>
+                                            </span>
+                                        );
+                                    })}
+
+                                </Button>
                             </HoverCardTrigger>
                             <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
-                                <div className="font-semibold">{title}</div>
-                                <div>{description}</div>
+                                <div className="font-semibold">Rating {reviewSummary.avgRating || 0} / 5</div>
+                                <div>Based on {reviewSummary.totalReviews} Review(s)</div>
                             </HoverCardContent>
                         </HoverCard>
-                        )
-                    })}
+                    }
                 </div>
             </div>            
 
@@ -126,7 +155,7 @@ export default function OrgProfilePage() {
                                     <Field>
                                     <Label className="text-muted-foreground text-lg">Website</Label>
                                         {!editing ? 
-                                        <Label className="text-md"><a href={currentOrg?.website}>{currentOrg?.website}</a></Label>: 
+                                        <Label className="text-md"><a href={currentOrg?.website} className="hover:underline text-blue-600" >{currentOrg?.website}</a></Label>: 
                                         <InputGroup id="website">
                                             <InputGroupInput id="website" type="text" placeholder="example.org" value={currentOrg?.website}
                                             onChange={(e) => setCurrentOrg((prev) => prev ? { ...prev, website: e.target.value } : prev)} required/>

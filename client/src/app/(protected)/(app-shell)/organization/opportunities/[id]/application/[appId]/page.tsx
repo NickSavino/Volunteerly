@@ -30,7 +30,7 @@ export default function ViewApplicationPage({
     <div className="min-h-screen">
         <title>Organization View Opportunity - Volunteerly</title>       
 
-        <main className="flex flex-col md:flex-row p-6 mx-10">
+        <main className="flex flex-col md:flex-row p-6 md:mx-10">
 
             <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3xl flex flex-col gap-6 mb-10">
                 <div>

@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentOrganizationUpdate, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
 
 export function useOrgProfileViewModel() {
@@ -16,6 +17,10 @@ export function useOrgProfileViewModel() {
   const [error, setError] = useState<string | null>(null);
   const [fetching, setFetching] = useState(true)
   const [awards, setAwards] = useState<Record<string, string>>({})
+  const [reviewSummary, setReviewSummary] = useState({
+    avgRating: 0,
+    totalReviews: 0
+  })
   const [impactHighlights, setImpactHighlights] = useState({
     first: { label: "", value: "" },
     second: { label: "", value: "" },
@@ -58,10 +63,15 @@ export function useOrgProfileViewModel() {
             second: { label: Object.keys(org.data.impactHighlights[1])[0], value: org.data.impactHighlights[1][Object.keys(org.data.impactHighlights[1])[0]] },
           })
         }
-
+        
         const awardsFetch = await OrganizationService.getOrgAwards()
         if (awardsFetch.success){
           setAwards(awardsFetch.data)
+        }
+
+        const reviewsFetch = await OrganizationService.getReviewSummary()
+        if (reviewsFetch.success){
+          setReviewSummary(reviewsFetch.data)
         }
         setFetching(false)
       } catch (error) {
@@ -116,8 +126,10 @@ export function useOrgProfileViewModel() {
 
       if (updated.success){
         setEditing(false)
+        toast.success("Profile Updated!", { position: "top-right" })
       } else {
         setError("Could Not Update Organization.")
+        toast.error("Error updating Profile.", { position: "top-right" })
       }
       setFetching(false)
       return
@@ -152,8 +164,10 @@ export function useOrgProfileViewModel() {
       formData.append("image", newAvatar)
 
       const path = await UserService.uploadAvatar(formData)
-
+      if (path){
+        toast.success("Avatar Updated!", { position: "top-right" })
+      }
       setFetching(false)
     }
-    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} 
+    return {loading, session,fetching, signOut, router, user, error, reviewSummary, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} 
 }

@@ -44,7 +44,7 @@ export default function ViewOpportunityPage({
     <div className="min-h-screen">
         <title>Organization View Opportunity - Volunteerly</title>       
 
-        <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 mx-10">
+        <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 md:mx-10">
 
             <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6 mb-10">
                 <div>
@@ -202,8 +202,8 @@ export default function ViewOpportunityPage({
                                     <CardTitle>Opportunity Overview</CardTitle>
                                     <CardDescription>{opportunity?.description}</CardDescription>
                                     {opportunity?.status == "FILLED" &&
-                                        <CardAction>
-                                            <Button className="cursor-pointer" onClick={completeOpportunity}>Complete Opportunity</Button>
+                                        <CardAction className="w-full md:w-auto mt-2 md:mt-0">
+                                            <Button className="cursor-pointer w-full md:w-auto" onClick={completeOpportunity}>Complete</Button>
                                         </CardAction>
                                     }
 

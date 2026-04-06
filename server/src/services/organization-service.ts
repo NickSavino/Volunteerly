@@ -236,6 +236,27 @@ export async function sumTotalOpportunityHours(organizationId: string) {
     });
 }
 
+
+export async function getReviewSummary(organizationId: string) {
+  const stats = await prisma.review.aggregate({
+    where: {
+      revieweeId: organizationId,
+    },
+    _avg: {
+      rating: true,
+    },
+    _count: {
+      rating: true,
+    },
+  });
+
+  return {
+    avgRating: stats._avg.rating ?? 0,
+    totalReviews: stats._count.rating,
+  };
+}
+
+
 export async function getActiveOpportunities(organizationId: string) {
     return prisma.opportunity.findMany({
         where: { orgId: organizationId, status: {in: ["OPEN", "FILLED"]}},
