@@ -26,7 +26,6 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <VolunteerNavbar currentVolunteer={vm.currentVolunteer ?? undefined} onSignOut={() => vm.router.push("/")} />
 
             <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
                 <button

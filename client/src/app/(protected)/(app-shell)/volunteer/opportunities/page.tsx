@@ -121,10 +121,6 @@ export default function OpportunitiesPage() {
 
     return (
         <div className="flex h-screen flex-col overflow-hidden bg-background">
-            <VolunteerNavbar
-                currentVolunteer={currentVolunteer}
-                onSignOut={handleSignOut}
-            />
 
             <div className="flex flex-1 overflow-hidden">
                 <aside className="hidden w-56 flex-shrink-0 overflow-y-auto border-r bg-card p-5 lg:block">
