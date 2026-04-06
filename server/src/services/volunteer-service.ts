@@ -6,7 +6,11 @@ export async function getCurrentVolunteer(volunteerId: string) {
     const volunteer = await prisma.volunteer.findUnique({
         where: { id: volunteerId },
     });
-    return volunteer;
+    if (!volunteer) return null;
+    const reviewCount = await prisma.review.count({
+        where: { revieweeId: volunteerId },
+    });
+    return { ...volunteer, reviewCount };
 }
 
 export async function createCurrentVolunteer(userId: string, firstName: string, lastName: string) {
@@ -117,13 +121,23 @@ export async function postReview(
     });
     if (existing) throw new Error("ALREADY_REVIEWED");
 
-    return prisma.review.create({
+    await prisma.review.create({
         data: {
             issuerId,
             revieweeId,
             opportunityId,
             rating: input.rating,
         },
+    });
+
+    const allReviews = await prisma.review.findMany({
+        where: { revieweeId },
+        select: { rating: true },
+    });
+    const newAverage = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+    await prisma.volunteer.update({
+        where: { id: revieweeId },
+        data: { averageRating: newAverage },
     });
 }
 
