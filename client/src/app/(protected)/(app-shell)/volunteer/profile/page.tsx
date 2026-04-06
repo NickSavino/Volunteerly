@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
 import { Settings, Pencil } from "lucide-react";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
-import { Rocket, Handshake, Star, Award, LucideIcon } from "lucide-react";
+import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award, type LucideIcon } from "lucide-react";
 import { OrganizationLoadingPage } from "../../organization/organization_loading";
 
 export default function ProfilePage() {
@@ -103,7 +103,6 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        {/* Average Rating Card */}
                         <div className="rounded-xl border bg-white p-6 shadow-sm flex flex-col items-center gap-2">
                             <h2 className="font-semibold text-gray-800 text-lg">Your Rating</h2>
                             {currentVolunteer.reviewCount > 0 ? (
@@ -135,7 +134,6 @@ export default function ProfilePage() {
                             )}
                         </div>
 
-                        {/* Milestones */}
                         <div className="rounded-xl border bg-white p-6 shadow-sm flex flex-col items-center gap-3">
                             <h2 className="font-semibold text-gray-800 text-lg mb-3">Milestones</h2>
                             <div className="flex flex-wrap gap-2 justify-center">
