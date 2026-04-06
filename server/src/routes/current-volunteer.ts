@@ -63,10 +63,13 @@ currentVolunteerRouter.post("/reviews", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
-        const { revieweeId, rating } = req.body;
-        await postReview(userId, revieweeId, { rating });
+        const { revieweeId, rating, opportunityId } = req.body;
+        await postReview(userId, revieweeId, opportunityId, { rating });
         res.status(201).json({ success: true });
-    } catch (error) {
+    } catch (error: any) {
+        if (error?.message === "ALREADY_REVIEWED") {
+            return res.status(409).json({ error: "Already reviewed for this opportunity." });
+        }
         next(error);
     }
 });
