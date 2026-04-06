@@ -13,6 +13,7 @@ import {
     addProgressUpdate,
     requestCompletion,
     postReview,
+    postFlag,
 } from "../services/volunteer-service.js";
 
 export const currentVolunteerRouter = Router();
@@ -62,8 +63,20 @@ currentVolunteerRouter.post("/reviews", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
-        const { revieweeId, rating, title, description } = req.body;
-        await postReview(userId, revieweeId, { rating, title, description });
+        const { revieweeId, rating } = req.body;
+        await postReview(userId, revieweeId, { rating });
+        res.status(201).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/flags", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { flaggedUserId, reason } = req.body;
+        await postFlag(userId, flaggedUserId, reason);
         res.status(201).json({ success: true });
     } catch (error) {
         next(error);
