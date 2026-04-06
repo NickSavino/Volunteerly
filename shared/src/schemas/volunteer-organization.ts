@@ -16,5 +16,7 @@ export const PublicOrgProfileSchema = z.object({
     impactHighlights: z.array(ImpactHighlightSchema),
     totalVolunteersHired: z.number(),
     activeOpportunities: z.number(),
+    averageRating: z.number().nullable(),
+    reviewCount: z.number(),
 });
 export type PublicOrgProfile = z.infer<typeof PublicOrgProfileSchema>;

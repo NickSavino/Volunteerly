@@ -32,6 +32,14 @@ export async function getPublicOrgProfile(orgId: string) {
         },
     });
 
+    const reviews = await prisma.review.findMany({
+        where: { revieweeId: orgId },
+        select: { rating: true },
+    });
+    const averageRating = reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : null;
+
     const rawHighlights = Array.isArray(org.impactHighlights) ? org.impactHighlights : [];
     const impactHighlights = rawHighlights
         .filter((h: any) => h && typeof h.value === "number" && typeof h.label === "string")
@@ -47,5 +55,7 @@ export async function getPublicOrgProfile(orgId: string) {
         impactHighlights,
         totalVolunteersHired,
         activeOpportunities,
+        averageRating,
+        reviewCount: reviews.length,
     };
 }
