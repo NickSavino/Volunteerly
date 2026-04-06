@@ -15,6 +15,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
   const [error, setError] = useState<string | null>(null);
   const [application, setApplication] = useState<Application>()
   const [fetching, setFetching] = useState(true)
+  const [matchedSchedule, setMatchedSchedule] = useState<string[]>()
 
   // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
@@ -60,6 +61,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
             setFetching(false)
             return; 
           }
+          setMatchedSchedule(opp.data.availability.filter(day => app.data.volunteer?.availability?.includes(day)))
           setApplication(app.data);   
           setFetching(false)
         }catch (error)  {
@@ -83,6 +85,6 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
       }
       setError("Cannot Select Volunteer")
     }
-    return {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} 
+    return {loading, fetching, session, signOut, router, user, error, currentUser, matchedSchedule,application, selectVolunteer} 
 
   }

@@ -18,7 +18,7 @@ export const ApplicationSchema = z.object({
         bio: z.string(),
         location: z.string().optional(),
         availability: z.array(z.any()).optional(),
-        averageRating: z.number(),
+        averageRating: z.number().optional(),
         workExperiences: z.array(
           z.object({
             id: z.string(),

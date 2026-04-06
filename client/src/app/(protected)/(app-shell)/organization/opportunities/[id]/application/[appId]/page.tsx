@@ -20,7 +20,7 @@ export default function ViewApplicationPage({
   params: Promise<{ id: string, appId: string }>
 }) {
     const { id, appId } = use(params);
-    const {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} = useOppApplicationViewModel(id, appId)
+    const {loading, fetching, session, signOut, router, user, error, matchedSchedule, currentUser, application, selectVolunteer} = useOppApplicationViewModel(id, appId)
 
     if (loading || !session || fetching) {
         return <LoadingScreen />
@@ -169,10 +169,19 @@ export default function ViewApplicationPage({
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Message to Organization</CardTitle>
+                        <CardTitle>Opportunity Specific Details</CardTitle>
                     </CardHeader>
                     <CardContent>
+                        <CardTitle className="text-md pb-2">Message to Organization</CardTitle>
                         <p>{application?.message}</p>
+                    </CardContent>
+                    <CardContent>
+                        <CardTitle className="text-md pb-2">Availability Match</CardTitle>
+                        {matchedSchedule?.length === 0 ? 
+                            <p className="text-destructive">No Days Match</p>
+                        :
+                            <p>{matchedSchedule?.join(", ")}</p>
+                        }
                     </CardContent>
                 </Card>
 

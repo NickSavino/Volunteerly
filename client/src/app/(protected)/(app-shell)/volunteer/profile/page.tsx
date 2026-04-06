@@ -11,7 +11,7 @@ import { Toggle } from "@/components/ui/toggle";
 import { Settings, Pencil } from "lucide-react";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award } from "lucide-react";
-import { OrganizationLoadingPage } from "../../organization/organization_loading";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 export default function ProfilePage() {
     const {
@@ -41,7 +41,7 @@ export default function ProfilePage() {
     } = useProfileViewModel();
 
     if (loading || !session || fetching) {
-        return (<OrganizationLoadingPage />)
+        return (<LoadingScreen />)
     }
 
 
