@@ -405,3 +405,23 @@ export async function createOpportunity(orgId:string, name:string, category:stri
 
     return org;
 }
+
+export async function orgPostReview(
+    issuerId: string,
+    revieweeId: string,
+    rating: number,
+) {
+    return prisma.review.create({
+        data: { issuerId, revieweeId, rating },
+    });
+}
+
+export async function orgPostFlag(
+    issuerId: string,
+    flaggedUserId: string,
+    reason: string,
+) {
+    return prisma.flag.create({
+        data: { flagIssuerId: issuerId, flaggedUserId, reason },
+    });
+}
