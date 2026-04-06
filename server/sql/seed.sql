@@ -407,4 +407,11 @@ RAISE NOTICE 'vol2: %', vol2_id;
 RAISE NOTICE 'org1: %', org1_id;
 RAISE NOTICE 'mod1: %', mod1_id;
 
+--Storage Buckets
+INSERT INTO storage.buckets (id, name, public)
+VALUES
+    ('organization-documents', 'organization-documents', false),
+    ('avatars', 'avatars', true)
+ON CONFLICT (id) DO NOTHING;
+
 END $$;
