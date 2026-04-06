@@ -3,14 +3,29 @@ import z from "zod";
 export const ModeratorTicketStatusSchema = z.enum(["OPEN", "CLOSED"]);
 export type ModeratorTicketStatus = z.infer<typeof ModeratorTicketStatusSchema>;
 
+export const ModeratorTicketCategorySchema = z.enum([
+  "BUG",
+  "ABUSE",
+  "BILLING",
+  "OTHER",
+]);
+export type ModeratorTicketCategory = z.infer<typeof ModeratorTicketCategorySchema>;
+
+export const ModeratorUrgencyRatingSchema = z.enum([
+  "MINOR",
+  "MODERATE",
+  "SERIOUS",
+]);
+export type ModeratorUrgencyRating = z.infer<typeof ModeratorUrgencyRatingSchema>;
+
 export const ModeratorTicketSchema = z.object({
   id: z.uuid(),
   title: z.string(),
   description: z.string(),
   status: ModeratorTicketStatusSchema,
-  category: z.enum(["BUG", "ABUSE", "BILLING", "OTHER"]),
-  urgencyRating: z.enum(["MINOR", "MODERATE", "SERIOUS"]),
-  createdAt: z.string(),
+  category: ModeratorTicketCategorySchema,
+  urgencyRating: ModeratorUrgencyRatingSchema,
+  createdAt: z.iso.datetime(),
   issuerId: z.uuid(),
   targetId: z.uuid(),
 });

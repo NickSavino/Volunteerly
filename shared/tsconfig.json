@@ -35,11 +35,6 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
   },
   "include": ["src"]
 }

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ModeratorTicketListSchema } from "./moderator-tickets";
 
 export const PendingOrganizationSchema = z.object({
     id: z.uuid(),
@@ -25,30 +26,13 @@ export type FlaggedAccount = z.infer<typeof FlaggedAccountSchema>;
 export const FlaggedAccountsSchema = z.array(FlaggedAccountSchema);
 export type FlaggedAccounts = z.infer<typeof FlaggedAccountsSchema>;
 
-export const TicketStatusSchema = z.enum(["OPEN", "IN_PROGRESS", "RESOLVED", "CLOSED"]);
-export type TicketStatus = z.infer<typeof TicketStatusSchema>;
-
-export const SupportTicketSchema = z.object({
-    id: z.uuid(),
-    subject: z.string(),
-    description: z.string(),
-    status: TicketStatusSchema,
-    submittedByEmail: z.email(),
-    createdAt: z.iso.datetime(),
-    updatedAt: z.iso.datetime(),
-});
-export type SupportTicket = z.infer<typeof SupportTicketSchema>;
-
-export const SupportTicketsSchema = z.array(SupportTicketSchema);
-export type SupportTickets = z.infer<typeof SupportTicketsSchema>;
-
 export const ModeratorDashboardSummarySchema = z.object({
     pendingOrganizationsCount: z.number().int().nonnegative(),
     flaggedAccountsCount: z.number().int().nonnegative(),
     openTicketsCount: z.number().int().nonnegative(),
     recentPendingOrganizations: PendingOrganizationsSchema,
     recentFlaggedAccounts: FlaggedAccountsSchema,
-    recentTickets: SupportTicketsSchema,
+    recentTickets: ModeratorTicketListSchema,
 });
 export type ModeratorDashboardSummary = z.infer<typeof ModeratorDashboardSummarySchema>;
 
