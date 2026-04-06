@@ -308,3 +308,29 @@ function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, number>)
   return defs.map((d) => map[d.id]);
 }
 
+function buildEdges(
+  nodes: SkillNode[],
+  svgH: number
+): { x1: number; y1: number; x2: number; y2: number; lit: boolean }[] {
+  const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
+  const edges: { x1: number; y1: number; x2: number; y2: number; lit: boolean }[] = [];
+ 
+  for (const node of nodes) {
+    const to = getPos(node.tier, node.col, svgH);
+    for (const orGroup of node.requiresAny) {
+      for (const reqId of orGroup) {
+        const req = byId[reqId];
+        if (!req) continue;
+        const from = getPos(req.tier, req.col, svgH);
+        edges.push({
+          x1: from.x,
+          y1: from.y - NODE_H / 2,   
+          x2: to.x,
+          y2: to.y + NODE_H / 2,   
+          lit: req.status !== "locked",
+        });
+      }
+    }
+  }
+  return edges;
+}
