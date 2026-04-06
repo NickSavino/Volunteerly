@@ -288,7 +288,26 @@ export async function getOrgApplication(orgId: string, appId: string) {
         where: { id: appId, opportunity:{orgId:orgId} },
         include: {
         volunteer: {
-            select: { id: true, firstName: true, lastName: true, bio:true, location:true, availability:true },
+            select: { id: true, firstName: true, lastName: true, bio:true, location:true, availability:true, averageRating:true,
+            workExperiences: {
+                select: {
+                id: true,
+                jobTitle: true,
+                company: true,
+                startDate: true,
+                endDate: true,
+                responsibilities: true,
+                },
+            },
+            educations: {
+                select: {
+                id: true,
+                institution: true,
+                degree: true,
+                graduationYear: true,
+                },
+            },
+            },            
         },       
     }
     });
@@ -441,4 +460,30 @@ export async function updateOpportunity(oppId:string, orgId:string, name:string,
     }
 
     return org;
+}
+
+export async function orgPostReview(
+    issuerId: string,
+    revieweeId: string,
+    opportunityId: string,
+    rating: number,
+) {
+    const existing = await prisma.review.findUnique({
+        where: { issuerId_opportunityId: { issuerId, opportunityId } },
+    });
+    if (existing) throw new Error("ALREADY_REVIEWED");
+
+    return prisma.review.create({
+        data: { issuerId, revieweeId, opportunityId, rating },
+    });
+}
+
+export async function orgPostFlag(
+    issuerId: string,
+    flaggedUserId: string,
+    reason: string,
+) {
+    return prisma.flag.create({
+        data: { flagIssuerId: issuerId, flaggedUserId, reason },
+    });
 }

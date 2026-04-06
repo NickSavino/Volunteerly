@@ -1,6 +1,6 @@
 "use client";
 
-import { OrganizationLoadingPage } from "../../../organization_loading";
+import { LoadingScreen } from "@/components/common/loading-screen";
 import { useCreateOpportunityViewModel } from "../../create/orgCreateOpportunityVm";
 import OpportunityForm from "../../opportunityForm";
 import { use } from "react";
@@ -27,7 +27,7 @@ export default function OppUpdatePage({
     } = useCreateOpportunityViewModel(id)
 
     if (loading || submitting) {
-        return <OrganizationLoadingPage />
+        return <LoadingScreen />
     }
 
     return (

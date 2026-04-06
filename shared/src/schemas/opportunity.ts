@@ -37,6 +37,8 @@ export const OpportunitySchema = z.object({
     organization: z.object({
         id: z.uuid(),
         orgName: z.string(),
+        hqAdr: z.string().optional(),
+        causeCategory: z.string().optional(),
     }).optional(),
     volunteer: z.object({
         id: z.uuid(),
@@ -72,3 +74,13 @@ export const UpdateOpportunitySchema = z.object({
 export type UpdateOpportunitySchema = z.infer<typeof UpdateOpportunitySchema>;
 export type Opportunity = z.infer<typeof OpportunitySchema>;
 export const OpportunitiesSchema = z.array(OpportunitySchema);
+export type Opportunities = z.infer<typeof OpportunitiesSchema>;
+
+export const OpportunityFiltersSchema = z.object({
+    search: z.string().optional(),
+    category: z.string().optional(),
+    workType: z.enum(["IN_PERSON", "REMOTE", "HYBRID"]).optional(),
+    commitmentLevel: z.enum(["FLEXIBLE", "PART_TIME", "FULL_TIME"]).optional(),
+    maxHours: z.number().optional(),
+});
+export type OpportunityFilters = z.infer<typeof OpportunityFiltersSchema>;
