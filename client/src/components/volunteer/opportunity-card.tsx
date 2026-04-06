@@ -1,6 +1,7 @@
 "use client";
 
 import { Clock, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { Opportunity } from "@volunteerly/shared";
 
@@ -45,8 +46,16 @@ function MatchBadge({ pct }: { pct: number }) {
 }
 
 export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick }: OppCardProps) {
+    const router = useRouter();
     const avatarColor = getAvatarColor(opp.organization?.orgName ?? "O");
     const initials = opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG";
+    const orgId = opp.organization?.id;
+
+    function handleOrgClick(e: React.MouseEvent) {
+        if (!orgId) return;
+        e.stopPropagation();
+        router.push(`/volunteer/organizations/${orgId}`);
+    }
 
     return (
         <div
@@ -58,15 +67,27 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
         >
             <div className="mb-3 flex items-start justify-between gap-2">
                 <div className="flex items-center gap-3">
-                    <div className={cn(
-                        "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold",
-                        avatarColor
-                    )}>
+                    <button
+                        onClick={handleOrgClick}
+                        className={cn(
+                            "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold transition-opacity hover:opacity-75",
+                            avatarColor,
+                            !orgId && "pointer-events-none"
+                        )}
+                    >
                         {initials}
-                    </div>
+                    </button>
                     <div>
                         <p className="font-semibold text-foreground leading-tight">{opp.name}</p>
-                        <p className="text-xs text-muted-foreground">{opp.organization?.orgName ?? "—"}</p>
+                        <button
+                            onClick={handleOrgClick}
+                            className={cn(
+                                "text-xs text-muted-foreground text-left hover:underline",
+                                !orgId && "pointer-events-none"
+                            )}
+                        >
+                            {opp.organization?.orgName ?? "—"}
+                        </button>
                     </div>
                 </div>
                 <div className="flex flex-col items-end gap-1.5">
