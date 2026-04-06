@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity } from "../services/organization-service.js";
+import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity, orgPostReview, orgPostFlag } from "../services/organization-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -448,3 +448,26 @@ currentOrganizationRouter.put("/opportunity", auth, async (req, res, next) => {
 
 });
 
+currentOrganizationRouter.post("/reviews", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { revieweeId, rating } = req.body;
+        await orgPostReview(userId, revieweeId, rating);
+        res.status(201).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.post("/flags", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { flaggedUserId, reason } = req.body;
+        await orgPostFlag(userId, flaggedUserId, reason);
+        res.status(201).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
