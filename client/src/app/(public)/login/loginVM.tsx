@@ -17,14 +17,11 @@ export function useLoginViewModel() {
 
         const {error} = await AuthService.loginUserWithEmailPass(email, password)
 
-        setSubmitting(false);
-
         if (error) {
             setError(error.message);
+            setSubmitting(false);
             return;
         }
-
-        router.replace("/");
     }
     return {
         email,
