@@ -1,7 +1,6 @@
 "use client";
 
 import { useCreateOpportunityViewModel } from "./orgCreateOpportunityVm";
-import { OrganizationLoadingPage } from "../../organization_loading";
 import OpportunityForm from "../opportunityForm";
 import { LoadingScreen } from "@/components/common/loading-screen";
 

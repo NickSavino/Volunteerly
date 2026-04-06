@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Briefcase, GraduationCap, MapPin, School} from "lucide-react";
+import { ArrowLeft, Briefcase, GraduationCap, MapPin, School, User} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,7 @@ import { useOppApplicationViewModel } from "./oppApplicationVm";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { UserService } from "@/services/UserService";
 
 
 export default function ViewApplicationPage({
@@ -29,9 +30,9 @@ export default function ViewApplicationPage({
     <div className="min-h-screen">
         <title>Organization View Opportunity - Volunteerly</title>       
 
-        <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 mx-10">
+        <main className="flex flex-col md:flex-row p-6 mx-10">
 
-            <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6 mb-10">
+            <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3xl flex flex-col gap-6 mb-10">
                 <div>
                     <Button
                     variant="ghost"
@@ -49,7 +50,10 @@ export default function ViewApplicationPage({
                     <CardContent>
                         <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
                             <div className="flex md:w-full justify-center md:col-span-2">
-                                <img src={avtImg.src} className="w-24 md:w-30 rounded-lg object-cover"/>
+                                <Avatar className="h-auto w-20">
+                                    <AvatarImage src={UserService.getAvatarURL(application?.volId || "")} />
+                                    <AvatarFallback> <User className="h-auto w-20"></User></AvatarFallback>
+                                </Avatar>
                             </div>
 
                             <div className="md:col-span-4 flex flex-col gap-3">
@@ -115,7 +119,7 @@ export default function ViewApplicationPage({
                             }
                         </CardContent>
                     }
-                    {(application?.volunteer?.workExperiences?.length || 0) > 0 &&
+                    {(application?.volunteer?.educations?.length || 0) > 0 &&
                         <CardContent>
                             <CardTitle className="text-muted-foreground text-sm">Education</CardTitle>
                             {application?.volunteer?.educations?.map((edu) => (
