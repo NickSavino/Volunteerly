@@ -126,8 +126,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
     async function addUpdate() {
       if (progressUpdate){
         setFetching(true)
-        progressUpdate.opportunityId = opportunity?.id
-        const updated = await OrganizationService.addProgressUpdate(progressUpdate)
+        const updated = await OrganizationService.addProgressUpdate({ ...progressUpdate, opportunityId: opportunity?.id })
         if (updated.success){
           toast.success("Progress Updated Added!")
           setProgressUpdate({
@@ -146,17 +145,31 @@ export function useOrgViewOpportunityViewModel(id: string) {
       if (submitting || !opportunity?.volunteer?.id) return;
       setSubmitting(true);
       try {
-          await OrganizationService.postReview(opportunity.volunteer.id, input.rating);
-          if (input.flagged && input.flagReason?.trim()) {
-              await OrganizationService.postFlag(opportunity.volunteer.id, input.flagReason.trim());
-          }
+          await OrganizationService.postReview(opportunity.volunteer.id, opportunity.id, input.rating);
+      } catch (err) {
           setReviewModalOpen(false);
-          toast.success("Review posted!");
-      } catch {
-          setError("Failed to post review.");
-      } finally {
           setSubmitting(false);
+          const msg = err instanceof Error && err.message === "ALREADY_REVIEWED"
+              ? "You have already reviewed this volunteer for this opportunity."
+              : "Failed to post review.";
+          setError(msg);
+          setTimeout(() => setError(null), 4000);
+          return;
       }
+      if (input.flagged && input.flagReason?.trim()) {
+          try {
+              await OrganizationService.postFlag(opportunity.volunteer.id, input.flagReason.trim());
+          } catch {
+              setReviewModalOpen(false);
+              setSubmitting(false);
+              setError("Review posted, but failed to submit flag.");
+              setTimeout(() => setError(null), 4000);
+              return;
+          }
+      }
+      setReviewModalOpen(false);
+      setSubmitting(false);
+      toast.success("Review posted!");
     }
 
     return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate, reviewModalOpen, setReviewModalOpen, submitting, submitReview} 
