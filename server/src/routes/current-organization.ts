@@ -1,7 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, orgPostReview, orgPostFlag, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity, updateOpportunity, getOppVltApplication } from "../services/organization-service.js";
+import { applyOrganization, orgPostReview, orgPostFlag, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity, updateOpportunity, getOppVltApplication, getReviewSummary } from "../services/organization-service.js";
 import { getCurrentUser } from "../services/user-service.js";
 import { sendEmail } from "../services/azure-service.js";
 
@@ -154,6 +154,18 @@ currentOrganizationRouter.get("/opportunities/totalCount", async (req, res, next
 
         const opportunities = await countAllOpportunities(userId);
         res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentOrganizationRouter.get("/reviews", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const reviewSummary = await getReviewSummary(userId);
+        res.status(200).json(reviewSummary);
     } catch (error) {
         next(error);
     }

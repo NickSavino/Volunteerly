@@ -19,7 +19,8 @@ import {
     ProgressUpdateSchema,
     Opportunity,
     UpdateOpportunitySchema,
-    organizationAwardsSchema
+    organizationAwardsSchema,
+    OrganizationReviewStatsSchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -116,6 +117,12 @@ export class OrganizationService {
     static async sumTotalHours() {
         const response = await api<unknown>("/current-organization/opportunities/hoursTotal");
         const parsed = TotalHoursSchema.safeParse(response)
+        return parsed
+    }
+
+    static async getReviewSummary() {
+        const response = await api<unknown>("/current-organization/reviews");
+        const parsed = OrganizationReviewStatsSchema.safeParse(response)
         return parsed
     }
 
