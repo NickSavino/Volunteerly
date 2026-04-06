@@ -3,6 +3,7 @@
 import { useCreateOpportunityViewModel } from "./orgCreateOpportunityVm";
 import { OrganizationLoadingPage } from "../../organization_loading";
 import OpportunityForm from "../opportunityForm";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 export default function OppCreatePage() {
   const {        
@@ -21,7 +22,7 @@ export default function OppCreatePage() {
   } = useCreateOpportunityViewModel()
 
   if (loading || submitting) {
-    return <OrganizationLoadingPage />
+    return <LoadingScreen />
   }
 
   return (

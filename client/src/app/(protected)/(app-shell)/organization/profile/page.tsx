@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserService } from "@/services/UserService";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { OrganizationLoadingPage } from "@/app/(protected)/(app-shell)/organization/organization_loading";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 const awardIcons: Record<string, LucideIcon> = {
   "First Step": Rocket,
@@ -29,7 +29,7 @@ export default function OrgProfilePage() {
     impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} = useOrgProfileViewModel()
 
   if (loading || !session || fetching) {
-    return (<OrganizationLoadingPage />)
+    return (<LoadingScreen />)
   }
 
   return (

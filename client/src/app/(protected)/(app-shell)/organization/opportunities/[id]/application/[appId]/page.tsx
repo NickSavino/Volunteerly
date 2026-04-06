@@ -8,9 +8,9 @@ import avtImg from "@/assets/avatarImg.png"
 import { use } from 'react'
 import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { useOppApplicationViewModel } from "./oppApplicationVm";
-import { OrganizationLoadingPage } from "../../../../organization_loading";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 
 export default function ViewApplicationPage({
@@ -22,7 +22,7 @@ export default function ViewApplicationPage({
     const {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} = useOppApplicationViewModel(id, appId)
 
     if (loading || !session || fetching) {
-        return <OrganizationLoadingPage />
+        return <LoadingScreen />
     }
 
   return (

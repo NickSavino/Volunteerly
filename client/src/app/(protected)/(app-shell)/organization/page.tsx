@@ -16,13 +16,14 @@ import { OrganizationLoadingPage } from "./organization_loading";
 import { UserService } from "@/services/UserService";
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 
 export default function HomePage() {
   const {loading, session, fetching, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} = useOrgDashboardViewModel()
 
   if (loading || !session || fetching) {
-    return (<OrganizationLoadingPage />)
+    return (<LoadingScreen />)
   }
 
   return (

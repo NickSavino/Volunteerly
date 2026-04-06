@@ -17,13 +17,14 @@ import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { useOrgOpportunitiesViewModel } from "./orgOpportunitiesVm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OrganizationLoadingPage } from "../organization_loading";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 
 export default function OrgOpportunitiesPage() {
   const {loading, session, fetching, signOut, router, user, error, currentUser, filteredOpportunities, currentTab, setCurrentTab} = useOrgOpportunitiesViewModel()
 
   if (loading || !session || fetching) {
-    return (<OrganizationLoadingPage />)
+    return (<LoadingScreen />)
   }
 
   return (
