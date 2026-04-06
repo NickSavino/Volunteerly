@@ -175,9 +175,11 @@ VALUES
     (progress1_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 1 Update', 'Completed figma designs', 8);
 
 --Reviews
-INSERT INTO public.reviews (id, issuer_id, reviewee_id, opportunity_id, rating, title, description)
+INSERT INTO public.reviews (id, issuer_id, reviewee_id, opportunity_id, rating)
 VALUES
-    (review1_id::text, org1_id::text, vol1_id::text, opp1_id::text, 4.5, 'Great volunteer!', 'Estelle was punctual and professional throughout.');
+    (review1_id::text, org1_id::text, vol1_id::text, opp1_id::text, 4);
+
+UPDATE public.volunteers SET average_rating = 4 WHERE id = vol1_id::text;
 
 --Skill Trees and Nodes
 INSERT INTO public.skill_trees (id, vol_id, type_of_tree, total_xp_needed, current_xp, num_of_nodes_completed)
