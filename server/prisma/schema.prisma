@@ -118,6 +118,7 @@ model Opportunity {
   volunteer       Volunteer?       @relation(fields: [volId], references: [id])
   progressUpdates ProgressUpdate[]
   applications    Application[]
+  reviews         Review[]
 
   @@map("opportunities")
 }
@@ -147,17 +148,20 @@ model Skill {
 }
 
 model Review {
-  id          String   @id @default(uuid())
-  issuerId    String   @map("issuer_id")
-  revieweeId  String   @map("reviewee_id")
-  rating      Float
-  title       String   @default("")
-  description String   @default("")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id            String   @id @default(uuid())
+  issuerId      String   @map("issuer_id")
+  revieweeId    String   @map("reviewee_id")
+  opportunityId String   @map("opportunity_id")
+  rating        Float
+  title         String   @default("")
+  description   String   @default("")
+  createdAt     DateTime @default(now()) @map("created_at")
 
-  issuer   User @relation("ReviewIssuer", fields: [issuerId], references: [id])
-  reviewee User @relation("ReviewReviewee", fields: [revieweeId], references: [id])
+  issuer      User        @relation("ReviewIssuer", fields: [issuerId], references: [id])
+  reviewee    User        @relation("ReviewReviewee", fields: [revieweeId], references: [id])
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id])
 
+  @@unique([issuerId, opportunityId])
   @@map("reviews")
 }
 
