@@ -49,9 +49,9 @@ export async function getYourOpportunities(volunteerId: string) {
     });
 }
 
-export async function getOpportunityById(_volunteerId: string, oppId: string) {
+export async function getOpportunityById(volunteerId: string, oppId: string) {
     return prisma.opportunity.findFirst({
-        where: { id: oppId },
+        where: { id: oppId, volId: volunteerId },
         include: {
             organization: {
                 select: { id: true, orgName: true, hqAdr: true, causeCategory: true },
@@ -109,15 +109,27 @@ export async function requestCompletion(volunteerId: string, oppId: string) {
 export async function postReview(
     issuerId: string,
     revieweeId: string,
-    input: { rating: number; title: string; description: string },
+    input: { rating: number },
 ) {
     return prisma.review.create({
         data: {
             issuerId,
             revieweeId,
             rating: input.rating,
-            title: input.title,
-            description: input.description,
+        },
+    });
+}
+
+export async function postFlag(
+    issuerId: string,
+    flaggedUserId: string,
+    reason: string,
+) {
+    return prisma.flag.create({
+        data: {
+            flagIssuerId: issuerId,
+            flaggedUserId,
+            reason,
         },
     });
 }
