@@ -38,10 +38,8 @@ build:
 deploy:
   stage: deploy
   script:
-    - npm install -g vercel
-    - vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
-    - vercel build --prod --token="$VERCEL_TOKEN"
-    - vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+    - apt-get update && apt-get install -y curl
+    - curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_MAIN"
   needs: ["build"]
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
