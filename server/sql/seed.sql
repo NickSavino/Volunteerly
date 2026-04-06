@@ -10,6 +10,7 @@ BEGIN
     EXECUTE 'TRUNCATE TABLE 
         public.chat_messages,
         public.chat_conversations,
+        public.chat_conversation_participants,
         public.volunteer_reports,
         public.tickets,
         public.reviews,
@@ -57,7 +58,7 @@ DECLARE
     node1_id     UUID := 'a0000000-0000-4000-8000-000000000501';
     node2_id     UUID := 'a0000000-0000-4000-8000-000000000502';
 
-    conv1_id     UUID := 'a0000000-0000-4000-8000-000000000601';
+    conv1_id UUID := 'a0000000-0000-4000-8000-000000000601';
 
     ticket1_id   UUID := 'a0000000-0000-4000-8000-000000000701';
     ticket2_id   UUID := 'a0000000-0000-4000-8000-000000000702';
@@ -65,10 +66,14 @@ DECLARE
     ticket4_id   UUID := 'a0000000-0000-4000-8000-000000000704';
     ticket5_id   UUID := 'a0000000-0000-4000-8000-000000000705';
     ticket6_id   UUID := 'a0000000-0000-4000-8000-000000000706';
-    
-    review1_id   UUID := 'a0000000-0000-4000-8000-000000000801';
-    flag1_id     UUID := 'a0000000-0000-4000-8000-000000000901';
-    progress1_id UUID := 'a0000000-0000-4000-8000-000000001001';
+
+    ticket_conv1_id UUID := 'a0000000-0000-4000-8000-000000000801';
+    ticket_conv2_id UUID := 'a0000000-0000-4000-8000-000000000802';
+    ticket_conv3_id UUID := 'a0000000-0000-4000-8000-000000000803';
+
+    review1_id   UUID := 'a0000000-0000-4000-8000-000000000901';
+    flag1_id     UUID := 'a0000000-0000-4000-8000-000000001001';
+    progress1_id UUID := 'a0000000-0000-4000-8000-000000001101';
 
     work_exp1_id  UUID := 'a0000000-0000-4000-8000-000000001002';
     work_exp2_id  UUID := 'a0000000-0000-4000-8000-000000001003';
@@ -186,17 +191,37 @@ VALUES
     (node1_id::text, tree1_id::text, 'First Aid',   200),
     (node2_id::text, tree1_id::text, 'Programming', 300);
 
---Chat
-INSERT INTO public.chat_conversations (id, user_a_id, user_b_id)
+-- Direct Chat
+INSERT INTO public.chat_conversations (
+    id,
+    kind,
+    created_at,
+    updated_at,
+    last_message_at
+)
 VALUES
-    (conv1_id::text, vol1_id::text, org1_id::text);
+    (conv1_id::text, 'DIRECT', now(), now(), now());
 
-INSERT INTO public.chat_messages (id, conversation_id, sender_id, content)
+INSERT INTO public.chat_conversation_participants (
+    id,
+    conversation_id,
+    user_id,
+    joined_at
+)
+VALUES
+    (gen_random_uuid()::text, conv1_id::text, vol1_id::text, now()),
+    (gen_random_uuid()::text, conv1_id::text, org1_id::text, now());
+
+INSERT INTO public.chat_messages (
+    id,
+    conversation_id,
+    sender_id,
+    content
+)
 VALUES
     (gen_random_uuid()::text, conv1_id::text, vol1_id::text, 'Hi, I am interested in the opportunity!'),
     (gen_random_uuid()::text, conv1_id::text, org1_id::text, 'Great! We would love to have you.');
 
---Tickets
 --Tickets
 INSERT INTO public.tickets (
     id,
@@ -275,6 +300,89 @@ VALUES
         'MINOR',
         'OPEN',
         '2026-03-29 08:10:00'
+    );
+
+-- Ticket Conversations
+INSERT INTO public.chat_conversations (
+    id,
+    kind,
+    ticket_id,
+    created_at,
+    updated_at,
+    last_message_at
+)
+VALUES
+    (ticket_conv1_id::text, 'TICKET', ticket1_id::text, '2026-03-26 09:15:00', now(), '2026-03-26 09:15:00'),
+    (ticket_conv2_id::text, 'TICKET', ticket2_id::text, '2026-03-27 14:30:00', now(), '2026-03-27 14:30:00'),
+    (ticket_conv3_id::text, 'TICKET', ticket3_id::text, '2026-03-28 11:00:00', now(), '2026-03-28 11:00:00');
+
+INSERT INTO public.chat_conversation_participants (
+    id,
+    conversation_id,
+    user_id,
+    joined_at
+)
+VALUES
+    (gen_random_uuid()::text, ticket_conv1_id::text, vol1_id::text, now()),
+    (gen_random_uuid()::text, ticket_conv1_id::text, mod1_id::text, now()),
+
+    (gen_random_uuid()::text, ticket_conv2_id::text, vol2_id::text, now()),
+    (gen_random_uuid()::text, ticket_conv2_id::text, mod1_id::text, now()),
+
+    (gen_random_uuid()::text, ticket_conv3_id::text, org1_id::text, now()),
+    (gen_random_uuid()::text, ticket_conv3_id::text, mod1_id::text, now());
+
+INSERT INTO public.chat_messages (
+    id,
+    conversation_id,
+    sender_id,
+    content,
+    sent_at
+)
+VALUES
+    (
+        gen_random_uuid()::text,
+        ticket_conv1_id::text,
+        vol1_id::text,
+        'The upload button does nothing on Firefox.',
+        '2026-03-26 09:16:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        ticket_conv1_id::text,
+        mod1_id::text,
+        'Thanks for reporting this. We are investigating the Firefox issue now.',
+        '2026-03-26 10:05:00'
+    ),
+
+    (
+        gen_random_uuid()::text,
+        ticket_conv2_id::text,
+        vol2_id::text,
+        'I received messages that made me uncomfortable.',
+        '2026-03-27 14:32:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        ticket_conv2_id::text,
+        mod1_id::text,
+        'Understood. We have opened a review and will follow up shortly.',
+        '2026-03-27 15:00:00'
+    ),
+
+    (
+        gen_random_uuid()::text,
+        ticket_conv3_id::text,
+        org1_id::text,
+        'We need our main contact information updated.',
+        '2026-03-28 11:02:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        ticket_conv3_id::text,
+        mod1_id::text,
+        'Please send the new contact details here and we will update the record.',
+        '2026-03-28 11:20:00'
     );
 
 --Flags

@@ -18,18 +18,22 @@ model User {
   organization Organization?
   volunteer    Volunteer?
 
-  reportsFiled     VolunteerReport[]  @relation("ReportsFiled")
-  reportsReceived  VolunteerReport[]  @relation("ReportsReceived")
-  reviewsGiven     Review[]           @relation("ReviewIssuer")
-  reviewsRecvd     Review[]           @relation("ReviewReviewee")
-  progressUpdates  ProgressUpdate[]
-  ticketsIssued    Ticket[]           @relation("TicketIssuer")
-  ticketsReceived  Ticket[]           @relation("TicketTarget")
-  conversationsAsA ChatConversation[] @relation("ConversationUserA")
-  conversationsAsB ChatConversation[] @relation("ConversationUserB")
-  chatMessagesSent ChatMessage[]      @relation("ChatMessageSender")
-  flagsIssued      Flag[]             @relation("FlagIssuer")
-  flagsReceived    Flag[]             @relation("FlaggedUser")
+  reportsFiled    VolunteerReport[] @relation("ReportsFiled")
+  reportsReceived VolunteerReport[] @relation("ReportsReceived")
+
+  reviewsGiven Review[] @relation("ReviewIssuer")
+  reviewsRecvd Review[] @relation("ReviewReviewee")
+
+  progressUpdates ProgressUpdate[]
+
+  ticketsIssued   Ticket[] @relation("TicketIssuer")
+  ticketsReceived Ticket[] @relation("TicketTarget")
+
+  chatConversationParticipants ChatConversationParticipant[]
+  chatMessagesSent             ChatMessage[]                 @relation("ChatMessageSender")
+
+  flagsIssued   Flag[] @relation("FlagIssuer")
+  flagsReceived Flag[] @relation("FlaggedUser")
 
   @@map("users")
 }
@@ -72,27 +76,27 @@ model Organization {
 }
 
 model Volunteer {
-  id                    String         @id
-  firstName             String         @default("") @map("first_name")
-  lastName              String         @default("") @map("last_name")
-  status                VolunteerState @default(CLEAR)
-  location              String         @default("") @map("location")
-  bio                   String         @default("") @map("bio")
-  availability          Json           @default("[]") @map("availability")
-  hourlyValue           Int            @default(0) @map("hourly_value")
-  organizationsAssisted Int            @default(0) @map("organizations_assisted")
-  averageRating         Float          @default(0) @map("average_rating")
-  skillVector           Unsupported("vector(3072)")?  @map("skill_vector")
+  id                    String                       @id
+  firstName             String                       @default("") @map("first_name")
+  lastName              String                       @default("") @map("last_name")
+  status                VolunteerState               @default(CLEAR)
+  location              String                       @default("") @map("location")
+  bio                   String                       @default("") @map("bio")
+  availability          Json                         @default("[]") @map("availability")
+  hourlyValue           Int                          @default(0) @map("hourly_value")
+  organizationsAssisted Int                          @default(0) @map("organizations_assisted")
+  averageRating         Float                        @default(0) @map("average_rating")
+  skillVector           Unsupported("vector(3072)")? @map("skill_vector")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   user User @relation(fields: [id], references: [id])
 
-  opportunities Opportunity[]
-  applications  Application[]
-  skillTrees    SkillTree[]
-  skillProfile  VolunteerSkillProfile?
+  opportunities   Opportunity[]
+  applications    Application[]
+  skillTrees      SkillTree[]
+  skillProfile    VolunteerSkillProfile?
   workExperiences VolunteerWorkExperience[]
   educations      VolunteerEducation[]
 
@@ -165,7 +169,6 @@ model VolunteerEducation {
   @@map("volunteer_educations")
 }
 
-
 model Review {
   id          String   @id @default(uuid())
   issuerId    String   @map("issuer_id")
@@ -211,7 +214,14 @@ model Ticket {
   issuer User @relation("TicketIssuer", fields: [issuerId], references: [id])
   target User @relation("TicketTarget", fields: [targetId], references: [id])
 
+  conversation ChatConversation?
+
   @@map("tickets")
+}
+
+enum ConversationKind {
+  DIRECT
+  TICKET
 }
 
 model ChatMessage {
@@ -224,21 +234,44 @@ model ChatMessage {
   conversation ChatConversation @relation(fields: [conversationId], references: [id])
   sender       User             @relation("ChatMessageSender", fields: [senderId], references: [id])
 
+  @@index([conversationId, sentAt])
+  @@index([senderId])
   @@map("chat_messages")
 }
 
 model ChatConversation {
-  id            String   @id @default(uuid())
-  userAId       String   @map("user_a_id")
-  userBId       String   @map("user_b_id")
+  id       String           @id @default(uuid())
+  kind     ConversationKind @default(DIRECT)
+  ticketId String?          @unique @map("ticket_id")
+
   createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
   lastMessageAt DateTime @default(now()) @map("last_message_at")
 
-  userA    User          @relation("ConversationUserA", fields: [userAId], references: [id])
-  userB    User          @relation("ConversationUserB", fields: [userBId], references: [id])
-  messages ChatMessage[]
+  ticket       Ticket?                       @relation(fields: [ticketId], references: [id])
+  messages     ChatMessage[]
+  participants ChatConversationParticipant[]
 
+  @@index([kind])
+  @@index([lastMessageAt])
   @@map("chat_conversations")
+}
+
+model ChatConversationParticipant {
+  id             String @id @default(uuid())
+  conversationId String @map("conversation_id")
+  userId         String @map("user_id")
+
+  joinedAt   DateTime  @default(now()) @map("joined_at")
+  lastReadAt DateTime? @map("last_read_at")
+
+  conversation ChatConversation @relation(fields: [conversationId], references: [id])
+  user         User             @relation(fields: [userId], references: [id])
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+  @@map("chat_conversation_participants")
 }
 
 model Application {
