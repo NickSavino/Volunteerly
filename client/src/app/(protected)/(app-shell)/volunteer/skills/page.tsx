@@ -1,23 +1,30 @@
 "use client";
- 
-import { useState, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import { api } from "@/lib/api";
-  
+import {
+  Code, Table, Zap, Database, BarChart2, Globe, Smartphone,
+  TrendingUp, Settings, Lock, Bot, Cloud, Trophy,
+  MessageCircle, PenLine, Users, Mic, Search, GraduationCap,
+  DollarSign, Calendar, ClipboardList, Megaphone, Star, ChevronUp, Award,
+  type LucideIcon,
+} from "lucide-react";
+
 type NodeStatus = "mastered" | "in_progress" | "locked";
- 
+
 interface SkillNodeDef {
   id: string;
   label: string;
-  icon: string;
-  tier: number; 
-  col: number;  
-  trackedSkills: string[]; 
+  icon: LucideIcon;
+  tier: number;
+  col: number;
+  trackedSkills: string[];
   threshold: number;
   requiresAny: string[][];
   description: string;
   requirementLabel: string;
 }
- 
+
 interface SkillNode extends SkillNodeDef {
   status: NodeStatus;
   current: number;
@@ -25,7 +32,7 @@ interface SkillNode extends SkillNodeDef {
 
 const TECH_NODES: SkillNodeDef[] = [
   {
-    id: "python", label: "Python", icon: "🐍",
+    id: "python", label: "Python", icon: Code,
     tier: 1, col: 1,
     trackedSkills: ["Python"],
     threshold: 2, requiresAny: [],
@@ -33,7 +40,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Python in 2 opportunities",
   },
   {
-    id: "excel", label: "Excel", icon: "📊",
+    id: "excel", label: "Excel", icon: Table,
     tier: 1, col: 3,
     trackedSkills: ["Excel"],
     threshold: 2, requiresAny: [],
@@ -41,16 +48,16 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Excel in 2 opportunities",
   },
   {
-    id: "javascript", label: "JavaScript", icon: "⚡",
+    id: "javascript", label: "JavaScript", icon: Zap,
     tier: 1, col: 0,
     trackedSkills: ["JavaScript", "TypeScript"],
     threshold: 2, requiresAny: [],
     description: "Use JavaScript or TypeScript in volunteer web projects.",
     requirementLabel: "Log JavaScript or TypeScript in 2 opportunities",
   },
- 
+
   {
-    id: "sql", label: "SQL / DBs", icon: "🗄️",
+    id: "sql", label: "SQL / DBs", icon: Database,
     tier: 2, col: 1,
     trackedSkills: ["SQL", "Databases"],
     threshold: 2, requiresAny: [["python"]],
@@ -58,7 +65,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Python, then log SQL or Databases in 2 opportunities",
   },
   {
-    id: "powerbi", label: "Power BI", icon: "📉",
+    id: "powerbi", label: "Power BI", icon: BarChart2,
     tier: 2, col: 3,
     trackedSkills: ["Excel", "Data Analysis"],
     threshold: 3, requiresAny: [["excel"]],
@@ -66,7 +73,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Excel, then log Excel + Data Analysis across 3 combined opportunities",
   },
   {
-    id: "webdev", label: "Web Dev", icon: "🌐",
+    id: "webdev", label: "Web Dev", icon: Globe,
     tier: 2, col: 0,
     trackedSkills: ["JavaScript", "TypeScript", "React", "Node.js", "UI/UX Design"],
     threshold: 3, requiresAny: [["javascript"]],
@@ -74,7 +81,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock JavaScript, then log any web dev skills in 3 opportunities",
   },
   {
-    id: "mobile", label: "Mobile Dev", icon: "📱",
+    id: "mobile", label: "Mobile Dev", icon: Smartphone,
     tier: 2, col: 4,
     trackedSkills: ["Mobile Development"],
     threshold: 2, requiresAny: [["javascript"]],
@@ -83,7 +90,7 @@ const TECH_NODES: SkillNodeDef[] = [
   },
 
   {
-    id: "data_analysis", label: "Data Analysis", icon: "📈",
+    id: "data_analysis", label: "Data Analysis", icon: TrendingUp,
     tier: 3, col: 2,
     trackedSkills: ["Data Analysis", "Python", "SQL", "Excel"],
     threshold: 4,
@@ -92,7 +99,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock SQL/DBs OR Power BI, then log any data skills in 4 total opportunities",
   },
   {
-    id: "devops", label: "DevOps", icon: "⚙️",
+    id: "devops", label: "DevOps", icon: Settings,
     tier: 3, col: 0,
     trackedSkills: ["DevOps", "Cloud (AWS/GCP/Azure)"],
     threshold: 3, requiresAny: [["webdev"]],
@@ -100,7 +107,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Web Dev, then log DevOps or Cloud in 3 opportunities",
   },
   {
-    id: "cybersecurity", label: "Cybersecurity", icon: "🔐",
+    id: "cybersecurity", label: "Cybersecurity", icon: Lock,
     tier: 3, col: 1,
     trackedSkills: ["Cybersecurity"],
     threshold: 2, requiresAny: [["sql"]],
@@ -109,7 +116,7 @@ const TECH_NODES: SkillNodeDef[] = [
   },
 
   {
-    id: "machine_learning", label: "ML / AI", icon: "🤖",
+    id: "machine_learning", label: "ML / AI", icon: Bot,
     tier: 4, col: 2,
     trackedSkills: ["Machine Learning"],
     threshold: 3, requiresAny: [["data_analysis"]],
@@ -117,7 +124,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Data Analysis, then log Machine Learning in 3 opportunities",
   },
   {
-    id: "cloud", label: "Cloud Arch.", icon: "☁️",
+    id: "cloud", label: "Cloud Arch.", icon: Cloud,
     tier: 4, col: 0,
     trackedSkills: ["Cloud (AWS/GCP/Azure)", "DevOps"],
     threshold: 4, requiresAny: [["devops"]],
@@ -126,7 +133,7 @@ const TECH_NODES: SkillNodeDef[] = [
   },
 
   {
-    id: "tech_expert", label: "Tech Expert", icon: "🏆",
+    id: "tech_expert", label: "Tech Expert", icon: Trophy,
     tier: 5, col: 2,
     trackedSkills: ["Machine Learning", "Cloud (AWS/GCP/Azure)", "DevOps", "Data Analysis"],
     threshold: 6, requiresAny: [["machine_learning"]],
@@ -137,7 +144,7 @@ const TECH_NODES: SkillNodeDef[] = [
 
 const NT_NODES: SkillNodeDef[] = [
   {
-    id: "nt_communication", label: "Communication", icon: "💬",
+    id: "nt_communication", label: "Communication", icon: MessageCircle,
     tier: 1, col: 1,
     trackedSkills: ["Communication"],
     threshold: 2, requiresAny: [],
@@ -145,7 +152,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Communication in 2 opportunities",
   },
   {
-    id: "nt_writing", label: "Writing", icon: "✍️",
+    id: "nt_writing", label: "Writing", icon: PenLine,
     tier: 1, col: 3,
     trackedSkills: ["Writing"],
     threshold: 2, requiresAny: [],
@@ -153,16 +160,16 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Writing in 2 opportunities",
   },
   {
-    id: "nt_teamwork", label: "Teamwork", icon: "🤝",
+    id: "nt_teamwork", label: "Teamwork", icon: Users,
     tier: 1, col: 0,
     trackedSkills: ["Teamwork", "Adaptability"],
     threshold: 2, requiresAny: [],
     description: "Collaborate and adapt effectively in diverse volunteer teams.",
     requirementLabel: "Log Teamwork or Adaptability in 2 opportunities",
   },
- 
+
   {
-    id: "nt_public_speaking", label: "Public Speaking", icon: "🎤",
+    id: "nt_public_speaking", label: "Public Speaking", icon: Mic,
     tier: 2, col: 1,
     trackedSkills: ["Public Speaking", "Communication"],
     threshold: 3, requiresAny: [["nt_communication"]],
@@ -170,7 +177,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Communication, then log Public Speaking in 2 opportunities",
   },
   {
-    id: "nt_research", label: "Research", icon: "🔍",
+    id: "nt_research", label: "Research", icon: Search,
     tier: 2, col: 3,
     trackedSkills: ["Research", "Critical Thinking"],
     threshold: 2, requiresAny: [["nt_writing"]],
@@ -178,7 +185,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Writing, then log Research in 2 opportunities",
   },
   {
-    id: "nt_mentoring", label: "Mentoring", icon: "🧑‍🏫",
+    id: "nt_mentoring", label: "Mentoring", icon: GraduationCap,
     tier: 2, col: 0,
     trackedSkills: ["Mentoring", "Teaching"],
     threshold: 2, requiresAny: [["nt_teamwork"]],
@@ -186,16 +193,16 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Teamwork, then log Mentoring or Teaching in 2 opportunities",
   },
   {
-    id: "nt_fundraising", label: "Fundraising", icon: "💰",
+    id: "nt_fundraising", label: "Fundraising", icon: DollarSign,
     tier: 2, col: 4,
     trackedSkills: ["Fundraising", "Networking"],
     threshold: 2, requiresAny: [["nt_communication"]],
     description: "Drive fundraising efforts and build donor or sponsor networks.",
     requirementLabel: "Unlock Communication, then log Fundraising or Networking in 2 opportunities",
   },
- 
+
   {
-    id: "nt_event_planning", label: "Event Planning", icon: "📅",
+    id: "nt_event_planning", label: "Event Planning", icon: Calendar,
     tier: 3, col: 1,
     trackedSkills: ["Event Planning", "Time Management"],
     threshold: 3,
@@ -204,7 +211,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Public Speaking OR Mentoring, then log Event Planning in 3 opportunities",
   },
   {
-    id: "nt_project_mgmt", label: "Project Mgmt", icon: "📋",
+    id: "nt_project_mgmt", label: "Project Mgmt", icon: ClipboardList,
     tier: 3, col: 3,
     trackedSkills: ["Project Management", "Problem Solving"],
     threshold: 3, requiresAny: [["nt_research"]],
@@ -212,16 +219,16 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Research, then log Project Management in 3 opportunities",
   },
   {
-    id: "nt_marketing", label: "Marketing", icon: "📣",
+    id: "nt_marketing", label: "Marketing", icon: Megaphone,
     tier: 3, col: 4,
     trackedSkills: ["Marketing", "Social Media"],
     threshold: 2, requiresAny: [["nt_fundraising"]],
     description: "Promote causes and grow audiences using marketing and social media.",
     requirementLabel: "Unlock Fundraising, then log Marketing or Social Media in 2 opportunities",
   },
- 
+
   {
-    id: "nt_leadership", label: "Leadership", icon: "⭐",
+    id: "nt_leadership", label: "Leadership", icon: Star,
     tier: 4, col: 2,
     trackedSkills: ["Leadership"],
     threshold: 3, requiresAny: [["nt_event_planning"]],
@@ -229,7 +236,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Event Planning, then log Leadership in 3 opportunities",
   },
   {
-    id: "nt_strategy", label: "Strategy", icon: "♟️",
+    id: "nt_strategy", label: "Strategy", icon: ChevronUp,
     tier: 4, col: 4,
     trackedSkills: ["Problem Solving", "Critical Thinking", "Project Management"],
     threshold: 5,
@@ -237,9 +244,9 @@ const NT_NODES: SkillNodeDef[] = [
     description: "Strategic planning and high-level decision-making for organisations.",
     requirementLabel: "Unlock Project Mgmt AND Marketing, then log strategic skills in 5 total opportunities",
   },
- 
+
   {
-    id: "nt_community_leader", label: "Community Leader", icon: "🌟",
+    id: "nt_community_leader", label: "Community Leader", icon: Award,
     tier: 5, col: 2,
     trackedSkills: ["Leadership", "Project Management", "Communication"],
     threshold: 8,
@@ -257,36 +264,35 @@ const PAD_X = 36;
 const PAD_Y = 40;
 const COLS = 5;
 const MAX_TIER = 5;
- 
+
 function getPos(tier: number, col: number, svgH: number) {
   const x = PAD_X + col * COL_GAP + COL_GAP / 2;
   const y = svgH - PAD_Y - (tier - 1) * ROW_GAP - ROW_GAP / 2;
   return { x, y };
 }
 
- 
 function prereqsMet(node: SkillNode, byId: Record<string, SkillNode>): boolean {
   if (node.requiresAny.length === 0) return true;
   return node.requiresAny.every((orGroup) =>
     orGroup.some((id) => byId[id]?.status === "mastered")
   );
 }
- 
+
 function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, number>): SkillNode[] {
   const map: Record<string, SkillNode> = {};
- 
+
   for (const def of defs) {
     const current = def.trackedSkills.reduce((s, k) => s + (skillCounts[k] ?? 0), 0);
     map[def.id] = { ...def, status: "locked", current };
   }
- 
+
   let changed = true;
   while (changed) {
     changed = false;
     for (const id of Object.keys(map)) {
       const node = map[id];
       const unlocked = prereqsMet(node, map);
- 
+
       let status: NodeStatus;
       if (!unlocked) {
         status = "locked";
@@ -297,14 +303,14 @@ function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, number>)
       } else {
         status = "locked";
       }
- 
+
       if (map[id].status !== status) {
         map[id] = { ...map[id], status };
         changed = true;
       }
     }
   }
- 
+
   return defs.map((d) => map[d.id]);
 }
 
@@ -314,7 +320,7 @@ function buildEdges(
 ): { x1: number; y1: number; x2: number; y2: number; lit: boolean }[] {
   const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
   const edges: { x1: number; y1: number; x2: number; y2: number; lit: boolean }[] = [];
- 
+
   for (const node of nodes) {
     const to = getPos(node.tier, node.col, svgH);
     for (const orGroup of node.requiresAny) {
@@ -324,9 +330,9 @@ function buildEdges(
         const from = getPos(req.tier, req.col, svgH);
         edges.push({
           x1: from.x,
-          y1: from.y - NODE_H / 2,   
+          y1: from.y - NODE_H / 2,
           x2: to.x,
-          y2: to.y + NODE_H / 2,   
+          y2: to.y + NODE_H / 2,
           lit: req.status !== "locked",
         });
       }
@@ -343,9 +349,9 @@ function SkillTree({ nodes, onSelect, selectedId }: {
   const svgW = PAD_X * 2 + COLS * COL_GAP;
   const svgH = PAD_Y * 2 + MAX_TIER * ROW_GAP;
   const edges = buildEdges(nodes, svgH);
- 
+
   return (
-    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" as any, padding: "0 20px 20px" }}>
+    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"], padding: "0 20px 20px" }}>
       <svg viewBox={`0 0 ${svgW} ${svgH}`} width={svgW} height={svgH} style={{ display: "block", minWidth: svgW }}>
         {edges.map((e, i) => (
           <line key={i} x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2}
@@ -370,7 +376,7 @@ function SkillTree({ nodes, onSelect, selectedId }: {
     </div>
   );
 }
- 
+
 function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: number; selected: boolean }) {
   const r = 18;
   const fill =
@@ -382,7 +388,8 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
     : node.status === "in_progress" ? "var(--accent)"
     : "var(--locked-stroke)";
   const dimmed = node.status === "locked";
- 
+  const Icon = node.icon;
+
   return (
     <g>
       {node.status !== "locked" && (
@@ -394,11 +401,9 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
       <rect x={0} y={0} width={w} height={h} rx={r}
         fill={fill} stroke={stroke} strokeWidth={selected ? 3 : 2}
       />
-      <text x={w / 2} y={h / 2 - 5}
-        textAnchor="middle" dominantBaseline="middle"
-        fontSize={23} opacity={dimmed ? 0.32 : 1}>
-        {node.icon}
-      </text>
+      <foreignObject x={(w - 20) / 2} y={h / 2 - 18} width={20} height={20} opacity={dimmed ? 0.32 : 1}>
+        <Icon size={20} strokeWidth={1.5} color={dimmed ? "#94A3B8" : "#1E293B"} />
+      </foreignObject>
       <text x={w / 2} y={h - 11}
         textAnchor="middle" dominantBaseline="middle"
         fontSize={8} fontWeight="700"
@@ -429,13 +434,16 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
   const statusLabel = node.status === "mastered" ? "Mastered" : node.status === "in_progress" ? "In Progress" : "Locked";
   const statusColor = node.status === "mastered" ? "#16A34A" : node.status === "in_progress" ? "var(--accent-stroke)" : "var(--locked-stroke)";
   const barColor = node.status === "mastered" ? "#16A34A" : node.status === "in_progress" ? "var(--accent)" : "var(--locked-stroke)";
- 
+
   const prereqIds = [...new Set(node.requiresAny.flat())];
- 
+  const Icon = node.icon;
+
   return (
     <div className="st-panel" onClick={(e) => e.stopPropagation()}>
       <button className="st-panel-close" onClick={onClose}>✕</button>
-      <div style={{ fontSize: "2rem", marginBottom: 8 }}>{node.icon}</div>
+      <div style={{ marginBottom: 8, color: "var(--text)" }}>
+        <Icon size={28} strokeWidth={1.5} />
+      </div>
       <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text)", marginBottom: 8, letterSpacing: "-0.01em" }}>
         {node.label}
       </div>
@@ -444,19 +452,19 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
         fontSize: "0.7rem", fontWeight: 700, border: `1.5px solid ${statusColor}`,
         color: statusColor, marginBottom: 14, letterSpacing: "0.05em", textTransform: "uppercase" as const,
       }}>{statusLabel}</span>
- 
+
       <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginBottom: 16, lineHeight: 1.5 }}>
         {node.description}
       </p>
- 
+
       <div className="st-section">
-        <div className="st-section-label">🎯 Requirement</div>
+        <div className="st-section-label">Requirement</div>
         <div className="st-req-box">{node.requirementLabel}</div>
       </div>
- 
+
       <div className="st-section">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <span className="st-section-label">📊 Progress</span>
+          <span className="st-section-label">Progress</span>
           <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text)" }}>
             {node.current} / {node.threshold}
           </span>
@@ -466,19 +474,19 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
         </div>
         <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", textAlign: "right", marginTop: 3 }}>{pct}% complete</div>
       </div>
- 
+
       <div className="st-section">
-        <div className="st-section-label">🏷️ Skills That Count</div>
+        <div className="st-section-label">Skills That Count</div>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {node.trackedSkills.map((s) => (
             <span key={s} className="st-tag">{s}</span>
           ))}
         </div>
       </div>
- 
+
       {prereqIds.length > 0 && (
         <div className="st-section">
-          <div className="st-section-label">🔗 Requires</div>
+          <div className="st-section-label">Requires</div>
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             {node.requiresAny.map((orGroup, i) => (
               <span key={i} className="st-tag">
@@ -498,25 +506,23 @@ export default function SkillTreePage() {
   const [skillCounts, setSkillCounts] = useState<Record<string, number> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
- 
+
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    setError(null);
     api<Record<string, number>>("/current-volunteer/skill-counts")
       .then((data) => { if (!cancelled) { setSkillCounts(data); setLoading(false); } })
       .catch((err) => { if (!cancelled) { setError(err?.message ?? "Failed to load skill data"); setLoading(false); } });
     return () => { cancelled = true; };
   }, []);
- 
+
   const counts = skillCounts ?? {};
   const techNodes = computeNodes(TECH_NODES, counts);
   const ntNodes = computeNodes(NT_NODES, counts);
   const nodes = tab === "technical" ? techNodes : ntNodes;
- 
+
   const mastered = nodes.filter((n) => n.status === "mastered").length;
   const inProg = nodes.filter((n) => n.status === "in_progress").length;
- 
+
   return (
     <>
       <style>{`
@@ -571,47 +577,47 @@ export default function SkillTreePage() {
           .st-legend { display: none; }
         }
       `}</style>
- 
+
       <div className="st-page" onClick={() => setSelected(null)}>
         <div className="st-header">
           <h1>Skill Tree</h1>
           <p>Skills unlock as you log what you use across completed opportunities. Start at the bottom — work your way up.</p>
- 
+
           {!loading && !error && (
             <div className="st-stats">
-              <div className="st-chip"><div className="st-dot" style={{ background: "#D4A017" }} />{mastered} Mastered</div>
-              <div className="st-chip"><div className="st-dot" style={{ background: "#F5C842" }} />{inProg} In Progress</div>
-              <div className="st-chip"><div className="st-dot" style={{ background: "#CBD5E1" }} />{nodes.length - mastered - inProg} Locked</div>
+              <div className="st-chip"><div className="st-dot" style={{ background: "var(--mastered-stroke)" }} />{mastered} Mastered</div>
+              <div className="st-chip"><div className="st-dot" style={{ background: "var(--accent)" }} />{inProg} In Progress</div>
+              <div className="st-chip"><div className="st-dot" style={{ background: "var(--locked-stroke)" }} />{nodes.length - mastered - inProg} Locked</div>
             </div>
           )}
- 
+
           <div className="st-tabs">
             <button className={`st-tab${tab === "technical" ? " active" : ""}`}
               onClick={(e) => { e.stopPropagation(); setTab("technical"); setSelected(null); }}>
-              ⚡ Technical
+              Technical
             </button>
             <button className={`st-tab${tab === "nontechnical" ? " active" : ""}`}
               onClick={(e) => { e.stopPropagation(); setTab("nontechnical"); setSelected(null); }}>
-              🌱 Non-Technical
+              Non-Technical
             </button>
           </div>
         </div>
- 
+
         {loading && <div className="st-loading">Loading your skills…</div>}
         {error && <div className="st-error">{error}</div>}
- 
+
         {!loading && !error && (
           <>
             <div className="st-canvas">
               <div className="st-legend">
                 <div className="st-legend-item">
-                  <div className="st-legend-swatch" style={{ background: "#F5C842", border: "2px solid #D4A017" }} />Mastered
+                  <div className="st-legend-swatch" style={{ background: "var(--mastered-fill)", border: "2px solid var(--mastered-stroke)" }} />Mastered
                 </div>
                 <div className="st-legend-item">
-                  <div className="st-legend-swatch" style={{ background: "#FEFCE8", border: "2px solid #F5C842" }} />In Progress
+                  <div className="st-legend-swatch" style={{ background: "var(--progress-fill)", border: "2px solid var(--accent)" }} />In Progress
                 </div>
                 <div className="st-legend-item">
-                  <div className="st-legend-swatch" style={{ background: "#F1F5F9", border: "2px solid #CBD5E1" }} />Locked
+                  <div className="st-legend-swatch" style={{ background: "var(--locked-fill)", border: "2px solid var(--locked-stroke)" }} />Locked
                 </div>
               </div>
               <SkillTree
@@ -620,9 +626,9 @@ export default function SkillTreePage() {
                 selectedId={selected?.id ?? null}
               />
             </div>
- 
+
             {!selected && <p className="st-hint">Tap any node to see requirements and your progress</p>}
- 
+
             {selected && (
               <div className="st-panel-wrap" onClick={(e) => e.stopPropagation()}>
                 <DetailPanel node={selected} onClose={() => setSelected(null)} />
