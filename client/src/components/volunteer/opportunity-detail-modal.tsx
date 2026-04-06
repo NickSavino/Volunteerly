@@ -126,6 +126,26 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                     />
                 </div>
 
+
+                    {opp?.availability && opp.availability.length > 0 && (
+                        <div className="flex flex-col gap-2">
+                            <p className="text-sm font-semibold text-gray-800">Availability</p>
+
+                            <div className="flex flex-wrap gap-2">
+                                {opp.availability.map((day: string) => (
+                                    <span
+                                        key={day}
+                                        className="px-3 py-1.5 rounded-lg border text-xs font-medium
+                                            border-yellow-400 text-gray-800 bg-yellow-50"
+                                    >
+                                        {day}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+
                 <div>
                     <h3 className="mb-2 text-sm font-semibold text-foreground">About This Opportunity</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{opp.description}</p>
