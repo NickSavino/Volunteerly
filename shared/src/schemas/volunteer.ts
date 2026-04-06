@@ -21,6 +21,8 @@ export const CurrentVolunteerSchema = z.object({
   bio: z.string(),
   availability: z.array(z.any()).optional(),
   hourlyValue: z.number().int(),
+  averageRating: z.number().default(0),
+  reviewCount: z.number().int().default(0),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime()
 });

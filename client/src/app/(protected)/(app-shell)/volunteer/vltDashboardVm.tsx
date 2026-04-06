@@ -42,16 +42,25 @@ export function useVltDashboardViewModel() {
                 setCurrentVolunteer(volResult.data);
 
                 const oppResult = await VolunteerService.getYourOpportunities();
-                if (!oppResult.success) { setError("Failed to load opportunities."); return; }
-                setOpportunities(oppResult.data);
+                if (oppResult.success) {
+                    setOpportunities(oppResult.data);
+                } else {
+                    console.warn("Failed to load opportunities:", oppResult.error);
+                }
 
                 const orgResult = await VolunteerService.getVolunteerOrganizations();
-                if (!orgResult.success) { setError("Failed to load organizations."); return; }
-                setPartnerOrgs(orgResult.data);
+                if (orgResult.success) {
+                    setPartnerOrgs(orgResult.data);
+                } else {
+                    console.warn("Failed to load organizations:", orgResult.error);
+                }
 
                 const hoursResult = await VolunteerService.getMonthlyHours();
-                if (!hoursResult.success) { setError("Failed to load monthly hours."); return; }
-                setMonthlyHoursMap(hoursResult.data);
+                if (hoursResult.success) {
+                    setMonthlyHoursMap(hoursResult.data);
+                } else {
+                    console.warn("Failed to load monthly hours:", hoursResult.error);
+                }
 
             } catch (err) {
                 console.error(err);

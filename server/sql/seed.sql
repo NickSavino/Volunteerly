@@ -52,6 +52,7 @@ DECLARE
 
     app1_id      UUID := 'a0000000-0000-4000-8000-000000000301';
     app2_id      UUID := 'a0000000-0000-4000-8000-000000000302';
+    app3_id      UUID := 'a0000000-0000-4000-8000-000000000303';
 
     tree1_id     UUID := 'a0000000-0000-4000-8000-000000000401';
     node1_id     UUID := 'a0000000-0000-4000-8000-000000000501';
@@ -127,11 +128,11 @@ INSERT INTO public.moderators (id, first_name, last_name)
 VALUES (mod1_id::text, 'Admin', 'Moderator');
 
 --Insert Organizations
-INSERT INTO public.organizations (id, org_name, status, charity_num, doc_id, contact_name, contact_email, contact_num, hq_adr, mission_statement, cause_category, website)
+INSERT INTO public.organizations (id, org_name, status, charity_num, doc_id, contact_name, contact_email, contact_num, hq_adr, mission_statement, cause_category, website, impact_highlights)
 VALUES
-    (org1_id::text, 'Red Cross International', 'VERIFIED', 123456, 'doc-red-cross',  'Jane Smith', 'jane@redcross.org',  '403-555-0101', '123 Main St, Calgary, AB',   'Providing humanitarian aid worldwide.',    'Humanitarian', 'https://redcross.org'),
-    (org2_id::text, 'World United',            'VERIFIED', 654321, 'doc-world-united','Bob Green',  'bob@worldunited.org','403-555-0202', '456 Park Ave, Calgary, AB',  'Uniting the World one step at a time.',   'Humanitarian', 'https://worldunited.org'),
-    (org3_id::text, 'The Mustard Seed',        'VERIFIED', 789012, 'doc-tms',         'Alice Dev',  'alice@theseed.org', '403-555-0303', '789 Tech Blvd, Calgary, AB', 'Ending Homelessness.',                    'Poverty',      'https://tms.org');
+    (org1_id::text, 'Red Cross International', 'VERIFIED', 123456, 'doc-red-cross',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '2609 15 St NE, Calgary, AB, Canada',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org',   '[{"value": 42, "label": "countries served"}, {"value": 12400, "label": "people helped"}]'),
+    (org2_id::text, 'World United',  'VERIFIED', 654321, 'doc-world-united', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"value": 12, "label": "countries operated in"}, {"value": 3800, "label": "students helped"}]'),
+    (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012, 'doc-tms',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org',         '[{"value": 5200, "label": "meals served"}, {"value": 300, "label": "families housed"}]');
 
 --Insert Volunteers (no skills seeded — volunteers complete experience input on first login)
 INSERT INTO public.volunteers (id, first_name, last_name, location, bio, hourly_value, organizations_assisted, availability)
@@ -142,9 +143,9 @@ VALUES
 --Insert Opps
 INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)
 VALUES
-    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',   'Web Dev',       'Create a website for our charity',          'Must have relevant seng experience.',  'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]'),
-    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',    'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',       'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]'),
-    (opp3_id::text, org3_id::text, vol2_id::text, 'FILLED',   'Future Trend Analysis', 'Data Science',  'Predict our Q3 donation amounts.',          'Programming experience required.',     'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
+    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]'),
+    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]'),
+    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
 
 --Insert Vol Work Experiences
 INSERT INTO public.volunteer_work_experiences (id, vol_id, job_title, company, responsibilities, created_at, start_date, end_date)
@@ -164,7 +165,9 @@ VALUES
 INSERT INTO public.applications (id, opp_id, vol_id, match_pct, message, date_applied)
 VALUES
     (app1_id::text, opp3_id::text, vol1_id::text, 85, 'I have 5 years data science experience at google.', '2026-03-05'),
-    (app2_id::text, opp1_id::text, vol2_id::text, 70, 'I have a degree in software engineering.',           '2026-01-20');
+    (app2_id::text, opp1_id::text, vol2_id::text, 70, 'I have a degree in software engineering.',             '2026-01-20'),
+    (app3_id::text, opp2_id::text, vol1_id::text, 90, 'I have extensive experience in data analytics.',       '2026-02-01');
+
 
 --Progress Updates
 INSERT INTO public.progress_updates (id, opportunity_id, sender_id, sender_role, title, description, hours_contributed)
@@ -172,9 +175,11 @@ VALUES
     (progress1_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 1 Update', 'Completed figma designs', 8);
 
 --Reviews
-INSERT INTO public.reviews (id, issuer_id, reviewee_id, rating, title, description)
+INSERT INTO public.reviews (id, issuer_id, reviewee_id, opportunity_id, rating)
 VALUES
-    (review1_id::text, org1_id::text, vol1_id::text, 4.5, 'Great volunteer!', 'Estelle was punctual and professional throughout.');
+    (review1_id::text, org1_id::text, vol1_id::text, opp1_id::text, 4);
+
+UPDATE public.volunteers SET average_rating = 4 WHERE id = vol1_id::text;
 
 --Skill Trees and Nodes
 INSERT INTO public.skill_trees (id, vol_id, type_of_tree, total_xp_needed, current_xp, num_of_nodes_completed)

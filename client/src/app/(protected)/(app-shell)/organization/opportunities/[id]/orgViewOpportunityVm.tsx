@@ -24,6 +24,8 @@ export function useOrgViewOpportunityViewModel(id: string) {
     description: "",
     hoursContributed: 0
   })
+  const [reviewModalOpen, setReviewModalOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
@@ -125,7 +127,38 @@ export function useOrgViewOpportunityViewModel(id: string) {
       }
     }
 
-    
+    async function submitReview(input: { rating: number; flagged: boolean; flagReason?: string }) {
+      if (submitting || !opportunity?.volunteer?.id) return;
+      setSubmitting(true);
+      try {
+          await OrganizationService.postReview(opportunity.volunteer.id, opportunity.id, input.rating);
+      } catch (err) {
+          setReviewModalOpen(false);
+          setSubmitting(false);
+          let msg = "Failed to post review. Please try again.";
+          try {
+              const body = JSON.parse(err instanceof Error ? err.message : "");
+              if (body?.error?.toLowerCase().includes("already")) {
+                  msg = "You have already reviewed this volunteer for this opportunity.";
+              }
+          } catch {}
+          toast.error(msg);
+          return;
+      }
+      if (input.flagged && input.flagReason?.trim()) {
+          try {
+              await OrganizationService.postFlag(opportunity.volunteer.id, input.flagReason.trim());
+          } catch {
+              setReviewModalOpen(false);
+              setSubmitting(false);
+              toast.error("Review posted, but the flag failed to submit. Please try again.");
+              return;
+          }
+      }
+      setReviewModalOpen(false);
+      setSubmitting(false);
+      toast.success(input.flagged ? "Review and flag posted!" : "Review posted!");
+    }
 
-    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate} 
+    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate, reviewModalOpen, setReviewModalOpen, submitting, submitReview} 
 }

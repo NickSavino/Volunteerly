@@ -179,6 +179,20 @@ export class OrganizationService {
         const parsed = OpportunitySchema.safeParse(response);
         return parsed;
     }
+
+    static async postReview(revieweeId: string, opportunityId: string, rating: number) {
+        return api<{ success: boolean }>("/current-organization/reviews", {
+            method: "POST",
+            body: JSON.stringify({ revieweeId, opportunityId, rating }),
+        });
+    }
+
+    static async postFlag(flaggedUserId: string, reason: string) {
+        return api<{ success: boolean }>("/current-organization/flags", {
+            method: "POST",
+            body: JSON.stringify({ flaggedUserId, reason }),
+        });
+    }
     static async updateOpportunity(opportunityId:string,opportunity: UpdateOpportunitySchema) {
         const response = await api<unknown>("/current-organization/opportunity", {
             method: "PUT",
