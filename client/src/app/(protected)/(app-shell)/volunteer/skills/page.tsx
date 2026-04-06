@@ -66,12 +66,28 @@ const ICON_PATHS: Record<string, string> = {
 
 const TECH_NODES: SkillNodeDef[] = [
   {
+    id: "javascript", label: "JavaScript", iconKey: "Zap", icon: Zap,
+    tier: 1, col: 0,
+    trackedSkills: ["JavaScript", "TypeScript"],
+    threshold: 2, requiresAny: [],
+    description: "Use JavaScript or TypeScript in volunteer web projects.",
+    requirementLabel: "Log JavaScript or TypeScript in 2 opportunities",
+  },
+  {
     id: "python", label: "Python", iconKey: "Code", icon: Code,
     tier: 1, col: 1,
     trackedSkills: ["Python"],
     threshold: 2, requiresAny: [],
     description: "Use Python scripting or automation in volunteer work.",
     requirementLabel: "Log Python in 2 opportunities",
+  },
+  {
+    id: "accounting", label: "Accounting", iconKey: "BookOpen", icon: BookOpen,
+    tier: 1, col: 2,
+    trackedSkills: ["Accounting", "Bookkeeping"],
+    threshold: 2, requiresAny: [],
+    description: "Apply bookkeeping and accounting practices in volunteer finance roles.",
+    requirementLabel: "Log Accounting or Bookkeeping in 2 opportunities",
   },
   {
     id: "excel", label: "Excel", iconKey: "Table", icon: Table,
@@ -82,22 +98,22 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Excel in 2 opportunities",
   },
   {
-    id: "javascript", label: "JavaScript", iconKey: "Zap", icon: Zap,
-    tier: 1, col: 0,
-    trackedSkills: ["JavaScript", "TypeScript"],
+    id: "mobile", label: "Mobile Dev", iconKey: "Smartphone", icon: Smartphone,
+    tier: 1, col: 4,
+    trackedSkills: ["Mobile Development"],
     threshold: 2, requiresAny: [],
-    description: "Use JavaScript or TypeScript in volunteer web projects.",
-    requirementLabel: "Log JavaScript or TypeScript in 2 opportunities",
-  },
-  {
-    id: "accounting", label: "Accounting", iconKey: "BookOpen", icon: BookOpen,
-    tier: 1, col: 2,
-    trackedSkills: ["Accounting", "Bookkeeping"],
-    threshold: 2, requiresAny: [],
-    description: "Apply bookkeeping and accounting practices in volunteer finance roles.",
-    requirementLabel: "Log Accounting or Bookkeeping in 2 opportunities",
+    description: "Build mobile apps that serve community organisations.",
+    requirementLabel: "Log Mobile Development in 2 opportunities",
   },
 
+  {
+    id: "webdev", label: "Web Dev", iconKey: "Globe", icon: Globe,
+    tier: 2, col: 0,
+    trackedSkills: ["JavaScript", "TypeScript", "React", "Node.js", "UI/UX Design"],
+    threshold: 3, requiresAny: [["javascript"]],
+    description: "Build web interfaces and full-stack apps for nonprofits.",
+    requirementLabel: "Unlock JavaScript, then log any web dev skills in 3 opportunities",
+  },
   {
     id: "sql", label: "SQL / DBs", iconKey: "Database", icon: Database,
     tier: 2, col: 1,
@@ -105,6 +121,14 @@ const TECH_NODES: SkillNodeDef[] = [
     threshold: 2, requiresAny: [["python"]],
     description: "Write SQL queries and work with databases in volunteer systems.",
     requirementLabel: "Unlock Python, then log SQL or Databases in 2 opportunities",
+  },
+  {
+    id: "finance", label: "Finance", iconKey: "Briefcase", icon: Briefcase,
+    tier: 2, col: 2,
+    trackedSkills: ["Finance", "Budgeting"],
+    threshold: 2, requiresAny: [["accounting"]],
+    description: "Manage budgets and financial planning for nonprofit organisations.",
+    requirementLabel: "Unlock Accounting, then log Finance or Budgeting in 2 opportunities",
   },
   {
     id: "powerbi", label: "Power BI", iconKey: "BarChart2", icon: BarChart2,
@@ -115,30 +139,22 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Excel, then log Excel + Data Analysis across 3 combined opportunities",
   },
   {
-    id: "webdev", label: "Web Dev", iconKey: "Globe", icon: Globe,
-    tier: 2, col: 0,
-    trackedSkills: ["JavaScript", "TypeScript", "React", "Node.js", "UI/UX Design"],
-    threshold: 3, requiresAny: [["javascript"]],
-    description: "Build web interfaces and full-stack apps for nonprofits.",
-    requirementLabel: "Unlock JavaScript, then log any web dev skills in 3 opportunities",
-  },
-  {
-    id: "mobile", label: "Mobile Dev", iconKey: "Smartphone", icon: Smartphone,
+    id: "cybersecurity", label: "Cybersecurity", iconKey: "Lock", icon: Lock,
     tier: 2, col: 4,
-    trackedSkills: ["Mobile Development"],
-    threshold: 2, requiresAny: [["javascript"]],
-    description: "Build mobile apps that serve community organisations.",
-    requirementLabel: "Unlock JavaScript, then log Mobile Development in 2 opportunities",
-  },
-  {
-    id: "finance", label: "Finance", iconKey: "Briefcase", icon: Briefcase,
-    tier: 2, col: 2,
-    trackedSkills: ["Finance", "Budgeting"],
-    threshold: 2, requiresAny: [["accounting"]],
-    description: "Manage budgets and financial planning for nonprofit organisations.",
-    requirementLabel: "Unlock Accounting, then log Finance or Budgeting in 2 opportunities",
+    trackedSkills: ["Cybersecurity"],
+    threshold: 2, requiresAny: [["mobile", "javascript"]],
+    description: "Apply security best practices across volunteer systems.",
+    requirementLabel: "Unlock Mobile Dev or JavaScript, then log Cybersecurity in 2 opportunities",
   },
 
+  {
+    id: "devops", label: "DevOps", iconKey: "Settings", icon: Settings,
+    tier: 3, col: 0,
+    trackedSkills: ["DevOps", "Cloud (AWS/GCP/Azure)"],
+    threshold: 3, requiresAny: [["webdev"]],
+    description: "CI/CD pipelines, infrastructure, and deployment for volunteer tech.",
+    requirementLabel: "Unlock Web Dev, then log DevOps or Cloud in 3 opportunities",
+  },
   {
     id: "data_analysis", label: "Data Analysis", iconKey: "TrendingUp", icon: TrendingUp,
     tier: 3, col: 1,
@@ -149,30 +165,38 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock SQL/DBs OR Power BI, then log any data skills in 4 total opportunities",
   },
   {
-    id: "devops", label: "DevOps", iconKey: "Settings", icon: Settings,
-    tier: 3, col: 0,
-    trackedSkills: ["DevOps", "Cloud (AWS/GCP/Azure)"],
-    threshold: 3, requiresAny: [["webdev"]],
-    description: "CI/CD pipelines, infrastructure, and deployment for volunteer tech.",
-    requirementLabel: "Unlock Web Dev, then log DevOps or Cloud in 3 opportunities",
-  },
-  {
-    id: "cybersecurity", label: "Cybersecurity", iconKey: "Lock", icon: Lock,
-    tier: 3, col: 4,
-    trackedSkills: ["Cybersecurity"],
-    threshold: 2, requiresAny: [["sql"]],
-    description: "Apply security best practices across volunteer systems.",
-    requirementLabel: "Unlock SQL/DBs, then log Cybersecurity in 2 opportunities",
-  },
-  {
     id: "financial_analysis", label: "Financial Analysis", iconKey: "PieChart", icon: PieChart,
     tier: 3, col: 2,
     trackedSkills: ["Financial Analysis", "Excel", "Data Analysis"],
-    threshold: 3, requiresAny: [["finance"]],
+    threshold: 3, requiresAny: [["finance", "powerbi"]],
     description: "Analyse financial data and produce reports to guide org decisions.",
-    requirementLabel: "Unlock Finance, then log Financial Analysis skills in 3 opportunities",
+    requirementLabel: "Unlock Finance or Power BI, then log Financial Analysis skills in 3 opportunities",
+  },
+  {
+    id: "networking_infra", label: "Networking", iconKey: "Globe", icon: Globe,
+    tier: 3, col: 3,
+    trackedSkills: ["Networking", "IT Support", "Cybersecurity"],
+    threshold: 3, requiresAny: [["cybersecurity", "sql"]],
+    description: "Manage IT infrastructure and networking for volunteer organisations.",
+    requirementLabel: "Unlock Cybersecurity or SQL/DBs, then log Networking or IT Support in 3 opportunities",
+  },
+  {
+    id: "mobile_advanced", label: "App Dev", iconKey: "Smartphone", icon: Smartphone,
+    tier: 3, col: 4,
+    trackedSkills: ["Mobile Development", "JavaScript", "TypeScript", "React"],
+    threshold: 3, requiresAny: [["mobile", "webdev"]],
+    description: "Build advanced cross-platform applications for nonprofits.",
+    requirementLabel: "Unlock Mobile Dev or Web Dev, then log app dev skills in 3 opportunities",
   },
 
+  {
+    id: "cloud", label: "Cloud Arch.", iconKey: "Cloud", icon: Cloud,
+    tier: 4, col: 0,
+    trackedSkills: ["Cloud (AWS/GCP/Azure)", "DevOps"],
+    threshold: 4, requiresAny: [["devops"]],
+    description: "Design and manage scalable cloud-based systems for nonprofits.",
+    requirementLabel: "Unlock DevOps, then log Cloud or DevOps in 4 total opportunities",
+  },
   {
     id: "machine_learning", label: "ML / AI", iconKey: "Bot", icon: Bot,
     tier: 4, col: 1,
@@ -182,21 +206,37 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Data Analysis, then log Machine Learning in 3 opportunities",
   },
   {
-    id: "cloud", label: "Cloud Arch.", iconKey: "Cloud", icon: Cloud,
-    tier: 4, col: 0,
-    trackedSkills: ["Cloud (AWS/GCP/Azure)", "DevOps"],
-    threshold: 4, requiresAny: [["devops"]],
-    description: "Design and manage scalable cloud-based systems for nonprofits.",
-    requirementLabel: "Unlock DevOps, then log Cloud or DevOps in 4 total opportunities",
+    id: "business_intelligence", label: "Business Intel.", iconKey: "BarChart2", icon: BarChart2,
+    tier: 4, col: 2,
+    trackedSkills: ["Financial Analysis", "Data Analysis", "Excel"],
+    threshold: 4, requiresAny: [["financial_analysis", "data_analysis"]],
+    description: "Drive data-informed decisions across finance and operations.",
+    requirementLabel: "Unlock Financial Analysis or Data Analysis, then log BI skills in 4 opportunities",
+  },
+  {
+    id: "it_management", label: "IT Management", iconKey: "Settings", icon: Settings,
+    tier: 4, col: 3,
+    trackedSkills: ["DevOps", "Cybersecurity", "Networking", "IT Support"],
+    threshold: 4, requiresAny: [["networking_infra", "devops"]],
+    description: "Oversee IT systems, security, and infrastructure for organisations.",
+    requirementLabel: "Unlock Networking or DevOps, then log IT management skills in 4 opportunities",
+  },
+  {
+    id: "product_dev", label: "Product Dev", iconKey: "Trophy", icon: Trophy,
+    tier: 4, col: 4,
+    trackedSkills: ["Mobile Development", "JavaScript", "TypeScript", "React", "UI/UX Design"],
+    threshold: 4, requiresAny: [["mobile_advanced"]],
+    description: "Lead end-to-end product development for nonprofit digital tools.",
+    requirementLabel: "Unlock App Dev, then log product development skills in 4 opportunities",
   },
 
   {
     id: "tech_expert", label: "Tech Expert", iconKey: "Trophy", icon: Trophy,
     tier: 5, col: 2,
-    trackedSkills: ["Machine Learning", "Cloud (AWS/GCP/Azure)", "DevOps", "Data Analysis"],
-    threshold: 6, requiresAny: [["machine_learning"]],
-    description: "Recognised technical leader — reachable via dev OR business paths.",
-    requirementLabel: "Unlock ML/AI, then log 6 total advanced tech skills",
+    trackedSkills: ["Machine Learning", "Cloud (AWS/GCP/Azure)", "DevOps", "Data Analysis", "Financial Analysis", "Cybersecurity"],
+    threshold: 6, requiresAny: [["machine_learning", "cloud", "business_intelligence", "it_management", "product_dev"]],
+    description: "Recognised technical leader across engineering, data, and business paths.",
+    requirementLabel: "Unlock any tier-4 node, then log 6 total advanced tech skills",
   },
 ];
 
@@ -424,7 +464,7 @@ function SkillTree({ nodes, onSelect, selectedId }: {
           return (
             <g key={node.id}
               transform={`translate(${x - NODE_W / 2},${y - NODE_H / 2})`}
-              onClick={() => onSelect(node)}
+              onClick={(e) => { e.stopPropagation(); onSelect(node); }}
               style={{ cursor: "pointer" }}>
               <TreeNode node={node} w={NODE_W} h={NODE_H} selected={selectedId === node.id} />
             </g>
@@ -453,6 +493,9 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
   const line2 = words.slice(mid).join(" ");
   const hasTwo = line2.length > 0;
 
+  const scale = 20 / 24;
+  const iconPath = ICON_PATHS[node.iconKey] ?? "";
+
   return (
     <g>
       {node.status !== "locked" && (
@@ -464,31 +507,29 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
       <rect x={0} y={0} width={w} height={h} rx={r}
         fill={fill} stroke={stroke} strokeWidth={selected ? 3 : 2}
       />
-      <g transform={`translate(${(w - 20) / 2}, ${h / 2 - 20})`} opacity={dimmed ? 0.32 : 1}>
-        <svg width={20} height={20} viewBox="0 0 24 24" fill="none"
-          stroke={dimmed ? "#94A3B8" : "#1E293B"} strokeWidth={1.5}
-          strokeLinecap="round" strokeLinejoin="round">
-          <path d={ICON_PATHS[node.iconKey] ?? ""} />
-        </svg>
+      <g
+        transform={`translate(${(w - 20) / 2}, ${h / 2 - 20}) scale(${scale})`}
+        opacity={dimmed ? 0.32 : 1}
+        stroke={dimmed ? "#94A3B8" : "#1E293B"}
+        strokeWidth={1.5 / scale}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        pointerEvents="none"
+      >
+        <path d={iconPath} />
       </g>
       <text textAnchor="middle" fontSize={7} fontWeight="700"
         fill="var(--node-text)" opacity={dimmed ? 0.32 : 1}
-        fontFamily="'DM Sans', sans-serif" letterSpacing="0.04em">
+        fontFamily="'DM Sans', sans-serif" letterSpacing="0.04em"
+        pointerEvents="none">
         <tspan x={w / 2} y={hasTwo ? h - 16 : h - 11}>{line1}</tspan>
         {hasTwo && <tspan x={w / 2} dy={9}>{line2}</tspan>}
       </text>
       {node.status === "mastered" && (
-        <g transform={`translate(${w - 14}, -4)`}>
+        <g transform={`translate(${w - 14}, -4)`} pointerEvents="none">
           <circle r={9} fill="#16A34A" />
           <text textAnchor="middle" dominantBaseline="middle" fontSize={11} fill="white">✓</text>
-        </g>
-      )}
-      {node.status === "in_progress" && node.current > 0 && (
-        <g transform={`translate(${w - 14}, -4)`}>
-          <circle r={9} fill="var(--accent)" />
-          <text textAnchor="middle" dominantBaseline="middle" fontSize={9} fontWeight="700" fill="#1E293B">
-            {node.current}
-          </text>
         </g>
       )}
     </g>
@@ -647,7 +688,7 @@ export default function SkillTreePage() {
       <div className="st-page" onClick={() => setSelected(null)}>
         <div className="st-header">
           <h1>Skill Tree</h1>
-          <p>Skills unlock as you log what you use across completed opportunities. Start at the bottom — work your way up.</p>
+          <p>Nodes unlock based on the skills you log after completing an opportunity. Start at the bottom and work your way up.</p>
 
           {!loading && !error && (
             <div className="st-stats">
