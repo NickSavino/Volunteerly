@@ -7,7 +7,6 @@ workflow:
   - if: $CI_COMMIT_BRANCH == "development"
 
 stages:
-  - install
   - typecheck
   - build
   - deploy
@@ -17,7 +16,8 @@ cache:
     files:
       - package-lock.json
   paths:
-    - npm/
+    - .npm/
+    - client/.next/cache/
   policy: pull-push
 
 default:
