@@ -13,34 +13,27 @@ stages:
   - deploy
 
 cache:
+  key:
+    files:
+      - package-lock.json
   paths:
-    - node_modules/
-  
-install:
-  stage: install
-  script:
-    - npm ci
-  artifacts:
-    paths:
-      - node_modules/
-    expire_in: 1h
+    - npm/
+  policy: pull-push
+
+default:
+  before_script:
+    - npm ci --cache .npm --prefer-offline
 
 typecheck:
   stage: typecheck
   script:
     - npm run typecheck
-  needs: 
-    - job: install
-      artifacts: true
 
 build:
   stage: build
   script:
     - npm run build
-  needs: 
-    - job: install
-      artifacts: true
-    - job: typecheck
+  needs: ["typecheck"]
 
 deploy:
   stage: deploy
