@@ -59,10 +59,10 @@ export class VolunteerService {
         });
     }
 
-    static async postReview(orgUserId: string, input: { rating: number }) {
+    static async postReview(orgUserId: string, opportunityId: string, input: { rating: number }) {
         return api<{ success: boolean }>(`/current-volunteer/reviews`, {
             method: "POST",
-            body: JSON.stringify({ revieweeId: orgUserId, ...input }),
+            body: JSON.stringify({ revieweeId: orgUserId, opportunityId, ...input }),
         });
     }
 

@@ -174,10 +174,10 @@ export class OrganizationService {
         return parsed;
     }
 
-    static async postReview(revieweeId: string, rating: number) {
+    static async postReview(revieweeId: string, opportunityId: string, rating: number) {
         return api<{ success: boolean }>("/current-organization/reviews", {
             method: "POST",
-            body: JSON.stringify({ revieweeId, rating }),
+            body: JSON.stringify({ revieweeId, opportunityId, rating }),
         });
     }
 
