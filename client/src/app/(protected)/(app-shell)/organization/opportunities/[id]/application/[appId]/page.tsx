@@ -1,23 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft, MapPin} from "lucide-react";
+import { ArrowLeft, Briefcase, GraduationCap, MapPin, School} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
-import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
-import { api } from "@/lib/api";
-import { ModStatCard } from "@/components/custom/mod_stat_card";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
-import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { use } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { useOppApplicationViewModel } from "./oppApplicationVm";
 import { OrganizationLoadingPage } from "../../../../organization_loading";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 
 export default function ViewApplicationPage({
@@ -90,6 +83,59 @@ export default function ViewApplicationPage({
                     <CardHeader>
                         <CardTitle>Volunteer Details</CardTitle>
                     </CardHeader>
+                    {(application?.volunteer?.workExperiences?.length === 0) && (application?.volunteer?.educations?.length === 0) &&
+                        <CardContent className="flex flex-col justify-center h-full text-center justify-center">
+                            <div className="flex justify-center mb-4">
+                                <Avatar size="lg">
+                                    <AvatarImage src={volunteerly_logo.src} />
+                                    <AvatarFallback></AvatarFallback>
+                                </Avatar>
+                            </div>
+                            <h3 className="text-lg">No Experiences</h3>
+                        </CardContent>
+                    }
+                    {(application?.volunteer?.workExperiences?.length || 0) > 0 &&
+                        <CardContent>
+                            <CardTitle className="text-muted-foreground text-sm">Employment Experience</CardTitle>
+                            {application?.volunteer?.workExperiences?.map((exp) => (
+                                <Item key={exp.id}>
+                                    <ItemMedia>
+                                        <Briefcase className="size-10 text-primary" />
+                                    </ItemMedia>
+                                    <ItemContent>
+                                        <ItemTitle>{exp.jobTitle} | {exp.company}</ItemTitle>
+                                        <ItemDescription>{exp.responsibilities}</ItemDescription>
+                                    </ItemContent>
+                                    <ItemActions>
+                                        <ItemDescription>{exp.startDate?.getFullYear()} - {exp.endDate?.getFullYear() || "Present"}</ItemDescription>
+                                    </ItemActions>
+                                </Item>
+                            ))
+                            
+                            }
+                        </CardContent>
+                    }
+                    {(application?.volunteer?.workExperiences?.length || 0) > 0 &&
+                        <CardContent>
+                            <CardTitle className="text-muted-foreground text-sm">Education</CardTitle>
+                            {application?.volunteer?.educations?.map((edu) => (
+                                <Item key={edu.id}>
+                                    <ItemMedia>
+                                        <GraduationCap className="size-10 text-primary" />
+                                    </ItemMedia>
+                                    <ItemContent>
+                                        <ItemTitle>{edu.degree}</ItemTitle>
+                                        <ItemDescription>{edu.institution}</ItemDescription>
+                                    </ItemContent>
+                                    <ItemActions>
+                                        <ItemDescription>{edu.graduationYear}</ItemDescription>
+                                    </ItemActions>
+                                </Item>
+                            ))
+                            
+                            }
+                        </CardContent>
+                    }
                 </Card>
 
                 <Card>

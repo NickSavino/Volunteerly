@@ -46,18 +46,25 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
 
     useEffect(() => {
       async function loadApplication() {
-        setFetching(true)
-        const opp = await OrganizationService.getOpportunity(oppId)
-        if (!(opp.data?.status == "OPEN")) {
-          router.replace(`/organization/opportunities/${oppId}`);
-          return;
+        try {
+          setFetching(true)
+          const opp = await OrganizationService.getOpportunity(oppId)
+          if (!(opp.data?.status == "OPEN")) {
+            router.replace(`/organization/opportunities/${oppId}`);
+            return;
+          }
+          const app = await OrganizationService.getApplication(appId)
+          if (!app.success) { 
+            console.error(app.error)
+            setError("Failed to load application."); 
+            setFetching(false)
+            return; 
+          }
+          setApplication(app.data);   
+          setFetching(false)
+        }catch (error)  {
+          console.log(error)
         }
-        const app = await OrganizationService.getApplication(appId)
-        if (!app.success) { 
-          console.error(app.error)
-          setError("Failed to load application."); return; }
-        setApplication(app.data);   
-        setFetching(false)
       }
       loadApplication()
     }, [appId])
