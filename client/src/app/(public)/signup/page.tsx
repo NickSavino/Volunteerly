@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "../../../components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link";
 import tms from "@/assets/tms.png"
-import avtImg from "@/assets/avatarImg.png"
+import avtImg from "@/assets/volunteerly_logo.png"
 import { useSignUpViewModel } from "./signupVM";
 import { Navbar } from "@/components/custom/login_navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,7 +36,7 @@ export default function LoginPage() {
                         AI-Powered Matching for Skilled Volunteering
                         </h3>
                         <p className="text-muted text-lg">
-                        &quot;Through Volunteerly, we were able to find volunteers for our most complex tasks, allowing us to devote more funds to hepling our cause.&quot;
+                        &quot;Through Volunteerly, we were able to find volunteers for our most complex tasks, allowing us to devote more funds to helping our cause.&quot;
                         </p>
                         <div className="flex items-center gap-3">
                             <Avatar>
@@ -44,8 +44,8 @@ export default function LoginPage() {
                                 <AvatarFallback>TMS</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col justify-center">
-                                <p className="text-secondary text-sm">Joshua Bright</p>
-                                <p className="text-secondary text-sm">Verified Volunteer</p>
+                                <p className="text-secondary text-sm">World Impact</p>
+                                <p className="text-secondary text-sm">Verified Organization</p>
                             </div>
                         </div>
                     </div>
@@ -158,7 +158,7 @@ export default function LoginPage() {
                                         <p className="text-sm text-red-500">{error}</p>
                                     ) : null}
 
-                                    <Button type="submit" className="w-full" disabled={submitting}>
+                                    <Button type="submit" className="w-full cursor-pointer" disabled={submitting}>
                                         {submitting ? "Creating account..." : "Sign up"}
                                     </Button>
 
