@@ -24,6 +24,8 @@ export function useOrgViewOpportunityViewModel(id: string) {
     description: "",
     hoursContributed: 0
   })
+  const [reviewModalOpen, setReviewModalOpen] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     if (!loading && !session) {
@@ -140,7 +142,22 @@ export function useOrgViewOpportunityViewModel(id: string) {
       }
     }
 
-    
+    async function submitReview(input: { rating: number; flagged: boolean; flagReason?: string }) {
+      if (submitting || !opportunity?.volunteer?.id) return;
+      setSubmitting(true);
+      try {
+          await OrganizationService.postReview(opportunity.volunteer.id, input.rating);
+          if (input.flagged && input.flagReason?.trim()) {
+              await OrganizationService.postFlag(opportunity.volunteer.id, input.flagReason.trim());
+          }
+          setReviewModalOpen(false);
+          toast.success("Review posted!");
+      } catch {
+          setError("Failed to post review.");
+      } finally {
+          setSubmitting(false);
+      }
+    }
 
-    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate} 
+    return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate, reviewModalOpen, setReviewModalOpen, submitting, submitReview} 
 }
