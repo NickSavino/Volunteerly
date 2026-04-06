@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { UserService } from "@/services/UserService";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
 
 const awardIcons: Record<string, LucideIcon> = {
   "First Step": Rocket,
@@ -51,7 +52,7 @@ export default function OrgProfilePage() {
                     <div className="relative">
                         <Avatar className="h-20 w-20">
                             <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")}/>
-                            <AvatarFallback> {currentOrg?.orgName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                            <AvatarFallback> {getAvatarFallback(currentOrg?.orgName)}</AvatarFallback>
                         </Avatar>
                         <Button className="absolute bottom-0 right-0 bg-white rounded-full p-1 text-gray-700 text-xs cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                             <Pencil />

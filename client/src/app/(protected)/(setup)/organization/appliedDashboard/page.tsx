@@ -7,12 +7,13 @@ import avtImg from "@/assets/avatarImg.png"
 import { Avatar, AvatarFallback, AvatarImage,  } from "@/components/ui/avatar";
 import { LogOut, MessageCircleQuestionMark, FileText, User } from "lucide-react";
 import { Navbar } from "../application/navbar";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 export default function HomePage() {
   const {loading, session, router, signOut, currentUser} = useAppliedOrgDashboardViewModel()
 
-  if (loading || !session ) {
-    return <main className="p-6">Loading...</main>
+  if (loading || !session) {
+    return (<LoadingScreen />)
   }
   return (
     <div className="min-h-screen">

@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import { Navbar } from "@/app/(protected)/(setup)/organization/application/navbar";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 export default function OrgApplicationPage() {
   const {        
@@ -34,7 +35,7 @@ export default function OrgApplicationPage() {
 
 
   if (loading || bootstrapping) {
-    return <main className="p-6">Loading...</main>
+    return (<LoadingScreen />)
   }
 
   return (
