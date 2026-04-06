@@ -5,9 +5,11 @@ import { CurrentOrganizationUpdateSchema, CurrentUserUpdateSchema, UpdateCurrent
 import { UserService } from "@/services/UserService";
 import { VolunteerService } from "@/services/VolunteerService";
 import { OrganizationService } from "@/services/OrganizationService";
+import { useAppSession } from "@/providers/app-session-provider";
 
 export function useSignUpViewModel() {
- const router = useRouter();
+    const router = useRouter();
+    const { refresh } = useAppSession();
 
     const [fName, setfName] = useState("");
     const [lName, setlName] = useState("");
@@ -23,65 +25,73 @@ export function useSignUpViewModel() {
         setSubmitting(true);
         setError(null);
 
-        const {data, error} = await AuthService.SignUpUserWithEmailPass(email, password)
+        try {
+            const {data, error} = await AuthService.SignUpUserWithEmailPass(email, password)
 
-        setSubmitting(false);
-
-        if (error) {
-            setError("Error Signing Up User.");
+            if (error) {
+                setError("Error Signing Up User.");
             return;
-        }
+           }
 
-        const createdUser = CurrentUserUpdateSchema.parse({
+            const createdUser = CurrentUserUpdateSchema.parse({
             email: email,
             role: role,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-        });
+            });
 
-        const result = await UserService.update_create_User(createdUser);
-        
-        if (result.success) {
+            const userResult = await UserService.update_create_User(createdUser);
+
+            if (!userResult.success) {
+                console.error("Failed to create user:", userResult.error);
+                setError("Cannot sign-up, try again later.");
+                return;
+            }
+
             if (role == "VOLUNTEER") {
                 const createdVolunteer = UpdateCurrentVolunteerSchema.parse({
                     firstName: fName,
                     lastName: lName,
                 });
-                const result = await VolunteerService.update_create_Volunteer(createdVolunteer);
-                if (result.success) {
-                    console.log("Updated user:", result.data);
 
-                    if (data.session) {
-                        router.replace("/");
-                        return;
-                    }
+                const volunteerResult = await VolunteerService.update_create_Volunteer(createdVolunteer);
 
-                } else {
-                    console.error("Failed to parse volunteer:", result.error);
-                }
-            } else if (role == "ORGANIZATION") {
+                if (!volunteerResult.success) {
+                    console.error("Failed to create volunteer:", volunteerResult.error);
+                    setError("Cannot sign-up, try again later.");
+                    return;
+                } 
+            } 
+            else if (role == "ORGANIZATION") {
                 const createdOrg = CurrentOrganizationUpdateSchema.parse({
                     orgName: orgName,
                 });
-                const result = await OrganizationService.update_create_Organization(createdOrg);
-                if (result.success) {
-                    if (data.session) {
-                        router.push("/organization/application");
-                        return;
-                    }
 
-                } else {
-                    console.error("Failed to parse organization:", result.error);
-                }
+                const orgResult = await OrganizationService.update_create_Organization(createdOrg);
+                if (!orgResult.success) {
+                    console.error("Failed to create organization:", orgResult.error);
+                    setError("Cannot sign-up, try again later.");
+                    return;
+                } 
             }
-        } else {
-            console.error("Failed to parse user:", result.error);
-            setError("Cannot sign-up, try again later.")
-            //Add section to delete user-auth if not logged in
+
+            if (data.session) {
+                await refresh();
+                
+                const nextRoute =
+                    role === "VOLUNTEER"
+                        ? "/volunteer/experience-input"
+                        : "/organization/application";
+                
+                router.replace(nextRoute)
+                return;
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Cannot sign up. Try again later.")
+        } finally {
+            setSubmitting(false);
         }
-
-
-        router.replace("/")
     }
     return {
         email,

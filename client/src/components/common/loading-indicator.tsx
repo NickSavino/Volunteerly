@@ -38,7 +38,7 @@ export function LoadingIndicator({
                     cy={size / 2}
                     r={radius}
                     fill="none"
-                    stroke="rgba(122, 111, 31, 0.45"
+                    stroke="rgba(122, 111, 31, 0.45)"
                     strokeWidth={strokeWidth}
                     strokeLinecap="round"
                     strokeDasharray={trackDash}

@@ -32,7 +32,7 @@ export function resolveDefaultAppRoute({
         case "CREATED":
           return "/organization/application";
         case "APPLIED":
-          return "/organizations/appliedDashboard";
+          return "/organization/appliedDashboard";
         default:
           return "/organization";
       }

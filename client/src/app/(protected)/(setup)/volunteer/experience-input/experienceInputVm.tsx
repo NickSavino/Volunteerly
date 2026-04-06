@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { VolunteerService } from "@/services/VolunteerService";
-import { api } from "@/lib/api";
-import { CurrentUserSchema } from "@volunteerly/shared";
 
 export type WorkExperience = {
     jobTitle: string;
@@ -29,7 +27,7 @@ export type FormErrors = {
 
 export function useExperienceInputViewModel() {
     const router = useRouter();
-    const { session, loading, signOut } = useAuth();
+    const { session, signOut } = useAuth();
 
     const [resumeFile, setResumeFile] = useState<File | null>(null);
     const [workExperiences, setWorkExperiences] = useState<WorkExperience[]>([
@@ -41,20 +39,6 @@ export function useExperienceInputViewModel() {
     const [errors, setErrors] = useState<FormErrors>({});
     const [submitting, setSubmitting] = useState(false);
     const [fullName, setFullName] = useState("Volunteer");
-
-
-    //redirect away if already verified
-    useEffect(() => {
-        async function checkVerified() {
-            if (loading || !session) return;
-            const json = await api<unknown>("/current-user");
-            const parsed = CurrentUserSchema.safeParse(json);
-            if (parsed.success && parsed.data.status === "VERIFIED") {
-                router.replace("/volunteer");
-            }
-        }
-        checkVerified();
-    }, [session, loading, router]);
 
     useEffect(() => {
     async function loadName() {

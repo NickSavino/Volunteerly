@@ -7,27 +7,16 @@ import { api } from "@/lib/api";
 import { CurrentUserSchema, ExtractedSkills } from "@volunteerly/shared";
 import { VolunteerService } from "@/services/VolunteerService";
 import { Education, WorkExperience } from "../experience-input/experienceInputVm";
+import { useAppSession } from "@/providers/app-session-provider";
 
 export function useSkillExtractionViewModel() {
     const router = useRouter();
+    const { refresh } = useAppSession();
     const { session, loading, signOut } = useAuth();
     const [skills, setSkills] = useState<ExtractedSkills | null>(null);
     const [confirming, setConfirming] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [fullName, setFullName] = useState("Volunteer");
-
-    //Redirect away if already verified
-    useEffect(() => {
-        async function checkVerified() {
-            if (loading || !session) return;
-            const json = await api<unknown>("/current-user");
-            const parsed = CurrentUserSchema.safeParse(json);
-            if (parsed.success && parsed.data.status === "VERIFIED") {
-                router.replace("/volunteer");
-            }
-        }
-        checkVerified();
-    }, [session, loading, router]);
 
     //Load skills from session storage
     useEffect(() => {
@@ -87,7 +76,8 @@ export function useSkillExtractionViewModel() {
             sessionStorage.removeItem("extractedSkills");
             sessionStorage.removeItem("workExperiences");
             sessionStorage.removeItem("educations");
-
+            
+            await refresh();
             router.replace("/volunteer");
         } catch (err) {
             console.error(err);
