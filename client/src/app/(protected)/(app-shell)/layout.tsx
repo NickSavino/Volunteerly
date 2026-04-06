@@ -63,6 +63,9 @@ export default function AppShellLayout({ children }: { children: ReactNode }) {
         ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
         : "Loading...";
       subtitle = "Volunteer";
+      avatarUrl = currentVolunteer?.id
+      ? UserService.getAvatarURL(currentVolunteer.id)
+      : undefined;
       avatarFallback = getAvatarFallback(displayName, "VLT");
       break;
   }
