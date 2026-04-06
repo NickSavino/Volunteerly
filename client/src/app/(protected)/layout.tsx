@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAppSession } from "@/providers/app-session-provider";
 import { resolveDefaultAppRoute } from "@/lib/utils";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { UserRole } from "@volunteerly/shared";
 
 function isVolunteerSetupRoute(pathname: string) {
   return (
@@ -18,17 +19,6 @@ function isOrganizationSetupRoute(pathname: string) {
     pathname === "/organization/application" ||
     pathname === "/organization/appliedDashboard"
   );
-}
-
-function getRoleBasePath(role: "VOLUNTEER" | "ORGANIZATION" | "MODERATOR") {
-  switch (role) {
-    case "VOLUNTEER":
-      return "/volunteer";
-    case "ORGANIZATION":
-      return "/organization";
-    case "MODERATOR":
-      return "/moderator";
-  }
 }
 
 export default function ProtectedLayout({ children }: { children: ReactNode }) {
@@ -55,7 +45,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       currentOrganization,
     });
 
-    const roleBasePath = getRoleBasePath(currentUser.role);
+    const roleBasePath = resolveDefaultAppRoute( { currentUser, currentOrganization } );
     const isWrongRoleSection = !pathname.startsWith(roleBasePath);
 
     if (isWrongRoleSection) {

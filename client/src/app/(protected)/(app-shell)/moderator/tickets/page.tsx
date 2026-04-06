@@ -12,6 +12,7 @@ import { ModeratorListContainer } from "@/components/moderator/moderator-list-co
 import { ModeratorPageHeader } from "@/components/moderator/moderator-page-header";
 import { ModeratorPagination } from "@/components/moderator/moderator-pagination";
 import { ModeratorTabs } from "@/components/moderator/moderator-tabs";
+import { TicketDetailModal } from "@/app/(protected)/(app-shell)/moderator/tickets/ticket-detail/ticketDetailModal";
 
 function formatCategory(category: ModeratorTicket["category"]) {
   switch (category) {
@@ -56,6 +57,8 @@ function getTimeOpen(createdAt: string) {
 
 export default function ModeratorTicketsPage() {
   const { auth, page, filters, data, pagination } = useTicketListViewModel();
+
+
 
   if (auth.loading || !auth.session) {
     return <main className="p-6">Loading...</main>;
@@ -160,7 +163,11 @@ export default function ModeratorTicketsPage() {
 
                   <div className="flex flex-wrap items-center gap-3">
                     <button
+                      type="button"
                       className="rounded-xl bg-primary px-6 py-3 text-base font-semibold text-foreground hover:opacity-90"
+                      onClick={() => {
+                        page.openTicketDetail(ticket.id)
+                      }}
                     >
                       View Ticket
                     </button>
@@ -192,6 +199,13 @@ export default function ModeratorTicketsPage() {
           />
         </div>
       </main>
+
+      <TicketDetailModal
+        ticketId={page.selectedTicketId}
+        open={page.isTicketDetailOpen}
+        onClose={page.closeTicketDetail}
+        currentUserId={auth.currentModerator?.id ?? ""}
+        />
     </div>
   );
 }
