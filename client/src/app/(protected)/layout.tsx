@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useMemo } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSession } from "@/providers/app-session-provider";
 import { resolveDefaultAppRoute } from "@/lib/utils";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 function isVolunteerSetupRoute(pathname: string) {
   return (
@@ -43,11 +44,10 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   } = useAppSession();
 
   const redirectTarget = useMemo(() => {
-    if (!initialized || loading) return;
+    if (!initialized || loading) return null;
 
     if (!isAuthenticated || !currentUser) {
-      router.replace("/login");
-      return;
+      return "/login";
     }
 
     const defaultRoute = resolveDefaultAppRoute({
@@ -59,8 +59,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     const isWrongRoleSection = !pathname.startsWith(roleBasePath);
 
     if (isWrongRoleSection) {
-      router.replace(defaultRoute);
-      return;
+      return defaultRoute
     }
 
     if (currentUser.role === "VOLUNTEER") {
@@ -68,13 +67,12 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       const onSetupRoute = isVolunteerSetupRoute(pathname);
 
       if (needsSetup && !onSetupRoute) {
-        router.replace("/volunteer/experience-input");
-        return;
+        return ("/volunteer/experience-input")
       }
 
       if (!needsSetup && onSetupRoute) {
-        router.replace("/volunteer");
-        return;
+        return"/volunteer"
+        
       }
     }
 
@@ -86,13 +84,11 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         orgStatus === "CREATED" || orgStatus === "APPLIED";
 
       if (needsSetup && pathname !== defaultRoute) {
-        router.replace(defaultRoute);
-        return;
+        return defaultRoute
       }
 
       if (!needsSetup && onSetupRoute) {
-        router.replace("/organization");
-        return;
+        return "/organization";
       }
     }
 
@@ -104,8 +100,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         pathname.startsWith("/volunteer/skill-extraction");
 
       if (isSetupRoute) {
-        router.replace("/moderator");
-        return;
+        return "/moderator"
       }
     }
 
@@ -117,7 +112,6 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     currentUser,
     currentOrganization,
     pathname,
-    router,
   ]);
 
   useEffect(() => {
@@ -126,8 +120,8 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     }
   }, [redirectTarget, router])
 
-  if (!initialized || loading || !currentUser) {
-    return <main className="p-6">Loading...</main>;
+  if (!initialized || loading || !currentUser || redirectTarget) {
+    return <LoadingScreen label="Loading..." />
   }
 
   return <>{children}</>;
