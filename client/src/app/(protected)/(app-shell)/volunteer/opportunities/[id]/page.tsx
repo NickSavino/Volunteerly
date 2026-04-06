@@ -7,6 +7,16 @@ import { VolunteerService } from "@/services/VolunteerService";
 import { useVolOppDetailViewModel } from "./volOppDetailVm";
 import { AppModal } from "@/components/common/app-modal";
 
+const ALL_SKILLS = [
+    "Python", "JavaScript", "TypeScript", "Java", "C++", "C#", "SQL", "React",
+    "Node.js", "Excel", "Data Analysis", "Machine Learning", "Cloud (AWS/GCP/Azure)",
+    "Cybersecurity", "UI/UX Design", "Mobile Development", "DevOps", "Databases",
+    "Leadership", "Communication", "Teamwork", "Problem Solving", "Project Management",
+    "Public Speaking", "Writing", "Research", "Event Planning", "Fundraising",
+    "Marketing", "Social Media", "Mentoring", "Conflict Resolution", "Time Management",
+    "Adaptability", "Critical Thinking", "Customer Service", "Teaching", "Networking",
+];
+
 export default function VolOppDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const vm = useVolOppDetailViewModel(id);
@@ -156,6 +166,18 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                             </button>
                         </div>
                     )}
+
+                    {isCompleted && (
+                        <div className="mt-6">
+                            <button
+                                onClick={() => vm.setSkillModalOpen(true)}
+                                disabled={vm.skillsAlreadySubmitted}
+                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {vm.skillsAlreadySubmitted ? "Skills Already Logged" : "Log Skills Used"}
+                            </button>
+                        </div>
+                    )}
                 </div>
             </main>
 
@@ -172,6 +194,13 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 submitting={vm.submitting}
                 onClose={() => vm.setReviewModalOpen(false)}
                 onSubmit={vm.submitReview}
+            />
+
+            <SkillPickerModal
+                open={vm.skillModalOpen}
+                submitting={vm.submitting}
+                onClose={() => vm.setSkillModalOpen(false)}
+                onSubmit={vm.submitSkills}
             />
 
             <AppModal
@@ -212,6 +241,73 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 </div>
             </AppModal>
         </div>
+    );
+}
+
+function SkillPickerModal({
+    open,
+    submitting,
+    onClose,
+    onSubmit,
+}: {
+    open: boolean;
+    submitting: boolean;
+    onClose: () => void;
+    onSubmit: (skills: string[]) => void;
+}) {
+    const [selected, setSelected] = useState<string[]>([]);
+
+    function toggle(skill: string) {
+        setSelected((prev) =>
+            prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
+        );
+    }
+
+    function handleClose() {
+        setSelected([]);
+        onClose();
+    }
+
+    return (
+        <AppModal
+            open={open}
+            onClose={handleClose}
+            title="Log Skills Used"
+            maxWidthClassName="sm:max-w-2xl"
+            footer={
+                <>
+                    <button
+                        onClick={handleClose}
+                        disabled={submitting}
+                        className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={() => onSubmit(selected)}
+                        disabled={submitting || selected.length === 0}
+                        className="h-11 min-w-32 rounded-xl bg-yellow-400 px-5 text-sm font-semibold text-gray-900 hover:bg-yellow-500 disabled:opacity-50"
+                    >
+                        {submitting ? "Saving..." : `Submit (${selected.length})`}
+                    </button>
+                </>
+            }
+        >
+            <p className="mb-4 text-sm text-gray-500">Select all the skills you used during this opportunity.</p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 max-h-96 overflow-y-auto pr-1">
+                {ALL_SKILLS.map((skill) => (
+                    <label key={skill} className="flex cursor-pointer items-center gap-2 rounded-lg border p-2.5 hover:bg-gray-50">
+                        <input
+                            type="checkbox"
+                            checked={selected.includes(skill)}
+                            onChange={() => toggle(skill)}
+                            className="h-4 w-4 accent-yellow-400"
+                        />
+                        <span className="text-sm text-gray-800">{skill}</span>
+                    </label>
+                ))}
+            </div>
+        </AppModal>
     );
 }
 
