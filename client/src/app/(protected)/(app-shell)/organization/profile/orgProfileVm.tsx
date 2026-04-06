@@ -7,6 +7,7 @@ import { CurrentOrganization, CurrentOrganizationUpdate, CurrentUser, CurrentUse
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 import { toast } from "sonner";
+import { useAppSession } from "@/providers/app-session-provider";
 
 
 export function useOrgProfileViewModel() {
@@ -33,8 +34,8 @@ export function useOrgProfileViewModel() {
   })
   const [editing, setEditing] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const {refresh} = useAppSession()
 
-  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
@@ -44,6 +45,7 @@ export function useOrgProfileViewModel() {
         if (!org.success) {
           console.error(org.error);
           setError("Received invalid user data from the server.");
+          toast.error("Failed to load Organization.", { position: "top-right" })
           return;
         }
         if (org.data.status == "CREATED") {
@@ -76,6 +78,7 @@ export function useOrgProfileViewModel() {
         setFetching(false)
       } catch (error) {
         console.error(error);
+        toast.error("Failed to load Organization Details.", { position: "top-right" })
         return
       }
     }
@@ -98,6 +101,7 @@ export function useOrgProfileViewModel() {
 
       } catch (error) {
         console.error("Failed to load document", error);
+        toast.error("Failed to load document.", { position: "top-right" })
       }
     }
     return
@@ -166,6 +170,9 @@ export function useOrgProfileViewModel() {
       const path = await UserService.uploadAvatar(formData)
       if (path){
         toast.success("Avatar Updated!", { position: "top-right" })
+        await refresh()
+      } else {
+        toast.error("Error updating Avatar.", { position: "top-right" })
       }
       setFetching(false)
     }

@@ -5,6 +5,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
 export function useOrgDashboardViewModel() {
   const router = useRouter();
@@ -17,7 +18,6 @@ export function useOrgDashboardViewModel() {
   const [activeVlt, setActiveVlt] = useState(0)
   const [totalHours, setTotalHours] = useState(0)
 
-  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
@@ -27,6 +27,7 @@ export function useOrgDashboardViewModel() {
         if (!org.success) {
           console.error(org.error);
           setError("Received invalid user data from the server.");
+          toast.error("Failed to load Organization.", { position: "top-right" })
           return;
         }
         if (org.data.status == "CREATED") {
@@ -39,6 +40,7 @@ export function useOrgDashboardViewModel() {
         setCurrentUser(org.data);
       } catch (error) {
         console.error(error);
+        toast.error("Failed to load Organization.", { position: "top-right" })
         return
       }
     }
@@ -50,15 +52,15 @@ export function useOrgDashboardViewModel() {
 
         const opps = await OrganizationService.getActiveOpportunities()
         if (!opps.success) { 
-          console.error(opps.error)
           setError("Failed to load opportunities."); 
+          toast.error("Failed to load Opportunities.", { position: "top-right" })
         }else {
           setOpportunities(opps.data);   
         }
         
         const totalOpps = await OrganizationService.countAllOpportunities()
         if (!totalOpps.success) { 
-          setError("Failed to get total opportunities."); 
+          setError("Failed to get total opportunities.");
         }else{
           setTotalOpps(totalOpps.data)
         }
