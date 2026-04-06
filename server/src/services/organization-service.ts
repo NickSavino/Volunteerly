@@ -27,7 +27,7 @@ export async function createCurrentOrganization(orgId: string, orgName: string) 
     return org;
 }
 
-export async function updateCurrentOrganization(orgId: string, contactName: string, contactEmail: string, contactNum: string, missionStmt: string, causeCat: string, website:string, impactHighlights: Prisma.InputJsonValue) {
+export async function updateCurrentOrganization(orgId: string, contactName: string, contactEmail: string, contactNum: string, missionStmt: string, causeCat: string, website:string, impactHighlights: Prisma.InputJsonValue, hqAdr: string) {
     const organization = await prisma.organization.update({
         where: { id: orgId },
         data: {
@@ -37,7 +37,8 @@ export async function updateCurrentOrganization(orgId: string, contactName: stri
             missionStatement: missionStmt,
             causeCategory: causeCat,
             website: website,
-            impactHighlights: impactHighlights
+            impactHighlights: impactHighlights,
+            hqAdr:hqAdr
         },
     });
     if (!organization) {
@@ -294,6 +295,14 @@ export async function getOrgApplication(orgId: string, appId: string) {
     return org;
 }
 
+export async function getOppVltApplication(orgId:string, oppId: string, vltId: string) {
+    const app = await prisma.application.findFirst({
+        where: { oppId: oppId, volId:vltId, opportunity:{orgId: orgId} },
+    });
+    return app;
+}
+
+
 export async function selectOppVolunteer(oppId:string, vltId:string) {
     const organization = await prisma.opportunity.update({
         where: { id: oppId },
@@ -374,7 +383,7 @@ export async function createOrgProgressUpdate(orgId: string, oppId: string, titl
             },
         });
     if (!org) {
-        throw new Error("Error creating the Organization.");
+        throw new Error("Error creating the Progress Update.");
     }
 
     return org;
@@ -400,7 +409,35 @@ export async function createOpportunity(orgId:string, name:string, category:stri
             },
         });
     if (!org) {
-        throw new Error("Error creating the Organization.");
+        throw new Error("Error creating the Opportunity.");
+    }
+
+    return org;
+}
+
+
+export async function updateOpportunity(oppId:string, orgId:string, name:string, category:string, description:string, candidateDesc:string, workType:WorkType,
+        commitmentLevel: CommitmentLevel, length:string, deadlineDate:Date, availability:Prisma.InputJsonValue) {
+    const org = await prisma.opportunity.update({
+        where:{id: oppId},
+        data: {
+            orgId:orgId,
+            name:name,
+            category:category,
+            status: "OPEN",
+            description:description,
+            candidateDesc:candidateDesc,
+            workType:workType,
+            commitmentLevel:commitmentLevel,
+            length:length,
+            deadlineDate:deadlineDate,
+            availability: availability,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        },
+        });
+    if (!org) {
+        throw new Error("Error updating the Opportunity.");
     }
 
     return org;

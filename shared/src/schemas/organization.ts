@@ -13,7 +13,7 @@ export const TotalHoursSchema = z.object({
     hours: z.number().nullable(),
   }),
 })
-
+export const organizationAwardsSchema = z.record(z.string(), z.string());
 
 export const OrganizationSchema = z.object({
   id: z.uuid(),

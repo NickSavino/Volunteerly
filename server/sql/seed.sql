@@ -17,9 +17,8 @@ BEGIN
         public.applications,
         public.skill_nodes,
         public.skill_trees,
-        public.volunteer_skills,
+        public.volunteer_skill_profiles,
         public.opportunities,
-        public.skills,
         public.volunteers,
         public.organizations,
         public.moderators,
@@ -47,10 +46,6 @@ DECLARE
     org3_id      UUID;
     mod1_id      UUID;
 
-    skill1_id    UUID := 'a0000000-0000-4000-8000-000000000101';
-    skill2_id    UUID := 'a0000000-0000-4000-8000-000000000102';
-    skill3_id    UUID := 'a0000000-0000-4000-8000-000000000103';
-
     opp1_id      UUID := 'a0000000-0000-4000-8000-000000000201';
     opp2_id      UUID := 'a0000000-0000-4000-8000-000000000202';
     opp3_id      UUID := 'a0000000-0000-4000-8000-000000000203';
@@ -64,13 +59,27 @@ DECLARE
     node2_id     UUID := 'a0000000-0000-4000-8000-000000000502';
 
     conv1_id     UUID := 'a0000000-0000-4000-8000-000000000601';
+
     ticket1_id   UUID := 'a0000000-0000-4000-8000-000000000701';
+    ticket2_id   UUID := 'a0000000-0000-4000-8000-000000000702';
+    ticket3_id   UUID := 'a0000000-0000-4000-8000-000000000703';
+    ticket4_id   UUID := 'a0000000-0000-4000-8000-000000000704';
+    ticket5_id   UUID := 'a0000000-0000-4000-8000-000000000705';
+    ticket6_id   UUID := 'a0000000-0000-4000-8000-000000000706';
+    
     review1_id   UUID := 'a0000000-0000-4000-8000-000000000801';
     flag1_id     UUID := 'a0000000-0000-4000-8000-000000000901';
     progress1_id UUID := 'a0000000-0000-4000-8000-000000001001';
 
-BEGIN
+    work_exp1_id  UUID := 'a0000000-0000-4000-8000-000000001002';
+    work_exp2_id  UUID := 'a0000000-0000-4000-8000-000000001003';
+    work_exp3_id  UUID := 'a0000000-0000-4000-8000-000000001004';
 
+    education1_id UUID := 'a0000000-0000-4000-8000-000000001005';
+    education2_id UUID := 'a0000000-0000-4000-8000-000000001006';
+    education3_id UUID := 'a0000000-0000-4000-8000-000000001007';
+    
+BEGIN
 
 --Auth Users
 INSERT INTO auth.users (
@@ -125,28 +134,11 @@ VALUES
     (org2_id::text, 'World United',  'VERIFIED', 654321, 'doc-world-united', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"value": 12, "label": "countries operated in"}, {"value": 3800, "label": "students helped"}]'),
     (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012, 'doc-tms',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org',         '[{"value": 5200, "label": "meals served"}, {"value": 300, "label": "families housed"}]');
 
-
---Insert Volunteers
+--Insert Volunteers (no skills seeded — volunteers complete experience input on first login)
 INSERT INTO public.volunteers (id, first_name, last_name, location, bio, hourly_value, organizations_assisted, availability)
 VALUES
-    (vol1_id::text, 'Estelle', 'Bright',  'Calgary, AB', 'Passionate volunteer with a love for data.', 25, 2, '["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"]'),
-    (vol2_id::text, 'Joshua',   'Bright', 'Calgary, AB', 'Software developer who loves giving back.',       30, 1, '["Mon", "Sat", "Sun"]');
-
-
---Insert Skills
-INSERT INTO public.skills (id, name, category)
-VALUES
-    (skill1_id::text, 'First Aid',       'TECHNICAL'),
-    (skill2_id::text, 'Public Speaking', 'SOFT'),
-    (skill3_id::text, 'Programming',     'TECHNICAL');
-
-
---Insert Volunteer Skills
-INSERT INTO public.volunteer_skills (id, vol_id, skill_id)
-VALUES
-    (gen_random_uuid()::text, vol1_id::text, skill1_id::text),
-    (gen_random_uuid()::text, vol1_id::text, skill2_id::text),
-    (gen_random_uuid()::text, vol2_id::text, skill3_id::text);
+    (vol1_id::text, 'Estelle', 'Bright', 'Calgary, AB', 'Passionate volunteer with a love for data.', 25, 2, '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]'),
+    (vol2_id::text, 'Joshua',  'Bright', 'Calgary, AB', 'Software developer who loves giving back.',  30, 1, '["Monday", "Saturday", "Sunday"]');
 
 --Insert Opps
 INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)
@@ -155,6 +147,19 @@ VALUES
     (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]'),
     (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
 
+--Insert Vol Work Experiences
+INSERT INTO public.volunteer_work_experiences (id, vol_id, job_title, company, responsibilities, created_at, start_date, end_date)
+VALUES
+    (work_exp1_id::text, vol1_id::text, 'Data & AI Consultant', 'EY', 'Leverages AI to help drive decisions',   '2026-04-05',  '2025-03-05', '2026-02-10'),
+    (work_exp2_id::text, vol2_id::text, 'Investment Banker', 'RBC', 'Create Excel dashboards',   '2026-04-05',  '2026-03-05', '2026-06-01'),
+    (work_exp3_id::text, vol2_id::text, 'Data Science Associate', 'CTC', 'Develop machine learning models to forcast sales',   '2026-04-05',  '2026-05-04', NULL);
+
+--Inset vol Educations
+INSERT INTO public.volunteer_educations (id, vol_id, institution, degree, graduation_year, created_at)
+VALUES
+    (education1_id::text, vol1_id::text, 'University of Manitoba', 'Software Engineering', '2025',   '2026-04-05'),
+    (education2_id::text, vol2_id::text, 'University of Saskatchewan', 'Finance', '2020',   '2026-04-05'),
+    (education3_id::text, vol2_id::text, 'University of Guelph', 'Music Theory', '2026',   '2026-04-05');
 
 --Applications
 INSERT INTO public.applications (id, opp_id, vol_id, match_pct, message, date_applied)
@@ -174,15 +179,15 @@ INSERT INTO public.reviews (id, issuer_id, reviewee_id, opportunity_id, rating, 
 VALUES
     (review1_id::text, org1_id::text, vol1_id::text, opp1_id::text, 4.5, 'Great volunteer!', 'Estelle was punctual and professional throughout.');
 
---Skill Tree and Nodes
+--Skill Trees and Nodes
 INSERT INTO public.skill_trees (id, vol_id, type_of_tree, total_xp_needed, current_xp, num_of_nodes_completed)
 VALUES
     (tree1_id::text, vol1_id::text, 'TECHNICAL', 1000, 250, 1);
 
-INSERT INTO public.skill_nodes (id, skill_tree_id, skill_id, xp_required)
+INSERT INTO public.skill_nodes (id, skill_tree_id, skill_name, xp_required)
 VALUES
-    (node1_id::text, tree1_id::text, skill1_id::text, 200),
-    (node2_id::text, tree1_id::text, skill3_id::text, 300);
+    (node1_id::text, tree1_id::text, 'First Aid',   200),
+    (node2_id::text, tree1_id::text, 'Programming', 300);
 
 --Chat
 INSERT INTO public.chat_conversations (id, user_a_id, user_b_id)
@@ -195,9 +200,85 @@ VALUES
     (gen_random_uuid()::text, conv1_id::text, org1_id::text, 'Great! We would love to have you.');
 
 --Tickets
-INSERT INTO public.tickets (id, issuer_id, target_id, category, title, description, urgency_rating, status)
+--Tickets
+INSERT INTO public.tickets (
+    id,
+    issuer_id,
+    target_id,
+    category,
+    title,
+    description,
+    urgency_rating,
+    status,
+    created_at
+)
 VALUES
-    (ticket1_id::text, vol1_id::text, mod1_id::text, 'BUG', 'Cannot upload profile photo', 'The upload button does nothing on Firefox.', 'MODERATE', 'OPEN');
+    (
+        ticket1_id::text,
+        vol1_id::text,
+        mod1_id::text,
+        'BUG',
+        'Cannot upload profile photo',
+        'The upload button does nothing on Firefox.',
+        'MODERATE',
+        'OPEN',
+        '2026-03-26 09:15:00'
+    ),
+    (
+        ticket2_id::text,
+        vol2_id::text,
+        mod1_id::text,
+        'ABUSE',
+        'Organization sent inappropriate messages',
+        'I received messages that were unprofessional and made me uncomfortable.',
+        'SERIOUS',
+        'OPEN',
+        '2026-03-27 14:30:00'
+    ),
+    (
+        ticket3_id::text,
+        org1_id::text,
+        mod1_id::text,
+        'OTHER',
+        'Need help updating private organization details',
+        'We need our primary contact information updated and cannot edit it from the profile page.',
+        'MINOR',
+        'OPEN',
+        '2026-03-28 11:00:00'
+    ),
+    (
+        ticket4_id::text,
+        org2_id::text,
+        mod1_id::text,
+        'BILLING',
+        'Question about premium analytics charges',
+        'We were expecting the monthly report to be included. Please clarify the current billing status.',
+        'MODERATE',
+        'CLOSED',
+        '2026-03-20 10:45:00'
+    ),
+    (
+        ticket5_id::text,
+        vol1_id::text,
+        mod1_id::text,
+        'BUG',
+        'Dashboard stats are not updating',
+        'My completed opportunity hours have not changed since last week even after refreshing.',
+        'MINOR',
+        'CLOSED',
+        '2026-03-18 16:20:00'
+    ),
+    (
+        ticket6_id::text,
+        org3_id::text,
+        mod1_id::text,
+        'OTHER',
+        'Volunteer application page is confusing',
+        'The applicant review flow is unclear and our staff is not sure how to proceed after opening an application.',
+        'MINOR',
+        'OPEN',
+        '2026-03-29 08:10:00'
+    );
 
 --Flags
 INSERT INTO public.flags (id, flag_issuer_id, flagged_user_id, reason)

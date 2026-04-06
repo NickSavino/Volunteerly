@@ -1,6 +1,7 @@
 "use client";
 
-import { LoadingIndicator } from "./loading-indicator";
+import { LoadingIndicator } from "@/components/common/loading-indicator";
+
 
 type LoadingScreenProps = {
     label?: string;

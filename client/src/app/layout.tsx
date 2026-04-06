@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../providers/auth-provider";
 import { Toaster } from "sonner";
+import { AppSessionProvider } from "../providers/app-session-provider";
 
 export const dynamic = "force-dynamic";
 

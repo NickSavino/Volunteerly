@@ -1,7 +1,9 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
-import { applyOrganization, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity, orgPostReview, orgPostFlag } from "../services/organization-service.js";
+import { applyOrganization, orgPostReview, orgPostFlag, createCurrentOrganization, getCurrentOrganization, getAllOpportunities, updateCurrentOrganization, getActiveOpportunities, sumTotalOpportunityHours, countActiveOpportunities, countAllOpportunities, getOrgOpportunity, getApplications, getOrgApplication, selectOppVolunteer, completeOpportunity, getOpportunityAnalytics, createOrgProgressUpdate, createOpportunity, updateOpportunity, getOppVltApplication } from "../services/organization-service.js";
+import { getCurrentUser } from "../services/user-service.js";
+import { sendEmail } from "../services/azure-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -50,14 +52,14 @@ currentOrganizationRouter.put("/", async (req, res, next) => {
   try {
     const userId = req.auth!.userId;
 
-    const { orgName, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights} = req.body;
+    const { orgName, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, impactHighlights, hqAdr} = req.body;
 
     const user = await getCurrentOrganization(userId);
     let modified_user;
     if (!user) {
         modified_user = await createCurrentOrganization(userId, orgName);
     } else {
-        modified_user = await updateCurrentOrganization(userId, contactName, contactEmail, contactNum, missionStmt, causeCat, website, impactHighlights);    
+        modified_user = await updateCurrentOrganization(userId, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, impactHighlights, hqAdr);    
     }
     if (!modified_user) {
         return res.status(500).json({
@@ -158,6 +160,35 @@ currentOrganizationRouter.get("/opportunities/totalCount", async (req, res, next
 });
 
 
+currentOrganizationRouter.get("/awards", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const awards: Record<string, string> = {};
+
+        const org = await getCurrentOrganization(userId)
+        if (Array.isArray(org?.impactHighlights) && org?.impactHighlights?.length >= 2) {
+            awards["Strong Presence"] = "Completed all organization profile details!";
+        }
+
+        const opportunities = await countAllOpportunities(userId);
+        if (opportunities >= 1) {
+            awards["First Step"] = "Post first opportunity!";
+        }
+        if (opportunities >= 100){
+            awards["Community Builder"] = "100 Opportunities on Volunteerly";
+        } else if (opportunities >= 50){
+            awards["Community Builder"] = "50 Opportunities on Volunteerly";
+        } else if (opportunities >= 10) {
+            awards["Community Builder"] = "10 Opportunities on Volunteerly";
+        }
+
+        res.status(200).json(awards);
+    } catch (error) {
+        next(error);
+    }
+});
 currentOrganizationRouter.get("/opportunities/hoursTotal", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -273,12 +304,12 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
 
         const { oppId, vltId } = req.body;
 
-        const opportunity = await getOrgOpportunity(userId, oppId);
+        const application = await getOppVltApplication(userId, oppId, vltId);
 
-        if (!opportunity) {
+        if (!application) {
             return res.status(500).json({
-                error: "Cannot fetch Opportunity",
-                message: "Opportunity doesn't exist or not owned by this organization."
+                error: "Cannot fetch Application",
+                message: "Either Volunteer hasn't applied, or Opportunity doesn't exist, or not owned by Organization."
             });
         }
 
@@ -288,6 +319,43 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
                 error: "Cannot Select Volunteer",
                 message: "Error selecting Volunteer for this opportunity."
             });
+        }
+
+        const vltDetails = await getCurrentUser(vltId)
+
+        if (vltDetails)
+        {
+            const emailSubject = "Volunteerly - Opportunity Confirmation"
+            const emailContentPlain = 
+            `Hi,
+            We're pleased to let you know that you have been selected for the volunteer opportunity "${selected_vlt.name}".
+        
+            Please log in to your Volunteerly account to review the opportunity details.
+
+            Best regards,
+            Volunteerly Team
+            `
+            const emailContentHTML =
+            `
+            <html>
+				<body>
+					<p>
+						Hi, \n
+					</p>
+                    <p>
+						We're pleased to let you know that you have been selected for the volunteer opportunity "${selected_vlt.name}". \n
+					</p>
+                    <p>
+						Please log in to your Volunteerly account to review the opportunity details. \n
+					</p>
+                    <p>
+                        Best regards, \n
+                        Volunteerly Team
+                    </p>
+				</body>
+			</html>`;            
+            const emailResult = await sendEmail(vltDetails.email, emailSubject, emailContentPlain, emailContentHTML)
+            console.log(emailResult)
         }
         
         res.status(200).json(selected_vlt);
@@ -360,7 +428,7 @@ currentOrganizationRouter.get("/opportunity/analytics", auth, async (req, res, n
     }
 });
 
-currentOrganizationRouter.put("/opportunity/progressUpdate", auth, async (req, res, next) => {
+currentOrganizationRouter.post("/opportunity/progressUpdate", auth, async (req, res, next) => {
   try {
     const typedReq = req as typeof req & AuthenticatedRequest;
 
@@ -416,7 +484,7 @@ currentOrganizationRouter.put("/opportunity/progressUpdate", auth, async (req, r
 
 });
 
-currentOrganizationRouter.put("/opportunity", auth, async (req, res, next) => {
+currentOrganizationRouter.post("/opportunity", auth, async (req, res, next) => {
   try {
     const typedReq = req as typeof req & AuthenticatedRequest;
 
@@ -473,4 +541,35 @@ currentOrganizationRouter.post("/flags", async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+});
+
+currentOrganizationRouter.put("/opportunity", auth, async (req, res, next) => {
+  try {
+    const typedReq = req as typeof req & AuthenticatedRequest;
+
+    const userId = typedReq.auth?.userId;
+
+    if (!userId) {
+        return res.status(401).json({
+            error: "Unauthorized",
+            message: "User context missing."
+        });
+    }
+    const { opportunityId, name, category, description, candidateDesc, workType,
+        commitmentLevel, length, deadlineDate, availability } = req.body;
+
+    const created_opp = await updateOpportunity(opportunityId, userId, name, category, description, candidateDesc, workType,
+        commitmentLevel, length, deadlineDate, availability as string[]);
+    
+    if (!created_opp){
+        return res.status(404).json({
+            error: "Error Updating Opportunity",
+            message: "Cannot Update."
+        });
+    }
+    res.status(200).json(created_opp);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });

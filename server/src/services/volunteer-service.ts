@@ -40,7 +40,7 @@ export async function updateCurrentVolunteer(
 
 export async function getYourOpportunities(volunteerId: string) {
     return prisma.opportunity.findMany({
-        where: { volId: volunteerId },
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] }},
         include: {
             organization: {
                 select: { id: true, orgName: true },
@@ -143,7 +143,7 @@ export async function postFlag(
 
 export async function getVolunteerOrganizations(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
-        where: { volId: volunteerId },
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] }},
         select: {
             orgId: true,
             hours: true,
@@ -173,8 +173,11 @@ export async function getVolunteerOrganizations(volunteerId: string) {
 
 export async function getMonthlyHours(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
-        where: { volId: volunteerId },
-        select: { hours: true, postedDate: true },
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
+        select: {
+            hours: true,
+            postedDate: true,
+        },
     });
 
     const map = new Map<string, number>();

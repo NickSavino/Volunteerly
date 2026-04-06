@@ -18,7 +18,8 @@ import {
     ProgressUpdate,
     ProgressUpdateSchema,
     Opportunity,
-    UpdateOpportunitySchema
+    UpdateOpportunitySchema,
+    organizationAwardsSchema
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -45,6 +46,11 @@ export class OrganizationService {
         });
         const parsed = CurrentOrganizationSchema.safeParse(response);
         return parsed;
+    }
+    static async getOrgAwards() {
+        const response = await api<unknown>("/current-organization/awards");
+        const parsed = organizationAwardsSchema.safeParse(response)
+        return parsed
     }
 
     static async getAllOrganizations(status?: "APPLIED") : Promise<ModeratorOrganizationList> {
@@ -145,7 +151,7 @@ export class OrganizationService {
     static async completeOpportunity(oppId: string) {
         const response = await api<unknown>("/current-organization/opportunity/complete", {
             method: "PUT",
-            body: JSON.stringify({ oppId}),
+            body: JSON.stringify({oppId}),
         });
         const parsed = OpportunitySchema.safeParse(response);
         return parsed;
@@ -158,7 +164,7 @@ export class OrganizationService {
     }
     static async addProgressUpdate(progressUpdate: ProgressUpdate) {
         const response = await api<unknown>("/current-organization/opportunity/progressUpdate", {
-            method: "PUT",
+            method: "POST",
             body: JSON.stringify(progressUpdate),
         });
         const parsed = ProgressUpdateSchema.safeParse(response);
@@ -167,7 +173,7 @@ export class OrganizationService {
 
     static async addOpportunity(opportunity: UpdateOpportunitySchema) {
         const response = await api<unknown>("/current-organization/opportunity", {
-            method: "PUT",
+            method: "POST",
             body: JSON.stringify(opportunity),
         });
         const parsed = OpportunitySchema.safeParse(response);
@@ -187,4 +193,13 @@ export class OrganizationService {
             body: JSON.stringify({ flaggedUserId, reason }),
         });
     }
+    static async updateOpportunity(opportunityId:string,opportunity: UpdateOpportunitySchema) {
+        const response = await api<unknown>("/current-organization/opportunity", {
+            method: "PUT",
+            body: JSON.stringify({ ...opportunity, opportunityId }),
+        });
+        const parsed = OpportunitySchema.safeParse(response);
+        return parsed;
+    }
+
 }
