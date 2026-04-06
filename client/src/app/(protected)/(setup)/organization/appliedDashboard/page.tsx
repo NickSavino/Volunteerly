@@ -5,7 +5,7 @@ import { useAppliedOrgDashboardViewModel } from "./appliedDashboardVm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import avtImg from "@/assets/avatarImg.png"
 import { Avatar, AvatarFallback, AvatarImage,  } from "@/components/ui/avatar";
-import { LogOut, MessageCircleQuestionMark, FileText } from "lucide-react";
+import { LogOut, MessageCircleQuestionMark, FileText, User } from "lucide-react";
 import { Navbar } from "../application/navbar";
 
 export default function HomePage() {
@@ -17,7 +17,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
         <title>Organization Dashboard - Volunteerly</title>
-        <Navbar avtImg={{src: avtImg.src}} name={currentUser?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
+        <Navbar name={currentUser?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
         
         <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 ">
     
@@ -25,8 +25,18 @@ export default function HomePage() {
                 <div className="flex flex-col justify-center h-full text-center">
                     <h1 className="text-2x1 font-bold">Welcome, {currentUser?.orgName}</h1>                   
                     <div className="bg-warning p-5 m-5 radius-2 rounded-sm">
-                        <h1>Awaiting Approval</h1>
-                        <p>Our Moderator Team will review your application shortly.</p>
+                        {currentUser?.status === "REJECTED" ? 
+                            <>
+                                <h1>Application Rejected</h1>
+                                <p>{currentUser.rejectionReason}</p>
+                                <p>Please Open a Ticket to dispute this decision.</p>
+                            </>
+                            :
+                            <>
+                                <h1>Awaiting Approval</h1>
+                                <p>Our Moderator Team will review your application shortly.</p>
+                            </>
+                        }
                     </div>
                 </div>
             </div>
@@ -35,7 +45,7 @@ export default function HomePage() {
                     <CardContent className="text-center">
                         <div className="flex justify-center mb-4">
                             <Avatar size="lg">
-                                <AvatarImage src={avtImg.src} />
+                                <AvatarImage><User /> </AvatarImage>
                                 <AvatarFallback>ORG</AvatarFallback>
                             </Avatar>
                         </div>

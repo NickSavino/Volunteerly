@@ -40,7 +40,7 @@ export default function OrgApplicationPage() {
   return (
       <div className="min-h-screen">
           <title>Organization Application - Volunteerly</title>
-          <Navbar avtImg={{src: ""}} name={currentOrg?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
+          <Navbar name={currentOrg?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
         <main className="w-full items-center h-full flex flex-col p-8 ">
           <div className="w-full flex justify-start">
           {isReadOnly && <Button
