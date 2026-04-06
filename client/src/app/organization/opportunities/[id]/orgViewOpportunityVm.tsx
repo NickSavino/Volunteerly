@@ -149,11 +149,14 @@ export function useOrgViewOpportunityViewModel(id: string) {
       } catch (err) {
           setReviewModalOpen(false);
           setSubmitting(false);
-          const msg = err instanceof Error && err.message === "ALREADY_REVIEWED"
-              ? "You have already reviewed this volunteer for this opportunity."
-              : "Failed to post review.";
-          setError(msg);
-          setTimeout(() => setError(null), 4000);
+          let msg = "Failed to post review. Please try again.";
+          try {
+              const body = JSON.parse(err instanceof Error ? err.message : "");
+              if (body?.error?.toLowerCase().includes("already")) {
+                  msg = "You have already reviewed this volunteer for this opportunity.";
+              }
+          } catch {}
+          toast.error(msg);
           return;
       }
       if (input.flagged && input.flagReason?.trim()) {
@@ -162,14 +165,13 @@ export function useOrgViewOpportunityViewModel(id: string) {
           } catch {
               setReviewModalOpen(false);
               setSubmitting(false);
-              setError("Review posted, but failed to submit flag.");
-              setTimeout(() => setError(null), 4000);
+              toast.error("Review posted, but the flag failed to submit. Please try again.");
               return;
           }
       }
       setReviewModalOpen(false);
       setSubmitting(false);
-      toast.success("Review posted!");
+      toast.success(input.flagged ? "Review and flag posted!" : "Review posted!");
     }
 
     return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate, reviewModalOpen, setReviewModalOpen, submitting, submitReview} 

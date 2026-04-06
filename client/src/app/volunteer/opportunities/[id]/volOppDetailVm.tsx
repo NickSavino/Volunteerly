@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { VolunteerService } from "@/services/VolunteerService";
+import { toast } from "sonner";
 import type { Opportunity, CurrentVolunteer } from "@volunteerly/shared";
 
 export type ProgressUpdateInput = {
@@ -83,11 +84,14 @@ export function useVolOppDetailViewModel(oppId: string) {
         } catch (err) {
             setReviewModalOpen(false);
             setSubmitting(false);
-            const msg = err instanceof Error && err.message === "ALREADY_REVIEWED"
-                ? "You have already reviewed this organization for this opportunity."
-                : "Failed to post review.";
-            setError(msg);
-            setTimeout(() => setError(null), 4000);
+            let msg = "Failed to post review. Please try again.";
+            try {
+                const body = JSON.parse(err instanceof Error ? err.message : "");
+                if (body?.error?.toLowerCase().includes("already")) {
+                    msg = "You have already reviewed this organization for this opportunity.";
+                }
+            } catch {}
+            toast.error(msg);
             return;
         }
         if (input.flagged && input.flagReason?.trim()) {
@@ -96,13 +100,13 @@ export function useVolOppDetailViewModel(oppId: string) {
             } catch {
                 setReviewModalOpen(false);
                 setSubmitting(false);
-                setError("Review posted, but failed to submit flag.");
-                setTimeout(() => setError(null), 4000);
+                toast.error("Review posted, but the flag failed to submit. Please try again.");
                 return;
             }
         }
         setReviewModalOpen(false);
         setSubmitting(false);
+        toast.success(input.flagged ? "Review and flag posted!" : "Review posted!");
     }
 
     async function requestCompletion() {
