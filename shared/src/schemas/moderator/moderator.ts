@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ModeratorTicketListSchema } from "./moderator-tickets";
+import { ModeratorTicketListSchema } from "./moderator-tickets.js";
 
 export const PendingOrganizationSchema = z.object({
     id: z.uuid(),

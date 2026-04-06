@@ -1,5 +1,5 @@
 import z from "zod";
-import { UserRoleSchema } from "../user";
+import { UserRoleSchema } from "../user.js";
 
 export const ChatMessageSchema = z.object({
     id: z.uuid(),

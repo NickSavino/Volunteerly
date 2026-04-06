@@ -1,6 +1,6 @@
 import z from "zod";
-import { UserRoleSchema } from "../user";
-import { ChatMessagesSchema } from "./message";
+import { UserRoleSchema } from "../user.js";
+import { ChatMessagesSchema } from "./message.js";
 
 export const ConversationKindSchema = z.enum(["DIRECT", "TICKET"]);
 export type ConversationKind = z.infer<typeof ConversationKindSchema>;

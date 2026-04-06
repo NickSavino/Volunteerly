@@ -1,6 +1,6 @@
 import type z from "zod";
-import { ChatConversationDetailSchema, ChatParticipantSummarySchema } from "../chat";
-import { ModeratorTicketSchema } from "./moderator-tickets";
+import { ChatConversationDetailSchema, ChatParticipantSummarySchema } from "../chat/index.js";
+import { ModeratorTicketSchema } from "./moderator-tickets.js";
 
 
 export const ModeratorTicketDetailSchema = ModeratorTicketSchema.extend({
