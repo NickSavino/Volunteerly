@@ -334,3 +334,92 @@ function buildEdges(
   }
   return edges;
 }
+
+function SkillTree({ nodes, onSelect, selectedId }: {
+  nodes: SkillNode[];
+  onSelect: (n: SkillNode) => void;
+  selectedId: string | null;
+}) {
+  const svgW = PAD_X * 2 + COLS * COL_GAP;
+  const svgH = PAD_Y * 2 + MAX_TIER * ROW_GAP;
+  const edges = buildEdges(nodes, svgH);
+ 
+  return (
+    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" as any, padding: "0 20px 20px" }}>
+      <svg viewBox={`0 0 ${svgW} ${svgH}`} width={svgW} height={svgH} style={{ display: "block", minWidth: svgW }}>
+        {edges.map((e, i) => (
+          <line key={i} x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2}
+            stroke={e.lit ? "var(--accent)" : "var(--line-locked)"}
+            strokeWidth={2.5}
+            strokeDasharray={e.lit ? "none" : "5 4"}
+            opacity={e.lit ? 0.85 : 0.3}
+          />
+        ))}
+        {nodes.map((node) => {
+          const { x, y } = getPos(node.tier, node.col, svgH);
+          return (
+            <g key={node.id}
+              transform={`translate(${x - NODE_W / 2},${y - NODE_H / 2})`}
+              onClick={() => onSelect(node)}
+              style={{ cursor: "pointer" }}>
+              <TreeNode node={node} w={NODE_W} h={NODE_H} selected={selectedId === node.id} />
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+ 
+function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: number; selected: boolean }) {
+  const r = 18;
+  const fill =
+    node.status === "mastered" ? "var(--mastered-fill)"
+    : node.status === "in_progress" ? "var(--progress-fill)"
+    : "var(--locked-fill)";
+  const stroke = selected ? "var(--selected)"
+    : node.status === "mastered" ? "var(--mastered-stroke)"
+    : node.status === "in_progress" ? "var(--accent)"
+    : "var(--locked-stroke)";
+  const dimmed = node.status === "locked";
+ 
+  return (
+    <g>
+      {node.status !== "locked" && (
+        <rect x={-5} y={-5} width={w + 10} height={h + 10} rx={r + 5}
+          fill={node.status === "mastered" ? "var(--mastered-glow)" : "var(--progress-glow)"}
+          opacity={selected ? 0.55 : 0.22}
+        />
+      )}
+      <rect x={0} y={0} width={w} height={h} rx={r}
+        fill={fill} stroke={stroke} strokeWidth={selected ? 3 : 2}
+      />
+      <text x={w / 2} y={h / 2 - 5}
+        textAnchor="middle" dominantBaseline="middle"
+        fontSize={23} opacity={dimmed ? 0.32 : 1}>
+        {node.icon}
+      </text>
+      <text x={w / 2} y={h - 11}
+        textAnchor="middle" dominantBaseline="middle"
+        fontSize={8} fontWeight="700"
+        fill="var(--node-text)" opacity={dimmed ? 0.32 : 1}
+        fontFamily="'DM Sans', sans-serif" letterSpacing="0.05em">
+        {node.label.toUpperCase()}
+      </text>
+      {node.status === "mastered" && (
+        <g transform={`translate(${w - 14}, -4)`}>
+          <circle r={9} fill="#16A34A" />
+          <text textAnchor="middle" dominantBaseline="middle" fontSize={11} fill="white">✓</text>
+        </g>
+      )}
+      {node.status === "in_progress" && node.current > 0 && (
+        <g transform={`translate(${w - 14}, -4)`}>
+          <circle r={9} fill="var(--accent)" />
+          <text textAnchor="middle" dominantBaseline="middle" fontSize={9} fontWeight="700" fill="#1E293B">
+            {node.current}
+          </text>
+        </g>
+      )}
+    </g>
+  );
+}
