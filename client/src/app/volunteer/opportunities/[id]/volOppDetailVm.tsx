@@ -14,8 +14,8 @@ export type ProgressUpdateInput = {
 
 export type ReviewInput = {
     rating: number;
-    title: string;
-    description: string;
+    flagged: boolean;
+    flagReason?: string;
 };
 
 export function useVolOppDetailViewModel(oppId: string) {
@@ -79,7 +79,10 @@ export function useVolOppDetailViewModel(oppId: string) {
         if (submitting || !opp?.organization?.id) return;
         setSubmitting(true);
         try {
-            await VolunteerService.postReview(opp.organization.id, input);
+            await VolunteerService.postReview(opp.organization.id, { rating: input.rating });
+            if (input.flagged && input.flagReason?.trim()) {
+                await VolunteerService.postFlag(opp.organization.id, input.flagReason.trim());
+            }
             setReviewModalOpen(false);
         } catch {
             setError("Failed to post review.");

@@ -126,9 +126,6 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                         </p>
                                         <p className="mt-0.5 font-semibold text-gray-900">{update.title}</p>
                                         <p className="mt-1 text-sm text-gray-500">{update.description}</p>
-                                        {update.senderRole && (
-                                            <p className="mt-1 text-xs text-gray-400">{update.senderRole}</p>
-                                        )}
                                     </li>
                                 );
                             })}
@@ -203,7 +200,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     </div>
                     <p className="text-sm text-gray-600">Are you sure you want to request to complete?</p>
                     <p className="text-sm text-gray-400">
-                        This will inform the organization they must review and mark as completed.
+                        This will email the organization letting them know they must review and mark as completed.
                     </p>
                 </div>
             </AppModal>
@@ -322,28 +319,27 @@ function ReviewModal({
     orgName: string;
     submitting: boolean;
     onClose: () => void;
-    onSubmit: (input: { rating: number; title: string; description: string }) => Promise<void>;
+    onSubmit: (input: { rating: number; flagged: boolean; flagReason?: string }) => Promise<void>;
 }) {
     const [rating, setRating] = useState(0);
     const [hovered, setHovered] = useState(0);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [flagged, setFlagged] = useState(false);
+    const [flagReason, setFlagReason] = useState("");
     const [touched, setTouched] = useState(false);
 
     const ratingMissing = rating === 0;
-    const titleEmpty = title.trim().length === 0;
-    const descEmpty = description.trim().length === 0;
+    const flagReasonEmpty = flagged && flagReason.trim().length === 0;
 
     async function handleSubmit() {
         setTouched(true);
-        if (ratingMissing || titleEmpty || descEmpty || submitting) return;
-        await onSubmit({ rating, title, description });
-        setRating(0); setTitle(""); setDescription(""); setTouched(false);
+        if (ratingMissing || flagReasonEmpty || submitting) return;
+        await onSubmit({ rating, flagged, flagReason: flagged ? flagReason : undefined });
+        setRating(0); setFlagged(false); setFlagReason(""); setTouched(false);
     }
 
     function handleClose() {
         if (submitting) return;
-        setRating(0); setTitle(""); setDescription(""); setTouched(false);
+        setRating(0); setFlagged(false); setFlagReason(""); setTouched(false);
         onClose();
     }
 
@@ -376,6 +372,7 @@ function ReviewModal({
                 <p className="text-sm text-foreground">
                     Reviewing: <span className="font-semibold">{orgName}</span>
                 </p>
+
                 <div>
                     <label className="mb-1 block text-sm font-medium text-foreground">Rating</label>
                     <div className="flex gap-1">
@@ -395,29 +392,32 @@ function ReviewModal({
                     </div>
                     {touched && ratingMissing && <p className="mt-1 text-xs text-destructive">Please select a rating.</p>}
                 </div>
-                <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Title:</label>
+
+                <label className="flex items-center gap-2 cursor-pointer select-none">
                     <input
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Provide title summary for your reason..."
+                        type="checkbox"
+                        checked={flagged}
+                        onChange={(e) => setFlagged(e.target.checked)}
                         disabled={submitting}
-                        className={`w-full rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && titleEmpty ? "border-destructive" : "border-border"}`}
+                        className="h-4 w-4 rounded border-gray-300 accent-yellow-400"
                     />
-                    {touched && titleEmpty && <p className="mt-1 text-xs text-destructive">Title is required.</p>}
-                </div>
-                <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Description:</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Describe reasons for rating..."
-                        rows={4}
-                        disabled={submitting}
-                        className={`w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && descEmpty ? "border-destructive" : "border-border"}`}
-                    />
-                    {touched && descEmpty && <p className="mt-1 text-xs text-destructive">Description is required.</p>}
-                </div>
+                    <span className="text-sm text-foreground">Flag this organization</span>
+                </label>
+
+                {flagged && (
+                    <div>
+                        <label className="mb-1 block text-sm font-medium text-foreground">Reason for flagging:</label>
+                        <textarea
+                            value={flagReason}
+                            onChange={(e) => setFlagReason(e.target.value)}
+                            placeholder="Describe why you are flagging this organization..."
+                            rows={4}
+                            disabled={submitting}
+                            className={`w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
+                        />
+                        {touched && flagReasonEmpty && <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>}
+                    </div>
+                )}
             </div>
         </AppModal>
     );
