@@ -409,10 +409,16 @@ export async function createOpportunity(orgId:string, name:string, category:stri
 export async function orgPostReview(
     issuerId: string,
     revieweeId: string,
+    opportunityId: string,
     rating: number,
 ) {
+    const existing = await prisma.review.findUnique({
+        where: { issuerId_opportunityId: { issuerId, opportunityId } },
+    });
+    if (existing) throw new Error("ALREADY_REVIEWED");
+
     return prisma.review.create({
-        data: { issuerId, revieweeId, rating },
+        data: { issuerId, revieweeId, opportunityId, rating },
     });
 }
 

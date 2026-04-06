@@ -109,12 +109,19 @@ export async function requestCompletion(volunteerId: string, oppId: string) {
 export async function postReview(
     issuerId: string,
     revieweeId: string,
+    opportunityId: string,
     input: { rating: number },
 ) {
+    const existing = await prisma.review.findUnique({
+        where: { issuerId_opportunityId: { issuerId, opportunityId } },
+    });
+    if (existing) throw new Error("ALREADY_REVIEWED");
+
     return prisma.review.create({
         data: {
             issuerId,
             revieweeId,
+            opportunityId,
             rating: input.rating,
         },
     });
