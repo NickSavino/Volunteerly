@@ -7,6 +7,7 @@ import { VolunteerService } from "@/services/VolunteerService";
 import { UserService } from "@/services/UserService";
 import { CurrentVolunteer } from "@volunteerly/shared";
 import { toast } from "sonner";
+import { useAppSession } from "@/providers/app-session-provider";
 
 export const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -21,6 +22,7 @@ export type ProfileErrors = {
 export function useProfileViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
+    const { refresh } = useAppSession();
 
     const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
     const [editing, setEditing] = useState(false);
@@ -35,7 +37,6 @@ export function useProfileViewModel() {
     const [errors, setErrors] = useState<ProfileErrors>({});
     const [fetching, setFetching] = useState(true);
     const [awards, setAwards] = useState<Record<string, string>>({});
-
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -56,17 +57,16 @@ export function useProfileViewModel() {
                     setLocation(vol.location);
                     setBio(vol.bio);
                     setAvailability((vol.availability as string[]) ?? []);
-                
+
                     const awardsResult = await VolunteerService.getVolAwards();
                     if (awardsResult.success) {
-                        setAwards(awardsResult.data); // assume it's a Record<string, string>
+                        setAwards(awardsResult.data);
                     }
-                
                 }
             } catch (err) {
                 console.error(err);
             } finally {
-            setFetching(false);
+                setFetching(false);
             }
         }
         loadData();
@@ -130,6 +130,7 @@ export function useProfileViewModel() {
             if (result.success) {
                 setCurrentVolunteer(result.data);
                 setEditing(false);
+                await refresh();
                 toast.success("Account Changes Saved", {
                     description: "Your profile has been updated.",
                     position: "top-right",
@@ -175,7 +176,6 @@ export function useProfileViewModel() {
         loading,
         session,
         fetching,
-        awards
-        
+        awards,
     };
 }
