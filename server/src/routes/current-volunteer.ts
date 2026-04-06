@@ -1,7 +1,135 @@
 import { Router } from "express";
-import {createCurrentVolunteer, getCurrentVolunteer,updateCurrentVolunteer, getYourOpportunities, getVolunteerOrganizations, getMonthlyHours } from "../services/volunteer-service.js";
+import {
+    createCurrentVolunteer,
+    getCurrentVolunteer,
+    updateCurrentVolunteer,
+    getYourOpportunities,
+    getOpportunityById,
+    getVolunteerOrganizations,
+    getMonthlyHours,
+    browseOpportunities,
+    applyToOpportunity,
+    getAppliedOppIds,
+    addProgressUpdate,
+    requestCompletion,
+    postReview,
+    postFlag,
+} from "../services/volunteer-service.js";
 
 export const currentVolunteerRouter = Router();
+
+currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const { message } = req.body;
+        await applyToOpportunity(userId, oppId, message ?? "");
+        res.status(201).json({ success: true });
+    } catch (error: any) {
+        if (error?.message === "ALREADY_APPLIED") {
+            return res.status(409).json({ error: "Already applied to this opportunity." });
+        }
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/:oppId/progress", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const { title, description, hoursContributed } = req.body;
+        await addProgressUpdate(userId, oppId, { title, description, hoursContributed });
+        res.status(201).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/:oppId/request-completion", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        await requestCompletion(userId, oppId);
+        res.status(200).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/reviews", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { revieweeId, rating, opportunityId } = req.body;
+        await postReview(userId, revieweeId, opportunityId, { rating });
+        res.status(201).json({ success: true });
+    } catch (error: any) {
+        if (error?.message === "ALREADY_REVIEWED") {
+            return res.status(409).json({ error: "Already reviewed for this opportunity." });
+        }
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/flags", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { flaggedUserId, reason } = req.body;
+        await postFlag(userId, flaggedUserId, reason);
+        res.status(201).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/applied-ids", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const ids = await getAppliedOppIds(userId);
+        res.status(200).json(ids);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { search, category, workType, commitmentLevel, maxHours } = req.query;
+
+        const opportunities = await browseOpportunities({
+            search: search as string | undefined,
+            category: category as string | undefined,
+            workType: workType as "IN_PERSON" | "REMOTE" | "HYBRID" | undefined,
+            commitmentLevel: commitmentLevel as "FLEXIBLE" | "PART_TIME" | "FULL_TIME" | undefined,
+            maxHours: maxHours ? Number(maxHours) : undefined,
+        });
+
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/:oppId", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const opp = await getOpportunityById(userId, oppId);
+        if (!opp) return res.status(404).json({ error: "Not Found" });
+        res.status(200).json(opp);
+    } catch (error) {
+        next(error);
+    }
+});
 
 currentVolunteerRouter.get("/opportunities", async (req, res, next) => {
     try {
@@ -50,7 +178,7 @@ currentVolunteerRouter.get("/", async (req, res, next) => {
 
 currentVolunteerRouter.put("/", async (req, res, next) => {
     try {
-    const userId = req.auth!.userId;
+        const userId = req.auth!.userId;
         console.log("got req");
         const { firstName, lastName, location, bio, availability, hourlyValue } = req.body;
         const user = await getCurrentVolunteer(userId);
