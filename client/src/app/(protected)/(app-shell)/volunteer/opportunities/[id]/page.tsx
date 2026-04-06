@@ -84,12 +84,20 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 <div className="mb-6 rounded-xl border bg-white p-5 shadow-sm">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600">
+                            <button
+                                onClick={() => vm.opp?.organization?.id && vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)}
+                                className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600 hover:opacity-75 transition-opacity"
+                            >
                                 {vm.opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
-                            </div>
+                            </button>
                             <div>
                                 <p className="text-xs font-medium uppercase tracking-wide text-gray-400">Parent Organization</p>
-                                <p className="text-lg font-bold text-gray-900">{vm.opp.organization?.orgName ?? "—"}</p>
+                                <button
+                                    onClick={() => vm.opp?.organization?.id && vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)}
+                                    className="text-lg font-bold text-gray-900 text-left hover:underline"
+                                >
+                                    {vm.opp.organization?.orgName ?? "—"}
+                                </button>
                                 <p className="text-sm text-gray-500">{vm.opp.organization?.causeCategory ?? ""}</p>
                             </div>
                         </div>
