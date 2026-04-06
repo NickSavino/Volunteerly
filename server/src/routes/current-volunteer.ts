@@ -14,6 +14,8 @@ import {
     requestCompletion,
     postReview,
     postFlag,
+    logOpportunitySkills,
+    getOpportunitySkills,
 } from "../services/volunteer-service.js";
 
 export const currentVolunteerRouter = Router();
@@ -242,6 +244,34 @@ currentVolunteerRouter.get("/awards", async (req, res, next) => {
         
 
         res.status(200).json(awards);
+    } catch (error) {
+        next(error);
+    }
+});
+currentVolunteerRouter.post("/opportunities/:oppId/skills", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const { skills } = req.body;
+        if (!Array.isArray(skills)) return res.status(400).json({ error: "skills must be an array" });
+        await logOpportunitySkills(userId, oppId, skills);
+        res.status(201).json({ success: true });
+    } catch (error: any) {
+        if (error?.message === "ALREADY_SUBMITTED") {
+            return res.status(409).json({ error: "ALREADY_SUBMITTED" });
+        }
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/:oppId/skills", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const skills = await getOpportunitySkills(userId, oppId);
+        res.status(200).json(skills);
     } catch (error) {
         next(error);
     }

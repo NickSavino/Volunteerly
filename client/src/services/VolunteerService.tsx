@@ -122,6 +122,18 @@ export class VolunteerService {
         return parsed
     }
 
+    static async logOppSkills(oppId: string, skills: string[]) {
+        return api<{ success: boolean }>(`/current-volunteer/opportunities/${oppId}/skills`, {
+            method: "POST",
+            body: JSON.stringify({ skills }),
+        });
+    }
+
+    static async getOppSkills(oppId: string): Promise<string[]> {
+        const response = await api<unknown>(`/current-volunteer/opportunities/${oppId}/skills`);
+        return Array.isArray(response) ? (response as string[]) : [];
+    }
+
     static async extractSkills(
         resumeFile: File,
         workExperience: string,
