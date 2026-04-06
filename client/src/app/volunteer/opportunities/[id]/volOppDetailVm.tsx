@@ -79,16 +79,30 @@ export function useVolOppDetailViewModel(oppId: string) {
         if (submitting || !opp?.organization?.id) return;
         setSubmitting(true);
         try {
-            await VolunteerService.postReview(opp.organization.id, { rating: input.rating });
-            if (input.flagged && input.flagReason?.trim()) {
-                await VolunteerService.postFlag(opp.organization.id, input.flagReason.trim());
-            }
+            await VolunteerService.postReview(opp.organization.id, oppId, { rating: input.rating });
+        } catch (err) {
             setReviewModalOpen(false);
-        } catch {
-            setError("Failed to post review.");
-        } finally {
             setSubmitting(false);
+            const msg = err instanceof Error && err.message === "ALREADY_REVIEWED"
+                ? "You have already reviewed this organization for this opportunity."
+                : "Failed to post review.";
+            setError(msg);
+            setTimeout(() => setError(null), 4000);
+            return;
         }
+        if (input.flagged && input.flagReason?.trim()) {
+            try {
+                await VolunteerService.postFlag(opp.organization.id, input.flagReason.trim());
+            } catch {
+                setReviewModalOpen(false);
+                setSubmitting(false);
+                setError("Review posted, but failed to submit flag.");
+                setTimeout(() => setError(null), 4000);
+                return;
+            }
+        }
+        setReviewModalOpen(false);
+        setSubmitting(false);
     }
 
     async function requestCompletion() {
