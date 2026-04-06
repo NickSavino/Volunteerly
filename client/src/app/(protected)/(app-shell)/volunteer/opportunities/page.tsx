@@ -1,13 +1,14 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useRef, useCallback } from "react";
-import { ArrowUpDown } from "lucide-react";
+import { useRef, useCallback, useState } from "react";
+import { ArrowUpDown, SlidersHorizontal, Map, X } from "lucide-react";
 import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
 import { OpportunityCard } from "@/components/volunteer/opportunity-card";
 import { OpportunityDetailModal } from "@/components/volunteer/opportunity-detail-modal";
 import { ApplyModal } from "@/components/volunteer/apply-modal";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import {
     useOpportunitiesViewModel,
@@ -49,6 +50,124 @@ const MAP_MIN_WIDTH = 200;
 const MAP_MAX_WIDTH = 800;
 const MAP_DEFAULT_WIDTH = 420;
 
+function FiltersContent({
+    selectedCategories,
+    toggleCategory,
+    workType,
+    setWorkType,
+    commitmentLevel,
+    setCommitmentLevel,
+    maxHours,
+    setMaxHours,
+    applyFilters,
+    onClose,
+}: {
+    selectedCategories: string[];
+    toggleCategory: (cat: string) => void;
+    workType: WorkTypeFilter;
+    setWorkType: (v: WorkTypeFilter) => void;
+    commitmentLevel: CommitmentFilter;
+    setCommitmentLevel: (v: CommitmentFilter) => void;
+    maxHours: number;
+    setMaxHours: (v: number) => void;
+    applyFilters: () => void;
+    onClose?: () => void;
+}) {
+    return (
+        <>
+            <div className="mb-6">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Roles
+                </p>
+                <div className="space-y-2">
+                    {OPPORTUNITY_CATEGORIES.map((cat) => (
+                        <label key={cat} className="flex cursor-pointer items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={selectedCategories.includes(cat)}
+                                onChange={() => toggleCategory(cat)}
+                                className="h-4 w-4 rounded accent-yellow-400"
+                            />
+                            <span className="text-sm text-foreground">{cat}</span>
+                        </label>
+                    ))}
+                </div>
+            </div>
+
+            <div className="mb-6">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Engagement
+                </p>
+                <div className="flex flex-wrap gap-2">
+                    {(["REMOTE", "IN_PERSON", "HYBRID"] as const).map((wt) => (
+                        <button
+                            key={wt}
+                            onClick={() => setWorkType(workType === wt ? "ALL" : wt)}
+                            className={cn(
+                                "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                                workType === wt
+                                    ? "bg-primary text-foreground"
+                                    : "bg-muted text-muted-foreground hover:bg-secondary"
+                            )}
+                        >
+                            {WORK_TYPE_LABELS[wt]}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="mb-6">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Commitment
+                </p>
+                <div className="flex flex-wrap gap-2">
+                    {(["FLEXIBLE", "PART_TIME", "FULL_TIME"] as const).map((cl) => (
+                        <button
+                            key={cl}
+                            onClick={() => setCommitmentLevel(commitmentLevel === cl ? "ALL" : cl)}
+                            className={cn(
+                                "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                                commitmentLevel === cl
+                                    ? "bg-primary text-foreground"
+                                    : "bg-muted text-muted-foreground hover:bg-secondary"
+                            )}
+                        >
+                            {COMMITMENT_LABELS[cl]}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="mb-6">
+                <div className="mb-2 flex items-center justify-between">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Max Hours
+                    </p>
+                    <span className="text-xs font-semibold text-primary">{maxHours}h/wk</span>
+                </div>
+                <input
+                    type="range"
+                    min={1}
+                    max={40}
+                    value={maxHours}
+                    onChange={(e) => setMaxHours(Number(e.target.value))}
+                    className="w-full accent-yellow-400"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>1h</span><span>40h</span>
+                </div>
+            </div>
+
+            <button
+                onClick={() => { applyFilters(); onClose?.(); }}
+                className="w-full rounded-xl bg-primary py-2 text-sm font-semibold text-foreground hover:opacity-90"
+            >
+                Apply Filters
+            </button>
+        </>
+    );
+}
+
 export default function OpportunitiesPage() {
     const {
         loading,
@@ -81,6 +200,9 @@ export default function OpportunitiesPage() {
         appliedOppIds,
     } = useOpportunitiesViewModel();
 
+    const [filtersOpen, setFiltersOpen] = useState(false);
+    const [mapOpen, setMapOpen] = useState(false);
+
     const mapWidthRef = useRef<number>(MAP_DEFAULT_WIDTH);
     const mapPanelRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
@@ -111,6 +233,18 @@ export default function OpportunitiesPage() {
         window.addEventListener("mouseup", onMouseUp);
     }, []);
 
+    const filterProps = {
+        selectedCategories,
+        toggleCategory,
+        workType,
+        setWorkType,
+        commitmentLevel,
+        setCommitmentLevel,
+        maxHours,
+        setMaxHours,
+        applyFilters,
+    };
+
     if (loading || !session) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-background">
@@ -123,102 +257,15 @@ export default function OpportunitiesPage() {
         <div className="flex h-screen flex-col overflow-hidden bg-background">
 
             <div className="flex flex-1 overflow-hidden">
+
                 <aside className="hidden w-56 flex-shrink-0 overflow-y-auto border-r bg-card p-5 lg:block">
                     <p className="mb-5 text-sm font-semibold text-foreground">= Filters</p>
-
-                    <div className="mb-6">
-                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Roles
-                        </p>
-                        <div className="space-y-2">
-                            {OPPORTUNITY_CATEGORIES.map((cat) => (
-                                <label key={cat} className="flex cursor-pointer items-center gap-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedCategories.includes(cat)}
-                                        onChange={() => toggleCategory(cat)}
-                                        className="h-4 w-4 rounded accent-yellow-400"
-                                    />
-                                    <span className="text-sm text-foreground">{cat}</span>
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="mb-6">
-                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Engagement
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                            {(["REMOTE", "IN_PERSON", "HYBRID"] as const).map((wt) => (
-                                <button
-                                    key={wt}
-                                    onClick={() => setWorkType(workType === wt ? "ALL" : wt)}
-                                    className={cn(
-                                        "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-                                        workType === wt
-                                            ? "bg-primary text-foreground"
-                                            : "bg-muted text-muted-foreground hover:bg-secondary"
-                                    )}
-                                >
-                                    {WORK_TYPE_LABELS[wt]}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="mb-6">
-                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Commitment
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                            {(["FLEXIBLE", "PART_TIME", "FULL_TIME"] as const).map((cl) => (
-                                <button
-                                    key={cl}
-                                    onClick={() => setCommitmentLevel(commitmentLevel === cl ? "ALL" : cl)}
-                                    className={cn(
-                                        "rounded-full px-3 py-1 text-xs font-medium transition-colors",
-                                        commitmentLevel === cl
-                                            ? "bg-primary text-foreground"
-                                            : "bg-muted text-muted-foreground hover:bg-secondary"
-                                    )}
-                                >
-                                    {COMMITMENT_LABELS[cl]}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="mb-6">
-                        <div className="mb-2 flex items-center justify-between">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                                Max Hours
-                            </p>
-                            <span className="text-xs font-semibold text-primary">{maxHours}h/wk</span>
-                        </div>
-                        <input
-                            type="range"
-                            min={1}
-                            max={40}
-                            value={maxHours}
-                            onChange={(e) => setMaxHours(Number(e.target.value))}
-                            className="w-full accent-yellow-400"
-                        />
-                        <div className="flex justify-between text-xs text-muted-foreground">
-                            <span>1h</span><span>40h</span>
-                        </div>
-                    </div>
-
-                    <button
-                        onClick={applyFilters}
-                        className="w-full rounded-xl bg-primary py-2 text-sm font-semibold text-foreground hover:opacity-90"
-                    >
-                        Apply Filters
-                    </button>
+                    <FiltersContent {...filterProps} />
                 </aside>
 
                 <div className="flex flex-1 overflow-hidden">
                     <div className="flex flex-1 flex-col overflow-hidden">
+
                         <div className="flex-shrink-0 border-b bg-card px-5 py-4">
                             <div className="flex items-center justify-between gap-3">
                                 <h1 className="font-bold text-foreground">
@@ -232,20 +279,37 @@ export default function OpportunitiesPage() {
                                     onKeyDown={(e) => e.key === "Enter" && applyFilters()}
                                     className="hidden rounded-lg border bg-muted px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:block sm:w-56"
                                 />
-                                <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                    <ArrowUpDown className="h-3.5 w-3.5 flex-shrink-0" />
-                                    <span className="hidden sm:inline">Sort:</span>
-                                    <select
-                                        value={sortBy}
-                                        onChange={(e) => setSortBy(e.target.value as SortOption)}
-                                        className="cursor-pointer rounded-md border-0 bg-transparent py-0 pr-6 text-sm font-medium text-foreground focus:outline-none focus:ring-0"
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setFiltersOpen(true)}
+                                        className="flex items-center gap-1.5 rounded-lg border bg-muted px-3 py-1.5 text-sm font-medium text-foreground lg:hidden"
                                     >
-                                        {(Object.keys(SORT_LABELS) as SortOption[]).map((opt) => (
-                                            <option key={opt} value={opt}>
-                                                {SORT_LABELS[opt]}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        <SlidersHorizontal className="h-4 w-4" />
+                                        Filters
+                                    </button>
+                                    <button
+                                        onClick={() => setMapOpen(true)}
+                                        className="flex items-center gap-1.5 rounded-lg border bg-muted px-3 py-1.5 text-sm font-medium text-foreground lg:hidden"
+                                    >
+                                        <Map className="h-4 w-4" />
+                                        Map
+                                    </button>
+
+                                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                                        <ArrowUpDown className="h-3.5 w-3.5 flex-shrink-0" />
+                                        <span className="hidden sm:inline">Sort:</span>
+                                        <select
+                                            value={sortBy}
+                                            onChange={(e) => setSortBy(e.target.value as SortOption)}
+                                            className="cursor-pointer rounded-md border-0 bg-transparent py-0 pr-6 text-sm font-medium text-foreground focus:outline-none focus:ring-0"
+                                        >
+                                            {(Object.keys(SORT_LABELS) as SortOption[]).map((opt) => (
+                                                <option key={opt} value={opt}>
+                                                    {SORT_LABELS[opt]}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -293,6 +357,26 @@ export default function OpportunitiesPage() {
                     </div>
                 </div>
             </div>
+
+            <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
+                <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Filters</DialogTitle>
+                    </DialogHeader>
+                    <FiltersContent {...filterProps} onClose={() => setFiltersOpen(false)} />
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={mapOpen} onOpenChange={setMapOpen}>
+                <DialogContent className="flex flex-col h-[80vh] max-w-full p-0 sm:max-w-2xl">
+                    <DialogHeader className="flex-shrink-0 px-4 pt-4 pb-2">
+                        <DialogTitle>Map</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex-1 min-h-0 isolate">
+                        <OpportunitiesMap opportunities={opportunities} />
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             <div className="relative z-50">
                 <OpportunityDetailModal
