@@ -18,6 +18,7 @@ import { Navbar } from "@/app/(protected)/(setup)/organization/application/navba
 export default function OrgApplicationPage() {
   const {        
     loading,
+    bootstrapping,
     submitting,
     currentOrg,
     isReadOnly,
@@ -32,7 +33,7 @@ export default function OrgApplicationPage() {
   } = useOrgApplicationViewModel()
 
 
-  if (loading || submitting) {
+  if (loading || bootstrapping) {
     return <main className="p-6">Loading...</main>
   }
 
@@ -197,8 +198,8 @@ export default function OrgApplicationPage() {
                 </CardContent>
 
                 <div className="px-6 pb-6">
-                  <Button type="submit" disabled={isReadOnly} className="w-full pointer-cursor">
-                    Submit
+                  <Button type="submit" disabled={isReadOnly || submitting} className="w-full pointer-cursor">
+                    {submitting ? "Submitting..." : "Submit"}
                   </Button>
                 </div>
               </form>
