@@ -423,3 +423,71 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
     </g>
   );
 }
+
+function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }) {
+  const pct = node.threshold > 0 ? Math.min(100, Math.round((node.current / node.threshold) * 100)) : 0;
+  const statusLabel = node.status === "mastered" ? "Mastered" : node.status === "in_progress" ? "In Progress" : "Locked";
+  const statusColor = node.status === "mastered" ? "#16A34A" : node.status === "in_progress" ? "var(--accent-stroke)" : "var(--locked-stroke)";
+  const barColor = node.status === "mastered" ? "#16A34A" : node.status === "in_progress" ? "var(--accent)" : "var(--locked-stroke)";
+ 
+  const prereqIds = [...new Set(node.requiresAny.flat())];
+ 
+  return (
+    <div className="st-panel" onClick={(e) => e.stopPropagation()}>
+      <button className="st-panel-close" onClick={onClose}>✕</button>
+      <div style={{ fontSize: "2rem", marginBottom: 8 }}>{node.icon}</div>
+      <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text)", marginBottom: 8, letterSpacing: "-0.01em" }}>
+        {node.label}
+      </div>
+      <span style={{
+        display: "inline-block", padding: "3px 11px", borderRadius: 99,
+        fontSize: "0.7rem", fontWeight: 700, border: `1.5px solid ${statusColor}`,
+        color: statusColor, marginBottom: 14, letterSpacing: "0.05em", textTransform: "uppercase" as const,
+      }}>{statusLabel}</span>
+ 
+      <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginBottom: 16, lineHeight: 1.5 }}>
+        {node.description}
+      </p>
+ 
+      <div className="st-section">
+        <div className="st-section-label">🎯 Requirement</div>
+        <div className="st-req-box">{node.requirementLabel}</div>
+      </div>
+ 
+      <div className="st-section">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+          <span className="st-section-label">📊 Progress</span>
+          <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text)" }}>
+            {node.current} / {node.threshold}
+          </span>
+        </div>
+        <div className="st-bar-bg">
+          <div className="st-bar-fill" style={{ width: `${pct}%`, background: barColor }} />
+        </div>
+        <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", textAlign: "right", marginTop: 3 }}>{pct}% complete</div>
+      </div>
+ 
+      <div className="st-section">
+        <div className="st-section-label">🏷️ Skills That Count</div>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {node.trackedSkills.map((s) => (
+            <span key={s} className="st-tag">{s}</span>
+          ))}
+        </div>
+      </div>
+ 
+      {prereqIds.length > 0 && (
+        <div className="st-section">
+          <div className="st-section-label">🔗 Requires</div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {node.requiresAny.map((orGroup, i) => (
+              <span key={i} className="st-tag">
+                {orGroup.map((id) => id.replace(/^nt_/, "").replace(/_/g, " ")).join(" or ")}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
