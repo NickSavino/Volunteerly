@@ -17,7 +17,6 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
   const [fetching, setFetching] = useState(true)
   const [matchedSchedule, setMatchedSchedule] = useState<string[]>()
 
-  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
@@ -27,6 +26,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
         if (!org.success) {
           console.error(org.error);
           setError("Received invalid user data from the server.");
+          toast.error("Failed to load Organization.", { position: "top-right" })
           return;
         }
         if (org.data.status == "CREATED") {
@@ -38,6 +38,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
         }
         setCurrentUser(org.data);
       } catch (error) {
+        toast.error("Failed to load Organization.", { position: "top-right" })
         console.error(error);
         return
       }
@@ -58,6 +59,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
           if (!app.success) { 
             console.error(app.error)
             setError("Failed to load application."); 
+            toast.error("Failed to load Application.", { position: "top-right" })
             setFetching(false)
             return; 
           }
@@ -66,6 +68,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
           setFetching(false)
         }catch (error)  {
           console.log(error)
+          toast.error("Failed to load Application.", { position: "top-right" })
         }
       }
       loadApplication()
@@ -84,6 +87,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
         setFetching(false)
       }
       setError("Cannot Select Volunteer")
+      toast.error("Failed to select Volunteer.", { position: "top-right" })
     }
     return {loading, fetching, session, signOut, router, user, error, currentUser, matchedSchedule,application, selectVolunteer} 
 

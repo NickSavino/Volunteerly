@@ -71,10 +71,14 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       const onSetupRoute = isOrganizationSetupRoute(pathname);
 
       const needsSetup =
-        orgStatus === "CREATED" || orgStatus === "APPLIED";
+        orgStatus === "CREATED" || orgStatus === "APPLIED" || orgStatus == "REJECTED";
 
-      if (needsSetup && pathname !== defaultRoute) {
-        return defaultRoute
+      if ((orgStatus == "APPLIED" || orgStatus == "REJECTED") && !(onSetupRoute)){
+          return "/organization/appliedDashboard"
+      }
+
+      if (orgStatus == 'CREATED' && pathname !== defaultRoute) {  
+          return defaultRoute
       }
 
       if (!needsSetup && onSetupRoute) {

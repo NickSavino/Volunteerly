@@ -27,7 +27,6 @@ export function useOrgViewOpportunityViewModel(id: string) {
   const [reviewModalOpen, setReviewModalOpen] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
-  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
@@ -37,6 +36,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
         if (!org.success) {
           console.error(org.error);
           setError("Received invalid user data from the server.");
+          toast.error("Failed to load Organization.", { position: "top-right" })
           return;
         }
         if (org.data.status == "CREATED") {
@@ -49,6 +49,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
         setCurrentUser(org.data);
       } catch (error) {
         console.error(error);
+        toast.error("Failed to load Organization.", { position: "top-right" })
         return
       }
     }
@@ -61,7 +62,9 @@ export function useOrgViewOpportunityViewModel(id: string) {
         const opp = await OrganizationService.getOpportunity(id)
         if (!opp.success) { 
           console.error(opp.error)
-          setError("Failed to load opportunities."); return; }
+          setError("Failed to load Opportunity."); 
+          toast.error("Failed to load Opportunity.", { position: "top-right" })
+          return; }
 
         const sortedApp = {
           ...opp.data,
@@ -76,7 +79,11 @@ export function useOrgViewOpportunityViewModel(id: string) {
           const apps = await OrganizationService.getApplications(opp.data.id)
           if (!apps.success) { 
             console.error(apps.error)
-            setError("Failed to load opportunities."); return; }
+            setError("Failed to load Applications."); 
+            toast.error("Failed to load Applications.", { position: "top-right" })
+            setFetching(false)
+            return; 
+          }
           setApplications(apps.data);   
         }
 
@@ -103,6 +110,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
             return
         }
       }
+      toast.error("Failed to complete Opportunity.", { position: "top-right" })
       setError("Cannot Complete Opportunity")
     }
     async function addUpdate() {
@@ -120,9 +128,12 @@ export function useOrgViewOpportunityViewModel(id: string) {
             description: "",
             hoursContributed: 0
           })
-          setFetching(false)
           setReload(true)
+          setFetching(false)
           return
+        } else {
+          toast.error("Failed to add Progress Update.", { position: "top-right" })
+          setFetching(false)
         }
       }
     }
@@ -142,7 +153,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
                   msg = "You have already reviewed this volunteer for this opportunity.";
               }
           } catch {}
-          toast.error(msg);
+          toast.error(msg, { position: "top-right" });
           return;
       }
       if (input.flagged && input.flagReason?.trim()) {
@@ -151,13 +162,13 @@ export function useOrgViewOpportunityViewModel(id: string) {
           } catch {
               setReviewModalOpen(false);
               setSubmitting(false);
-              toast.error("Review posted, but the flag failed to submit. Please try again.");
+              toast.error("Review posted, but the flag failed to submit. Please try again.", { position: "top-right" });
               return;
           }
       }
       setReviewModalOpen(false);
       setSubmitting(false);
-      toast.success(input.flagged ? "Review and flag posted!" : "Review posted!");
+      toast.success(input.flagged ? "Review and flag posted!" : "Review posted!", { position: "top-right" });
     }
 
     return {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate, reviewModalOpen, setReviewModalOpen, submitting, submitReview} 
