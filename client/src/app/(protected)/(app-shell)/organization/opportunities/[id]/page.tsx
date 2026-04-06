@@ -24,7 +24,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { OrganizationLoadingPage } from "../../organization_loading";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 
 export default function ViewOpportunityPage({
@@ -36,7 +36,7 @@ export default function ViewOpportunityPage({
     const {loading, fetching, session, signOut, router, user, error, currentUser, opportunity, applications, completeOpportunity, totalHours, monetaryValue, setProgressUpdate, addUpdate, reviewModalOpen, setReviewModalOpen, submitting, submitReview} = useOrgViewOpportunityViewModel(id)
 
     if (loading || !session || fetching) {
-        return (<OrganizationLoadingPage />)
+        return (<LoadingScreen />)
     }
 
   return (

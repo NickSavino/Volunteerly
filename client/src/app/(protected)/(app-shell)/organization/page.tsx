@@ -12,17 +12,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
 import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { OrgStatCard } from "@/components/custom/org_stat_card";
-import { OrganizationLoadingPage } from "./organization_loading";
 import { UserService } from "@/services/UserService";
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 
 export default function HomePage() {
   const {loading, session, fetching, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} = useOrgDashboardViewModel()
 
   if (loading || !session || fetching) {
-    return (<OrganizationLoadingPage />)
+    return (<LoadingScreen />)
   }
 
   return (

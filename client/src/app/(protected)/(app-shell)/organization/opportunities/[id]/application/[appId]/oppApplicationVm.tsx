@@ -15,6 +15,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
   const [error, setError] = useState<string | null>(null);
   const [application, setApplication] = useState<Application>()
   const [fetching, setFetching] = useState(true)
+  const [matchedSchedule, setMatchedSchedule] = useState<string[]>()
 
   // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
@@ -46,18 +47,26 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
 
     useEffect(() => {
       async function loadApplication() {
-        setFetching(true)
-        const opp = await OrganizationService.getOpportunity(oppId)
-        if (!(opp.data?.status == "OPEN")) {
-          router.replace(`/organization/opportunities/${oppId}`);
-          return;
+        try {
+          setFetching(true)
+          const opp = await OrganizationService.getOpportunity(oppId)
+          if (!(opp.data?.status == "OPEN")) {
+            router.replace(`/organization/opportunities/${oppId}`);
+            return;
+          }
+          const app = await OrganizationService.getApplication(appId)
+          if (!app.success) { 
+            console.error(app.error)
+            setError("Failed to load application."); 
+            setFetching(false)
+            return; 
+          }
+          setMatchedSchedule(opp.data.availability.filter(day => app.data.volunteer?.availability?.includes(day)))
+          setApplication(app.data);   
+          setFetching(false)
+        }catch (error)  {
+          console.log(error)
         }
-        const app = await OrganizationService.getApplication(appId)
-        if (!app.success) { 
-          console.error(app.error)
-          setError("Failed to load application."); return; }
-        setApplication(app.data);   
-        setFetching(false)
       }
       loadApplication()
     }, [appId])
@@ -76,6 +85,6 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
       }
       setError("Cannot Select Volunteer")
     }
-    return {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} 
+    return {loading, fetching, session, signOut, router, user, error, currentUser, matchedSchedule,application, selectVolunteer} 
 
   }
