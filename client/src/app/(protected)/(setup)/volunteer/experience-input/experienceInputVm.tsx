@@ -58,6 +58,10 @@ export function useExperienceInputViewModel() {
         ]);
     }
 
+    const removeWorkExperience = (index: number) => {
+    setWorkExperiences((prev) => prev.filter((_, i) => i !== index));
+    };
+
     function updateWorkExperience(index: number, field: keyof WorkExperience, value: string) {
         setWorkExperiences((prev) =>
             prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
@@ -70,6 +74,10 @@ export function useExperienceInputViewModel() {
             { institution: "", degree: "", graduationYear: "" },
         ]);
     }
+
+    const removeEducation = (index: number) => {
+    setEducations((prev) => prev.filter((_, i) => i !== index));
+    };
 
     function updateEducation(index: number, field: keyof Education, value: string) {
         setEducations((prev) =>
@@ -85,7 +93,7 @@ export function useExperienceInputViewModel() {
         }
 
         const hasIncompleteWork = workExperiences.some(
-            (w) => !w.jobTitle || !w.company || !w.startDate || !w.endDate || !w.responsibilities
+            (w) => !w.jobTitle || !w.company || !w.startDate || !w.responsibilities
         );
         if (hasIncompleteWork) {
             newErrors.workExperience = "Please fill in all fields.";
@@ -110,7 +118,7 @@ export function useExperienceInputViewModel() {
             const workText = workExperiences
                 .map(
                     (w) =>
-                        `${w.jobTitle} at ${w.company} (${w.startDate} - ${w.endDate}): ${w.responsibilities}`
+                        `${w.jobTitle} at ${w.company} (${w.startDate}${w.endDate ? ` - ${w.endDate}` : " - Present"}): ${w.responsibilities}`
                 )
                 .join("\n");
 
@@ -152,5 +160,7 @@ export function useExperienceInputViewModel() {
         handleSubmit,
         fullName,
         signOut,
+        removeWorkExperience,
+        removeEducation
     };
 }

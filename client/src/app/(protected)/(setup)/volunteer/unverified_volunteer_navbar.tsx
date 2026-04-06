@@ -37,8 +37,7 @@ export function UnverifiedNavbar({ fullName, onSignOut }: UnverifiedNavbarProps)
                                         <p className="text-xs text-gray-400">VOLUNTEER</p>
                                     </div>
                                     <Avatar>
-                                        <AvatarImage src={avtImg.src} />
-                                        <AvatarFallback>VLT</AvatarFallback>
+                                        <AvatarFallback> {fullName?.slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
                             </NavigationMenuTrigger>

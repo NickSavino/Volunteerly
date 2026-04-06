@@ -50,7 +50,7 @@ export const ConfirmSkillsSchema = z.object({
     jobTitle: z.string(),
     company: z.string(),
     startDate: z.string(),
-    endDate: z.string(),
+    endDate: z.string().optional(),
     responsibilities: z.string(),
   })),
   educations: z.array(z.object({
@@ -60,3 +60,5 @@ export const ConfirmSkillsSchema = z.object({
   })),
 });
 export type ConfirmSkills = z.infer<typeof ConfirmSkillsSchema>;
+
+export const volunteerAwardsSchema = z.record(z.string(), z.string());

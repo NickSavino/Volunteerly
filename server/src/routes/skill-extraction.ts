@@ -78,8 +78,8 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
             workExperiences: {
                 jobTitle: string;
                 company: string;
-                startDate: string;
-                endDate: string;
+                startDate: Date;
+                endDate: Date;
                 responsibilities: string;
             }[];
             educations: {
@@ -118,8 +118,8 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
                     volId: userId,
                     jobTitle: w.jobTitle,
                     company: w.company,
-                    startDate: w.startDate,
-                    endDate: w.endDate,
+                    startDate: new Date(w.startDate),
+                    endDate: w.endDate ? new Date(w.endDate) : null,
                     responsibilities: w.responsibilities,
                 })),
             });

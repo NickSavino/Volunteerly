@@ -33,7 +33,7 @@ export default function VolunteerDashboardPage() {
     const {
         loading, session, error, currentVolunteer, opportunities, partnerOrgs,
         handleSignOut, firstName, totalHours, economicValue, impactScore,
-        orgsAssisted, chartLabels, chartData, chartRange, setChartRange, router,hourlyRate
+        orgsAssisted, chartLabels, chartData, chartRange, setChartRange, router, hourlyRate, fetching
     } = useVltDashboardViewModel();
 
     const pathname = usePathname();
@@ -43,7 +43,9 @@ export default function VolunteerDashboardPage() {
 
     const [showAllPartners, setShowAllPartners] = useState(false);
 
-    if (loading || !session) return <main className="p-6">Loading...</main>;
+    //if (loading || !session || fetching) {
+    //    return (<VolunteerLoadingPage />)
+    //}
 
     const maxHours = Math.max(...chartData, 1);
 

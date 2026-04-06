@@ -70,7 +70,14 @@ DECLARE
     flag1_id     UUID := 'a0000000-0000-4000-8000-000000000901';
     progress1_id UUID := 'a0000000-0000-4000-8000-000000001001';
 
+    work_exp1_id  UUID := 'a0000000-0000-4000-8000-000000001002';
+    work_exp2_id  UUID := 'a0000000-0000-4000-8000-000000001003';
+    work_exp3_id  UUID := 'a0000000-0000-4000-8000-000000001004';
 
+    education1_id UUID := 'a0000000-0000-4000-8000-000000001005';
+    education2_id UUID := 'a0000000-0000-4000-8000-000000001006';
+    education3_id UUID := 'a0000000-0000-4000-8000-000000001007';
+    
 BEGIN
 
 --Auth Users
@@ -129,8 +136,8 @@ VALUES
 --Insert Volunteers (no skills seeded — volunteers complete experience input on first login)
 INSERT INTO public.volunteers (id, first_name, last_name, location, bio, hourly_value, organizations_assisted, availability)
 VALUES
-    (vol1_id::text, 'Estelle', 'Bright', 'Calgary, AB', 'Passionate volunteer with a love for data.', 25, 2, '["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"]'),
-    (vol2_id::text, 'Joshua',  'Bright', 'Calgary, AB', 'Software developer who loves giving back.',  30, 1, '["Mon", "Sat", "Sun"]');
+    (vol1_id::text, 'Estelle', 'Bright', 'Calgary, AB', 'Passionate volunteer with a love for data.', 25, 2, '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]'),
+    (vol2_id::text, 'Joshua',  'Bright', 'Calgary, AB', 'Software developer who loves giving back.',  30, 1, '["Monday", "Saturday", "Sunday"]');
 
 --Insert Opps
 INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)
@@ -138,6 +145,20 @@ VALUES
     (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',   'Web Dev',       'Create a website for our charity',          'Must have relevant seng experience.',  'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]'),
     (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',    'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',       'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]'),
     (opp3_id::text, org3_id::text, vol2_id::text, 'FILLED',   'Future Trend Analysis', 'Data Science',  'Predict our Q3 donation amounts.',          'Programming experience required.',     'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
+
+--Insert Vol Work Experiences
+INSERT INTO public.volunteer_work_experiences (id, vol_id, job_title, company, responsibilities, created_at, start_date, end_date)
+VALUES
+    (work_exp1_id::text, vol1_id::text, 'Data & AI Consultant', 'EY', 'Leverages AI to help drive decisions',   '2026-04-05',  '2025-03-05', '2026-02-10'),
+    (work_exp2_id::text, vol2_id::text, 'Investment Banker', 'RBC', 'Create Excel dashboards',   '2026-04-05',  '2026-03-05', '2026-06-01'),
+    (work_exp3_id::text, vol2_id::text, 'Data Science Associate', 'CTC', 'Develop machine learning models to forcast sales',   '2026-04-05',  '2026-05-04', NULL);
+
+--Inset vol Educations
+INSERT INTO public.volunteer_educations (id, vol_id, institution, degree, graduation_year, created_at)
+VALUES
+    (education1_id::text, vol1_id::text, 'University of Manitoba', 'Software Engineering', '2025',   '2026-04-05'),
+    (education2_id::text, vol2_id::text, 'University of Saskatchewan', 'Finance', '2020',   '2026-04-05'),
+    (education3_id::text, vol2_id::text, 'University of Guelph', 'Music Theory', '2026',   '2026-04-05');
 
 --Applications
 INSERT INTO public.applications (id, opp_id, vol_id, match_pct, message, date_applied)

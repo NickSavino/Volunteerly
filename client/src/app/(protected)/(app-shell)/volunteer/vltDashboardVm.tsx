@@ -18,7 +18,7 @@ export function useVltDashboardViewModel() {
     const [monthlyHoursMap, setMonthlyHoursMap] = useState<Record<string, number>>({});
     const [chartRange, setChartRange] = useState<ChartRange>("last_6_months");
     const [error, setError] = useState<string | null>(null);
-
+    const [fetching, setFetching] = useState(true);
 
     //Redirect away if unverified
     useEffect(() => {
@@ -56,6 +56,8 @@ export function useVltDashboardViewModel() {
             } catch (err) {
                 console.error(err);
                 setError("Failed to load data.");
+            } finally {
+            setFetching(false);
             }
         }
         loadData();
@@ -158,5 +160,6 @@ export function useVltDashboardViewModel() {
         chartRange,
         setChartRange,
         hourlyRate,
+        fetching
     };
 }

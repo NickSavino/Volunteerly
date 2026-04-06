@@ -67,3 +67,54 @@ currentVolunteerRouter.put("/", async (req, res, next) => {
         next(error);
     }
 });
+
+currentVolunteerRouter.get("/awards", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const awards: Record<string, string> = {};
+
+        const vol = await getCurrentVolunteer(userId)
+        const locationLength = vol?.location?.length || 0;
+        const bioLength = vol?.bio?.length || 0;
+        
+        if (locationLength >= 1 && bioLength >= 1) {
+            awards["Profile Pro"] = "Completed all volunteer profile details!";
+        }
+
+        const opportunities = await getYourOpportunities(userId);
+        const num_opporuntities = opportunities?.length || 0;
+        
+        if (num_opporuntities >= 1) {
+            awards["First Step"] = "Completed your first opportunity!";
+        }
+        if (num_opporuntities >= 100){
+            awards["Legendary Volunteer"] = "Completed 100 Opportunities on Volunteerly!";
+        } else if (num_opporuntities >= 50){
+            awards["Master Volunteer"] = "Completed 50 Opportunities on Volunteerly!";
+        } else if (num_opporuntities >= 10) {
+            awards["Active Volunteer"] = "Completed Opportunities on Volunteerly!";
+        }
+
+        const hours = await getVolunteerOrganizations(userId);
+        const num_unique_orgs = hours?.length || 0;
+        
+        if (num_unique_orgs >= 1) {
+            awards["Helping Hand"] = "Assisted your first Organization!";
+        }
+        
+        if (num_unique_orgs >= 100){
+            awards["Changemaker"] = "Assisted 100 Organizations!";
+        } else if (num_unique_orgs >= 50){
+            awards["Community Pillar"] = "Assisted 50 Organizations!";
+        } else if (num_unique_orgs >= 10) {
+            awards["Connector"] = "Assisted 10 Organizations!";
+        }
+        
+
+        res.status(200).json(awards);
+    } catch (error) {
+        next(error);
+    }
+});

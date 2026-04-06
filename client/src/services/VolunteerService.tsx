@@ -6,6 +6,7 @@ import {
     OpportunitiesSchema,
     ExtractedSkills,
     ExtractedSkillsSchema,
+    volunteerAwardsSchema
 } from "@volunteerly/shared";
 import { WorkExperience, Education } from "@/app/(protected)/(setup)/volunteer/experience-input/experienceInputVm";
 
@@ -50,6 +51,12 @@ export class VolunteerService {
     static async getMonthlyHours() {
         const response = await api<unknown>("/current-volunteer/monthly-hours");
         return MonthlyHoursSchema.safeParse(response);
+    }
+
+    static async getVolAwards() {
+        const response = await api<unknown>("/current-volunteer/awards");
+        const parsed = volunteerAwardsSchema.safeParse(response)
+        return parsed
     }
 
     static async extractSkills(
