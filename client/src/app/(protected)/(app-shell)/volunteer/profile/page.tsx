@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
 import { Settings, Pencil } from "lucide-react";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
-import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award } from "lucide-react";
+import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award, type LucideIcon } from "lucide-react";
 import { OrganizationLoadingPage } from "../../organization/organization_loading";
 
 export default function ProfilePage() {
@@ -44,15 +44,15 @@ export default function ProfilePage() {
         return (<OrganizationLoadingPage />)
     }
 
-
     if (!currentVolunteer) {
         return <main className="p-6">Loading...</main>;
     }
+
     const fullName = `${currentVolunteer.firstName} ${currentVolunteer.lastName}`;
-    
-    const awardIcons: Record<string, any> = {
+
+    const awardIcons: Record<string, LucideIcon> = {
         "Profile Pro": Star,
-        
+
         "First Step": Rocket,
         "Active Volunteer": Rocket,
         "Master Volunteer": Rocket,
@@ -68,7 +68,7 @@ export default function ProfilePage() {
         <div className="min-h-screen bg-gray-50">
             <title>Volunteer - Profile</title>
             <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row gap-6 items-start">
+                <div className="flex flex-col lg:flex-row gap-6 items-stretch">
 
                     <div className="flex flex-col gap-4 w-full lg:w-72 flex-shrink-0">
                         <div className="rounded-xl border bg-white p-6 flex flex-col items-center gap-3 shadow-sm">
@@ -102,7 +102,37 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        {/* milestones*/}
+                        <div className="rounded-xl border bg-white p-6 shadow-sm flex flex-col items-center gap-2">
+                            <h2 className="font-semibold text-gray-800 text-lg">Your Rating</h2>
+                            {currentVolunteer.reviewCount > 0 ? (
+                                <>
+                                    <div className="flex items-center gap-0.5 mt-1">
+                                        {[1, 2, 3, 4, 5].map((star) => {
+                                            const fill = Math.min(1, Math.max(0, currentVolunteer.averageRating - (star - 1)));
+                                            const pct = Math.round(fill * 100);
+                                            return (
+                                                <span key={star} className="relative text-2xl leading-none">
+                                                    <span className="text-gray-300">★</span>
+                                                    <span
+                                                        className="absolute inset-0 overflow-hidden text-yellow-400"
+                                                        style={{ width: `${pct}%` }}
+                                                    >★</span>
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                    <p className="text-sm font-semibold text-gray-800">
+                                        {currentVolunteer.averageRating.toFixed(1)} / 5.0
+                                    </p>
+                                    <p className="text-xs text-gray-400">
+                                        Based on {currentVolunteer.reviewCount} {currentVolunteer.reviewCount === 1 ? "review" : "reviews"}
+                                    </p>
+                                </>
+                            ) : (
+                                <p className="text-sm text-gray-400 text-center">No reviews yet.</p>
+                            )}
+                        </div>
+
                         <div className="rounded-xl border bg-white p-6 shadow-sm flex flex-col items-center gap-3">
                             <h2 className="font-semibold text-gray-800 text-lg mb-3">Milestones</h2>
                             <div className="flex flex-wrap gap-2 justify-center">
@@ -143,35 +173,35 @@ export default function ProfilePage() {
                         </div>
                     </div>
 
-            <div className="flex flex-col gap-4 w-full">
-                <div className="rounded-xl border bg-white p-6 shadow-sm">
-                    <div className="flex items-start justify-between">
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
-                            <p className="text-sm text-gray-500 mt-1">
-                                A complete profile increases your chances of being selected by organizations.
-                            </p>
-                        </div>
-                        <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                            {editing && (
-                                <Button variant="ghost" onClick={handleCancel} disabled={saving}>
-                                    Cancel
-                                </Button>
-                            )}
-                            <Button
-                                className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl px-6"
-                                onClick={editing ? handleSave : handleEdit}
-                                disabled={saving}
-                            >
-                                {saving ? "Saving..." : editing ? "Save Edits" : "Edit Profile"}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-
+                    <div className="flex flex-col gap-4 w-full min-h-full">
                         <div className="rounded-xl border bg-white p-6 shadow-sm">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        A complete profile increases your chances of being selected by organizations.
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                                    {editing && (
+                                        <Button variant="ghost" onClick={handleCancel} disabled={saving}>
+                                            Cancel
+                                        </Button>
+                                    )}
+                                    <Button
+                                        className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl px-6"
+                                        onClick={editing ? handleSave : handleEdit}
+                                        disabled={saving}
+                                    >
+                                        {saving ? "Saving..." : editing ? "Save Edits" : "Edit Profile"}
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="rounded-xl border bg-white p-6 shadow-sm flex-1 flex flex-col">
                             <h2 className="font-semibold text-gray-800 text-lg mb-5">General Information</h2>
-                            <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4 flex-1">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="flex flex-col gap-1">
                                         <Label>First Name</Label>
@@ -215,15 +245,14 @@ export default function ProfilePage() {
                                     )}
                                 </div>
 
-                                <div className="flex flex-col gap-1">
+                                <div className="flex flex-col gap-1 flex-1">
                                     <Label>Bio / About Me</Label>
                                     <Textarea
                                         value={bio}
                                         disabled={!editing}
                                         onChange={(e) => setBio(e.target.value)}
                                         placeholder="Describe your passion for volunteering and what you hope to achieve..."
-                                        rows={4}
-                                        className={`${!editing ? "text-gray-700" : ""} ${errors.bio ? "border-destructive" : ""}`}
+                                        className={`flex-1 resize-none ${!editing ? "text-gray-700" : ""} ${errors.bio ? "border-destructive" : ""}`}
                                     />
                                     {errors.bio && (
                                         <p className="text-destructive text-xs mt-1">{errors.bio}</p>
