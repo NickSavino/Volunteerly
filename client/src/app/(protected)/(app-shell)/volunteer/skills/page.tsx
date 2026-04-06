@@ -7,6 +7,7 @@ import {
   TrendingUp, Settings, Lock, Bot, Cloud, Trophy,
   MessageCircle, PenLine, Users, Mic, Search, GraduationCap,
   DollarSign, Calendar, ClipboardList, Megaphone, Star, ChevronUp, Award,
+  BookOpen, Briefcase, PieChart,
   type LucideIcon,
 } from "lucide-react";
 
@@ -15,6 +16,7 @@ type NodeStatus = "mastered" | "in_progress" | "locked";
 interface SkillNodeDef {
   id: string;
   label: string;
+  iconKey: string;
   icon: LucideIcon;
   tier: number;
   col: number;
@@ -30,9 +32,41 @@ interface SkillNode extends SkillNodeDef {
   current: number;
 }
 
+const ICON_PATHS: Record<string, string> = {
+  Code: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
+  Table: "M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18",
+  Zap: "M13 2L3 14h9l-1 8 10-12h-9l1-8z",
+  Database: "M12 2C6.477 2 2 4.477 2 7v10c0 2.523 4.477 5 10 5s10-2.477 10-5V7c0-2.523-4.477-5-10-5zm0 0c5.523 0 10 2.477 10 5M2 7c0 2.523 4.477 5 10 5s10-2.523 10-5M2 12c0 2.523 4.477 5 10 5s10-2.523 10-5",
+  BarChart2: "M18 20V10M12 20V4M6 20v-6",
+  Globe: "M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0c-3 4-3 12 0 20m0-20c3 4 3 12 0 20M2 12h20",
+  Smartphone: "M17 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2zm-5 17a1 1 0 110-2 1 1 0 010 2z",
+  TrendingUp: "M23 6l-9.5 9.5-5-5L1 18M17 6h6v6",
+  Settings: "M12 15a3 3 0 100-6 3 3 0 000 6zm6.9-3a6.9 6.9 0 01-.07 1l1.57 1.23a.4.4 0 01.09.49l-1.5 2.6a.4.4 0 01-.48.17l-1.85-.74a7 7 0 01-1.73 1l-.28 1.96a.39.39 0 01-.39.34h-3a.39.39 0 01-.39-.34l-.28-1.97a7 7 0 01-1.73-1l-1.85.75a.4.4 0 01-.48-.17l-1.5-2.6a.39.39 0 01.09-.49l1.57-1.22A6.9 6.9 0 015.1 12a6.9 6.9 0 01.07-1L3.6 9.77a.4.4 0 01-.09-.49l1.5-2.6a.4.4 0 01.48-.17l1.85.74a7 7 0 011.73-1l.28-1.96A.39.39 0 019.74 4h3c.2 0 .36.14.39.34l.28 1.97a7 7 0 011.73 1l1.85-.75a.4.4 0 01.48.17l1.5 2.6a.39.39 0 01-.09.49L17.83 11A6.9 6.9 0 0118.9 12z",
+  Lock: "M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zm-7 4v3M12 11V7a4 4 0 00-8 0",
+  Bot: "M12 2a2 2 0 012 2v2h4a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2h4V4a2 2 0 012-2zM8 13a1 1 0 102 0 1 1 0 00-2 0zm6 0a1 1 0 102 0 1 1 0 00-2 0zM9 17h6",
+  Cloud: "M18 10a6 6 0 00-11.94-.9A5 5 0 006 19h12a4 4 0 000-8z",
+  Trophy: "M8 21h8m-4-4v4M6 3H3v5a6 6 0 006 6 6 6 0 006-6V3h-3M6 3h12",
+  MessageCircle: "M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z",
+  PenLine: "M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z",
+  Users: "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zm8 4a4 4 0 00-4-4M23 21v-2a4 4 0 00-3-3.87",
+  Mic: "M12 1a3 3 0 013 3v8a3 3 0 01-6 0V4a3 3 0 013-3zm-7 9a7 7 0 0014 0M12 19v4m-4 0h8",
+  Search: "M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z",
+  GraduationCap: "M22 10v6M2 10l10-5 10 5-10 5-10-5zm6.5 5.5v4l3.5 2 3.5-2v-4",
+  DollarSign: "M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6",
+  Calendar: "M3 4h18v18H3zM16 2v4M8 2v4M3 10h18",
+  ClipboardList: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4",
+  Megaphone: "M3 11l19-9-9 19-2-8-8-2z",
+  Star: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z",
+  ChevronUp: "M18 15l-6-6-6 6",
+  Award: "M12 15a7 7 0 100-14 7 7 0 000 14zm0 0v6m-3-3h6",
+  BookOpen: "M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zm20 0h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z",
+  Briefcase: "M20 7H4a2 2 0 00-2 2v11a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zm-8 11v-5m-4-6V5a2 2 0 012-2h4a2 2 0 012 2v2",
+  PieChart: "M21.21 15.89A10 10 0 118 2.83M22 12A10 10 0 0012 2v10z",
+};
+
 const TECH_NODES: SkillNodeDef[] = [
   {
-    id: "python", label: "Python", icon: Code,
+    id: "python", label: "Python", iconKey: "Code", icon: Code,
     tier: 1, col: 1,
     trackedSkills: ["Python"],
     threshold: 2, requiresAny: [],
@@ -40,7 +74,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Python in 2 opportunities",
   },
   {
-    id: "excel", label: "Excel", icon: Table,
+    id: "excel", label: "Excel", iconKey: "Table", icon: Table,
     tier: 1, col: 3,
     trackedSkills: ["Excel"],
     threshold: 2, requiresAny: [],
@@ -48,16 +82,24 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Excel in 2 opportunities",
   },
   {
-    id: "javascript", label: "JavaScript", icon: Zap,
+    id: "javascript", label: "JavaScript", iconKey: "Zap", icon: Zap,
     tier: 1, col: 0,
     trackedSkills: ["JavaScript", "TypeScript"],
     threshold: 2, requiresAny: [],
     description: "Use JavaScript or TypeScript in volunteer web projects.",
     requirementLabel: "Log JavaScript or TypeScript in 2 opportunities",
   },
+  {
+    id: "accounting", label: "Accounting", iconKey: "BookOpen", icon: BookOpen,
+    tier: 1, col: 2,
+    trackedSkills: ["Accounting", "Bookkeeping"],
+    threshold: 2, requiresAny: [],
+    description: "Apply bookkeeping and accounting practices in volunteer finance roles.",
+    requirementLabel: "Log Accounting or Bookkeeping in 2 opportunities",
+  },
 
   {
-    id: "sql", label: "SQL / DBs", icon: Database,
+    id: "sql", label: "SQL / DBs", iconKey: "Database", icon: Database,
     tier: 2, col: 1,
     trackedSkills: ["SQL", "Databases"],
     threshold: 2, requiresAny: [["python"]],
@@ -65,7 +107,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Python, then log SQL or Databases in 2 opportunities",
   },
   {
-    id: "powerbi", label: "Power BI", icon: BarChart2,
+    id: "powerbi", label: "Power BI", iconKey: "BarChart2", icon: BarChart2,
     tier: 2, col: 3,
     trackedSkills: ["Excel", "Data Analysis"],
     threshold: 3, requiresAny: [["excel"]],
@@ -73,7 +115,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Excel, then log Excel + Data Analysis across 3 combined opportunities",
   },
   {
-    id: "webdev", label: "Web Dev", icon: Globe,
+    id: "webdev", label: "Web Dev", iconKey: "Globe", icon: Globe,
     tier: 2, col: 0,
     trackedSkills: ["JavaScript", "TypeScript", "React", "Node.js", "UI/UX Design"],
     threshold: 3, requiresAny: [["javascript"]],
@@ -81,17 +123,25 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock JavaScript, then log any web dev skills in 3 opportunities",
   },
   {
-    id: "mobile", label: "Mobile Dev", icon: Smartphone,
+    id: "mobile", label: "Mobile Dev", iconKey: "Smartphone", icon: Smartphone,
     tier: 2, col: 4,
     trackedSkills: ["Mobile Development"],
     threshold: 2, requiresAny: [["javascript"]],
     description: "Build mobile apps that serve community organisations.",
     requirementLabel: "Unlock JavaScript, then log Mobile Development in 2 opportunities",
   },
+  {
+    id: "finance", label: "Finance", iconKey: "Briefcase", icon: Briefcase,
+    tier: 2, col: 2,
+    trackedSkills: ["Finance", "Budgeting"],
+    threshold: 2, requiresAny: [["accounting"]],
+    description: "Manage budgets and financial planning for nonprofit organisations.",
+    requirementLabel: "Unlock Accounting, then log Finance or Budgeting in 2 opportunities",
+  },
 
   {
-    id: "data_analysis", label: "Data Analysis", icon: TrendingUp,
-    tier: 3, col: 2,
+    id: "data_analysis", label: "Data Analysis", iconKey: "TrendingUp", icon: TrendingUp,
+    tier: 3, col: 1,
     trackedSkills: ["Data Analysis", "Python", "SQL", "Excel"],
     threshold: 4,
     requiresAny: [["sql", "powerbi"]],
@@ -99,7 +149,7 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock SQL/DBs OR Power BI, then log any data skills in 4 total opportunities",
   },
   {
-    id: "devops", label: "DevOps", icon: Settings,
+    id: "devops", label: "DevOps", iconKey: "Settings", icon: Settings,
     tier: 3, col: 0,
     trackedSkills: ["DevOps", "Cloud (AWS/GCP/Azure)"],
     threshold: 3, requiresAny: [["webdev"]],
@@ -107,24 +157,32 @@ const TECH_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Web Dev, then log DevOps or Cloud in 3 opportunities",
   },
   {
-    id: "cybersecurity", label: "Cybersecurity", icon: Lock,
-    tier: 3, col: 1,
+    id: "cybersecurity", label: "Cybersecurity", iconKey: "Lock", icon: Lock,
+    tier: 3, col: 4,
     trackedSkills: ["Cybersecurity"],
     threshold: 2, requiresAny: [["sql"]],
     description: "Apply security best practices across volunteer systems.",
     requirementLabel: "Unlock SQL/DBs, then log Cybersecurity in 2 opportunities",
   },
+  {
+    id: "financial_analysis", label: "Financial Analysis", iconKey: "PieChart", icon: PieChart,
+    tier: 3, col: 2,
+    trackedSkills: ["Financial Analysis", "Excel", "Data Analysis"],
+    threshold: 3, requiresAny: [["finance"]],
+    description: "Analyse financial data and produce reports to guide org decisions.",
+    requirementLabel: "Unlock Finance, then log Financial Analysis skills in 3 opportunities",
+  },
 
   {
-    id: "machine_learning", label: "ML / AI", icon: Bot,
-    tier: 4, col: 2,
+    id: "machine_learning", label: "ML / AI", iconKey: "Bot", icon: Bot,
+    tier: 4, col: 1,
     trackedSkills: ["Machine Learning"],
     threshold: 3, requiresAny: [["data_analysis"]],
     description: "Apply machine learning and AI in real nonprofit projects.",
     requirementLabel: "Unlock Data Analysis, then log Machine Learning in 3 opportunities",
   },
   {
-    id: "cloud", label: "Cloud Arch.", icon: Cloud,
+    id: "cloud", label: "Cloud Arch.", iconKey: "Cloud", icon: Cloud,
     tier: 4, col: 0,
     trackedSkills: ["Cloud (AWS/GCP/Azure)", "DevOps"],
     threshold: 4, requiresAny: [["devops"]],
@@ -133,7 +191,7 @@ const TECH_NODES: SkillNodeDef[] = [
   },
 
   {
-    id: "tech_expert", label: "Tech Expert", icon: Trophy,
+    id: "tech_expert", label: "Tech Expert", iconKey: "Trophy", icon: Trophy,
     tier: 5, col: 2,
     trackedSkills: ["Machine Learning", "Cloud (AWS/GCP/Azure)", "DevOps", "Data Analysis"],
     threshold: 6, requiresAny: [["machine_learning"]],
@@ -144,7 +202,7 @@ const TECH_NODES: SkillNodeDef[] = [
 
 const NT_NODES: SkillNodeDef[] = [
   {
-    id: "nt_communication", label: "Communication", icon: MessageCircle,
+    id: "nt_communication", label: "Communication", iconKey: "MessageCircle", icon: MessageCircle,
     tier: 1, col: 1,
     trackedSkills: ["Communication"],
     threshold: 2, requiresAny: [],
@@ -152,7 +210,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Communication in 2 opportunities",
   },
   {
-    id: "nt_writing", label: "Writing", icon: PenLine,
+    id: "nt_writing", label: "Writing", iconKey: "PenLine", icon: PenLine,
     tier: 1, col: 3,
     trackedSkills: ["Writing"],
     threshold: 2, requiresAny: [],
@@ -160,7 +218,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Log Writing in 2 opportunities",
   },
   {
-    id: "nt_teamwork", label: "Teamwork", icon: Users,
+    id: "nt_teamwork", label: "Teamwork", iconKey: "Users", icon: Users,
     tier: 1, col: 0,
     trackedSkills: ["Teamwork", "Adaptability"],
     threshold: 2, requiresAny: [],
@@ -169,7 +227,7 @@ const NT_NODES: SkillNodeDef[] = [
   },
 
   {
-    id: "nt_public_speaking", label: "Public Speaking", icon: Mic,
+    id: "nt_public_speaking", label: "Public Speaking", iconKey: "Mic", icon: Mic,
     tier: 2, col: 1,
     trackedSkills: ["Public Speaking", "Communication"],
     threshold: 3, requiresAny: [["nt_communication"]],
@@ -177,7 +235,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Communication, then log Public Speaking in 2 opportunities",
   },
   {
-    id: "nt_research", label: "Research", icon: Search,
+    id: "nt_research", label: "Research", iconKey: "Search", icon: Search,
     tier: 2, col: 3,
     trackedSkills: ["Research", "Critical Thinking"],
     threshold: 2, requiresAny: [["nt_writing"]],
@@ -185,7 +243,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Writing, then log Research in 2 opportunities",
   },
   {
-    id: "nt_mentoring", label: "Mentoring", icon: GraduationCap,
+    id: "nt_mentoring", label: "Mentoring", iconKey: "GraduationCap", icon: GraduationCap,
     tier: 2, col: 0,
     trackedSkills: ["Mentoring", "Teaching"],
     threshold: 2, requiresAny: [["nt_teamwork"]],
@@ -193,7 +251,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Teamwork, then log Mentoring or Teaching in 2 opportunities",
   },
   {
-    id: "nt_fundraising", label: "Fundraising", icon: DollarSign,
+    id: "nt_fundraising", label: "Fundraising", iconKey: "DollarSign", icon: DollarSign,
     tier: 2, col: 4,
     trackedSkills: ["Fundraising", "Networking"],
     threshold: 2, requiresAny: [["nt_communication"]],
@@ -202,7 +260,7 @@ const NT_NODES: SkillNodeDef[] = [
   },
 
   {
-    id: "nt_event_planning", label: "Event Planning", icon: Calendar,
+    id: "nt_event_planning", label: "Event Planning", iconKey: "Calendar", icon: Calendar,
     tier: 3, col: 1,
     trackedSkills: ["Event Planning", "Time Management"],
     threshold: 3,
@@ -211,7 +269,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Public Speaking OR Mentoring, then log Event Planning in 3 opportunities",
   },
   {
-    id: "nt_project_mgmt", label: "Project Mgmt", icon: ClipboardList,
+    id: "nt_project_mgmt", label: "Project Mgmt", iconKey: "ClipboardList", icon: ClipboardList,
     tier: 3, col: 3,
     trackedSkills: ["Project Management", "Problem Solving"],
     threshold: 3, requiresAny: [["nt_research"]],
@@ -219,7 +277,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Research, then log Project Management in 3 opportunities",
   },
   {
-    id: "nt_marketing", label: "Marketing", icon: Megaphone,
+    id: "nt_marketing", label: "Marketing", iconKey: "Megaphone", icon: Megaphone,
     tier: 3, col: 4,
     trackedSkills: ["Marketing", "Social Media"],
     threshold: 2, requiresAny: [["nt_fundraising"]],
@@ -228,7 +286,7 @@ const NT_NODES: SkillNodeDef[] = [
   },
 
   {
-    id: "nt_leadership", label: "Leadership", icon: Star,
+    id: "nt_leadership", label: "Leadership", iconKey: "Star", icon: Star,
     tier: 4, col: 2,
     trackedSkills: ["Leadership"],
     threshold: 3, requiresAny: [["nt_event_planning"]],
@@ -236,7 +294,7 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Event Planning, then log Leadership in 3 opportunities",
   },
   {
-    id: "nt_strategy", label: "Strategy", icon: ChevronUp,
+    id: "nt_strategy", label: "Strategy", iconKey: "ChevronUp", icon: ChevronUp,
     tier: 4, col: 4,
     trackedSkills: ["Problem Solving", "Critical Thinking", "Project Management"],
     threshold: 5,
@@ -246,7 +304,7 @@ const NT_NODES: SkillNodeDef[] = [
   },
 
   {
-    id: "nt_community_leader", label: "Community Leader", icon: Award,
+    id: "nt_community_leader", label: "Community Leader", iconKey: "Award", icon: Award,
     tier: 5, col: 2,
     trackedSkills: ["Leadership", "Project Management", "Communication"],
     threshold: 8,
@@ -388,7 +446,12 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
     : node.status === "in_progress" ? "var(--accent)"
     : "var(--locked-stroke)";
   const dimmed = node.status === "locked";
-  const Icon = node.icon;
+
+  const words = node.label.toUpperCase().split(" ");
+  const mid = Math.ceil(words.length / 2);
+  const line1 = words.slice(0, mid).join(" ");
+  const line2 = words.slice(mid).join(" ");
+  const hasTwo = line2.length > 0;
 
   return (
     <g>
@@ -401,15 +464,18 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
       <rect x={0} y={0} width={w} height={h} rx={r}
         fill={fill} stroke={stroke} strokeWidth={selected ? 3 : 2}
       />
-      <foreignObject x={(w - 20) / 2} y={h / 2 - 18} width={20} height={20} opacity={dimmed ? 0.32 : 1}>
-        <Icon size={20} strokeWidth={1.5} color={dimmed ? "#94A3B8" : "#1E293B"} />
-      </foreignObject>
-      <text x={w / 2} y={h - 11}
-        textAnchor="middle" dominantBaseline="middle"
-        fontSize={8} fontWeight="700"
+      <g transform={`translate(${(w - 20) / 2}, ${h / 2 - 20})`} opacity={dimmed ? 0.32 : 1}>
+        <svg width={20} height={20} viewBox="0 0 24 24" fill="none"
+          stroke={dimmed ? "#94A3B8" : "#1E293B"} strokeWidth={1.5}
+          strokeLinecap="round" strokeLinejoin="round">
+          <path d={ICON_PATHS[node.iconKey] ?? ""} />
+        </svg>
+      </g>
+      <text textAnchor="middle" fontSize={7} fontWeight="700"
         fill="var(--node-text)" opacity={dimmed ? 0.32 : 1}
-        fontFamily="'DM Sans', sans-serif" letterSpacing="0.05em">
-        {node.label.toUpperCase()}
+        fontFamily="'DM Sans', sans-serif" letterSpacing="0.04em">
+        <tspan x={w / 2} y={hasTwo ? h - 16 : h - 11}>{line1}</tspan>
+        {hasTwo && <tspan x={w / 2} dy={9}>{line2}</tspan>}
       </text>
       {node.status === "mastered" && (
         <g transform={`translate(${w - 14}, -4)`}>
