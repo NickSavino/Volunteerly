@@ -57,6 +57,31 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                     )}
                                 </div>
                             </div>
+                            <div className="absolute bottom-2 right-6 flex flex-col items-end gap-0.5">
+                                {org.averageRating !== null ? (
+                                    <>
+                                        <div className="flex items-center gap-0.5">
+                                            {[1, 2, 3, 4, 5].map((star) => {
+                                                const fill = Math.min(1, Math.max(0, (org.averageRating ?? 0) - (star - 1)));
+                                                const pct = Math.round(fill * 100);
+                                                return (
+                                                    <span key={star} className="relative text-2xl leading-none">
+                                                        <span className="text-gray-500">★</span>
+                                                        <span
+                                                            className="absolute inset-0 overflow-hidden text-yellow-400"
+                                                            style={{ width: `${pct}%` }}
+                                                        >★</span>
+                                                    </span>
+                                                );
+                                            })}
+                                        </div>
+                                        <p className="text-xs text-gray-300">{(org.averageRating).toFixed(1)} / 5.0</p>
+                                        <p className="text-xs text-gray-400">Based on {org.reviewCount} {org.reviewCount === 1 ? "review" : "reviews"}</p>
+                                    </>
+                                ) : (
+                                    <p className="text-xs text-gray-400">No reviews yet</p>
+                                )}
+                            </div>
                         </div>
 
                         <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
