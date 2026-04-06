@@ -106,7 +106,7 @@ export default function LoginPage() {
                                         <p className="text-sm text-red-500">{error}</p>
                                     ) : null}
 
-                                    <Button type="submit" className="w-full" disabled={submitting}>
+                                    <Button type="submit" className="w-full cursor-pointer" disabled={submitting}>
                                         {submitting ? "Creating account..." : "Sign up"}
                                     </Button>
 
