@@ -134,6 +134,7 @@ export async function postReview(
         where: { revieweeId },
         select: { rating: true },
     });
+     
     const newAverage = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
     await prisma.volunteer.update({
         where: { id: revieweeId },
@@ -253,4 +254,29 @@ export async function getAppliedOppIds(volId: string): Promise<string[]> {
         select: { oppId: true },
     });
     return applications.map((a) => a.oppId);
+}
+export async function logOpportunitySkills(volId: string, oppId: string, skills: string[]) {
+    const existing = await prisma.opportunitySkill.findFirst({
+        where: { volId, opportunityId: oppId },
+    });
+    if (existing) throw new Error("ALREADY_SUBMITTED");
+
+    if (skills.length === 0) return;
+
+    await prisma.opportunitySkill.createMany({
+        data: skills.map((skillName) => ({
+            volId,
+            opportunityId: oppId,
+            skillName,
+        })),
+        skipDuplicates: true,
+    });
+}
+
+export async function getOpportunitySkills(volId: string, oppId: string): Promise<string[]> {
+    const skills = await prisma.opportunitySkill.findMany({
+        where: { volId, opportunityId: oppId },
+        select: { skillName: true },
+    });
+    return skills.map((s) => s.skillName);
 }
