@@ -191,3 +191,79 @@ For automatic reloading.
 Use components from [shacdn/ui](https://ui.shadcn.com/docs/components). Styling for web application is set in `/client/src/app/globals.css`.
 
 Imported components can be styled by accessing the relevant `.tsx` file for that component inside `/client/src/components/ui`
+
+### Docker
+Docker Compose is used for local development. The project uses three compose files to separate shared, development and production container settings:
+
+- `docker-compose.yml` - Base configuration
+- `docker-compose.override.yml` - Development overrides
+- `docker-compose.prod.yml` - Production overrides
+
+For normal development, run:
+```bash
+docker compose up --build
+```
+
+To test the application in a production-like setup, run:
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
+```
+This disables development only behaviour (hot reload, bind mounts)
+
+***Note: `docker-compose.prod.yml` is intended for validation only. The actual hosted deployment uses:
+
+- [Vercel](https://vercel.com/) for the frontend
+- [Render](https://render.com/) for the backend
+
+For local development, Docker Compose reads environment variables from the root `.env` file.
+
+For local testing of production, you may optionally use a separate .env.prod file:
+
+```bash
+docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up --build
+```
+
+### schema-milestone : Seeding Script Instructions
+
+1. Prerequisites
+ 
+    Ensure you have Node.js installed
+
+    `node --version`
+
+
+2. Clone Repository
+ 
+    `git clone https://csgit.ucalgary.ca/saad.abdullah1/seng513-202601-pg-40.git`
+
+
+3. In repo root, run npm commands
+ 
+    `npm install supabase`
+
+    `npm install prisma`
+
+    Need to install Supabase CLI to run Supabase locally and Prisma for migrations
+
+
+4. Set your environment variables
+ 
+    In repo root:
+
+    - `touch .env`
+
+    - Place environment variables only in this file, use from sample or submission 
+
+
+5. Run Supabase Locally
+ 
+    `npx supabase start`
+
+    Copy the authentication key -> Secret into the .env file
+
+    Copy the authentication key -> Publishable into the .env file
+
+
+6. Run the seeding script
+ 
+    `npm run db:reset -w server`

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,18 +7,420 @@ datasource db {
 }
 
 model User {
-    id       String   @id @default(uuid())
-    email    String   @unique
-    role    UserRole  @default(VOLUNTEER)
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
+  id        String       @id @default(uuid())
+  email     String       @unique
+  role      UserRole     @default(VOLUNTEER)
+  status    AccountState @default(UNVERIFIED)
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @default(now()) @updatedAt @map("updated_at")
 
-    @@map("users")
+  moderator    Moderator?
+  organization Organization?
+  volunteer    Volunteer?
+
+  reportsFiled    VolunteerReport[] @relation("ReportsFiled")
+  reportsReceived VolunteerReport[] @relation("ReportsReceived")
+
+  reviewsGiven Review[] @relation("ReviewIssuer")
+  reviewsRecvd Review[] @relation("ReviewReviewee")
+
+  progressUpdates ProgressUpdate[]
+
+  ticketsIssued   Ticket[] @relation("TicketIssuer")
+  ticketsReceived Ticket[] @relation("TicketTarget")
+
+  chatConversationParticipants ChatConversationParticipant[]
+  chatMessagesSent             ChatMessage[]                 @relation("ChatMessageSender")
+
+  flagsIssued   Flag[] @relation("FlagIssuer")
+  flagsReceived Flag[] @relation("FlaggedUser")
+
+  @@map("users")
+}
+
+model Moderator {
+  id        String   @id @map("id")
+  firstName String   @default("") @map("first_name")
+  lastName  String   @default("") @map("last_name")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user User @relation(fields: [id], references: [id])
+
+  @@map("moderators")
+}
+
+model Organization {
+  id               String            @id
+  orgName          String            @default("") @map("org_name")
+  status           OrganizationState @default(CREATED)
+  charityNum       Int               @default(0) @map("charity_num")
+  docId            String            @default("") @map("doc_id")
+  contactName      String            @default("") @map("contact_name")
+  contactEmail     String            @default("") @map("contact_email")
+  contactNum       String            @default("") @map("contact_num")
+  hqAdr            String            @default("") @map("hq_adr")
+  missionStatement String            @default("") @map("mission_statement")
+  causeCategory    String            @default("") @map("cause_category")
+  website          String            @default("") @map("website")
+  impactHighlights Json              @default("[]") @map("impact_highlights")
+  rejectionReason  String            @default("") @map("rejection_reason")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @default(now()) @updatedAt @map("updated_at")
+
+  user User @relation(fields: [id], references: [id])
+
+  opportunities Opportunity[]
+
+  @@map("organizations")
+}
+
+model Volunteer {
+  id                    String                       @id
+  firstName             String                       @default("") @map("first_name")
+  lastName              String                       @default("") @map("last_name")
+  status                VolunteerState               @default(CLEAR)
+  location              String                       @default("") @map("location")
+  bio                   String                       @default("") @map("bio")
+  availability          Json                         @default("[]") @map("availability")
+  hourlyValue           Int                          @default(0) @map("hourly_value")
+  organizationsAssisted Int                          @default(0) @map("organizations_assisted")
+  averageRating         Float                        @default(0) @map("average_rating")
+  skillVector           Unsupported("vector(3072)")? @map("skill_vector")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  user User @relation(fields: [id], references: [id])
+
+  opportunities   Opportunity[]
+  applications    Application[]
+  skillTrees      SkillTree[]
+  skillProfile    VolunteerSkillProfile?
+  workExperiences VolunteerWorkExperience[]
+  educations      VolunteerEducation[]
+
+  @@map("volunteers")
+}
+
+model Opportunity {
+  id              String           @id @default(uuid())
+  orgId           String           @map("org_id")
+  volId           String?          @map("vol_id")
+  status          OpportunityState @default(OPEN)
+  name            String           @default("") @map("name")
+  category        String           @default("") @map("category")
+  description     String           @default("") @map("description")
+  candidateDesc   String           @default("") @map("candidate_desc")
+  workType        WorkType         @default(IN_PERSON) @map("work_type")
+  commitmentLevel CommitmentLevel  @default(FLEXIBLE) @map("commitment_level")
+  hours           Float            @default(0) @map("hours")
+  length          String           @default("") @map("length")
+  deadlineDate    DateTime?        @map("deadline_date")
+  availability    Json             @default("[]") @map("availability")
+  postedDate      DateTime         @default(now()) @map("posted_date")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+
+  organization    Organization     @relation(fields: [orgId], references: [id])
+  volunteer       Volunteer?       @relation(fields: [volId], references: [id])
+  progressUpdates ProgressUpdate[]
+  applications    Application[]
+  reviews         Review[]
+
+  @@map("opportunities")
+}
+
+model VolunteerSkillProfile {
+  volId        String   @id @map("vol_id")
+  technical    Json     @default("[]")
+  nonTechnical Json     @default("[]") @map("non_technical")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  volunteer Volunteer @relation(fields: [volId], references: [id])
+
+  @@map("volunteer_skill_profiles")
+}
+
+model VolunteerWorkExperience {
+  id               String    @id @default(uuid())
+  volId            String    @map("vol_id")
+  jobTitle         String    @default("") @map("job_title")
+  company          String    @default("") @map("company")
+  startDate        DateTime? @map("start_date")
+  endDate          DateTime? @map("end_date")
+  responsibilities String    @default("") @map("responsibilities")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  volunteer Volunteer @relation(fields: [volId], references: [id])
+
+  @@map("volunteer_work_experiences")
+}
+
+model VolunteerEducation {
+  id             String   @id @default(uuid())
+  volId          String   @map("vol_id")
+  institution    String   @default("") @map("institution")
+  degree         String   @default("") @map("degree")
+  graduationYear String   @default("") @map("graduation_year")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  volunteer Volunteer @relation(fields: [volId], references: [id])
+
+  @@map("volunteer_educations")
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  issuerId      String   @map("issuer_id")
+  revieweeId    String   @map("reviewee_id")
+  opportunityId String   @map("opportunity_id")
+  rating        Float
+  title         String   @default("")
+  description   String   @default("")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  issuer      User        @relation("ReviewIssuer", fields: [issuerId], references: [id])
+  reviewee    User        @relation("ReviewReviewee", fields: [revieweeId], references: [id])
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id])
+
+  @@unique([issuerId, opportunityId])
+  @@map("reviews")
+}
+
+model ProgressUpdate {
+  id               String     @id @default(uuid())
+  opportunityId    String     @map("opportunity_id")
+  senderId         String     @map("sender_id")
+  senderRole       SenderRole @map("sender_role")
+  title            String
+  description      String
+  hoursContributed Float      @default(0) @map("hours_contributed")
+  createdAt        DateTime   @default(now()) @map("created_at")
+
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id])
+  sender      User        @relation(fields: [senderId], references: [id])
+
+  @@map("progress_updates")
+}
+
+model Ticket {
+  id            String         @id @default(uuid())
+  issuerId      String         @map("issuer_id")
+  targetId      String         @map("target_id")
+  category      TicketCategory
+  title         String
+  description   String
+  urgencyRating UrgencyRating  @map("urgency_rating")
+  status        TicketStatus
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  issuer User @relation("TicketIssuer", fields: [issuerId], references: [id])
+  target User @relation("TicketTarget", fields: [targetId], references: [id])
+
+  conversation ChatConversation?
+
+  @@map("tickets")
+}
+
+enum ConversationKind {
+  DIRECT
+  TICKET
+}
+
+model ChatMessage {
+  id             String   @id @default(uuid())
+  conversationId String   @map("conversation_id")
+  senderId       String   @map("sender_id")
+  content        String
+  sentAt         DateTime @default(now()) @map("sent_at")
+
+  conversation ChatConversation @relation(fields: [conversationId], references: [id])
+  sender       User             @relation("ChatMessageSender", fields: [senderId], references: [id])
+
+  @@index([conversationId, sentAt])
+  @@index([senderId])
+  @@map("chat_messages")
+}
+
+model ChatConversation {
+  id       String           @id @default(uuid())
+  kind     ConversationKind @default(DIRECT)
+  ticketId String?          @unique @map("ticket_id")
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+  lastMessageAt DateTime @default(now()) @map("last_message_at")
+
+  ticket       Ticket?                       @relation(fields: [ticketId], references: [id])
+  messages     ChatMessage[]
+  participants ChatConversationParticipant[]
+
+  @@index([kind])
+  @@index([lastMessageAt])
+  @@map("chat_conversations")
+}
+
+model ChatConversationParticipant {
+  id             String @id @default(uuid())
+  conversationId String @map("conversation_id")
+  userId         String @map("user_id")
+
+  joinedAt   DateTime  @default(now()) @map("joined_at")
+  lastReadAt DateTime? @map("last_read_at")
+
+  conversation ChatConversation @relation(fields: [conversationId], references: [id])
+  user         User             @relation(fields: [userId], references: [id])
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+  @@map("chat_conversation_participants")
+}
+
+model Application {
+  id              String   @id @default(uuid())
+  oppId           String   @map("opp_id")
+  volId           String   @map("vol_id")
+  matchPercentage Int      @default(0) @map("match_pct")
+  message         String   @default("")
+  dateApplied     DateTime @default(now()) @map("date_applied")
+
+  opportunity Opportunity @relation(fields: [oppId], references: [id])
+  volunteer   Volunteer   @relation(fields: [volId], references: [id])
+
+  @@unique([oppId, volId])
+  @@map("applications")
+}
+
+model SkillTree {
+  id                  String        @id @default(uuid())
+  volId               String        @map("vol_id")
+  typeOfTree          SkillCategory @map("type_of_tree")
+  totalXpNeeded       Int           @default(0) @map("total_xp_needed")
+  currentXp           Int           @default(0) @map("current_xp")
+  numOfNodesCompleted Int           @default(0) @map("num_of_nodes_completed")
+
+  volunteer Volunteer   @relation(fields: [volId], references: [id])
+  nodes     SkillNode[]
+
+  @@map("skill_trees")
+}
+
+model SkillNode {
+  id          String @id @default(uuid())
+  skillTreeId String @map("skill_tree_id")
+  skillName   String @default("") @map("skill_name")
+  xpRequired  Int    @default(0) @map("xp_required")
+
+  skillTree SkillTree @relation(fields: [skillTreeId], references: [id])
+
+  @@map("skill_nodes")
+}
+
+model Flag {
+  id            String   @id @default(uuid())
+  flagIssuerId  String   @map("flag_issuer_id")
+  flaggedUserId String   @map("flagged_user_id")
+  reason        String
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  flagIssuer  User @relation("FlagIssuer", fields: [flagIssuerId], references: [id])
+  flaggedUser User @relation("FlaggedUser", fields: [flaggedUserId], references: [id])
+
+  @@map("flags")
+}
+
+model VolunteerReport {
+  id String @id @default(uuid())
+
+  reason String  @default("")
+  isOpen Boolean @default(true) @map("is_open")
+
+  reportedUser   User   @relation("ReportsReceived", fields: [reportedUserId], references: [id])
+  reportedUserId String @map("reported_user_id")
+
+  reportingUser   User   @relation("ReportsFiled", fields: [reportingUserId], references: [id])
+  reportingUserId String @map("reporting_user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("volunteer_reports")
+}
+
+enum TicketStatus {
+  OPEN
+  CLOSED
+}
+
+enum UrgencyRating {
+  MINOR
+  MODERATE
+  SERIOUS
+}
+
+enum TicketCategory {
+  BUG
+  ABUSE
+  BILLING
+  OTHER
+}
+
+enum SkillCategory {
+  TECHNICAL
+  LEADERSHIP
+  SOFT
+}
+
+enum SenderRole {
+  VOLUNTEER
+  ORGANIZATION
 }
 
 enum UserRole {
-    VOLUNTEER
-    ORGANIZATION
-    MODERATOR
-    ADMIN
+  VOLUNTEER
+  ORGANIZATION
+  MODERATOR
+  ADMIN
+}
+
+enum AccountState {
+  VERIFIED
+  UNVERIFIED
+  FLAGGED
+  BANNED
+}
+
+enum VolunteerState {
+  CLEAR
+  FLAGGED
+  RESOLVED
+  CLOSED
+}
+
+enum OrganizationState {
+  CREATED
+  APPLIED
+  VERIFIED
+  REJECTED
+}
+
+enum OpportunityState {
+  OPEN
+  FILLED
+  CLOSED
+  CANCELLED
+}
+
+enum WorkType {
+  IN_PERSON
+  REMOTE
+  HYBRID
+}
+
+enum CommitmentLevel {
+  FLEXIBLE
+  PART_TIME
+  FULL_TIME
 }

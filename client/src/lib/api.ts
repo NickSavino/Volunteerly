@@ -17,23 +17,26 @@ async function getAccessToken(): Promise<string | null> {
  * @throws Error if NEXT_PUBLIC_API_BASE_URL is not set or if response is not 200 OK
  * @returns the response body parsed as JSON.
  */
-export async function api<T>(path: string, init?: RequestInit): Promise<T> {
+export async function api<T>(path: string, init?: RequestInit & { responseType?: "json" | "blob"}): Promise<T> {
     if (!baseUrl) throw new Error("NEXT_PUBLIC_API_BASE_URL is not set");
 
     const token = await getAccessToken();
-
+    const { responseType = "json" } = init ?? {};
+    const isJsonBody =
+        init?.body && typeof init.body === "string";
     
     const res = await fetch(`${baseUrl}${path}`, {
         ...init,
         headers: {
-            "Content-Type": "application/json",
+            ...(isJsonBody ? { "Content-Type": "application/json" } : {}),
             ...(token ? { Authorization: `Bearer ${token}`} : {}),
             ...(init?.headers ?? {}),
         },
     });
 
     if (!res.ok) throw new Error(await res.text());
-    
+      
+    if (responseType === "blob") return res.blob() as Promise<T>;
     return res.json() as Promise<T>;
     
 }

@@ -1,0 +1,248 @@
+import { Router } from "express";
+import {
+    createCurrentVolunteer,
+    getCurrentVolunteer,
+    updateCurrentVolunteer,
+    getYourOpportunities,
+    getOpportunityById,
+    getVolunteerOrganizations,
+    getMonthlyHours,
+    browseOpportunities,
+    applyToOpportunity,
+    getAppliedOppIds,
+    addProgressUpdate,
+    requestCompletion,
+    postReview,
+    postFlag,
+} from "../services/volunteer-service.js";
+
+export const currentVolunteerRouter = Router();
+
+currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const { message } = req.body;
+        await applyToOpportunity(userId, oppId, message ?? "");
+        res.status(201).json({ success: true });
+    } catch (error: any) {
+        if (error?.message === "ALREADY_APPLIED") {
+            return res.status(409).json({ error: "Already applied to this opportunity." });
+        }
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/:oppId/progress", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const { title, description, hoursContributed } = req.body;
+        await addProgressUpdate(userId, oppId, { title, description, hoursContributed });
+        res.status(201).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/:oppId/request-completion", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        await requestCompletion(userId, oppId);
+        res.status(200).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/reviews", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { revieweeId, rating, opportunityId } = req.body;
+        await postReview(userId, revieweeId, opportunityId, { rating });
+        res.status(201).json({ success: true });
+    } catch (error: any) {
+        if (error?.message === "ALREADY_REVIEWED") {
+            return res.status(409).json({ error: "Already reviewed for this opportunity." });
+        }
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/flags", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { flaggedUserId, reason } = req.body;
+        await postFlag(userId, flaggedUserId, reason);
+        res.status(201).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/applied-ids", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const ids = await getAppliedOppIds(userId);
+        res.status(200).json(ids);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const { search, category, workType, commitmentLevel, maxHours } = req.query;
+
+        const opportunities = await browseOpportunities({
+            search: search as string | undefined,
+            category: category as string | undefined,
+            workType: workType as "IN_PERSON" | "REMOTE" | "HYBRID" | undefined,
+            commitmentLevel: commitmentLevel as "FLEXIBLE" | "PART_TIME" | "FULL_TIME" | undefined,
+            maxHours: maxHours ? Number(maxHours) : undefined,
+        });
+
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/:oppId", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const opp = await getOpportunityById(userId, oppId);
+        if (!opp) return res.status(404).json({ error: "Not Found" });
+        res.status(200).json(opp);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const opportunities = await getYourOpportunities(userId);
+        res.status(200).json(opportunities);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/organizations", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const organizations = await getVolunteerOrganizations(userId);
+        res.status(200).json(organizations);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/monthly-hours", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const monthlyHours = await getMonthlyHours(userId);
+        res.status(200).json(monthlyHours);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        const user = await getCurrentVolunteer(userId);
+        if (!user) return res.status(404).json({ error: "Not Found", message: "Volunteer not found." });
+        res.status(200).json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.put("/", async (req, res, next) => {
+    try {
+        const userId = req.auth!.userId;
+        console.log("got req");
+        const { firstName, lastName, location, bio, availability, hourlyValue } = req.body;
+        const user = await getCurrentVolunteer(userId);
+        let modified_user;
+        if (!user) {
+            modified_user = await createCurrentVolunteer(userId, firstName, lastName);
+        } else {
+            modified_user = await updateCurrentVolunteer(userId, firstName, lastName, location, bio, availability, hourlyValue);
+        }
+        if (!modified_user) return res.status(500).json({ error: "Cannot update/create Volunteer", message: "Internal server error." });
+        res.status(200).json(modified_user);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/awards", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const awards: Record<string, string> = {};
+
+        const vol = await getCurrentVolunteer(userId)
+        const locationLength = vol?.location?.length || 0;
+        const bioLength = vol?.bio?.length || 0;
+        
+        if (locationLength >= 1 && bioLength >= 1) {
+            awards["Profile Pro"] = "Completed all volunteer profile details!";
+        }
+
+        const opportunities = await getYourOpportunities(userId);
+        const num_opporuntities = opportunities?.length || 0;
+        
+        if (num_opporuntities >= 1) {
+            awards["First Step"] = "Completed your first opportunity!";
+        }
+        if (num_opporuntities >= 100){
+            awards["Legendary Volunteer"] = "Completed 100 Opportunities on Volunteerly!";
+        } else if (num_opporuntities >= 50){
+            awards["Master Volunteer"] = "Completed 50 Opportunities on Volunteerly!";
+        } else if (num_opporuntities >= 10) {
+            awards["Active Volunteer"] = "Completed Opportunities on Volunteerly!";
+        }
+
+        const hours = await getVolunteerOrganizations(userId);
+        const num_unique_orgs = hours?.length || 0;
+        
+        if (num_unique_orgs >= 1) {
+            awards["Helping Hand"] = "Assisted your first Organization!";
+        }
+        
+        if (num_unique_orgs >= 100){
+            awards["Changemaker"] = "Assisted 100 Organizations!";
+        } else if (num_unique_orgs >= 50){
+            awards["Community Pillar"] = "Assisted 50 Organizations!";
+        } else if (num_unique_orgs >= 10) {
+            awards["Connector"] = "Assisted 10 Organizations!";
+        }
+        
+
+        res.status(200).json(awards);
+    } catch (error) {
+        next(error);
+    }
+});
