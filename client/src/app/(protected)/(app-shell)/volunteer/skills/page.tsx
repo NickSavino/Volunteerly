@@ -248,3 +248,63 @@ const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Leadership AND Strategy, then log 8 total leadership skills",
   },
 ];
+
+const NODE_W = 72;
+const NODE_H = 72;
+const COL_GAP = 92;
+const ROW_GAP = 116;
+const PAD_X = 36;
+const PAD_Y = 40;
+const COLS = 5;
+const MAX_TIER = 5;
+ 
+function getPos(tier: number, col: number, svgH: number) {
+  const x = PAD_X + col * COL_GAP + COL_GAP / 2;
+  const y = svgH - PAD_Y - (tier - 1) * ROW_GAP - ROW_GAP / 2;
+  return { x, y };
+}
+
+ 
+function prereqsMet(node: SkillNode, byId: Record<string, SkillNode>): boolean {
+  if (node.requiresAny.length === 0) return true;
+  return node.requiresAny.every((orGroup) =>
+    orGroup.some((id) => byId[id]?.status === "mastered")
+  );
+}
+ 
+function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, number>): SkillNode[] {
+  const map: Record<string, SkillNode> = {};
+ 
+  for (const def of defs) {
+    const current = def.trackedSkills.reduce((s, k) => s + (skillCounts[k] ?? 0), 0);
+    map[def.id] = { ...def, status: "locked", current };
+  }
+ 
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const id of Object.keys(map)) {
+      const node = map[id];
+      const unlocked = prereqsMet(node, map);
+ 
+      let status: NodeStatus;
+      if (!unlocked) {
+        status = "locked";
+      } else if (node.current >= node.threshold) {
+        status = "mastered";
+      } else if (node.current > 0) {
+        status = "in_progress";
+      } else {
+        status = "locked";
+      }
+ 
+      if (map[id].status !== status) {
+        map[id] = { ...map[id], status };
+        changed = true;
+      }
+    }
+  }
+ 
+  return defs.map((d) => map[d.id]);
+}
+
