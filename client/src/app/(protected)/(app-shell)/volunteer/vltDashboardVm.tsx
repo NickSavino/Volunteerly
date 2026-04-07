@@ -40,6 +40,11 @@ export function useVltDashboardViewModel() {
                 const volResult = await VolunteerService.getCurrentVolunteer();
                 if (!volResult.success) { setError("Failed to load volunteer."); return; }
                 setCurrentVolunteer(volResult.data);
+                
+                //backfill skill vector for seeded vols
+                if (!volResult.data.skill_vector) {
+                    VolunteerService.backfillSkillVector().catch(() => {});
+                }
 
                 const oppResult = await VolunteerService.getYourOpportunities();
                 if (oppResult.success) {
