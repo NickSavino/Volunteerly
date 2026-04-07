@@ -7,6 +7,7 @@ export type AppNavItem = {
 
 export type AppNavConfig = {
   homeHref: string;
+  profileHref: string;
   items: AppNavItem[];
   profileSubtitle: string;
 };
@@ -14,6 +15,7 @@ export type AppNavConfig = {
 export const NAV_CONFIG: Record<AppNavbarRole, AppNavConfig> = {
   MODERATOR: {
     homeHref: "/moderator",
+    profileHref: "/moderator/profile",
     profileSubtitle: "Moderator",
     items: [
       { label: "Dashboard", href: "/moderator" },
@@ -25,6 +27,7 @@ export const NAV_CONFIG: Record<AppNavbarRole, AppNavConfig> = {
 
   ORGANIZATION: {
     homeHref: "/organization",
+    profileHref: "/organization/profile",
     profileSubtitle: "Organization",
     items: [
       { label: "Dashboard", href: "/organization" },
@@ -35,13 +38,13 @@ export const NAV_CONFIG: Record<AppNavbarRole, AppNavConfig> = {
 
   VOLUNTEER: {
     homeHref: "/volunteer",
+    profileHref: "/volunteer/profile",
     profileSubtitle: "Volunteer",
     items: [
       { label: "Dashboard", href: "/volunteer" },
       { label: "Opportunities", href: "/volunteer/opportunities" },
       { label: "Skill Tree", href: "/volunteer/skills" },
       { label: "Messages", href: "/volunteer/messages" },
-      { label: "Profile", href: "/volunteer/profile" }
     ],
   },
 };
