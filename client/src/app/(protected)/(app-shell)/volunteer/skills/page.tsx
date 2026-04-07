@@ -8,17 +8,26 @@ import {
   type SkillNode,
 } from "./skillTreeVm";
 
-const NODE_W = 90;
-const NODE_H = 90;
-const COL_GAP = 114;
-const ROW_GAP = 140;
-const PAD_X = 44;
-const PAD_Y = 48;
+const NODE_W = 88;
+const NODE_H = 88;
+const COL_GAP = 124;
+const ROW_GAP = 160;
+const PAD_X = 56;
+const PAD_Y = 56;
 const COLS = 5;
 const MAX_TIER = 5;
 
+const TIER_OFFSET_X: Record<number, number> = {
+  1: 0,
+  2: 28,
+  3: -14,
+  4: 20,
+  5: 0,
+};
+
 function getPos(tier: number, col: number, svgH: number) {
-  const x = PAD_X + col * COL_GAP + COL_GAP / 2;
+  const baseX = PAD_X + col * COL_GAP + COL_GAP / 2;
+  const x = baseX + (TIER_OFFSET_X[tier] ?? 0);
   const y = svgH - PAD_Y - (tier - 1) * ROW_GAP - ROW_GAP / 2;
   return { x, y };
 }
@@ -26,9 +35,9 @@ function getPos(tier: number, col: number, svgH: number) {
 function buildEdges(
   nodes: SkillNode[],
   svgH: number
-): { x1: number; y1: number; x2: number; y2: number; lit: boolean }[] {
+): { x1: number; y1: number; x2: number; y2: number; lit: boolean; mastered: boolean }[] {
   const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
-  const edges: { x1: number; y1: number; x2: number; y2: number; lit: boolean }[] = [];
+  const edges: { x1: number; y1: number; x2: number; y2: number; lit: boolean; mastered: boolean }[] = [];
 
   for (const node of nodes) {
     const to = getPos(node.tier, node.col, svgH);
@@ -44,6 +53,7 @@ function buildEdges(
           x2: to.x,
           y2: to.y + NODE_H / 2,
           lit: req.status !== "locked",
+          mastered: req.status === "mastered",
         });
       }
     }
@@ -51,12 +61,28 @@ function buildEdges(
   return edges;
 }
 
+function CurvedEdge({ x1, y1, x2, y2, lit, mastered }: { x1: number; y1: number; x2: number; y2: number; lit: boolean; mastered: boolean }) {
+  const cy = (y1 + y2) / 2;
+  const d = `M ${x1} ${y1} C ${x1} ${cy}, ${x2} ${cy}, ${x2} ${y2}`;
+  const colour = mastered ? "var(--mastered-edge)" : lit ? "var(--accent)" : "var(--line-locked)";
+  return (
+    <path
+      d={d}
+      fill="none"
+      stroke={colour}
+      strokeWidth={lit ? 2.5 : 2}
+      strokeDasharray={lit ? "none" : "5 4"}
+      opacity={lit ? 0.7 : 0.55}
+    />
+  );
+}
+
 function SkillTree({ nodes, onSelect, selectedId }: {
   nodes: SkillNode[];
   onSelect: (n: SkillNode) => void;
   selectedId: string | null;
 }) {
-  const svgW = PAD_X * 2 + COLS * COL_GAP;
+  const svgW = PAD_X * 2 + COLS * COL_GAP + 40;
   const svgH = PAD_Y * 2 + MAX_TIER * ROW_GAP;
   const edges = buildEdges(nodes, svgH);
 
@@ -64,12 +90,7 @@ function SkillTree({ nodes, onSelect, selectedId }: {
     <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"], padding: "0 20px 20px" }}>
       <svg viewBox={`0 0 ${svgW} ${svgH}`} width={svgW} height={svgH} style={{ display: "block", minWidth: svgW }}>
         {edges.map((e, i) => (
-          <line key={i} x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2}
-            stroke={e.lit ? "var(--accent)" : "var(--line-locked)"}
-            strokeWidth={2.5}
-            strokeDasharray={e.lit ? "none" : "5 4"}
-            opacity={e.lit ? 0.85 : 0.3}
-          />
+          <CurvedEdge key={i} {...e} />
         ))}
         {nodes.map((node) => {
           const { x, y } = getPos(node.tier, node.col, svgH);
@@ -88,7 +109,7 @@ function SkillTree({ nodes, onSelect, selectedId }: {
 }
 
 function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: number; selected: boolean }) {
-  const r = 18;
+  const r = 20;
   const fill =
     node.status === "mastered" ? "var(--mastered-fill)"
     : node.status === "in_progress" ? "var(--progress-fill)"
@@ -111,18 +132,21 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
   return (
     <g>
       {node.status !== "locked" && (
-        <rect x={-5} y={-5} width={w + 10} height={h + 10} rx={r + 5}
+        <rect x={-7} y={-7} width={w + 14} height={h + 14} rx={r + 7}
           fill={node.status === "mastered" ? "var(--mastered-glow)" : "var(--progress-glow)"}
-          opacity={selected ? 0.55 : 0.22}
+          opacity={selected ? 0.6 : 0.18}
         />
       )}
+      <rect x={3} y={5} width={w} height={h} rx={r}
+        fill="rgba(0,0,0,0.06)"
+      />
       <rect x={0} y={0} width={w} height={h} rx={r}
         fill={fill} stroke={stroke} strokeWidth={selected ? 3 : 2}
       />
       <g
         transform={`translate(${(w - 20) / 2}, ${h / 2 - 20}) scale(${scale})`}
-        opacity={dimmed ? 0.32 : 1}
-        stroke={dimmed ? "#94A3B8" : "#1E293B"}
+        opacity={dimmed ? 0.55 : 1}
+        stroke={dimmed ? "#94A3B8" : node.status === "mastered" ? "#7C2D12" : node.status === "in_progress" ? "#D97706" : "#94A3B8"}
         strokeWidth={1.5 / scale}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -132,7 +156,8 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
         <path d={iconPath} />
       </g>
       <text textAnchor="middle" fontSize={9} fontWeight="700"
-        fill="var(--node-text)" opacity={dimmed ? 0.32 : 1}
+        fill={dimmed ? "var(--text-muted)" : node.status === "mastered" ? "#7C2D12" : "var(--node-text)"}
+        opacity={dimmed ? 0.75 : 1}
         fontFamily="'DM Sans', sans-serif" letterSpacing="0.04em"
         pointerEvents="none">
         <tspan x={w / 2} y={hasTwo ? h - 17 : h - 12}>{line1}</tspan>
@@ -140,7 +165,7 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
       </text>
       {node.status === "mastered" && (
         <g transform={`translate(${w - 14}, -4)`} pointerEvents="none">
-          <circle r={9} fill="#16A34A" />
+          <circle r={9} fill="#16A34A" stroke="white" strokeWidth={1.5} />
           <text textAnchor="middle" dominantBaseline="middle" fontSize={11} fill="white">✓</text>
         </g>
       )}
@@ -235,24 +260,25 @@ export default function SkillTreePage() {
         :root {
           --accent: #F5C842;
           --accent-stroke: #D4A017;
-          --mastered-fill: #F5C842;
-          --mastered-stroke: #D4A017;
-          --mastered-glow: rgba(245,200,66,0.5);
-          --progress-fill: #FEFCE8;
+          --mastered-fill: #FB923C;
+          --mastered-stroke: #C2410C;
+          --mastered-glow: rgba(251,146,60,0.45);
+          --mastered-edge: #EA580C;
+          --progress-fill: #FFFBEB;
           --progress-glow: rgba(245,200,66,0.3);
-          --locked-fill: #F1F5F9;
-          --locked-stroke: #CBD5E1;
-          --line-locked: #CBD5E1;
+          --locked-fill: #E9EEF4;
+          --locked-stroke: #94A3B8;
+          --line-locked: #94A3B8;
           --node-text: #1E293B;
           --selected: #3B82F6;
-          --bg: #F8FAFC;
+          --bg: #F1F5F9;
           --card: #FFFFFF;
           --border: #E2E8F0;
           --text: #0F172A;
           --text-muted: #64748B;
         }
         .st-page { min-height: 100vh; background: var(--bg); font-family: 'DM Sans','Segoe UI',sans-serif; }
-        .st-header { max-width: 1100px; margin: 0 auto; padding: 24px 20px 0; }
+        .st-header { max-width: 1140px; margin: 0 auto; padding: 24px 20px 0; }
         .st-header h1 { font-size: 1.55rem; font-weight: 800; color: var(--text); margin: 0 0 4px; letter-spacing: -0.025em; }
         .st-header p { font-size: 0.83rem; color: var(--text-muted); margin: 0 0 18px; line-height: 1.5; }
         .st-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
@@ -261,9 +287,9 @@ export default function SkillTreePage() {
         .st-tabs { display: flex; gap: 4px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 4px; width: fit-content; }
         .st-tab { padding: 7px 18px; border-radius: 9px; border: none; background: transparent; font-size: 0.82rem; font-weight: 700; cursor: pointer; color: var(--text-muted); transition: all 0.18s; white-space: nowrap; }
         .st-tab.active { background: #0F172A; color: #fff; }
-        .st-body { display: flex; align-items: flex-start; gap: 20px; max-width: 1100px; margin: 0 auto; padding: 0 20px 40px; }
+        .st-body { display: flex; align-items: flex-start; gap: 24px; max-width: 1140px; margin: 0 auto; padding: 0 20px 40px; }
         .st-canvas { position: relative; flex-shrink: 0; padding-top: 12px; }
-        .st-legend { position: absolute; top: 20px; right: 20px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 0.73rem; z-index: 10; display: flex; flex-direction: column; gap: 6px; }
+        .st-legend { position: absolute; top: 20px; right: 0px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 0.73rem; z-index: 10; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
         .st-legend-item { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-weight: 500; }
         .st-legend-swatch { width: 13px; height: 13px; border-radius: 4px; flex-shrink: 0; }
         .st-panel-wrap { flex: 1; min-width: 260px; max-width: 320px; padding-top: 12px; }
@@ -276,7 +302,7 @@ export default function SkillTreePage() {
         .st-bar-bg { height: 8px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 99px; overflow: hidden; }
         .st-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
         .st-tag { padding: 3px 10px; background: var(--bg); border: 1.5px solid var(--border); border-radius: 99px; font-size: 0.72rem; font-weight: 600; color: var(--text); white-space: nowrap; }
-        .st-hint { text-align: center; font-size: 0.74rem; color: var(--text-muted); padding: 4px 20px 12px; max-width: 1100px; margin: 0 auto; }
+        .st-hint { text-align: center; font-size: 0.74rem; color: var(--text-muted); padding: 4px 20px 12px; max-width: 1140px; margin: 0 auto; }
         .st-loading { text-align: center; padding: 56px 20px; font-size: 0.85rem; color: var(--text-muted); }
         .st-error { text-align: center; padding: 56px 20px; font-size: 0.85rem; color: #EF4444; }
         @media (max-width: 760px) {
