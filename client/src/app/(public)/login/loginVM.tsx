@@ -60,7 +60,6 @@ export function useLoginViewModel() {
                             : "/volunteer";
 
                     setPendingRoute(nextRoute);
-                    setPendingRedirect(false);
                     return;
                 }
 
@@ -84,7 +83,6 @@ export function useLoginViewModel() {
                                 : "/organization";
 
                     setPendingRoute(nextRoute);
-                    setPendingRedirect(false);
                     return;
                 }
 
@@ -99,18 +97,15 @@ export function useLoginViewModel() {
                     }
 
                     setPendingRoute("/moderator");
-                    setPendingRedirect(false);
                     return;
                 }
 
                 if (currentUser.role === "ADMIN") {
                     setPendingRoute("/admin");
-                    setPendingRedirect(false);
                     return;
                 }
 
                 setPendingRoute("/");
-                setPendingRedirect(false);
             } catch (err) {
                 console.error(err);
                 setError("Failed to complete login.");
@@ -139,6 +134,7 @@ export function useLoginViewModel() {
     return {
         email,
         setEmail,
+        pendingRedirect,
         password,
         setPassword,
         submitting,
