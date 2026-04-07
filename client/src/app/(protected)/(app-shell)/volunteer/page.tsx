@@ -244,7 +244,16 @@ export default function VolunteerDashboardPage() {
                                     opportunities.map((opp) => (
                                         <tr key={opp.id} className="hover:bg-gray-50">
                                             <td className="py-3 pr-4 font-medium text-gray-800">
-                                                {opp.organization?.orgName ?? "—"}
+                                                {opp.organization?.id ? (
+                                                    <button
+                                                        onClick={() => router.push(`/volunteer/organizations/${opp.organization!.id}`)}
+                                                        className="text-left hover:underline"
+                                                    >
+                                                        {opp.organization.orgName}
+                                                    </button>
+                                                ) : (
+                                                    opp.organization?.orgName ?? "—"
+                                                )}
                                             </td>
                                             <td className="py-3 pr-4 text-gray-600">{opp.category}</td>
                                             <td className="py-3 pr-4 text-gray-600">{opp.commitmentLevel}</td>

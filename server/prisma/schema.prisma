@@ -99,6 +99,7 @@ model Volunteer {
   skillProfile    VolunteerSkillProfile?
   workExperiences VolunteerWorkExperience[]
   educations      VolunteerEducation[]
+  opportunitySkills OpportunitySkill[]
 
   @@map("volunteers")
 }
@@ -127,6 +128,7 @@ model Opportunity {
   progressUpdates ProgressUpdate[]
   applications    Application[]
   reviews         Review[]
+  opportunitySkills OpportunitySkill[]
 
   @@map("opportunities")
 }
@@ -316,6 +318,20 @@ model SkillNode {
   skillTree SkillTree @relation(fields: [skillTreeId], references: [id])
 
   @@map("skill_nodes")
+}
+
+model OpportunitySkill {
+  id            String   @id @default(uuid())
+  volId         String   @map("vol_id")
+  opportunityId String   @map("opportunity_id")
+  skillName     String   @map("skill_name")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  volunteer   Volunteer   @relation(fields: [volId], references: [id])
+  opportunity Opportunity @relation(fields: [opportunityId], references: [id])
+
+  @@unique([volId, opportunityId, skillName])
+  @@map("opportunity_skills")
 }
 
 model Flag {

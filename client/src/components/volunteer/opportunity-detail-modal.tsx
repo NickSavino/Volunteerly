@@ -1,6 +1,7 @@
 "use client";
 
 import { MapPin, Clock, Building2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { AppModal } from "@/components/common/app-modal";
 import { cn } from "@/lib/utils";
 import type { Opportunity } from "@volunteerly/shared";
@@ -35,7 +36,17 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onApply }: OppDetailModalProps) {
+    const router = useRouter();
+
     if (!opp) return null;
+
+    const orgId = opp.organization?.id;
+
+    function handleOrgClick() {
+        if (!orgId) return;
+        onClose();
+        router.push(`/volunteer/organizations/${orgId}`);
+    }
 
     const matchCls =
         matchPct >= 80 ? "bg-green-100 text-green-700"
@@ -74,11 +85,25 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
         >
             <div className="space-y-5">
                 <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-sm font-bold text-primary">
+                    <button
+                        onClick={handleOrgClick}
+                        className={cn(
+                            "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-bold text-primary transition-opacity hover:opacity-75",
+                            !orgId && "pointer-events-none"
+                        )}
+                    >
                         {opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
-                    </div>
+                    </button>
                     <div>
-                        <p className="font-semibold text-foreground">{opp.organization?.orgName ?? "—"}</p>
+                        <button
+                            onClick={handleOrgClick}
+                            className={cn(
+                                "font-semibold text-foreground text-left hover:underline",
+                                !orgId && "pointer-events-none"
+                            )}
+                        >
+                            {opp.organization?.orgName ?? "—"}
+                        </button>
                         <p className="text-sm text-muted-foreground">{opp.organization?.hqAdr ?? ""}</p>
                     </div>
                     <div className="flex flex-col items-end gap-1.5 ml-auto">
