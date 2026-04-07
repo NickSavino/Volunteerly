@@ -6,6 +6,8 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentOrganizationUpdate, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
+import { useAppSession } from "@/providers/app-session-provider";
 
 
 export function useOrgProfileViewModel() {
@@ -16,6 +18,10 @@ export function useOrgProfileViewModel() {
   const [error, setError] = useState<string | null>(null);
   const [fetching, setFetching] = useState(true)
   const [awards, setAwards] = useState<Record<string, string>>({})
+  const [reviewSummary, setReviewSummary] = useState({
+    avgRating: 0,
+    totalReviews: 0
+  })
   const [impactHighlights, setImpactHighlights] = useState({
     first: { label: "", value: "" },
     second: { label: "", value: "" },
@@ -28,8 +34,8 @@ export function useOrgProfileViewModel() {
   })
   const [editing, setEditing] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const {refresh} = useAppSession()
 
-  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
@@ -39,6 +45,7 @@ export function useOrgProfileViewModel() {
         if (!org.success) {
           console.error(org.error);
           setError("Received invalid user data from the server.");
+          toast.error("Failed to load Organization.", { position: "top-right" })
           return;
         }
         if (org.data.status == "CREATED") {
@@ -58,14 +65,20 @@ export function useOrgProfileViewModel() {
             second: { label: Object.keys(org.data.impactHighlights[1])[0], value: org.data.impactHighlights[1][Object.keys(org.data.impactHighlights[1])[0]] },
           })
         }
-
+        
         const awardsFetch = await OrganizationService.getOrgAwards()
         if (awardsFetch.success){
           setAwards(awardsFetch.data)
         }
+
+        const reviewsFetch = await OrganizationService.getReviewSummary()
+        if (reviewsFetch.success){
+          setReviewSummary(reviewsFetch.data)
+        }
         setFetching(false)
       } catch (error) {
         console.error(error);
+        toast.error("Failed to load Organization Details.", { position: "top-right" })
         return
       }
     }
@@ -88,6 +101,7 @@ export function useOrgProfileViewModel() {
 
       } catch (error) {
         console.error("Failed to load document", error);
+        toast.error("Failed to load document.", { position: "top-right" })
       }
     }
     return
@@ -116,8 +130,10 @@ export function useOrgProfileViewModel() {
 
       if (updated.success){
         setEditing(false)
+        toast.success("Profile Updated!", { position: "top-right" })
       } else {
         setError("Could Not Update Organization.")
+        toast.error("Error updating Profile.", { position: "top-right" })
       }
       setFetching(false)
       return
@@ -152,8 +168,13 @@ export function useOrgProfileViewModel() {
       formData.append("image", newAvatar)
 
       const path = await UserService.uploadAvatar(formData)
-
+      if (path){
+        toast.success("Avatar Updated!", { position: "top-right" })
+        await refresh()
+      } else {
+        toast.error("Error updating Avatar.", { position: "top-right" })
+      }
       setFetching(false)
     }
-    return {loading, session,fetching, signOut, router, user, error, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} 
+    return {loading, session,fetching, signOut, router, user, error, reviewSummary, currentOrg, setCurrentOrg, address, viewSubmittedDoc, editing, setEditing, handleSubmit, setAddress, resetEdit, impactHighlights, setImpactHighlights, fileInputRef, handleAvatarChange, awards} 
 }

@@ -6,6 +6,7 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
 export function useOrgOpportunitiesViewModel() {
   const router = useRouter();
@@ -18,7 +19,6 @@ export function useOrgOpportunitiesViewModel() {
   const filteredOpportunities = opportunities.filter(
   (opp) => opp.status === currentTab);
 
-  // TODO: remove this logic and tie it to useAppSession()
   useEffect(() => {
     async function loadCurrentUser() {
       if (!session?.access_token) return;
@@ -28,6 +28,7 @@ export function useOrgOpportunitiesViewModel() {
         if (!org.success) {
           console.error(org.error);
           setError("Received invalid user data from the server.");
+          toast.error("Failed to load Organization.", { position: "top-right" })
           return;
         }
         if (org.data.status == "CREATED") {
@@ -40,6 +41,7 @@ export function useOrgOpportunitiesViewModel() {
         setCurrentUser(org.data);
       } catch (error) {
         console.error(error);
+        toast.error("Failed to load Organization.", { position: "top-right" })
         return
       }
     }
@@ -53,6 +55,7 @@ export function useOrgOpportunitiesViewModel() {
         if (!opps.success) {         
           console.error(opps.error)
           setError("Failed to load opportunities."); 
+          toast.error("Failed to load Opportunities.", { position: "top-right" })
           setFetching(false)
           return; 
         }

@@ -1,5 +1,6 @@
 "use client";
 
+import { LoadingScreen } from "@/components/common/loading-screen";
 import { resolveDefaultAppRoute } from "@/lib/utils";
 import { useAppSession } from "@/providers/app-session-provider";
 import { useRouter } from "next/navigation";
@@ -35,8 +36,8 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         router,
     ]);
 
-    if (!initialized || loading) {
-        return <main className="p-6">Loading...</main>
+    if (!initialized || loading || (isAuthenticated && !currentUser)) {
+        return <LoadingScreen label="Loading..." />
     }
 
     return <>{children}</>

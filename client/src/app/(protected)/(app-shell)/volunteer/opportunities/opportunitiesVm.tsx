@@ -63,7 +63,7 @@ export function useOpportunitiesViewModel() {
         if (!loading && !session) router.replace("/login");
     }, [loading, session, router]);
 
-    const fetchOpportunities = useCallback(async (cats: string[], wt: WorkTypeFilter, cl: CommitmentFilter, mh: number, sq: string, sort: SortOption) => {
+    const fetchOpportunities = useCallback(async (cats: string[], wt: WorkTypeFilter, cl: CommitmentFilter, mh: number, sq: string, sort: SortOption, volunteer?: CurrentVolunteer) => {
         try {
             const result = await VolunteerService.browseOpportunities({
                 search: sq || undefined,
@@ -81,6 +81,15 @@ export function useOpportunitiesViewModel() {
             if (cats.length > 0) {
                 filtered = filtered.filter((opp) =>
                     cats.some((cat) => opp.category.toLowerCase().includes(cat.toLowerCase()))
+                );
+            }
+
+            const userAvailability = volunteer?.availability ?? currentVolunteer?.availability ?? [];
+            if (userAvailability.length > 0) {
+                filtered = filtered.filter((opp) =>
+                    opp.availability?.some((day) =>
+                        userAvailability.includes(day)
+                    )
                 );
             }
 
@@ -102,12 +111,16 @@ export function useOpportunitiesViewModel() {
                 }
 
                 const volResult = await VolunteerService.getCurrentVolunteer();
-                if (volResult.success) setCurrentVolunteer(volResult.data);
+                let volunteer: CurrentVolunteer | undefined;
+                if (volResult.success) {
+                    setCurrentVolunteer(volResult.data);
+                    volunteer = volResult.data;
+                }
 
                 const appliedIds = await VolunteerService.getAppliedOppIds();
                 setAppliedOppIds(new Set(appliedIds));
 
-                await fetchOpportunities([], "ALL", "ALL", 40, "", "RELEVANT");
+                await fetchOpportunities([], "ALL", "ALL", 40, "", "RELEVANT", volunteer);
             } catch (err) {
                 console.error(err);
                 setError("Failed to load data.");
@@ -129,7 +142,7 @@ export function useOpportunitiesViewModel() {
     }
 
     function applyFilters() {
-        fetchOpportunities(selectedCategories, workType, commitmentLevel, maxHours, searchQuery, sortBy);
+        fetchOpportunities(selectedCategories, workType, commitmentLevel, maxHours, searchQuery, sortBy, currentVolunteer);
     }
 
     function getMatchPct(opp: Opportunity): number {

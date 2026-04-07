@@ -39,9 +39,9 @@ export function useCreateOpportunityViewModel(oppId?: string) {
         if (!org.success) {
             console.error(org.error);
             setError("Received invalid user data from the server.");
+            toast.error("Failed to load Organization.", { position: "top-right" })
             return;
         }
-        console.log(org.data)
         setCurrentOrg(org.data)
 
         if (oppId) {
@@ -76,6 +76,7 @@ export function useCreateOpportunityViewModel(oppId?: string) {
               return
           }else {          
               setError("Error updating Opportunity.")
+              toast.error("Failed to update Opportunity.", { position: "top-right" })
               console.error(error)
           }
         } else {
@@ -93,6 +94,7 @@ export function useCreateOpportunityViewModel(oppId?: string) {
               return
           }else {          
               setError("Error creating Opportunity.")
+              toast.error("Failed to create Opportunity.", { position: "top-right" })
               console.error(error)
           }
         }

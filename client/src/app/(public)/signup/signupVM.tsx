@@ -30,7 +30,8 @@ export function useSignUpViewModel() {
 
             if (error) {
                 setError("Error Signing Up User.");
-            return;
+                setSubmitting(false);
+                return;
            }
 
             const createdUser = CurrentUserUpdateSchema.parse({
@@ -45,6 +46,7 @@ export function useSignUpViewModel() {
             if (!userResult.success) {
                 console.error("Failed to create user:", userResult.error);
                 setError("Cannot sign-up, try again later.");
+                setSubmitting(false);
                 return;
             }
 
@@ -59,6 +61,7 @@ export function useSignUpViewModel() {
                 if (!volunteerResult.success) {
                     console.error("Failed to create volunteer:", volunteerResult.error);
                     setError("Cannot sign-up, try again later.");
+                    setSubmitting(false);
                     return;
                 } 
             } 
@@ -71,6 +74,7 @@ export function useSignUpViewModel() {
                 if (!orgResult.success) {
                     console.error("Failed to create organization:", orgResult.error);
                     setError("Cannot sign-up, try again later.");
+                    setSubmitting(false);
                     return;
                 } 
             }
@@ -89,8 +93,6 @@ export function useSignUpViewModel() {
         } catch (err) {
             console.error(err);
             setError("Cannot sign up. Try again later.")
-        } finally {
-            setSubmitting(false);
         }
     }
     return {

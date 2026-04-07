@@ -10,6 +10,7 @@ import { volunteerOrganizationRouter } from "./volunteer-organization.js";
 import { requireRole } from "../middleware/require-role.js";
 import { auth } from "../middleware/auth.js";
 import { skillExtractionRouter } from "./skill-extraction.js";
+import { chatRouter } from "./chat/index.js";
 
 export const apiRouter = Router();
 
@@ -25,3 +26,5 @@ apiRouter.use("/current-moderator", auth, requireRole("MODERATOR"), currentModer
 apiRouter.use("/moderator", auth, requireRole("MODERATOR"), moderatorRouter);
 apiRouter.use("/organization", auth, OrganizationRouter);
 apiRouter.use("/volunteer-organization", auth, requireRole("VOLUNTEER"), volunteerOrganizationRouter);
+
+apiRouter.use("/chat", auth, requireRole("MODERATOR", "VOLUNTEER", "ORGANIZATION"), chatRouter)

@@ -31,13 +31,14 @@ export function resolveDefaultAppRoute({
       switch (currentOrganization?.status) {
         case "CREATED":
           return "/organization/application";
-        case "APPLIED":
-          return "/organization/appliedDashboard";
         default:
           return "/organization";
       }
       
     case "MODERATOR":
       return "/moderator";
+
+    case "ADMIN":
+      return "/admin"
   }
 }

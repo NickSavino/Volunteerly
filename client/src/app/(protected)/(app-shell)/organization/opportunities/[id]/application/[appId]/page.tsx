@@ -1,23 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft, MapPin} from "lucide-react";
+import { ArrowLeft, Briefcase, GraduationCap, MapPin, School, User} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
-import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
-import { api } from "@/lib/api";
-import { ModStatCard } from "@/components/custom/mod_stat_card";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png"
-import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { use } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import volunteerly_logo from "@/assets/volunteerly_logo.png"
 import { useOppApplicationViewModel } from "./oppApplicationVm";
-import { OrganizationLoadingPage } from "../../../../organization_loading";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { UserService } from "@/services/UserService";
 
 
 export default function ViewApplicationPage({
@@ -26,19 +20,19 @@ export default function ViewApplicationPage({
   params: Promise<{ id: string, appId: string }>
 }) {
     const { id, appId } = use(params);
-    const {loading, fetching, session, signOut, router, user, error, currentUser, application, selectVolunteer} = useOppApplicationViewModel(id, appId)
+    const {loading, fetching, session, signOut, router, user, error, matchedSchedule, currentUser, application, selectVolunteer} = useOppApplicationViewModel(id, appId)
 
     if (loading || !session || fetching) {
-        return <OrganizationLoadingPage />
+        return <LoadingScreen />
     }
 
   return (
     <div className="min-h-screen">
         <title>Organization View Opportunity - Volunteerly</title>       
 
-        <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 mx-10">
+        <main className="flex flex-col md:flex-row p-6 md:mx-10">
 
-            <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6 mb-10">
+            <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3xl flex flex-col gap-6 mb-10">
                 <div>
                     <Button
                     variant="ghost"
@@ -56,30 +50,58 @@ export default function ViewApplicationPage({
                     <CardContent>
                         <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
                             <div className="flex md:w-full justify-center md:col-span-2">
-                                <img src={avtImg.src} className="w-24 md:w-30 rounded-lg object-cover"/>
+                                <Avatar className="h-auto w-20">
+                                    <AvatarImage src={UserService.getAvatarURL(application?.volId || "")} />
+                                    <AvatarFallback> <User className="h-auto w-20"></User></AvatarFallback>
+                                </Avatar>
                             </div>
 
-                            <div className="md:col-span-4 flex flex-col gap-3">
-                                <h3>{application?.volunteer?.firstName} {application?.volunteer?.lastName}</h3>
-                                <p>Applied {application?.dateApplied?.toLocaleDateString()}</p>
+                            <div className="md:col-span-4 flex flex-col gap-1">
+                                <div className="md:flex gap-3">
+                                    <h3>{application?.volunteer?.firstName} {application?.volunteer?.lastName}
+                                    </h3>
+                                    <Badge   className={
+                                        (application?.matchPercentage || 0) >= 80
+                                        ? "bg-green-500"
+                                        : (application?.matchPercentage || 0) >= 50
+                                        ? "bg-yellow-500"
+                                        : "bg-red-500"
+                                    }>
+                                    {application?.matchPercentage}% Match</Badge>   
+                                </div>
+                                {(application?.volunteer?.workExperiences) && 
+                                <h4>{application?.volunteer?.workExperiences[0].jobTitle}</h4>}
+                                <p className="text-sm">Applied {application?.dateApplied?.toLocaleDateString()}</p>
                                 <p className="text-sm">{application?.volunteer?.bio}</p>
                             </div>
 
-                            <div className="md:col-span-2 flex flex-col items-center gap-3">
-                                <Badge   className={
-                                    (application?.matchPercentage || 0) >= 80
-                                    ? "bg-green-500"
-                                    : (application?.matchPercentage || 0) >= 50
-                                    ? "bg-yellow-500"
-                                    : "bg-red-500"
-                                }>
-                                {application?.matchPercentage}% Match</Badge>                                
+                            <div className="pt-3 md:pt-0 md:col-span-2 flex flex-col items-center gap-3">                                                             
                                 <span className="flex flex-1 items-center gap-3 justify-center md:justify-start">
-                                    <MapPin/> 
+                                    <MapPin className="text-primary"/> 
                                     <div className="flex flex-col">
-                                        <span className="text-sm">{application?.volunteer?.location}</span>
+                                        <span className="text-sm text-muted-foreground">{application?.volunteer?.location}</span>
                                     </div>
                                 </span>
+                                {(application?.volunteer?.averageRating || 0) > 0 &&
+                                    <>
+                                    <div className="flex items-center gap-0.5">
+                                        {[1, 2, 3, 4, 5].map((star) => {
+                                            const fill = Math.min(1, Math.max(0, (application?.volunteer?.averageRating ?? 0) - (star - 1)));
+                                            const pct = Math.round(fill * 100);
+                                            return (
+                                                <span key={star} className="relative text-2xl leading-none">
+                                                    <span className="text-gray-500">★</span>
+                                                    <span
+                                                        className="absolute inset-0 overflow-hidden text-primary"
+                                                        style={{ width: `${pct}%` }}
+                                                    >★</span>
+                                                </span>
+                                            );
+                                        })}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">{(application?.volunteer?.averageRating || 0).toFixed(1)} / 5.0</p>
+                                    </>
+                                }
                             </div>
                         </div>
                     </CardContent>
@@ -90,14 +112,76 @@ export default function ViewApplicationPage({
                     <CardHeader>
                         <CardTitle>Volunteer Details</CardTitle>
                     </CardHeader>
+                    {(application?.volunteer?.workExperiences?.length === 0) && (application?.volunteer?.educations?.length === 0) &&
+                        <CardContent className="flex flex-col justify-center h-full text-center justify-center">
+                            <div className="flex justify-center mb-4">
+                                <Avatar size="lg">
+                                    <AvatarImage src={volunteerly_logo.src} />
+                                    <AvatarFallback></AvatarFallback>
+                                </Avatar>
+                            </div>
+                            <h3 className="text-lg">No Experiences</h3>
+                        </CardContent>
+                    }
+                    {(application?.volunteer?.workExperiences?.length || 0) > 0 &&
+                        <CardContent>
+                            <CardTitle className="text-muted-foreground text-sm">Employment Experience</CardTitle>
+                            {application?.volunteer?.workExperiences?.map((exp) => (
+                                <Item key={exp.id}>
+                                    <ItemMedia>
+                                        <Briefcase className="size-10 text-primary" />
+                                    </ItemMedia>
+                                    <ItemContent>
+                                        <ItemTitle>{exp.jobTitle} | {exp.company}</ItemTitle>
+                                        <ItemDescription>{exp.responsibilities}</ItemDescription>
+                                    </ItemContent>
+                                    <ItemActions>
+                                        <ItemDescription>{exp.startDate?.getFullYear()} - {exp.endDate?.getFullYear() || "Present"}</ItemDescription>
+                                    </ItemActions>
+                                </Item>
+                            ))
+                            
+                            }
+                        </CardContent>
+                    }
+                    {(application?.volunteer?.educations?.length || 0) > 0 &&
+                        <CardContent>
+                            <CardTitle className="text-muted-foreground text-sm">Education</CardTitle>
+                            {application?.volunteer?.educations?.map((edu) => (
+                                <Item key={edu.id}>
+                                    <ItemMedia>
+                                        <GraduationCap className="size-10 text-primary" />
+                                    </ItemMedia>
+                                    <ItemContent>
+                                        <ItemTitle>{edu.degree}</ItemTitle>
+                                        <ItemDescription>{edu.institution}</ItemDescription>
+                                    </ItemContent>
+                                    <ItemActions>
+                                        <ItemDescription>{edu.graduationYear}</ItemDescription>
+                                    </ItemActions>
+                                </Item>
+                            ))
+                            
+                            }
+                        </CardContent>
+                    }
                 </Card>
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Message to Organization</CardTitle>
+                        <CardTitle>Opportunity Specific Details</CardTitle>
                     </CardHeader>
                     <CardContent>
+                        <CardTitle className="text-md pb-2">Message to Organization</CardTitle>
                         <p>{application?.message}</p>
+                    </CardContent>
+                    <CardContent>
+                        <CardTitle className="text-md pb-2">Availability Match</CardTitle>
+                        {matchedSchedule?.length === 0 ? 
+                            <p className="text-destructive">No Days Match</p>
+                        :
+                            <p>{matchedSchedule?.join(", ")}</p>
+                        }
                     </CardContent>
                 </Card>
 

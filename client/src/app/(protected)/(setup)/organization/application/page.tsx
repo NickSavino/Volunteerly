@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import { Navbar } from "@/app/(protected)/(setup)/organization/application/navbar";
+import { LoadingScreen } from "@/components/common/loading-screen";
 
 export default function OrgApplicationPage() {
   const {        
@@ -34,13 +35,13 @@ export default function OrgApplicationPage() {
 
 
   if (loading || bootstrapping) {
-    return <main className="p-6">Loading...</main>
+    return (<LoadingScreen />)
   }
 
   return (
       <div className="min-h-screen">
           <title>Organization Application - Volunteerly</title>
-          <Navbar avtImg={{src: ""}} name={currentOrg?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
+          <Navbar name={currentOrg?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
         <main className="w-full items-center h-full flex flex-col p-8 ">
           <div className="w-full flex justify-start">
           {isReadOnly && <Button

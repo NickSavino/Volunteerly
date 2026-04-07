@@ -53,14 +53,12 @@ export function useOrgApplicationViewModel() {
           setError("Failed to load organization.");
         } finally {
           setBootStrapping(false)
-        }
-
-        
+        }     
       }
       loadCurrentUser()
     },[session, currentOrg]);
 
-  const isReadOnly = currentOrg?.status === "APPLIED" || currentOrg?.status === "VERIFIED";
+  const isReadOnly = currentOrg?.status === "APPLIED" || currentOrg?.status === "VERIFIED" || currentOrg?.status === "REJECTED";
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
       e.preventDefault();

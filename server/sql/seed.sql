@@ -10,6 +10,7 @@ BEGIN
     EXECUTE 'TRUNCATE TABLE 
         public.chat_messages,
         public.chat_conversations,
+        public.chat_conversation_participants,
         public.volunteer_reports,
         public.tickets,
         public.reviews,
@@ -49,6 +50,9 @@ DECLARE
     opp1_id      UUID := 'a0000000-0000-4000-8000-000000000201';
     opp2_id      UUID := 'a0000000-0000-4000-8000-000000000202';
     opp3_id      UUID := 'a0000000-0000-4000-8000-000000000203';
+    opp4_id      UUID := 'a0000000-0000-4000-8000-000000000204';
+    opp5_id      UUID := 'a0000000-0000-4000-8000-000000000205';
+    opp6_id      UUID := 'a0000000-0000-4000-8000-000000000206';
 
     app1_id      UUID := 'a0000000-0000-4000-8000-000000000301';
     app2_id      UUID := 'a0000000-0000-4000-8000-000000000302';
@@ -58,7 +62,7 @@ DECLARE
     node1_id     UUID := 'a0000000-0000-4000-8000-000000000501';
     node2_id     UUID := 'a0000000-0000-4000-8000-000000000502';
 
-    conv1_id     UUID := 'a0000000-0000-4000-8000-000000000601';
+    conv1_id UUID := 'a0000000-0000-4000-8000-000000000601';
 
     ticket1_id   UUID := 'a0000000-0000-4000-8000-000000000701';
     ticket2_id   UUID := 'a0000000-0000-4000-8000-000000000702';
@@ -66,10 +70,14 @@ DECLARE
     ticket4_id   UUID := 'a0000000-0000-4000-8000-000000000704';
     ticket5_id   UUID := 'a0000000-0000-4000-8000-000000000705';
     ticket6_id   UUID := 'a0000000-0000-4000-8000-000000000706';
-    
-    review1_id   UUID := 'a0000000-0000-4000-8000-000000000801';
-    flag1_id     UUID := 'a0000000-0000-4000-8000-000000000901';
-    progress1_id UUID := 'a0000000-0000-4000-8000-000000001001';
+
+    ticket_conv1_id UUID := 'a0000000-0000-4000-8000-000000000801';
+    ticket_conv2_id UUID := 'a0000000-0000-4000-8000-000000000802';
+    ticket_conv3_id UUID := 'a0000000-0000-4000-8000-000000000803';
+
+    review1_id   UUID := 'a0000000-0000-4000-8000-000000000901';
+    flag1_id     UUID := 'a0000000-0000-4000-8000-000000001001';
+    progress1_id UUID := 'a0000000-0000-4000-8000-000000001101';
 
     work_exp1_id  UUID := 'a0000000-0000-4000-8000-000000001002';
     work_exp2_id  UUID := 'a0000000-0000-4000-8000-000000001003';
@@ -130,9 +138,9 @@ VALUES (mod1_id::text, 'Admin', 'Moderator');
 --Insert Organizations
 INSERT INTO public.organizations (id, org_name, status, charity_num, doc_id, contact_name, contact_email, contact_num, hq_adr, mission_statement, cause_category, website, impact_highlights)
 VALUES
-    (org1_id::text, 'Red Cross International', 'VERIFIED', 123456, 'doc-red-cross',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '2609 15 St NE, Calgary, AB, Canada',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org',   '[{"value": 42, "label": "countries served"}, {"value": 12400, "label": "people helped"}]'),
-    (org2_id::text, 'World United',  'VERIFIED', 654321, 'doc-world-united', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"value": 12, "label": "countries operated in"}, {"value": 3800, "label": "students helped"}]'),
-    (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012, 'doc-tms',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org',         '[{"value": 5200, "label": "meals served"}, {"value": 300, "label": "families housed"}]');
+    (org1_id::text, 'Red Cross International', 'VERIFIED', 123456, 'organization-documents/org_' || org1_id::text || '.pdf',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '2609 15 St NE, Calgary, AB, Canada, T2E 8Y2',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org',   '[{"value": 42, "label": "countries served"}, {"value": 12400, "label": "people helped"}]'),
+    (org2_id::text, 'World United',  'VERIFIED', 654321, 'organization-documents/org_' || org2_id::text || '.pdf', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada, T1Y 6S1',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"value": 12, "label": "countries operated in"}, {"value": 3800, "label": "students helped"}]'),
+    (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012,  'organization-documents/org_' || org3_id::text || '.pdf',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org',         '[{"value": 5200, "label": "meals served"}, {"value": 300, "label": "families housed"}]');
 
 --Insert Volunteers (no skills seeded — volunteers complete experience input on first login)
 INSERT INTO public.volunteers (id, first_name, last_name, location, bio, hourly_value, organizations_assisted, availability)
@@ -143,9 +151,12 @@ VALUES
 --Insert Opps
 INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)
 VALUES
-    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 45, '3 months', '2026-01-15', '2026-04-15', '["Mon", "Tue", "Wed"]'),
-    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Fri", "Sat", "Sun"]'),
-    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Mon", "Wed", "Fri"]');
+    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 30, '3 months', '2026-01-15', '2026-04-15', '["Monday", "Tuesday", "Wednesday"]'),
+    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Friday", "Saturday", "Sunday"]'),
+    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 28, '6 months', '2026-03-01', '2026-09-01', '["Monday", "Wednesday", "Friday"]'),
+    (opp4_id::text, org1_id::text, NULL, 'OPEN',   'Tax Analyst',    'Accounting', 'Help streamline our tax flow',           'Accounting and/or finance experience required',        'HYBRID',    'PART_TIME', 25, 'Ongoing', '2026-04-10', '2026-09-01', '["Thursday", "Friday"]'),
+    (opp5_id::text, org2_id::text, NULL, 'OPEN',   'Project Manager',    'Management', 'We need someone who has PM experience to help guide our new volunteers',           'Leadership and project management',        'IN_PERSON',    'FLEXIBLE', 39, '12 months', '2026-05-01', '2026-10-01', '["Monday"]'),
+    (opp6_id::text, org3_id::text, NULL, 'OPEN',   'IT Developer',    'IT', 'We need an IT expert to help setup our infrastructure.',           'IT Experience (TCP/UDP)',        'IN_PERSON',    'PART_TIME', 35, '1 month', '2026-05-22', '2026-11-01', '["Wednesday", "Thursday"]');
 
 --Insert Vol Work Experiences
 INSERT INTO public.volunteer_work_experiences (id, vol_id, job_title, company, responsibilities, created_at, start_date, end_date)
@@ -191,17 +202,37 @@ VALUES
     (node1_id::text, tree1_id::text, 'First Aid',   200),
     (node2_id::text, tree1_id::text, 'Programming', 300);
 
---Chat
-INSERT INTO public.chat_conversations (id, user_a_id, user_b_id)
+-- Direct Chat
+INSERT INTO public.chat_conversations (
+    id,
+    kind,
+    created_at,
+    updated_at,
+    last_message_at
+)
 VALUES
-    (conv1_id::text, vol1_id::text, org1_id::text);
+    (conv1_id::text, 'DIRECT', now(), now(), now());
 
-INSERT INTO public.chat_messages (id, conversation_id, sender_id, content)
+INSERT INTO public.chat_conversation_participants (
+    id,
+    conversation_id,
+    user_id,
+    joined_at
+)
+VALUES
+    (gen_random_uuid()::text, conv1_id::text, vol1_id::text, now()),
+    (gen_random_uuid()::text, conv1_id::text, org1_id::text, now());
+
+INSERT INTO public.chat_messages (
+    id,
+    conversation_id,
+    sender_id,
+    content
+)
 VALUES
     (gen_random_uuid()::text, conv1_id::text, vol1_id::text, 'Hi, I am interested in the opportunity!'),
     (gen_random_uuid()::text, conv1_id::text, org1_id::text, 'Great! We would love to have you.');
 
---Tickets
 --Tickets
 INSERT INTO public.tickets (
     id,
@@ -282,6 +313,89 @@ VALUES
         '2026-03-29 08:10:00'
     );
 
+-- Ticket Conversations
+INSERT INTO public.chat_conversations (
+    id,
+    kind,
+    ticket_id,
+    created_at,
+    updated_at,
+    last_message_at
+)
+VALUES
+    (ticket_conv1_id::text, 'TICKET', ticket1_id::text, '2026-03-26 09:15:00', now(), '2026-03-26 09:15:00'),
+    (ticket_conv2_id::text, 'TICKET', ticket2_id::text, '2026-03-27 14:30:00', now(), '2026-03-27 14:30:00'),
+    (ticket_conv3_id::text, 'TICKET', ticket3_id::text, '2026-03-28 11:00:00', now(), '2026-03-28 11:00:00');
+
+INSERT INTO public.chat_conversation_participants (
+    id,
+    conversation_id,
+    user_id,
+    joined_at
+)
+VALUES
+    (gen_random_uuid()::text, ticket_conv1_id::text, vol1_id::text, now()),
+    (gen_random_uuid()::text, ticket_conv1_id::text, mod1_id::text, now()),
+
+    (gen_random_uuid()::text, ticket_conv2_id::text, vol2_id::text, now()),
+    (gen_random_uuid()::text, ticket_conv2_id::text, mod1_id::text, now()),
+
+    (gen_random_uuid()::text, ticket_conv3_id::text, org1_id::text, now()),
+    (gen_random_uuid()::text, ticket_conv3_id::text, mod1_id::text, now());
+
+INSERT INTO public.chat_messages (
+    id,
+    conversation_id,
+    sender_id,
+    content,
+    sent_at
+)
+VALUES
+    (
+        gen_random_uuid()::text,
+        ticket_conv1_id::text,
+        vol1_id::text,
+        'The upload button does nothing on Firefox.',
+        '2026-03-26 09:16:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        ticket_conv1_id::text,
+        mod1_id::text,
+        'Thanks for reporting this. We are investigating the Firefox issue now.',
+        '2026-03-26 10:05:00'
+    ),
+
+    (
+        gen_random_uuid()::text,
+        ticket_conv2_id::text,
+        vol2_id::text,
+        'I received messages that made me uncomfortable.',
+        '2026-03-27 14:32:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        ticket_conv2_id::text,
+        mod1_id::text,
+        'Understood. We have opened a review and will follow up shortly.',
+        '2026-03-27 15:00:00'
+    ),
+
+    (
+        gen_random_uuid()::text,
+        ticket_conv3_id::text,
+        org1_id::text,
+        'We need our main contact information updated.',
+        '2026-03-28 11:02:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        ticket_conv3_id::text,
+        mod1_id::text,
+        'Please send the new contact details here and we will update the record.',
+        '2026-03-28 11:20:00'
+    );
+
 --Flags
 INSERT INTO public.flags (id, flag_issuer_id, flagged_user_id, reason)
 VALUES
@@ -292,5 +406,12 @@ RAISE NOTICE 'vol1: %', vol1_id;
 RAISE NOTICE 'vol2: %', vol2_id;
 RAISE NOTICE 'org1: %', org1_id;
 RAISE NOTICE 'mod1: %', mod1_id;
+
+--Storage Buckets
+INSERT INTO storage.buckets (id, name, public)
+VALUES
+    ('organization-documents', 'organization-documents', false),
+    ('avatars', 'avatars', true)
+ON CONFLICT (id) DO NOTHING;
 
 END $$;

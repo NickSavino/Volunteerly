@@ -29,6 +29,20 @@ export function useTicketListViewModel() {
   const [tickets, setTickets] = useState<ModeratorTicketList>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+  const [isTicketDetailOpen, setIsTicketDetailOpen] = useState(false);
+
+  function openTicketDetail(ticketId: string) {
+    setSelectedTicketId(ticketId);
+    setIsTicketDetailOpen(true);
+  }
+
+  function closeTicketDetail() {
+    setIsTicketDetailOpen(false);
+    setSelectedTicketId(null);
+  }
+
 
   const [activeTab, setActiveTab] = useState<TicketTabKey>("OPEN");
   const [searchQuery, setSearchQuery] = useState("");
@@ -132,6 +146,10 @@ export function useTicketListViewModel() {
       activeTab,
       tabCounts,
       error,
+      selectedTicketId,
+      isTicketDetailOpen,
+      openTicketDetail,
+      closeTicketDetail,
     },
     filters: {
       pendingSearch,
