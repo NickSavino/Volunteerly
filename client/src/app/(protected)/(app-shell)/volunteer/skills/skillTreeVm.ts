@@ -144,9 +144,9 @@ export const TECH_NODES: SkillNodeDef[] = [
     id: "cybersecurity", label: "Cyber Basics", iconKey: "Lock", icon: Lock,
     tier: 2, col: 4,
     trackedSkills: ["Cybersecurity"],
-    threshold: 2, requiresAny: [["javascript", "python"]],
+    threshold: 2, requiresAny: [["javascript", "python", "mobile"]],
     description: "Apply security best practices across volunteer systems.",
-    requirementLabel: "Unlock JS Basics or Python Basics, then log Cybersecurity in 2 opportunities",
+    requirementLabel: "Unlock JS Basics, Python Basics, or Mobile Dev, then log Cybersecurity in 2 opportunities",
   },
 
   {
@@ -161,8 +161,7 @@ export const TECH_NODES: SkillNodeDef[] = [
     id: "data_analysis", label: "Data Analyst", iconKey: "TrendingUp", icon: TrendingUp,
     tier: 3, col: 1,
     trackedSkills: ["Data Analysis", "Python", "SQL", "Excel"],
-    threshold: 4,
-    requiresAny: [["sql", "powerbi"]],
+    threshold: 4, requiresAny: [["sql", "powerbi"]],
     description: "Full data analysis — reachable via Python/SQL or Excel/Power BI.",
     requirementLabel: "Unlock SQL/DBs or Power BI, then log Data Analysis, Python, SQL, or Excel in 4 total opportunities",
   },
@@ -186,9 +185,9 @@ export const TECH_NODES: SkillNodeDef[] = [
     id: "mobile_advanced", label: "App Dev", iconKey: "Smartphone", icon: Smartphone,
     tier: 3, col: 4,
     trackedSkills: ["Mobile Development", "JavaScript", "TypeScript", "React"],
-    threshold: 3, requiresAny: [["webdev"]],
+    threshold: 3, requiresAny: [["cybersecurity", "webdev"]],
     description: "Build advanced cross-platform applications for nonprofits.",
-    requirementLabel: "Unlock Web Dev, then log Mobile Development, JavaScript, TypeScript, or React in 3 opportunities",
+    requirementLabel: "Unlock Cyber Basics or Web Dev, then log Mobile Development, JavaScript, TypeScript, or React in 3 opportunities",
   },
 
   {
@@ -244,6 +243,14 @@ export const TECH_NODES: SkillNodeDef[] = [
 
 export const NT_NODES: SkillNodeDef[] = [
   {
+    id: "nt_teamwork", label: "Team Player", iconKey: "Users", icon: Users,
+    tier: 1, col: 0,
+    trackedSkills: ["Teamwork", "Adaptability"],
+    threshold: 2, requiresAny: [],
+    description: "Collaborate and adapt effectively in diverse volunteer teams.",
+    requirementLabel: "Log Teamwork or Adaptability in 2 opportunities",
+  },
+  {
     id: "nt_communication", label: "Clear Comms", iconKey: "MessageCircle", icon: MessageCircle,
     tier: 1, col: 1,
     trackedSkills: ["Communication"],
@@ -259,15 +266,15 @@ export const NT_NODES: SkillNodeDef[] = [
     description: "Professional writing, reports, and documentation for organisations.",
     requirementLabel: "Log Writing in 2 opportunities",
   },
-  {
-    id: "nt_teamwork", label: "Team Player", iconKey: "Users", icon: Users,
-    tier: 1, col: 0,
-    trackedSkills: ["Teamwork", "Adaptability"],
-    threshold: 2, requiresAny: [],
-    description: "Collaborate and adapt effectively in diverse volunteer teams.",
-    requirementLabel: "Log Teamwork or Adaptability in 2 opportunities",
-  },
 
+  {
+    id: "nt_mentoring", label: "Mentor", iconKey: "GraduationCap", icon: GraduationCap,
+    tier: 2, col: 0,
+    trackedSkills: ["Mentoring", "Teaching"],
+    threshold: 2, requiresAny: [["nt_teamwork"]],
+    description: "Guide and develop other volunteers or community members.",
+    requirementLabel: "Unlock Team Player, then log Mentoring or Teaching in 2 opportunities",
+  },
   {
     id: "nt_public_speaking", label: "Public Speaking", iconKey: "Mic", icon: Mic,
     tier: 2, col: 1,
@@ -285,14 +292,6 @@ export const NT_NODES: SkillNodeDef[] = [
     requirementLabel: "Unlock Written Comms, then log Research in 2 opportunities",
   },
   {
-    id: "nt_mentoring", label: "Mentor", iconKey: "GraduationCap", icon: GraduationCap,
-    tier: 2, col: 0,
-    trackedSkills: ["Mentoring", "Teaching"],
-    threshold: 2, requiresAny: [["nt_teamwork"]],
-    description: "Guide and develop other volunteers or community members.",
-    requirementLabel: "Unlock Team Player, then log Mentoring or Teaching in 2 opportunities",
-  },
-  {
     id: "nt_fundraising", label: "Fundraiser", iconKey: "DollarSign", icon: DollarSign,
     tier: 2, col: 4,
     trackedSkills: ["Fundraising", "Networking"],
@@ -305,8 +304,7 @@ export const NT_NODES: SkillNodeDef[] = [
     id: "nt_event_planning", label: "Event Planning", iconKey: "Calendar", icon: Calendar,
     tier: 3, col: 1,
     trackedSkills: ["Event Planning", "Time Management"],
-    threshold: 3,
-    requiresAny: [["nt_public_speaking", "nt_mentoring", "nt_fundraising"]],
+    threshold: 3, requiresAny: [["nt_public_speaking", "nt_mentoring", "nt_fundraising"]],
     description: "Organise and run volunteer events end-to-end.",
     requirementLabel: "Unlock Public Speaking, Mentor, or Fundraiser, then log Event Planning or Time Management in 3 opportunities",
   },
@@ -339,8 +337,7 @@ export const NT_NODES: SkillNodeDef[] = [
     id: "nt_strategy", label: "Strategy", iconKey: "ChevronUp", icon: ChevronUp,
     tier: 4, col: 4,
     trackedSkills: ["Problem Solving", "Critical Thinking", "Project Management"],
-    threshold: 5,
-    requiresAny: [["nt_project_mgmt", "nt_marketing"]],
+    threshold: 5, requiresAny: [["nt_project_mgmt", "nt_marketing"]],
     description: "Strategic planning and high-level decision-making for organisations.",
     requirementLabel: "Unlock Project Mgmt or Marketer, then log Problem Solving, Critical Thinking, or Project Management in 5 total opportunities",
   },
@@ -350,9 +347,9 @@ export const NT_NODES: SkillNodeDef[] = [
     tier: 5, col: 2,
     trackedSkills: ["Leadership", "Project Management", "Communication"],
     threshold: 8,
-    requiresAny: [["nt_leadership"], ["nt_strategy"]],
+    requiresAny: [["nt_leadership", "nt_strategy"]],
     description: "Recognised community leader with broad impact across people, projects, and organisations.",
-    requirementLabel: "Unlock both Team Leader and Strategy, then log Leadership, Project Management, or Communication in 8 total opportunities",
+    requirementLabel: "Unlock Team Leader or Strategy, then log Leadership, Project Management, or Communication in 8 total opportunities",
   },
 ];
 
@@ -367,22 +364,18 @@ function prereqsMet(node: SkillNode, byId: Record<string, SkillNode>): boolean {
 
 export function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, number>): SkillNode[] {
   const map: Record<string, SkillNode> = {};
-
   for (const def of defs) {
     map[def.id] = { ...def, status: "locked", current: 0 };
   }
-
   let changed = true;
   while (changed) {
     changed = false;
     for (const id of Object.keys(map)) {
       const node = map[id];
       const unlocked = prereqsMet(node, map);
-
       const current = unlocked
         ? defs.find((d) => d.id === id)!.trackedSkills.reduce((s, k) => s + (skillCounts[k] ?? 0), 0)
         : 0;
-
       let status: NodeStatus;
       if (!unlocked) {
         status = "locked";
@@ -393,14 +386,12 @@ export function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, n
       } else {
         status = "locked";
       }
-
       if (map[id].status !== status || map[id].current !== current) {
         map[id] = { ...map[id], status, current };
         changed = true;
       }
     }
   }
-
   return defs.map((d) => map[d.id]);
 }
 
@@ -423,17 +414,8 @@ export function useSkillTreeViewModel() {
   const techNodes = computeNodes(TECH_NODES, counts);
   const ntNodes = computeNodes(NT_NODES, counts);
   const nodes = tab === "technical" ? techNodes : ntNodes;
-
   const mastered = nodes.filter((n) => n.status === "mastered").length;
   const inProg = nodes.filter((n) => n.status === "in_progress").length;
 
-  return {
-    tab, setTab,
-    selected, setSelected,
-    nodes,
-    loading,
-    error,
-    mastered,
-    inProg,
-  };
+  return { tab, setTab, selected, setSelected, nodes, loading, error, mastered, inProg };
 }
