@@ -6,41 +6,31 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { useAppSession } from "@/providers/app-session-provider";
 
 export function useAppliedOrgDashboardViewModel() {
   const router = useRouter();
-  const { session, user, loading, signOut } = useAuth();
-  const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
-  const [error, setError] = useState<string | null>(null);
+  const { session, user, loading: authLoading, signOut } = useAuth();
 
-  // TODO: remove this logic and tie it to useAppSession()
+  const {
+    loading: appLoading,
+    initialized,
+    currentOrganization,
+  } = useAppSession();
+
   useEffect(() => {
-    async function loadCurrentUser() {
-      if (!session?.access_token) return;
-      try {
-        const org = await OrganizationService.getCurrentOrganization()
-        
-        if (!org.success) {
-          console.error(org.error);
-          setError("Received invalid user data from the server.");
-          return;
-        }
-        if (org.data.status == "CREATED") {
-            router.replace("/organization/application");
-            return;
-        } else if (org.data.status == "VERIFIED") {
-            router.replace("/organization");
-            return;
-        }
-        setCurrentUser(org.data);
-      } catch (error) {
-        console.error(error);
-        return
-      }
+    if (!initialized || appLoading || !currentOrganization) return;
+
+    if (currentOrganization.status === "CREATED") {
+      router.replace("/organization/application");
+      return;
     }
-    loadCurrentUser();
-    }, [session, router]);
 
+    if (currentOrganization.status === "VERIFIED") {
+      router.replace("/organization");
+      return;
+    }
+  }, [initialized, appLoading, currentOrganization, router])
 
-    return {loading, session, signOut, router, user, error, currentUser} 
+    return {loading: authLoading || appLoading || !initialized, session, signOut, router, user, currentOrganization} 
 }

@@ -1,42 +1,13 @@
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";
-import { resolveDefaultAppRoute } from "@/lib/utils";
-import { useAppSession } from "@/providers/app-session-provider";
-import { useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { useAuth } from "@/providers/auth-provider";
+import { ReactNode } from "react";
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
-    const router = useRouter();
-    const {
-        loading,
-        initialized,
-        isAuthenticated,
-        currentUser,
-        currentOrganization,
-    } = useAppSession();
+    const { loading } = useAuth();
 
-    useEffect(() => {
-        if (!initialized || loading) return;
-
-        if (!isAuthenticated || !currentUser) return;
-
-        const nextRoute = resolveDefaultAppRoute({
-            currentUser,
-            currentOrganization,
-        });
-
-        router.replace(nextRoute);
-    }, [
-        initialized,
-        loading,
-        isAuthenticated,
-        currentUser,
-        currentOrganization,
-        router,
-    ]);
-
-    if (!initialized || loading || isAuthenticated) {
+    if (loading) {
         return <LoadingScreen label="Loading..." />
     }
 
