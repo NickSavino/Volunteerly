@@ -36,7 +36,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         router,
     ]);
 
-    if (!initialized || loading || (isAuthenticated && !currentUser)) {
+    if (!initialized || loading || isAuthenticated) {
         return <LoadingScreen label="Loading..." />
     }
 
