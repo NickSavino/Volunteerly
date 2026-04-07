@@ -411,16 +411,16 @@ RAISE NOTICE 'mod1: %', mod1_id;
 --Registered Charity (Mock for actual CRA data)
 INSERT INTO public."RegisteredCharity" (id, "registrationNumber", "organizationName")
 VALUES
-  (gen_random_uuid(), '123456789', 'Red Cross International'),
-  (gen_random_uuid(), '234567891', 'World United'),
-  (gen_random_uuid(), '345678912', 'Green Earth Initiative'),
-  (gen_random_uuid(), '456789123', 'Helping Hands Foundation'),
-  (gen_random_uuid(), '567891234', 'Future Minds Education'),
-  (gen_random_uuid(), '678912345', 'Global Care Network'),
-  (gen_random_uuid(), '789123456', 'Hope Shelter Society'),
-  (gen_random_uuid(), '891234567', 'Food For All Alliance'),
-  (gen_random_uuid(), '912345678', 'Bright Horizons Outreach'),
-  (gen_random_uuid(), '135792468', 'Community Wellness Trust');
+  (gen_random_uuid()::text, 234567891, 'Red Cross International'),
+  (gen_random_uuid()::text, 123456789, 'World Impact'),
+  (gen_random_uuid()::text, 345678912, 'Green Earth Initiative'),
+  (gen_random_uuid()::text, 456789123, 'Helping Hands Foundation'),
+  (gen_random_uuid()::text, 567891234, 'Future Minds Education'),
+  (gen_random_uuid()::text, 678912345, 'Global Care Network'),
+  (gen_random_uuid()::text, 789123456, 'Hope Shelter Society'),
+  (gen_random_uuid()::text, 891234567, 'Food For All Alliance'),
+  (gen_random_uuid()::text, 912345678, 'Bright Horizons Outreach'),
+  (gen_random_uuid()::text, 135792468, 'Community Wellness Trust');
 
 
 --Storage Buckets

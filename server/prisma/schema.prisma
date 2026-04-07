@@ -367,7 +367,7 @@ model VolunteerReport {
 
 model RegisteredCharity {
   id                 String   @id @default(uuid())
-  registrationNumber String   @unique
+  registrationNumber Int   @unique
   organizationName   String
 }
 

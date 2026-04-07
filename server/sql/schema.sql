@@ -249,7 +249,7 @@ CREATE TABLE "flags" (
 -- CreateTable
 CREATE TABLE "RegisteredCharity" (
     "id" TEXT NOT NULL,
-    "registrationNumber" TEXT NOT NULL,
+    "registrationNumber" INTEGER NOT NULL,
     "organizationName" TEXT NOT NULL,
 
     CONSTRAINT "RegisteredCharity_pkey" PRIMARY KEY ("id")

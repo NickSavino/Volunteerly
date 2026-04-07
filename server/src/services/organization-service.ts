@@ -100,8 +100,8 @@ export async function autoApproval(orgName:string, charityNum: number, file:Expr
         const officialNumber = Number(businessNumberParagraph?.content.toLowerCase().split("business number is")[1]?.trim() || null)
 
         if (officialName == orgName && charityNum ==  officialNumber) {
-            const temporary_CRA_Mapping: Record<string, number> = {"World Impact": 123456789};
-            if (officialName in temporary_CRA_Mapping && temporary_CRA_Mapping[officialName] == officialNumber) {
+            const exists = await checkCharityExistence(officialName, officialNumber)
+            if (exists) {
                 return true
             }else {
                 console.log("Values did not match CRA DB.", officialName, officialNumber)
@@ -115,6 +115,18 @@ export async function autoApproval(orgName:string, charityNum: number, file:Expr
         console.log(error)
         return false
     }
+
+}
+
+export async function checkCharityExistence(orgName:string, charityNum: number) {
+    const charity = await prisma.registeredCharity.findFirst({
+        where: {
+        organizationName: orgName,
+        registrationNumber: charityNum,
+        },
+    });
+
+  return !!charity;
 
 }
 
