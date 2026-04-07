@@ -168,4 +168,12 @@ export class VolunteerService {
         });
         return response;
     }
+
+    static async backfillSkillVector() {
+        return api<{ success: boolean; skipped?: boolean }>(
+            "/current-volunteer/extract-skills/backfill",
+            { method: "POST" }
+        );
+    }
+
 }
