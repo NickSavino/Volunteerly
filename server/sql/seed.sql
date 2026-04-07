@@ -23,7 +23,8 @@ BEGIN
         public.volunteers,
         public.organizations,
         public.moderators,
-        public.users
+        public.users,
+        public.RegisteredCharity
         RESTART IDENTITY CASCADE';
 EXCEPTION WHEN others THEN
     RAISE NOTICE 'Cleanup skipped: %', SQLERRM;
@@ -406,6 +407,21 @@ RAISE NOTICE 'vol1: %', vol1_id;
 RAISE NOTICE 'vol2: %', vol2_id;
 RAISE NOTICE 'org1: %', org1_id;
 RAISE NOTICE 'mod1: %', mod1_id;
+
+--Registered Charity (Mock for actual CRA data)
+INSERT INTO public."RegisteredCharity" (id, "registrationNumber", "organizationName")
+VALUES
+  (gen_random_uuid(), '123456789', 'Red Cross International'),
+  (gen_random_uuid(), '234567891', 'World United'),
+  (gen_random_uuid(), '345678912', 'Green Earth Initiative'),
+  (gen_random_uuid(), '456789123', 'Helping Hands Foundation'),
+  (gen_random_uuid(), '567891234', 'Future Minds Education'),
+  (gen_random_uuid(), '678912345', 'Global Care Network'),
+  (gen_random_uuid(), '789123456', 'Hope Shelter Society'),
+  (gen_random_uuid(), '891234567', 'Food For All Alliance'),
+  (gen_random_uuid(), '912345678', 'Bright Horizons Outreach'),
+  (gen_random_uuid(), '135792468', 'Community Wellness Trust');
+
 
 --Storage Buckets
 INSERT INTO storage.buckets (id, name, public)
