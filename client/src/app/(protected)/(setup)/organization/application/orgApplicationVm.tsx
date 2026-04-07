@@ -8,8 +8,8 @@ import { useAppSession } from "@/providers/app-session-provider";
 
 export function useOrgApplicationViewModel() {
   const router = useRouter();
-  const { refresh } = useAppSession();
   const { session, loading, signOut } = useAuth();
+  const { refresh } = useAppSession();
   const [currentOrg, setCurrentOrg] = useState<CurrentOrganization>();
   const [address, setAddress] = useState({
     streetAdr: "",
@@ -18,7 +18,6 @@ export function useOrgApplicationViewModel() {
     postalCode: ""
   })
   const [file, setFile] = useState<File | null>();
-
 
   const [error, setError] = useState<string | null>(null);
   const [bootstrapping, setBootStrapping] = useState(true);
