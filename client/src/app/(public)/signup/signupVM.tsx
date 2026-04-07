@@ -79,17 +79,12 @@ export function useSignUpViewModel() {
                 } 
             }
 
-            if (data.session) {
-                await refresh();
-                
-                const nextRoute =
-                    role === "VOLUNTEER"
-                        ? "/volunteer/experience-input"
-                        : "/organization/application";
-                
-                router.replace(nextRoute)
-                return;
-            }
+            const nextRoute =
+                role === "VOLUNTEER"
+                    ? "/volunteer/experience-input"
+                    : "/organization/application";
+            
+            router.replace(nextRoute)
         } catch (err) {
             console.error(err);
             setError("Cannot sign up. Try again later.")

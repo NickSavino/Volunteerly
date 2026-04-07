@@ -62,7 +62,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
 
     if (authLoading) return;
 
-    if (!session?.access_token) {
+    if (!session || !session?.access_token) {
       clear();
       setLoading(false);
       setInitialized(true);
@@ -70,6 +70,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
     }
 
     setLoading(true);
+    setInitialized(false);
 
     try {
       const rawUser = await api<unknown>("/current-user");
@@ -134,7 +135,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Failed to initialize app session", error);
-      signOut()
+      signOut()      
       if (requestId !== requestIdRef.current) return;
       clear();
     } finally {
@@ -143,7 +144,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
         setInitialized(true);
       }
     }
-  }, [authLoading, session, clear]);
+  }, [authLoading, session?.access_token, clear]);
 
   useEffect(() => {
     void refresh();

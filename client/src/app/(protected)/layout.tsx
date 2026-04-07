@@ -36,8 +36,11 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   const redirectTarget = useMemo(() => {
     if (!initialized || loading) return null;
 
-    if (!isAuthenticated || !currentUser) {
-      return "/login";
+    if (!isAuthenticated) {
+      return "/login";    
+    }
+    if (!currentUser){
+      return null
     }
 
     const defaultRoute = resolveDefaultAppRoute({
