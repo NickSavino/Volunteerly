@@ -48,16 +48,14 @@ export async function updateCurrentOrganization(orgId: string, contactName: stri
     return organization;
 }
 
-export async function applyOrganization(orgId: string, orgName:string, charityNum: number, status:OrganizationState, contactName: string, contactEmail: string,
+export async function applyOrganization(orgId: string, orgName:string, charityNum: number, contactName: string, contactEmail: string,
     contactNum: string, missionStmt: string, causeCat: string, website:string, hqAdr: string, file:Express.Multer.File) {
 
     const savedFilePath = await saveFile(orgId, file)
 
     const autoApprove = await autoApproval(orgName, charityNum, file)
 
-    if (autoApprove) {
-        status = "VERIFIED"
-    }
+    const status: OrganizationState = autoApprove ? "VERIFIED" : "APPLIED";
 
     const organization = await prisma.organization.update({
         where: { id: orgId },

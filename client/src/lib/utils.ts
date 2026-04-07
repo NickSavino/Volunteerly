@@ -31,6 +31,10 @@ export function resolveDefaultAppRoute({
       switch (currentOrganization?.status) {
         case "CREATED":
           return "/organization/application";
+        case "APPLIED":
+          return "/organization/appliedDashboard"
+        case "REJECTED":
+          return "/organization/appliedDashboard"
         default:
           return "/organization";
       }
@@ -40,5 +44,8 @@ export function resolveDefaultAppRoute({
 
     case "ADMIN":
       return "/admin"
+
+    default:
+      return "/";
   }
 }

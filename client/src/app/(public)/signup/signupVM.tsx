@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
 import { CurrentOrganizationUpdateSchema, CurrentUserUpdateSchema, UpdateCurrentVolunteerSchema } from "@volunteerly/shared";
 import { UserService } from "@/services/UserService";
 import { VolunteerService } from "@/services/VolunteerService";
 import { OrganizationService } from "@/services/OrganizationService";
-import { useAppSession } from "@/providers/app-session-provider";
+import { useAuth } from "@/providers/auth-provider";
 
 export function useSignUpViewModel() {
     const router = useRouter();
-    const { refresh } = useAppSession();
+    const { session, loading } = useAuth();
+
+    const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
     const [fName, setfName] = useState("");
     const [lName, setlName] = useState("");
@@ -79,17 +81,34 @@ export function useSignUpViewModel() {
                 } 
             }
 
-            const nextRoute =
-                role === "VOLUNTEER"
-                    ? "/volunteer/experience-input"
-                    : "/organization/application";
-            
-            router.replace(nextRoute)
+            if (data.session) {
+                const nextRoute =
+                    role === "VOLUNTEER"
+                        ? "/volunteer/experience-input"
+                        : "/organization/application";
+                
+                setPendingRoute(nextRoute)
+                return;
+            }
         } catch (err) {
             console.error(err);
             setError("Cannot sign up. Try again later.")
         }
     }
+
+    useEffect(() => {
+        async function continueAfterAuth() {
+            if (!pendingRoute) return;
+            if (loading) return;
+            if (!session?.access_token) return;
+
+            router.replace(pendingRoute);
+            setPendingRoute(null);
+        }
+
+        void continueAfterAuth();
+    }, [pendingRoute, loading, session, router])
+
     return {
         email,
         setEmail,

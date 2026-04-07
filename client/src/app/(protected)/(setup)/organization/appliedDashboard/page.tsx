@@ -10,26 +10,26 @@ import { Navbar } from "../application/navbar";
 import { LoadingScreen } from "@/components/common/loading-screen";
 
 export default function HomePage() {
-  const {loading, session, router, signOut, currentUser} = useAppliedOrgDashboardViewModel()
+  const {loading, session, router, signOut, currentOrganization} = useAppliedOrgDashboardViewModel()
 
-  if (loading || !session) {
+  if (loading || !session || !currentOrganization) {
     return (<LoadingScreen />)
   }
   return (
     <div className="min-h-screen">
         <title>Organization Dashboard - Volunteerly</title>
-        <Navbar name={currentUser?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
+        <Navbar name={currentOrganization?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
         
         <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 ">
     
             <div className="w-full mb-5 md:mb-0 md:w-2/3 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
                 <div className="flex flex-col justify-center h-full text-center">
-                    <h1 className="text-2x1 font-bold">Welcome, {currentUser?.orgName}</h1>                   
+                    <h1 className="text-2x1 font-bold">Welcome, {currentOrganization?.orgName}</h1>                   
                     <div className="bg-warning p-5 m-5 radius-2 rounded-sm">
-                        {currentUser?.status === "REJECTED" ? 
+                        {currentOrganization?.status === "REJECTED" ? 
                             <>
                                 <h1>Application Rejected</h1>
-                                <p>{currentUser.rejectionReason}</p>
+                                <p>{currentOrganization.rejectionReason}</p>
                                 <p>Please Open a Ticket to dispute this decision.</p>
                             </>
                             :
@@ -50,8 +50,8 @@ export default function HomePage() {
                                 <AvatarFallback>ORG</AvatarFallback>
                             </Avatar>
                         </div>
-                        <h3>{currentUser?.orgName}</h3>
-                        <p>{currentUser?.causeCategory}</p>
+                        <h3>{currentOrganization?.orgName}</h3>
+                        <p>{currentOrganization?.causeCategory}</p>
                     </CardContent>
                     <hr className="mx-10 border-gray-300" />
                     <CardContent>

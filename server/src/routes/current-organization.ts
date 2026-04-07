@@ -104,7 +104,7 @@ currentOrganizationRouter.put("/apply", upload.single("document"),async (req, re
                 message: "No Document Submitted."
             });
             }
-            const updated_org = await applyOrganization(userId, orgName, charityNum_int, "APPLIED" ,contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr, file);  
+            const updated_org = await applyOrganization(userId, orgName, charityNum_int ,contactName, contactEmail, contactNum, missionStatement, causeCategory, website, hqAdr, file);  
             if (!updated_org) {
                 return res.status(500).json({
                     error: "Cannot update Organization",
