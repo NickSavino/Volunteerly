@@ -24,7 +24,8 @@ export const CurrentVolunteerSchema = z.object({
   averageRating: z.number().default(0),
   reviewCount: z.number().int().default(0),
   createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime()
+  updatedAt: z.iso.datetime(),
+  skill_vector: z.array(z.number()).optional(),
 });
 export type CurrentVolunteer = z.infer<typeof CurrentVolunteerSchema>;
 
