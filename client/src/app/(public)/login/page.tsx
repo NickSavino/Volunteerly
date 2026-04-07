@@ -13,9 +13,9 @@ import { Label } from "@/components/ui/label";
 import { LoadingScreen } from "@/components/common/loading-screen";
 
 export default function LoginPage() {
-    const {email, setEmail, password, setPassword, submitting, error, handleSubmit} = useLoginViewModel()
+    const {email, setEmail, password, setPassword, submitting, pendingRedirect, error, handleSubmit} = useLoginViewModel()
 
-    if (submitting){
+    if (submitting || pendingRedirect){
         return (<LoadingScreen />)
     }
 

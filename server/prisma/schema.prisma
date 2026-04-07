@@ -365,6 +365,12 @@ model VolunteerReport {
   @@map("volunteer_reports")
 }
 
+model RegisteredCharity {
+  id                 String   @id @default(uuid())
+  registrationNumber Int   @unique
+  organizationName   String
+}
+
 enum TicketStatus {
   OPEN
   CLOSED

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AppModal } from "@/components/common/app-modal";
-import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft, MessageSquareCheck, MessageCircleMore, UserStar, CircleDollarSign, Clock4} from "lucide-react";
+import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase, CalendarX, AlarmClockCheck, Handshake, ArrowLeft, MessageSquareCheck, MessageCircleMore, UserStar, CircleDollarSign, Clock4, User} from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { UserService } from "@/services/UserService";
 
 
 export default function ViewOpportunityPage({
@@ -163,8 +164,10 @@ export default function ViewOpportunityPage({
                                                     <Item key={app.id} variant="outline" className="mb-2">
                                                         <ItemMedia>
                                                             <Avatar size="lg">
-                                                                <AvatarImage src={avtImg.src} />
-                                                                <AvatarFallback>ORG</AvatarFallback>
+                                                                <Avatar className="h-auto w-10">
+                                                                    <AvatarImage src={UserService.getAvatarURL(app?.volId || "")} />
+                                                                    <AvatarFallback> <User className="h-auto w-20"></User></AvatarFallback>
+                                                                </Avatar>                                                            
                                                             </Avatar>
                                                         </ItemMedia>
                                                         <ItemContent>
