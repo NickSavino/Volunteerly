@@ -138,7 +138,7 @@ export const TECH_NODES: SkillNodeDef[] = [
     trackedSkills: ["Excel", "Data Analysis"],
     threshold: 3, requiresAny: [["excel"]],
     description: "Build dashboards and BI reports to drive org decisions.",
-    requirementLabel: "Unlock Spreadsheets, then log Excel + Data Analysis across 3 combined opportunities",
+    requirementLabel: "Unlock Spreadsheets, then log Excel or Data Analysis across 3 combined opportunities",
   },
   {
     id: "cybersecurity", label: "Cyber Basics", iconKey: "Lock", icon: Lock,
