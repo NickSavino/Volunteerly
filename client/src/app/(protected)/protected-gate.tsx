@@ -103,10 +103,14 @@ const router = useRouter();
       const onSetupRoute = isOrganizationSetupRoute(pathname);
 
       const needsSetup =
-        orgStatus === "CREATED" || orgStatus === "APPLIED";
-      
-      if (needsSetup && pathname !== defaultRoute) {
-        return defaultRoute
+        orgStatus === "CREATED" || orgStatus === "APPLIED" || orgStatus === "REJECTED";
+
+      if ((orgStatus == "APPLIED" || orgStatus == "REJECTED") && !(onSetupRoute)){
+          return "/organization/appliedDashboard"
+      }
+
+      if (orgStatus == 'CREATED' && pathname !== defaultRoute) {  
+          return defaultRoute
       }
 
       if (!needsSetup && onSetupRoute) {
