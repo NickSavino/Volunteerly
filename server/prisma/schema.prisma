@@ -47,6 +47,8 @@ model Moderator {
 
   user User @relation(fields: [id], references: [id])
 
+  handledReports VolunteerReport[] @relation("volunteer_report_moderator_action")
+
   @@map("moderators")
 }
 
@@ -354,7 +356,13 @@ model VolunteerReport {
   id String @id @default(uuid())
 
   reason String  @default("")
+  details String @default("")
+  severity UrgencyRating?
   isOpen Boolean @default(true) @map("is_open")
+  actionTaken VolunteerReportAction? @map("action_taken")
+  moderatorNote String @default("") @map("moderator_note")
+  suspensionUntil DateTime? @map("suspension_until")
+  resolvedAt DateTime? @map("resolved_at")
 
   reportedUser   User   @relation("ReportsReceived", fields: [reportedUserId], references: [id])
   reportedUserId String @map("reported_user_id")
@@ -362,10 +370,20 @@ model VolunteerReport {
   reportingUser   User   @relation("ReportsFiled", fields: [reportingUserId], references: [id])
   reportingUserId String @map("reporting_user_id")
 
+  moderatedBy Moderator? @relation("volunteer_report_moderator_action", fields: [moderatedById], references: [id], onDelete: SetNull)
+  moderatedById String? @map("moderated_by_id")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
+  @@index([reportedUserId, isOpen])
   @@map("volunteer_reports")
+}
+
+enum VolunteerReportAction {
+  WARNING
+  SUSPEND
+  ESCALATE
 }
 
 model RegisteredCharity {
