@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/build
+**/.next
+**/out
+**/coverage
+.vercel
+.qodo
+package-lock.json
+.env
+.env.*
+*.log

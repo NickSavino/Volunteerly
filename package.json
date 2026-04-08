@@ -8,7 +8,10 @@
     "typecheck": "npm run typecheck -w shared && npm run typecheck -w server && npm run typecheck -w client",
     "dev": "concurrently -n shared,server,client -c auto \"npm run dev -w shared\" \"npm run dev -w server\" \"npm run dev -w client\"",
     "db:reset": "npx supabase db reset && npm run db:reset -w server",
-    "test": "npm run test -w shared && npm run test -w server && npm run test -w client"
+    "test": "npm run test -w shared && npm run test -w server && npm run test -w client",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "npm run lint -w client"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +26,7 @@
     "@types/node": "^25.3.5",
     "concurrently": "^9.2.1",
     "eslint": "^9.39.3",
+    "prettier": "^3.8.1",
     "supabase": "^2.76.17"
   },
   "dependencies": {
