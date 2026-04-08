@@ -5,8 +5,14 @@ import {
     ModeratorTicketDetailSchema,
     ModeratorTicketList,
     ModeratorTicketListSchema,
+    ModeratorVolunteerDetail,
+    ModeratorVolunteerDetailSchema,
+    ModeratorVolunteerEscalateInput,
+    ModeratorVolunteerFlagInput,
     ModeratorVolunteerList,
     ModeratorVolunteerListSchema,
+    ModeratorVolunteerSuspendInput,
+    ModeratorVolunteerWarnInput,
     UpdateCurrentModerator,
 } from "@volunteerly/shared";
 
@@ -85,5 +91,44 @@ export class ModeratorService {
         }
 
         return parsed.data;
+    }
+
+    static async getModeratorVolunteerDetail(volunteerId: string): Promise<ModeratorVolunteerDetail> {
+        const json = await api<unknown>(`/moderator/volunteers/${volunteerId}`);
+        const parsed = ModeratorVolunteerDetailSchema.safeParse(json);
+
+        if (!parsed.success) {
+            throw new Error("Error fetching volunteer detail.");
+        }
+
+        return parsed.data;
+    }
+
+    static async flagVolunteer(volunteerId: string, input: ModeratorVolunteerFlagInput) {
+        return api<{ success: boolean }>(`/moderator/volunteers/${volunteerId}/flag`, {
+            method: "POST",
+            body: JSON.stringify(input),
+        });
+    }
+
+    static async warnVolunteer(volunteerId: string, input: ModeratorVolunteerWarnInput) {
+        return api<{ success: boolean }>(`/moderator/volunteers/${volunteerId}/warn`, {
+            method: "POST",
+            body: JSON.stringify(input),
+        });
+    }
+
+    static async suspendVolunteer(volunteerId: string, input: ModeratorVolunteerSuspendInput) {
+        return api<{ success: boolean }>(`/moderator/volunteers/${volunteerId}/suspend`, {
+            method: "POST",
+            body: JSON.stringify(input),
+        });
+    }
+
+    static async escalateVolunteer(volunteerId: string, input: ModeratorVolunteerEscalateInput) {
+        return api<{ success: boolean }>(`/moderator/volunteers/${volunteerId}/escalate`, {
+            method: "POST",
+            body: JSON.stringify(input),
+        });
     }
 }

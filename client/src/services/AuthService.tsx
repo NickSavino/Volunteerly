@@ -29,4 +29,12 @@ export class AuthService {
             throw error
         }
     }
+
+    static async signOutUser() {
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            throw error
+        }
+    }
 }

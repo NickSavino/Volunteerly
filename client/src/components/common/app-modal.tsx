@@ -9,6 +9,7 @@ type AppModalProps = {
     open: boolean;
     onClose: () => void;
     title: string;
+    description?: string;
     icon?: ReactNode;
     children: ReactNode;
     footer?: ReactNode;
@@ -21,6 +22,7 @@ export function AppModal({
     open,
     onClose,
     title,
+    description,
     icon,
     children,
     footer,
@@ -31,8 +33,9 @@ export function AppModal({
     return (
         <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
             <DialogContent
+                aria-describedby={description ? undefined : undefined}
                 className={cn(
-                    "gap-0 overflow-hidden rounded-2xl border bg-card p-0 shadow-2xl [&>button]:hidden",
+                    "flex max-h-[90vh] flex-col gap-0 overflow-hidden rounded-2xl border bg-card p-0 shadow-2xl [&>button]:hidden",
                     maxWidthClassName
                 )}>
                     <DialogHeader className="flex-row items-center justify-between border-b px-6 py-5 text-left">
@@ -54,7 +57,7 @@ export function AppModal({
                         </DialogClose>
                     </DialogHeader>
 
-                    <div className={cn("px-6 py-5", bodyClassName)}>{children}</div>
+                    <div className={cn("min-h-0 flex-1 overflow-y-auto px-6 py-5", bodyClassName)}>{children}</div>
 
                     {footer ? (
                         <div

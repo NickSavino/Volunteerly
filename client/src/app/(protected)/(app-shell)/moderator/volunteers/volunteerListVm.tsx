@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ModeratorVolunteerListItem, VolunteerModerationTab } from "@volunteerly/shared";
 import { useAuth } from "@/providers/auth-provider";
 import { ModeratorService } from "@/services/ModeratorService";
@@ -14,6 +14,7 @@ export const VOLUNTEER_TABS: { key: VolunteerModerationTab; label: string }[] = 
 ];
 
 const PAGE_SIZE_OPTIONS = [3, 5, 10] as const;
+
 
 export function useVolunteerListViewModel() {
     const router = useRouter();
@@ -32,22 +33,27 @@ export function useVolunteerListViewModel() {
     const [pendingPageSize, setPendingPageSize] = useState<number>(3);
     const [currentPage, setCurrentPage] = useState(1);
 
-    useEffect(() => {
-        async function load() {
-            if (!session?.access_token) return;
+    const accessToken = session?.access_token;
 
+    const loadVolunteers = useCallback(async () => {
+            if (!accessToken) return;
+            
+            setLoadingData(true);
             try {
                 const volunteers = await ModeratorService.getModeratorVolunteers();
                 setVolunteersList(volunteers);
+                setError(null);
             } catch {
                 setError("Failed to load volunteers.");
             } finally {
                 setLoadingData(false);
             }
-        }
+        }, [accessToken]);
 
-        load();
-    }, [session]);
+    useEffect(() => {
+
+        void loadVolunteers();
+    }, [loadVolunteers]);
 
     const tabCounts = useMemo(
         () => ({
@@ -119,6 +125,7 @@ export function useVolunteerListViewModel() {
             activeTab,
             tabCounts,
             error,
+            refreshVolunteers: loadVolunteers
         },
         filters: {
             pendingSearch,

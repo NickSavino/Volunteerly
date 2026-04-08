@@ -8,6 +8,8 @@ import { ModeratorListContainer } from "@/components/moderator/moderator-list-co
 import { ModeratorPageHeader } from "@/components/moderator/moderator-page-header";
 import { ModeratorPagination } from "@/components/moderator/moderator-pagination";
 import { ModeratorTabs } from "@/components/moderator/moderator-tabs";
+import { useState } from "react";
+import { VolunteerDetailModal, VolunteerModalMode } from "@/app/(protected)/(app-shell)/moderator/volunteers/volunteer-detail-modal";
 
 function getSeverity(pastFlagsCount: number) {
     return pastFlagsCount >= 3 ? "HIGH": "MEDIUM";
@@ -16,18 +18,39 @@ function getSeverity(pastFlagsCount: number) {
 export default function ModeratorVolunteersPage() {
     const { auth, page, filters, data, pagination } = useVolunteerListViewModel();
 
-    if (auth.loading || !auth.session) {
+    const [selectedVolunteerId, setSelectedVolunteerId] = useState<string | null>(null);
+    const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
+    const [volunteerModalMode, setVolunteerModalMode] = useState<VolunteerModalMode>("profile");
+
+    function openVolunteerModal(volunteerId: string, mode: VolunteerModalMode) {
+        setSelectedVolunteerId(volunteerId);
+        setVolunteerModalMode(mode);
+        setIsVolunteerModalOpen(true);
+    }
+
+    function closeVolunteerModal() {
+        setIsVolunteerModalOpen(false);
+        setSelectedVolunteerId(null);
+        setVolunteerModalMode("profile");
+    }
+
+    if (auth.loading && !auth.session) {
         return <main className="p-6">Loading...</main>
     }
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="h-20 border-b border-border bg-card" />
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <ModeratorPageHeader
                     title={page.title}
                     subtitle={page.subtitle}
                 />
+
+                {page.error && (
+                    <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                        {page.error}
+                    </p>
+                )}
 
                 <ModeratorFilterBar
                     searchLabel="Search Volunteers"
@@ -121,28 +144,38 @@ export default function ModeratorVolunteersPage() {
                                                 {severity}
                                             </span>
 
-                                            <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-4 text-xl font-bold text-foreground hover:opacity-90">
+                                            <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-4 text-xl font-bold text-foreground hover:opacity-90"
+                                                onClick={() => openVolunteerModal(volunteer.id, "profile")}
+                                            >
                                                 View Profile
                                                 <ExternalLink className="h-5 w-5" />
                                             </button>
 
                                         </div>
                                         <div className="flex flex-wrap items-center gap-2">
-                                            <button className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-foreground hover:opacity-90">
+                                            <button className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-foreground hover:opacity-90"
+                                                onClick={() => openVolunteerModal(volunteer.id, "investigation")}
+                                            >
                                                 View Investigation
                                             </button>
 
-                                            <button className="rounded-xl border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary">
+                                            <button 
+                                                onClick={() => openVolunteerModal(volunteer.id, "warning")}
+                                                className="rounded-xl border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary">
                                                 Issue Warning
                                             </button>
 
-                                            <button className="rounded-xl border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary">
+                                            <button 
+                                                onClick={() => openVolunteerModal(volunteer.id, "suspend")}
+                                                className="rounded-xl border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary">
                                                 Suspend
                                             </button>
                                         </div>
                                     </div>
                                 ) : (
-                                    <button className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-4 text-xl font-bold text-foreground hover:opacity-90">
+                                    <button 
+                                        onClick={() => openVolunteerModal(volunteer.id, "profile")}
+                                        className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-4 text-xl font-bold text-foreground hover:opacity-90">
                                         View Profile
                                         <ExternalLink className="h-5 w-5" />
                                     </button>
@@ -173,6 +206,14 @@ export default function ModeratorVolunteersPage() {
                     />
                 </div>
             </main>
+
+            <VolunteerDetailModal
+                volunteerId={selectedVolunteerId}
+                open={isVolunteerModalOpen}
+                mode={volunteerModalMode}
+                onClose={closeVolunteerModal}
+                onUpdated={page.refreshVolunteers}
+            />
         </div>
     )
 }

@@ -147,12 +147,41 @@ export async function postFlag(
     flaggedUserId: string,
     reason: string,
 ) {
-    return prisma.flag.create({
-        data: {
-            flagIssuerId: issuerId,
-            flaggedUserId,
-            reason,
-        },
+    return prisma.$transaction(async (tx) => {
+        const flag = await tx.flag.create({
+            data: {
+                flagIssuerId: issuerId,
+                flaggedUserId,
+                reason,
+            },
+        });
+
+        const flaggedVolunteer = await tx.volunteer.findUnique({
+            where: { id: flaggedUserId },
+            select: { id: true },
+        });
+
+        if (flaggedVolunteer) {
+            await tx.volunteerReport.create({
+                data: {
+                    reportedUserId: flaggedUserId,
+                    reportingUserId: issuerId,
+                    reason,
+                },
+            });
+
+            await tx.volunteer.update({
+                where: { id: flaggedUserId },
+                data: { status: "FLAGGED" },
+            });
+
+            await tx.user.update({
+                where: { id: flaggedUserId },
+                data: { status: "FLAGGED" },
+            });
+        }
+
+        return flag;
     });
 }
 

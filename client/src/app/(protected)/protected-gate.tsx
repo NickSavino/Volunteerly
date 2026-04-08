@@ -1,6 +1,7 @@
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { resolveDefaultAppRoute } from "@/lib/utils";
 import { useAppSession } from "@/providers/app-session-provider";
+import { useAuth } from "@/providers/auth-provider";
 import { UserRole } from "@volunteerly/shared";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useMemo } from "react";
@@ -45,10 +46,20 @@ const router = useRouter();
     currentOrganization,
   } = useAppSession();
 
+  const { signOut } = useAuth();
+
+  useEffect(() => {
+    if (!initialized || loading) return;
+    if (!isAuthenticated || !currentUser) return;
+    if (currentUser?.status !== "BANNED") return;
+
+    void signOut();
+  }, [currentUser, currentUser?.status, initialized, isAuthenticated, loading, signOut])
+
   const redirectTarget = useMemo(() => {
     if (!initialized || loading) return null;
 
-    if (!isAuthenticated || !currentUser) {
+    if (!isAuthenticated || !currentUser || currentUser.status === "BANNED") {
       return "/login";
     }
 

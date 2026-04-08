@@ -24,7 +24,11 @@ BEGIN
         public.organizations,
         public.moderators,
         public.users,
-        public."RegisteredCharity"
+        public."RegisteredCharity",
+        public.flags,
+        public.opportunity_skills,
+        public.volunteer_work_experiences,
+        public.volunteer_educations
         RESTART IDENTITY CASCADE';
 EXCEPTION WHEN others THEN
     RAISE NOTICE 'Cleanup skipped: %', SQLERRM;
@@ -75,6 +79,7 @@ DECLARE
     ticket_conv1_id UUID := 'a0000000-0000-4000-8000-000000000801';
     ticket_conv2_id UUID := 'a0000000-0000-4000-8000-000000000802';
     ticket_conv3_id UUID := 'a0000000-0000-4000-8000-000000000803';
+    ticket_conv4_id UUID := 'a0000000-0000-4000-8000-000000000804';
 
     review1_id   UUID := 'a0000000-0000-4000-8000-000000000901';
     review2_id   UUID := 'a0000000-0000-4000-8000-000000000902';
@@ -91,7 +96,10 @@ DECLARE
 
     vol_skill1_id UUID := 'a0000000-0000-4000-8000-000000001008';
     vol_skill2_id UUID := 'a0000000-0000-4000-8000-000000001009';
-    
+
+    report1_id UUID := 'a0000000-0000-4000-8000-000000001201';
+    report2_id UUID := 'a0000000-0000-4000-8000-000000001202';
+    report3_id UUID := 'a0000000-0000-4000-8000-000000001203';
 BEGIN
 
 --Auth Users
@@ -240,12 +248,30 @@ INSERT INTO public.chat_messages (
     id,
     conversation_id,
     sender_id,
-    content
+    sender_display_name_snapshot,
+    sender_role_snapshot,
+    content,
+    sent_at
 )
 VALUES
-    (gen_random_uuid()::text, conv1_id::text, vol1_id::text, 'Hi, I am interested in the opportunity!'),
-    (gen_random_uuid()::text, conv1_id::text, org1_id::text, 'Great! We would love to have you.');
-
+    (
+        gen_random_uuid()::text,
+        conv1_id::text,
+        vol1_id::text,
+        'Estelle Bright',
+        'VOLUNTEER',
+        'Hi, I am interested in the opportunity!',
+        '2026-03-25 13:05:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        conv1_id::text,
+        org1_id::text,
+        'Red Cross International',
+        'ORGANIZATION',
+        'Great! We would love to have you.',
+        '2026-03-25 13:10:00'
+    );
 --Tickets
 INSERT INTO public.tickets (
     id,
@@ -262,7 +288,7 @@ VALUES
     (
         ticket1_id::text,
         vol1_id::text,
-        mod1_id::text,
+        NULL,
         'BUG',
         'Cannot upload profile photo',
         'The upload button does nothing on Firefox.',
@@ -284,7 +310,7 @@ VALUES
     (
         ticket3_id::text,
         org1_id::text,
-        mod1_id::text,
+        NULL,
         'OTHER',
         'Need help updating private organization details',
         'We need our primary contact information updated and cannot edit it from the profile page.',
@@ -295,7 +321,7 @@ VALUES
     (
         ticket4_id::text,
         org2_id::text,
-        mod1_id::text,
+        NULL,
         'BILLING',
         'Question about premium analytics charges',
         'We were expecting the monthly report to be included. Please clarify the current billing status.',
@@ -306,7 +332,7 @@ VALUES
     (
         ticket5_id::text,
         vol1_id::text,
-        mod1_id::text,
+        NULL,
         'BUG',
         'Dashboard stats are not updating',
         'My completed opportunity hours have not changed since last week even after refreshing.',
@@ -317,7 +343,7 @@ VALUES
     (
         ticket6_id::text,
         org3_id::text,
-        mod1_id::text,
+        NULL,
         'OTHER',
         'Volunteer application page is confusing',
         'The applicant review flow is unclear and our staff is not sure how to proceed after opening an application.',
@@ -336,30 +362,37 @@ INSERT INTO public.chat_conversations (
     last_message_at
 )
 VALUES
-    (ticket_conv1_id::text, 'TICKET', ticket1_id::text, '2026-03-26 09:15:00', now(), '2026-03-26 09:15:00'),
-    (ticket_conv2_id::text, 'TICKET', ticket2_id::text, '2026-03-27 14:30:00', now(), '2026-03-27 14:30:00'),
-    (ticket_conv3_id::text, 'TICKET', ticket3_id::text, '2026-03-28 11:00:00', now(), '2026-03-28 11:00:00');
+    (ticket_conv1_id::text, 'TICKET', ticket1_id::text, '2026-03-26 09:15:00', '2026-03-26 10:05:00', '2026-03-26 10:05:00'),
+    (ticket_conv2_id::text, 'TICKET', ticket2_id::text, '2026-03-27 14:30:00', '2026-03-27 15:00:00', '2026-03-27 15:00:00'),
+    (ticket_conv3_id::text, 'TICKET', ticket3_id::text, '2026-03-28 11:00:00', '2026-03-28 11:20:00', '2026-03-28 11:20:00'),
+    (ticket_conv4_id::text, 'TICKET', ticket4_id::text, '2026-03-20 10:45:00', '2026-03-21 09:15:00', '2026-03-21 09:15:00');
 
 INSERT INTO public.chat_conversation_participants (
     id,
     conversation_id,
     user_id,
-    joined_at
+    joined_at,
+    last_read_at
 )
 VALUES
-    (gen_random_uuid()::text, ticket_conv1_id::text, vol1_id::text, now()),
-    (gen_random_uuid()::text, ticket_conv1_id::text, mod1_id::text, now()),
+    (gen_random_uuid()::text, ticket_conv1_id::text, vol1_id::text, '2026-03-26 09:15:00', '2026-03-26 10:10:00'),
+    (gen_random_uuid()::text, ticket_conv1_id::text, mod1_id::text, '2026-03-26 09:15:00', '2026-03-26 10:10:00'),
 
-    (gen_random_uuid()::text, ticket_conv2_id::text, vol2_id::text, now()),
-    (gen_random_uuid()::text, ticket_conv2_id::text, mod1_id::text, now()),
+    (gen_random_uuid()::text, ticket_conv2_id::text, vol2_id::text, '2026-03-27 14:30:00', '2026-03-27 15:05:00'),
+    (gen_random_uuid()::text, ticket_conv2_id::text, mod1_id::text, '2026-03-27 14:30:00', '2026-03-27 15:05:00'),
 
-    (gen_random_uuid()::text, ticket_conv3_id::text, org1_id::text, now()),
-    (gen_random_uuid()::text, ticket_conv3_id::text, mod1_id::text, now());
+    (gen_random_uuid()::text, ticket_conv3_id::text, org1_id::text, '2026-03-28 11:00:00', '2026-03-28 11:25:00'),
+    (gen_random_uuid()::text, ticket_conv3_id::text, mod1_id::text, '2026-03-28 11:00:00', '2026-03-28 11:25:00'),
+
+    (gen_random_uuid()::text, ticket_conv4_id::text, org2_id::text, '2026-03-20 10:45:00', '2026-03-21 09:20:00'),
+    (gen_random_uuid()::text, ticket_conv4_id::text, mod1_id::text, '2026-03-20 10:45:00', '2026-03-21 09:20:00');
 
 INSERT INTO public.chat_messages (
     id,
     conversation_id,
     sender_id,
+    sender_display_name_snapshot,
+    sender_role_snapshot,
     content,
     sent_at
 )
@@ -368,6 +401,8 @@ VALUES
         gen_random_uuid()::text,
         ticket_conv1_id::text,
         vol1_id::text,
+        'Estelle Bright',
+        'VOLUNTEER',
         'The upload button does nothing on Firefox.',
         '2026-03-26 09:16:00'
     ),
@@ -375,6 +410,8 @@ VALUES
         gen_random_uuid()::text,
         ticket_conv1_id::text,
         mod1_id::text,
+        'Admin Moderator',
+        'MODERATOR',
         'Thanks for reporting this. We are investigating the Firefox issue now.',
         '2026-03-26 10:05:00'
     ),
@@ -383,6 +420,8 @@ VALUES
         gen_random_uuid()::text,
         ticket_conv2_id::text,
         vol2_id::text,
+        'Joshua Bright',
+        'VOLUNTEER',
         'I received messages that made me uncomfortable.',
         '2026-03-27 14:32:00'
     ),
@@ -390,6 +429,8 @@ VALUES
         gen_random_uuid()::text,
         ticket_conv2_id::text,
         mod1_id::text,
+        'Admin Moderator',
+        'MODERATOR',
         'Understood. We have opened a review and will follow up shortly.',
         '2026-03-27 15:00:00'
     ),
@@ -398,6 +439,8 @@ VALUES
         gen_random_uuid()::text,
         ticket_conv3_id::text,
         org1_id::text,
+        'Red Cross International',
+        'ORGANIZATION',
         'We need our main contact information updated.',
         '2026-03-28 11:02:00'
     ),
@@ -405,20 +448,109 @@ VALUES
         gen_random_uuid()::text,
         ticket_conv3_id::text,
         mod1_id::text,
+        'Admin Moderator',
+        'MODERATOR',
         'Please send the new contact details here and we will update the record.',
         '2026-03-28 11:20:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        ticket_conv4_id::text,
+        org2_id::text,
+        'World United',
+        'ORGANIZATION',
+        'Can you clarify the premium analytics charge on our invoice?',
+        '2026-03-20 10:47:00'
+    ),
+    (
+        gen_random_uuid()::text,
+        ticket_conv4_id::text,
+        mod1_id::text,
+        'Admin Moderator',
+        'MODERATOR',
+        'We confirmed the charge and closed the ticket after follow-up.',
+        '2026-03-21 09:15:00'
     );
 
---Flags
-INSERT INTO public.flags (id, flag_issuer_id, flagged_user_id, reason)
+-- Moderation Intake Flags
+INSERT INTO public.flags (id, flag_issuer_id, flagged_user_id, reason, created_at)
 VALUES
-    (flag1_id::text, org1_id::text, vol2_id::text, 'Suspicious activity reported on profile.');
+    (flag1_id::text, org1_id::text, vol2_id::text, 'Missed deadlines and stopped responding.', '2026-04-02 09:00:00'),
+    (gen_random_uuid()::text, org2_id::text, vol1_id::text, 'Unprofessional communication during project handoff.', '2026-03-10 13:00:00'),
+    (gen_random_uuid()::text, org1_id::text, vol2_id::text, 'Repeated no-show after prior warning.', '2026-04-05 11:30:00');
 
-RAISE NOTICE 'Seed complete.';
-RAISE NOTICE 'vol1: %', vol1_id;
-RAISE NOTICE 'vol2: %', vol2_id;
-RAISE NOTICE 'org1: %', org1_id;
-RAISE NOTICE 'mod1: %', mod1_id;
+-- Volunteer Reports
+INSERT INTO public.volunteer_reports (
+    id,
+    reason,
+    details,
+    severity,
+    is_open,
+    action_taken,
+    moderator_note,
+    suspension_until,
+    resolved_at,
+    reported_user_id,
+    reporting_user_id,
+    moderated_by_id,
+    created_at,
+    updated_at
+)
+VALUES
+    (
+        report1_id::text,
+        'Missed deadlines and stopped responding.',
+        'Volunteer stopped replying after committing to deliverables for a scheduled engagement.',
+        'SERIOUS',
+        true,
+        NULL,
+        '',
+        NULL,
+        NULL,
+        vol2_id::text,
+        org1_id::text,
+        NULL,
+        '2026-04-02 09:00:00',
+        '2026-04-02 09:00:00'
+    ),
+    (
+        report2_id::text,
+        'Unprofessional communication during project handoff.',
+        'Issue was reviewed and addressed after moderator follow-up.',
+        'MODERATE',
+        false,
+        'WARNING',
+        'Formal warning issued. Future issues will escalate.',
+        NULL,
+        '2026-03-11 15:30:00',
+        vol1_id::text,
+        org2_id::text,
+        mod1_id::text,
+        '2026-03-10 13:00:00',
+        '2026-03-11 15:30:00'
+    ),
+    (
+        report3_id::text,
+        'Repeated no-show after prior warning.',
+        'Second report filed after an earlier warning on a similar reliability issue.',
+        'SERIOUS',
+        false,
+        'WARNING',
+        'Second warning recorded before suspension threshold.',
+        NULL,
+        '2026-04-05 14:00:00',
+        vol2_id::text,
+        org1_id::text,
+        mod1_id::text,
+        '2026-04-05 11:30:00',
+        '2026-04-05 14:00:00'
+    );
+
+UPDATE public.volunteers SET status = 'RESOLVED' WHERE id = vol1_id::text;
+UPDATE public.volunteers SET status = 'FLAGGED' WHERE id = vol2_id::text;
+
+UPDATE public.users SET status = 'VERIFIED' WHERE id = vol1_id::text;
+UPDATE public.users SET status = 'FLAGGED' WHERE id = vol2_id::text;
 
 --Registered Charity (Mock for actual CRA data)
 INSERT INTO public."RegisteredCharity" (id, "registrationNumber", "organizationName")
