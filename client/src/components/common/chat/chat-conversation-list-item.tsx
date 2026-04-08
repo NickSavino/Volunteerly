@@ -25,6 +25,10 @@ export function ChatConversationListItem({
   const fallback =
     conversation.otherParticipant?.displayName.slice(0, 2).toUpperCase() ?? "CH";
 
+  const conversationTitle = conversation.kind === "TICKET"
+    ? conversation.title ??
+      `Ticket #{(conversation.ticketId ?? conversation.id).slice(-8).toUpperCase()}`
+    : conversation.otherParticipant?.displayName ?? conversation.title ?? "Conversation";
   return (
     <button
       type="button"
@@ -45,7 +49,7 @@ export function ChatConversationListItem({
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-lg font-semibold text-foreground">
-              {conversation.otherParticipant?.displayName ?? conversation.title ?? "Conversation"}
+              {conversationTitle}
             </p>
             <p className="truncate text-sm text-muted-foreground">
               {conversation.lastMessagePreview || "No messages yet"}
