@@ -176,4 +176,14 @@ export class VolunteerService {
         );
     }
 
+    static async getOpportunityMatchScores(): Promise<Record<string, number>> {
+        try {
+            const response = await api<Record<string, number>>(
+                "/current-volunteer/opportunities/match-scores"
+            );
+            return response ?? {};
+        } catch {
+            return {};
+        }
+    }
 }
