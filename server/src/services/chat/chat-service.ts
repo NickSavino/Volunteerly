@@ -98,10 +98,22 @@ export async function createChatMessage(userId: string, conversationId: string, 
         some: { userId },
       },
     },
-    select: { id: true },
+    select: {
+      id: true,
+      kind: true,
+      ticket: {
+        select: {
+          status: true,
+        }
+      }
+    }
   });
 
   if (!conversation) return null;
+
+  if (conversation.kind === "TICKET" && conversation.ticket?.status === "CLOSED") {
+    throw new Error("TICKET_CLOSED");
+  }
 
   const message = await prisma.$transaction(async (tx) => {
     const createdMessage = await tx.chatMessage.create({

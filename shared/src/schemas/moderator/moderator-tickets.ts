@@ -1,5 +1,5 @@
 import z from "zod";
-import { TicketCategorySchema, TicketStatusSchema, UrgencyRatingSchema } from "../ticket";
+import { TicketCategorySchema, TicketStatusSchema, UrgencyRatingSchema } from "../ticket.js";
 
 export const ModeratorTicketStatusSchema = TicketStatusSchema;
 export type ModeratorTicketStatus = z.infer<typeof ModeratorTicketStatusSchema>;
