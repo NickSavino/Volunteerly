@@ -4,17 +4,22 @@ import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
-import type { CurrentModerator, ModeratorOrganizationList, ModeratorOrganizationListItem, Organization } from "@volunteerly/shared";
+import type {
+    CurrentModerator,
+    ModeratorOrganizationList,
+    ModeratorOrganizationListItem,
+    Organization,
+} from "@volunteerly/shared";
 import { appToast } from "@/components/common/app-toast";
 
 export type TabKey = "ALL" | "APPLIED" | "VERIFIED" | "REJECTED";
 export type SortKey = "alphabetical" | "newest" | "oldest";
 
 export const ORG_TABS: { key: TabKey; label: string }[] = [
-  { key: "ALL", label: "All Accounts" },
-  { key: "APPLIED", label: "Flagged Accounts" },
-  { key: "VERIFIED", label: "Resolved" },
-  { key: "REJECTED", label: "Closed" },
+    { key: "ALL", label: "All Accounts" },
+    { key: "APPLIED", label: "Flagged Accounts" },
+    { key: "VERIFIED", label: "Resolved" },
+    { key: "REJECTED", label: "Closed" },
 ];
 
 const PAGE_SIZE_OPTIONS = [3, 5, 10] as const;
@@ -74,12 +79,15 @@ export function useOrgListViewModel() {
         load();
     }, [session, router]);
 
-    const tabCounts = useMemo(() => ({
-        ALL: allOrgs.length,
-        APPLIED: allOrgs.filter((o) => o.status === "APPLIED").length,
-        VERIFIED: allOrgs.filter((o) => o.status === "VERIFIED").length,
-        REJECTED: allOrgs.filter((o) => o.status === "REJECTED").length,
-    }), [allOrgs]);
+    const tabCounts = useMemo(
+        () => ({
+            ALL: allOrgs.length,
+            APPLIED: allOrgs.filter((o) => o.status === "APPLIED").length,
+            VERIFIED: allOrgs.filter((o) => o.status === "VERIFIED").length,
+            REJECTED: allOrgs.filter((o) => o.status === "REJECTED").length,
+        }),
+        [allOrgs],
+    );
 
     const filteredOrgs = useMemo(() => {
         let orgs = allOrgs;
@@ -89,9 +97,7 @@ export function useOrgListViewModel() {
         }
 
         if (searchQuery.trim()) {
-            orgs = orgs.filter((o) =>
-                o.orgName.toLowerCase().includes(searchQuery.toLowerCase())
-            );
+            orgs = orgs.filter((o) => o.orgName.toLowerCase().includes(searchQuery.toLowerCase()));
         }
 
         if (sortBy === "alphabetical") {
@@ -151,17 +157,21 @@ export function useOrgListViewModel() {
         if (!selectedOrg || !allChecked) return;
         try {
             const result = await OrganizationService.approveOrganization(selectedOrg.id);
-            if (!result.success) { setError("Failed to approve organization."); return; }
-            setAllOrgs((prev) => prev.map((o) => o.id === selectedOrg.id ? { ...o, status: "VERIFIED" as const } : o));
+            if (!result.success) {
+                setError("Failed to approve organization.");
+                return;
+            }
+            setAllOrgs((prev) =>
+                prev.map((o) => (o.id === selectedOrg.id ? { ...o, status: "VERIFIED" as const } : o)),
+            );
             closeReviewModal();
             appToast.success("Organization approved", {
-                message: `${result.data.orgName} has been approved.`
-            })
-        }
-        catch {
+                message: `${result.data.orgName} has been approved.`,
+            });
+        } catch {
             appToast.error("Rejection Failed", {
-                message: "The organization could not be rejected."
-            })
+                message: "The organization could not be rejected.",
+            });
         }
     }
 
@@ -169,19 +179,23 @@ export function useOrgListViewModel() {
         if (!selectedOrg || !rejectionReason.trim()) return;
         try {
             const result = await OrganizationService.rejectOrganization(selectedOrg.id, rejectionReason);
-            if (!result.success) { setError("Failed to reject organization."); return; }
-            setAllOrgs((prev) => prev.map((o) => o.id === selectedOrg.id ? { ...o, status: "REJECTED" as const } : o));
+            if (!result.success) {
+                setError("Failed to reject organization.");
+                return;
+            }
+            setAllOrgs((prev) =>
+                prev.map((o) => (o.id === selectedOrg.id ? { ...o, status: "REJECTED" as const } : o)),
+            );
             closeReviewModal();
 
             appToast.success("Organization approved", {
-            message: `${result.data.orgName} has been rejected.`
-        })
+                message: `${result.data.orgName} has been rejected.`,
+            });
         } catch {
             appToast.error("Rejection Failed", {
-                message: "The organization could not be rejected."
-        })
+                message: "The organization could not be rejected.",
+            });
         }
-        
     }
 
     return {
@@ -220,7 +234,7 @@ export function useOrgListViewModel() {
             setCurrentPage,
             startItem,
             endItem,
-            totalItems: filteredOrgs.length
+            totalItems: filteredOrgs.length,
         },
         review: {
             selectedOrg,
@@ -237,7 +251,7 @@ export function useOrgListViewModel() {
             setRejectionReason,
             handleApprove,
             handleReject,
-            requestApprove
-        }
+            requestApprove,
+        },
     };
 }

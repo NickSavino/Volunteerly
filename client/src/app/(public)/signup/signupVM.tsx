@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
-import { CurrentOrganizationUpdateSchema, CurrentUserUpdateSchema, UpdateCurrentVolunteerSchema } from "@volunteerly/shared";
+import {
+    CurrentOrganizationUpdateSchema,
+    CurrentUserUpdateSchema,
+    UpdateCurrentVolunteerSchema,
+} from "@volunteerly/shared";
 import { UserService } from "@/services/UserService";
 import { VolunteerService } from "@/services/VolunteerService";
 import { OrganizationService } from "@/services/OrganizationService";
-import { useAppSession } from "@/providers/app-session-provider";
+import { useAuth } from "@/providers/auth-provider";
 
 export function useSignUpViewModel() {
     const router = useRouter();
-    const { refresh } = useAppSession();
+    const { session, loading } = useAuth();
+
+    const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
     const [fName, setfName] = useState("");
     const [lName, setlName] = useState("");
@@ -26,18 +32,19 @@ export function useSignUpViewModel() {
         setError(null);
 
         try {
-            const {data, error} = await AuthService.SignUpUserWithEmailPass(email, password)
+            const { data, error } = await AuthService.SignUpUserWithEmailPass(email, password);
 
             if (error) {
                 setError("Error Signing Up User.");
-            return;
-           }
+                setSubmitting(false);
+                return;
+            }
 
             const createdUser = CurrentUserUpdateSchema.parse({
-            email: email,
-            role: role,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+                email: email,
+                role: role,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
             });
 
             const userResult = await UserService.update_create_User(createdUser);
@@ -45,6 +52,7 @@ export function useSignUpViewModel() {
             if (!userResult.success) {
                 console.error("Failed to create user:", userResult.error);
                 setError("Cannot sign-up, try again later.");
+                setSubmitting(false);
                 return;
             }
 
@@ -59,10 +67,10 @@ export function useSignUpViewModel() {
                 if (!volunteerResult.success) {
                     console.error("Failed to create volunteer:", volunteerResult.error);
                     setError("Cannot sign-up, try again later.");
+                    setSubmitting(false);
                     return;
-                } 
-            } 
-            else if (role == "ORGANIZATION") {
+                }
+            } else if (role == "ORGANIZATION") {
                 const createdOrg = CurrentOrganizationUpdateSchema.parse({
                     orgName: orgName,
                 });
@@ -71,28 +79,36 @@ export function useSignUpViewModel() {
                 if (!orgResult.success) {
                     console.error("Failed to create organization:", orgResult.error);
                     setError("Cannot sign-up, try again later.");
+                    setSubmitting(false);
                     return;
-                } 
+                }
             }
 
             if (data.session) {
-                await refresh();
-                
-                const nextRoute =
-                    role === "VOLUNTEER"
-                        ? "/volunteer/experience-input"
-                        : "/organization/application";
-                
-                router.replace(nextRoute)
+                const nextRoute = role === "VOLUNTEER" ? "/volunteer/experience-input" : "/organization/application";
+
+                setPendingRoute(nextRoute);
                 return;
             }
         } catch (err) {
             console.error(err);
-            setError("Cannot sign up. Try again later.")
-        } finally {
-            setSubmitting(false);
+            setError("Cannot sign up. Try again later.");
         }
     }
+
+    useEffect(() => {
+        async function continueAfterAuth() {
+            if (!pendingRoute) return;
+            if (loading) return;
+            if (!session?.access_token) return;
+
+            router.replace(pendingRoute);
+            setPendingRoute(null);
+        }
+
+        void continueAfterAuth();
+    }, [pendingRoute, loading, session, router]);
+
     return {
         email,
         setEmail,
@@ -102,12 +118,12 @@ export function useSignUpViewModel() {
         setfName,
         lName,
         setlName,
-        orgName, 
+        orgName,
         setorgName,
-        role, 
+        role,
         setRole,
         submitting,
         error,
-        handleSubmit
-    }
+        handleSubmit,
+    };
 }

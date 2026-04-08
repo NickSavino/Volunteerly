@@ -22,8 +22,8 @@ export function requireRole(...allowedRoles: UserRole[]) {
             if (!user) {
                 return res.status(404).json({
                     error: "Not Found",
-                    message: "User not found."
-                })
+                    message: "User not found.",
+                });
             }
 
             if (!allowedRoles.includes(user.role)) {
@@ -37,5 +37,5 @@ export function requireRole(...allowedRoles: UserRole[]) {
         } catch (error) {
             next(error);
         }
-    }
+    };
 }

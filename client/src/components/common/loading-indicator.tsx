@@ -3,30 +3,21 @@
 import { cn } from "@/lib/utils";
 
 type LoadingIndicatorProps = {
-    size? :number;
-    strokeWidth?: number,
+    size?: number;
+    strokeWidth?: number;
     className?: string;
     label?: string;
-}
+};
 
-export function LoadingIndicator({
-    size = 72,
-    strokeWidth = 10,
-    className,
-    label = "Loading",
-}: LoadingIndicatorProps) {
+export function LoadingIndicator({ size = 72, strokeWidth = 10, className, label = "Loading" }: LoadingIndicatorProps) {
     const radius = (size - strokeWidth) / 2;
     const circumference = 2 * Math.PI * radius;
 
     const trackDash = `${circumference * 0.72} ${circumference * 0.28}`;
-    const activeDash = `${circumference * 0.24} ${circumference * 0.76}`
+    const activeDash = `${circumference * 0.24} ${circumference * 0.76}`;
 
     return (
-        <div
-            role="status"
-            aria-label={label}
-            className={cn("inline-flex items-center justify-center", className)}
-        >
+        <div role="status" aria-label={label} className={cn("inline-flex items-center justify-center", className)}>
             <svg
                 width={size}
                 height={size}
@@ -57,5 +48,5 @@ export function LoadingIndicator({
                 />
             </svg>
         </div>
-    )
+    );
 }

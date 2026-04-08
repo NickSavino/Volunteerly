@@ -11,6 +11,7 @@ import { requireRole } from "../middleware/require-role.js";
 import { auth } from "../middleware/auth.js";
 import { skillExtractionRouter } from "./skill-extraction.js";
 import { chatRouter } from "./chat/index.js";
+import { ticketsRouter } from "./tickets.js";
 
 export const apiRouter = Router();
 
@@ -27,4 +28,6 @@ apiRouter.use("/moderator", auth, requireRole("MODERATOR"), moderatorRouter);
 apiRouter.use("/organization", auth, OrganizationRouter);
 apiRouter.use("/volunteer-organization", auth, requireRole("VOLUNTEER"), volunteerOrganizationRouter);
 
-apiRouter.use("/chat", auth, requireRole("MODERATOR", "VOLUNTEER", "ORGANIZATION"), chatRouter)
+apiRouter.use("/chat", auth, requireRole("MODERATOR", "VOLUNTEER", "ORGANIZATION"), chatRouter);
+
+apiRouter.use("/tickets", auth, requireRole("VOLUNTEER", "MODERATOR", "ORGANIZATION"), ticketsRouter);

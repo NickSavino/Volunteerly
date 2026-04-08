@@ -2,7 +2,8 @@ import { Prisma, OrganizationState, CommitmentLevel, WorkType } from "@prisma/cl
 import { prisma } from "../lib/prisma.js";
 import { supabase } from "../lib/supabase.js";
 import { callDocumentAnalysis } from "./azure-service.js";
-
+import { extractSkillsFromOpportunity } from "./groq-service.js";
+import { embedText } from "./gemini-service.js";
 
 export async function getCurrentOrganization(orgId: string) {
     const org = await prisma.organization.findUnique({
@@ -14,12 +15,12 @@ export async function getCurrentOrganization(orgId: string) {
 
 export async function createCurrentOrganization(orgId: string, orgName: string) {
     const org = await prisma.organization.create({
-            data: {
+        data: {
             id: orgId,
             orgName: orgName,
-            status: OrganizationState.CREATED
-            },
-        });
+            status: OrganizationState.CREATED,
+        },
+    });
     if (!org) {
         throw new Error("Error creating the Organization.");
     }
@@ -27,7 +28,17 @@ export async function createCurrentOrganization(orgId: string, orgName: string) 
     return org;
 }
 
-export async function updateCurrentOrganization(orgId: string, contactName: string, contactEmail: string, contactNum: string, missionStmt: string, causeCat: string, website:string, impactHighlights: Prisma.InputJsonValue, hqAdr: string) {
+export async function updateCurrentOrganization(
+    orgId: string,
+    contactName: string,
+    contactEmail: string,
+    contactNum: string,
+    missionStmt: string,
+    causeCat: string,
+    website: string,
+    impactHighlights: Prisma.InputJsonValue,
+    hqAdr: string,
+) {
     const organization = await prisma.organization.update({
         where: { id: orgId },
         data: {
@@ -38,7 +49,7 @@ export async function updateCurrentOrganization(orgId: string, contactName: stri
             causeCategory: causeCat,
             website: website,
             impactHighlights: impactHighlights,
-            hqAdr:hqAdr
+            hqAdr: hqAdr,
         },
     });
     if (!organization) {
@@ -48,16 +59,24 @@ export async function updateCurrentOrganization(orgId: string, contactName: stri
     return organization;
 }
 
-export async function applyOrganization(orgId: string, orgName:string, charityNum: number, status:OrganizationState, contactName: string, contactEmail: string,
-    contactNum: string, missionStmt: string, causeCat: string, website:string, hqAdr: string, file:Express.Multer.File) {
+export async function applyOrganization(
+    orgId: string,
+    orgName: string,
+    charityNum: number,
+    contactName: string,
+    contactEmail: string,
+    contactNum: string,
+    missionStmt: string,
+    causeCat: string,
+    website: string,
+    hqAdr: string,
+    file: Express.Multer.File,
+) {
+    const savedFilePath = await saveFile(orgId, file);
 
-    const savedFilePath = await saveFile(orgId, file)
+    const autoApprove = await autoApproval(orgName, charityNum, file);
 
-    const autoApprove = await autoApproval(orgName, charityNum, file)
-
-    if (autoApprove) {
-        status = "VERIFIED"
-    }
+    const status: OrganizationState = autoApprove ? "VERIFIED" : "APPLIED";
 
     const organization = await prisma.organization.update({
         where: { id: orgId },
@@ -72,7 +91,7 @@ export async function applyOrganization(orgId: string, orgName:string, charityNu
             missionStatement: missionStmt,
             causeCategory: causeCat,
             website: website,
-            hqAdr: hqAdr
+            hqAdr: hqAdr,
         },
     });
 
@@ -83,77 +102,82 @@ export async function applyOrganization(orgId: string, orgName:string, charityNu
     return organization;
 }
 
-export async function autoApproval(orgName:string, charityNum: number, file:Express.Multer.File) {
-    
-    try {    
-        const result = await callDocumentAnalysis(file)
+export async function autoApproval(orgName: string, charityNum: number, file: Express.Multer.File) {
+    try {
+        const result = await callDocumentAnalysis(file);
 
         const officialNameParagraph = result.find((p: any) =>
-        p.content.toLowerCase().includes("registered under the name")
+            p.content.toLowerCase().includes("registered under the name"),
         );
 
-        const businessNumberParagraph = result.find((p: any) =>
-        p.content.toLowerCase().includes("business number is")
+        const businessNumberParagraph = result.find((p: any) => p.content.toLowerCase().includes("business number is"));
+
+        const officialName = officialNameParagraph?.content.split(":")[1]?.trim().slice(0, -1) || null;
+        const officialNumber = Number(
+            businessNumberParagraph?.content.toLowerCase().split("business number is")[1]?.trim() || null,
         );
 
-        const officialName = officialNameParagraph?.content.split(":")[1]?.trim().slice(0, -1) || null
-        const officialNumber = Number(businessNumberParagraph?.content.toLowerCase().split("business number is")[1]?.trim() || null)
-
-        if (officialName == orgName && charityNum ==  officialNumber) {
-            const temporary_CRA_Mapping: Record<string, number> = {"World Impact": 123456789};
-            if (officialName in temporary_CRA_Mapping && temporary_CRA_Mapping[officialName] == officialNumber) {
-                return true
-            }else {
-                console.log("Values did not match CRA DB.", officialName, officialNumber)
-                return false
+        if (officialName == orgName && charityNum == officialNumber) {
+            const exists = await checkCharityExistence(officialName, officialNumber);
+            if (exists) {
+                return true;
+            } else {
+                console.log("Values did not match CRA DB.", officialName, officialNumber);
+                return false;
             }
-        }else {
-            console.log("Values did not match those given.", officialName, orgName, charityNum, officialNumber)
-            return false
+        } else {
+            console.log("Values did not match those given.", officialName, orgName, charityNum, officialNumber);
+            return false;
         }
     } catch (error) {
-        console.log(error)
-        return false
+        console.log(error);
+        return false;
     }
-
 }
 
-export async function saveFile(orgId:string, file:Express.Multer.File){
+export async function checkCharityExistence(orgName: string, charityNum: number) {
+    const charity = await prisma.registeredCharity.findFirst({
+        where: {
+            organizationName: orgName,
+            registrationNumber: charityNum,
+        },
+    });
+
+    return !!charity;
+}
+
+export async function saveFile(orgId: string, file: Express.Multer.File) {
     const fileName = `org_${orgId}.pdf`;
 
-    const { data, error } = await supabase.storage
-    .from("organization-documents")
-    .upload(fileName, file.buffer, {
-      contentType: file.mimetype,
-      upsert: true,
+    const { data, error } = await supabase.storage.from("organization-documents").upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: true,
     });
 
     if (error) {
         throw new Error(`Failed to upload file: ${error.message}`);
     }
-    return data.fullPath
+    return data.fullPath;
 }
 
-export async function downloadFile(bucket:string, filePath:string){
-    console.log(filePath)
-    const { data, error } = await supabase.storage
-        .from(bucket)
-        .download(filePath);
+export async function downloadFile(bucket: string, filePath: string) {
+    console.log(filePath);
+    const { data, error } = await supabase.storage.from(bucket).download(filePath);
 
     if (error) {
-        console.log(error)
+        console.log(error);
         throw new Error(`Failed to download file: ${error.message}`);
     }
-        
+
     const arrayBuffer = await data.arrayBuffer();
-    return Buffer.from(arrayBuffer)
+    return Buffer.from(arrayBuffer);
 }
 
 export async function approveOrganization(orgId: string) {
     const organization = await prisma.organization.update({
         where: { id: orgId },
         data: {
-            status: OrganizationState.VERIFIED
+            status: OrganizationState.VERIFIED,
         },
     });
     if (!organization) {
@@ -203,12 +227,12 @@ export async function getAllOpportunities(organizationId: string) {
                 select: {
                     id: true,
                     firstName: true,
-                    lastName: true
+                    lastName: true,
                 },
             },
             _count: {
                 select: {
-                    applications:true
+                    applications: true,
                 },
             },
         },
@@ -217,13 +241,13 @@ export async function getAllOpportunities(organizationId: string) {
 
 export async function countAllOpportunities(organizationId: string) {
     return prisma.opportunity.count({
-        where: { orgId: organizationId }
+        where: { orgId: organizationId },
     });
 }
 
 export async function countActiveOpportunities(organizationId: string) {
     return prisma.opportunity.count({
-        where: { orgId: organizationId, status: "FILLED"}
+        where: { orgId: organizationId, status: "FILLED" },
     });
 }
 
@@ -231,25 +255,44 @@ export async function sumTotalOpportunityHours(organizationId: string) {
     return prisma.opportunity.aggregate({
         where: { orgId: organizationId },
         _sum: {
-            hours:true,
-        }
+            hours: true,
+        },
     });
+}
+
+export async function getReviewSummary(organizationId: string) {
+    const stats = await prisma.review.aggregate({
+        where: {
+            revieweeId: organizationId,
+        },
+        _avg: {
+            rating: true,
+        },
+        _count: {
+            rating: true,
+        },
+    });
+
+    return {
+        avgRating: stats._avg.rating ?? 0,
+        totalReviews: stats._count.rating,
+    };
 }
 
 export async function getActiveOpportunities(organizationId: string) {
     return prisma.opportunity.findMany({
-        where: { orgId: organizationId, status: {in: ["OPEN", "FILLED"]}},
+        where: { orgId: organizationId, status: { in: ["OPEN", "FILLED"] } },
         include: {
             volunteer: {
                 select: {
                     id: true,
                     firstName: true,
-                    lastName: true
-                },                
+                    lastName: true,
+                },
             },
             _count: {
                 select: {
-                    applications:true
+                    applications: true,
                 },
             },
         },
@@ -258,77 +301,90 @@ export async function getActiveOpportunities(organizationId: string) {
 
 export async function getOrgOpportunity(orgId: string, oppId: string) {
     const org = await prisma.opportunity.findFirst({
-        where: { id: oppId, orgId:orgId },
+        where: { id: oppId, orgId: orgId },
         include: {
-        volunteer: {
-            select: { id: true, firstName: true, lastName: true },
+            volunteer: {
+                select: { id: true, firstName: true, lastName: true },
+            },
+            progressUpdates: {
+                select: {
+                    id: true,
+                    senderRole: true,
+                    title: true,
+                    description: true,
+                    hoursContributed: true,
+                    createdAt: true,
+                },
+            },
         },
-        progressUpdates: {
-            select:{id:true, senderRole:true, title:true, description:true, hoursContributed:true, createdAt:true}
-        }
-    }
     });
     return org;
 }
 
 export async function getApplications(orgId: string, oppId: string) {
     const org = await prisma.application.findMany({
-        where: { oppId: oppId, opportunity: {orgId: orgId} },
+        where: { oppId: oppId, opportunity: { orgId: orgId } },
         include: {
-        volunteer: {
-            select: { id: true, firstName: true, lastName: true, bio:true },
-        },       
-    }
+            volunteer: {
+                select: { id: true, firstName: true, lastName: true, bio: true },
+            },
+        },
     });
     return org;
 }
 
 export async function getOrgApplication(orgId: string, appId: string) {
     const org = await prisma.application.findFirst({
-        where: { id: appId, opportunity:{orgId:orgId} },
+        where: { id: appId, opportunity: { orgId: orgId } },
         include: {
-        volunteer: {
-            select: { id: true, firstName: true, lastName: true, bio:true, location:true, availability:true, averageRating:true,
-            workExperiences: {
+            volunteer: {
                 select: {
-                id: true,
-                jobTitle: true,
-                company: true,
-                startDate: true,
-                endDate: true,
-                responsibilities: true,
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    bio: true,
+                    location: true,
+                    availability: true,
+                    averageRating: true,
+                    workExperiences: {
+                        select: {
+                            id: true,
+                            jobTitle: true,
+                            company: true,
+                            startDate: true,
+                            endDate: true,
+                            responsibilities: true,
+                        },
+                    },
+                    educations: {
+                        select: {
+                            id: true,
+                            institution: true,
+                            degree: true,
+                            graduationYear: true,
+                        },
+                    },
                 },
             },
-            educations: {
-                select: {
-                id: true,
-                institution: true,
-                degree: true,
-                graduationYear: true,
-                },
-            },
-            },            
-        },       
-    }
+        },
     });
     return org;
 }
 
-export async function getOppVltApplication(orgId:string, oppId: string, vltId: string) {
+export async function getOppVltApplication(orgId: string, oppId: string, vltId: string) {
     const app = await prisma.application.findFirst({
-        where: { oppId: oppId, volId:vltId, opportunity:{orgId: orgId} },
+        where: { oppId: oppId, volId: vltId, opportunity: { orgId: orgId } },
     });
     return app;
 }
 
-
-export async function selectOppVolunteer(oppId:string, vltId:string) {
+export async function selectOppVolunteer(oppId: string, vltId: string) {
     const organization = await prisma.opportunity.update({
         where: { id: oppId },
         data: {
             volId: vltId,
             status: "FILLED",
-            updatedAt: new Date()
+            updatedAt: new Date(),
         },
     });
     if (!organization) {
@@ -338,69 +394,92 @@ export async function selectOppVolunteer(oppId:string, vltId:string) {
     return organization;
 }
 
-export async function completeOpportunity(oppId:string) {
+export async function completeOpportunity(oppId: string) {
     const updateTotals = await prisma.progressUpdate.aggregate({
         where: {
             opportunityId: oppId,
         },
         _sum: {
-        hoursContributed: true,
+            hoursContributed: true,
         },
     });
 
-    const totalHours = updateTotals._sum.hoursContributed ?? 0
+    const totalHours = updateTotals._sum.hoursContributed ?? 0;
 
     const organization = await prisma.opportunity.update({
         where: { id: oppId },
         data: {
             status: "CLOSED",
             updatedAt: new Date(),
-            hours: totalHours
+            hours: totalHours,
         },
     });
     if (!organization) {
         throw new Error("Error completing Opportunity.");
     }
 
+    const opp = await prisma.opportunity.findUnique({
+        where: { id: oppId },
+        select: { orgId: true },
+    });
+
+    if (opp?.orgId) {
+        await prisma.progressUpdate.create({
+            data: {
+                opportunityId: oppId,
+                senderId: opp.orgId,
+                senderRole: "ORGANIZATION",
+                title: "Opportunity Completed",
+                description: "The organization has marked this opportunity as complete.",
+                hoursContributed: 0,
+            },
+        });
+    }
+
     return organization;
 }
 
-
-export async function getOpportunityAnalytics(organizationId: string, opportunityId:string) {
-  const opp = await prisma.opportunity.findFirst({
-    where: { orgId: organizationId, id: opportunityId},
-    select: {
-      hours: true,
-      volunteer: {
+export async function getOpportunityAnalytics(organizationId: string, opportunityId: string) {
+    const opp = await prisma.opportunity.findFirst({
+        where: { orgId: organizationId, id: opportunityId },
         select: {
-          hourlyValue: true,
+            hours: true,
+            volunteer: {
+                select: {
+                    hourlyValue: true,
+                },
+            },
         },
-      },
-    },
-  });
+    });
 
     if (!opp) {
         throw new Error("Error getting Opportunity Analytics.");
     }
 
-  return {
-    hours: opp.hours,
-    value: opp.hours*(opp.volunteer?.hourlyValue || 0),
-  };
+    return {
+        hours: opp.hours,
+        value: opp.hours * (opp.volunteer?.hourlyValue || 0),
+    };
 }
 
-export async function createOrgProgressUpdate(orgId: string, oppId: string, title: string, description:string, hoursContributed:number) {
+export async function createOrgProgressUpdate(
+    orgId: string,
+    oppId: string,
+    title: string,
+    description: string,
+    hoursContributed: number,
+) {
     const org = await prisma.progressUpdate.create({
-            data: {
-                opportunityId:oppId,
-                senderId:orgId,
-                senderRole:"ORGANIZATION",
-                title: title,
-                description:description,
-                hoursContributed: hoursContributed,
-                createdAt: new Date()
-            },
-        });
+        data: {
+            opportunityId: oppId,
+            senderId: orgId,
+            senderRole: "ORGANIZATION",
+            title: title,
+            description: description,
+            hoursContributed: hoursContributed,
+            createdAt: new Date(),
+        },
+    });
     if (!org) {
         throw new Error("Error creating the Progress Update.");
     }
@@ -408,53 +487,89 @@ export async function createOrgProgressUpdate(orgId: string, oppId: string, titl
     return org;
 }
 
-export async function createOpportunity(orgId:string, name:string, category:string, description:string, candidateDesc:string, workType:WorkType,
-        commitmentLevel: CommitmentLevel, length:string, deadlineDate:Date, availability:Prisma.InputJsonValue) {
+export async function createOpportunity(
+    orgId: string,
+    name: string,
+    category: string,
+    description: string,
+    candidateDesc: string,
+    workType: WorkType,
+    commitmentLevel: CommitmentLevel,
+    length: string,
+    deadlineDate: Date,
+    availability: Prisma.InputJsonValue,
+) {
     const org = await prisma.opportunity.create({
-            data: {
-                orgId:orgId,
-                name:name,
-                category:category,
-                status: "OPEN",
-                description:description,
-                candidateDesc:candidateDesc,
-                workType:workType,
-                commitmentLevel:commitmentLevel,
-                length:length,
-                deadlineDate:deadlineDate,
-                availability: availability,
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-        });
+        data: {
+            orgId: orgId,
+            name: name,
+            category: category,
+            status: "OPEN",
+            description: description,
+            candidateDesc: candidateDesc,
+            workType: workType,
+            commitmentLevel: commitmentLevel,
+            length: length,
+            deadlineDate: deadlineDate,
+            availability: availability,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+    });
     if (!org) {
         throw new Error("Error creating the Opportunity.");
     }
 
+    //create the embedding
+    (async () => {
+        try {
+            const skills = await extractSkillsFromOpportunity(name, category, description, candidateDesc);
+            const allSkills = [...skills.technical, ...skills.nonTechnical].join(", ");
+            const vector = await embedText(allSkills);
+            await prisma.$executeRaw`
+                UPDATE opportunities
+                SET skill_vector = ${JSON.stringify(vector)}::vector
+                WHERE id = ${org.id}
+            `;
+        } catch (err) {
+            console.warn("Failed to embed opportunity skill vector:", err);
+        }
+    })();
+
     return org;
 }
 
-
-export async function updateOpportunity(oppId:string, orgId:string, name:string, category:string, description:string, candidateDesc:string, workType:WorkType,
-        commitmentLevel: CommitmentLevel, length:string, deadlineDate:Date, availability:Prisma.InputJsonValue) {
+export async function updateOpportunity(
+    oppId: string,
+    orgId: string,
+    name: string,
+    category: string,
+    description: string,
+    candidateDesc: string,
+    workType: WorkType,
+    commitmentLevel: CommitmentLevel,
+    length: string,
+    deadlineDate: Date,
+    availability: Prisma.InputJsonValue,
+) {
     const org = await prisma.opportunity.update({
-        where:{id: oppId},
+        where: { id: oppId },
         data: {
-            orgId:orgId,
-            name:name,
-            category:category,
+            orgId: orgId,
+            name: name,
+            category: category,
             status: "OPEN",
-            description:description,
-            candidateDesc:candidateDesc,
-            workType:workType,
-            commitmentLevel:commitmentLevel,
-            length:length,
-            deadlineDate:deadlineDate,
+            description: description,
+            candidateDesc: candidateDesc,
+            workType: workType,
+            commitmentLevel: commitmentLevel,
+            length: length,
+            deadlineDate: deadlineDate,
             availability: availability,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
         },
-        });
+    });
     if (!org) {
         throw new Error("Error updating the Opportunity.");
     }
@@ -462,12 +577,7 @@ export async function updateOpportunity(oppId:string, orgId:string, name:string,
     return org;
 }
 
-export async function orgPostReview(
-    issuerId: string,
-    revieweeId: string,
-    opportunityId: string,
-    rating: number,
-) {
+export async function orgPostReview(issuerId: string, revieweeId: string, opportunityId: string, rating: number) {
     const existing = await prisma.review.findUnique({
         where: { issuerId_opportunityId: { issuerId, opportunityId } },
     });
@@ -478,12 +588,37 @@ export async function orgPostReview(
     });
 }
 
-export async function orgPostFlag(
-    issuerId: string,
-    flaggedUserId: string,
-    reason: string,
-) {
-    return prisma.flag.create({
-        data: { flagIssuerId: issuerId, flaggedUserId, reason },
+export async function orgPostFlag(issuerId: string, flaggedUserId: string, reason: string) {
+    return prisma.$transaction(async (tx) => {
+        const flag = await tx.flag.create({
+            data: { flagIssuerId: issuerId, flaggedUserId, reason },
+        });
+
+        const flaggedVolunteer = await tx.volunteer.findUnique({
+            where: { id: flaggedUserId },
+            select: { id: true },
+        });
+
+        if (flaggedVolunteer) {
+            await tx.volunteerReport.create({
+                data: {
+                    reportedUserId: flaggedUserId,
+                    reportingUserId: issuerId,
+                    reason,
+                },
+            });
+
+            await tx.volunteer.update({
+                where: { id: flaggedUserId },
+                data: { status: "FLAGGED" },
+            });
+
+            await tx.user.update({
+                where: { id: flaggedUserId },
+                data: { status: "FLAGGED" },
+            });
+        }
+
+        return flag;
     });
 }

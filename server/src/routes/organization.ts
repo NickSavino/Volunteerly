@@ -46,9 +46,7 @@ OrganizationRouter.get("/", auth, async (req, res, next) => {
 
         const { status } = req.query;
 
-        const organizations = status === "APPLIED"
-            ? await getAppliedOrganizations()
-            : await getAllOrganizations();
+        const organizations = status === "APPLIED" ? await getAppliedOrganizations() : await getAllOrganizations();
 
         res.status(200).json(organizations);
     } catch (error) {
@@ -56,7 +54,7 @@ OrganizationRouter.get("/", auth, async (req, res, next) => {
     }
 });
 
-OrganizationRouter.get("/document", auth, async (req:any, res, next) => {
+OrganizationRouter.get("/document", auth, async (req: any, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
         const userId = typedReq.auth?.userId;
@@ -67,23 +65,23 @@ OrganizationRouter.get("/document", auth, async (req:any, res, next) => {
 
         const { file_path } = req.query;
 
-        if (!(file_path)){
+        if (!file_path) {
             return res.status(400).json({ error: "File Path is missing/invalid." });
         }
-            
-        const fileId = file_path.split("org_")[1].split(".")[0]
 
-        if (!(fileId == userId)){
+        const fileId = file_path.split("org_")[1].split(".")[0];
+
+        if (!(fileId == userId)) {
             const mod = await requireModerator(userId, res);
             if (!mod) return;
         }
-        const bucket = file_path.split("/")[0]
-        const filePath = file_path.split("/")[1]
-        const file_data = await downloadFile(bucket, filePath)
+        const bucket = file_path.split("/")[0];
+        const filePath = file_path.split("/")[1];
+        const file_data = await downloadFile(bucket, filePath);
 
         res.setHeader("Content-Disposition", `attachment; filename="${file_path}"`);
         res.setHeader("Content-Type", "application/pdf");
-        res.send(file_data)
+        res.send(file_data);
     } catch (error) {
         next(error);
     }

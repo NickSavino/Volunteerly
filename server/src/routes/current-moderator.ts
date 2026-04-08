@@ -1,9 +1,5 @@
 import { Router } from "express";
-import {
-    createCurrentModerator,
-    getCurrentModerator,
-    updateCurrentModerator,
-} from "../services/moderator-service.js";
+import { createCurrentModerator, getCurrentModerator, updateCurrentModerator } from "../services/moderator-service.js";
 
 export const currentModeratorRouter = Router();
 

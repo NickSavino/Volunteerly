@@ -1,7 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { chatUserArgs } from "../helpers/prisma-shapes.js";
 
-
 export const moderatorTicketDetailInclude = {
     include: {
         issuer: chatUserArgs,
@@ -18,7 +17,7 @@ export const moderatorTicketDetailInclude = {
                         sentAt: "asc" as const,
                     },
                     include: {
-                        sender: chatUserArgs
+                        sender: chatUserArgs,
                     },
                 },
             },
@@ -26,6 +25,4 @@ export const moderatorTicketDetailInclude = {
     },
 } satisfies Prisma.TicketDefaultArgs;
 
-export type ModeratorTicketDetailRecord = Prisma.TicketGetPayload<
-    typeof moderatorTicketDetailInclude
->;
+export type ModeratorTicketDetailRecord = Prisma.TicketGetPayload<typeof moderatorTicketDetailInclude>;

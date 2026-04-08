@@ -1,45 +1,60 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Clock, Star, DollarSign, Building2, Search } from "lucide-react";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-    NavigationMenu, NavigationMenuContent, NavigationMenuItem,
-    NavigationMenuList, NavigationMenuTrigger,
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuList,
+    NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
 import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
 const STATUS_STYLES: Record<string, string> = {
-    OPEN:      "bg-green-50 text-green-700",
-    FILLED:    "bg-blue-50 text-blue-700",
-    CLOSED:    "bg-gray-100 text-gray-500",
+    OPEN: "bg-green-50 text-green-700",
+    FILLED: "bg-blue-50 text-blue-700",
+    CLOSED: "bg-gray-100 text-gray-500",
     CANCELLED: "bg-red-50 text-red-600",
 };
 
 const RANGE_LABELS: Record<ChartRange, string> = {
-    last_month:    "Last Month",
+    last_month: "Last Month",
     last_6_months: "Last 6 Months",
-    last_year:     "Last Year",
-    this_year:     "This Year",
-    total:         "Total",
+    last_year: "Last Year",
+    this_year: "This Year",
+    total: "Total",
 };
 
 export default function VolunteerDashboardPage() {
     const {
-        loading, session, error, currentVolunteer, opportunities, partnerOrgs,
-        handleSignOut, firstName, totalHours, economicValue, impactScore,
-        orgsAssisted, chartLabels, chartData, chartRange, setChartRange, router, hourlyRate, fetching
+        loading,
+        session,
+        error,
+        currentVolunteer,
+        opportunities,
+        partnerOrgs,
+        handleSignOut,
+        firstName,
+        totalHours,
+        economicValue,
+        impactScore,
+        orgsAssisted,
+        chartLabels,
+        chartData,
+        chartRange,
+        setChartRange,
+        router,
+        hourlyRate,
+        fetching,
     } = useVltDashboardViewModel();
 
     const pathname = usePathname();
-    const fullName = currentVolunteer
-        ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
-        : "Loading...";
+    const fullName = currentVolunteer ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}` : "Loading...";
 
     const [showAllPartners, setShowAllPartners] = useState(false);
 
@@ -49,10 +64,11 @@ export default function VolunteerDashboardPage() {
 
     const maxHours = Math.max(...chartData, 1);
 
+    const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+
     return (
         <div className="min-h-screen bg-gray-50">
             <main className="mx-auto max-w-7xl px=4 py-8 sm:px-6 lg:px-8">
-
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">Welcome back, {firstName}!</h1>
                 </div>
@@ -97,7 +113,6 @@ export default function VolunteerDashboardPage() {
 
                 {/* Chart + Partner Orgs */}
                 <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-
                     {/* Contribution Trends */}
                     <div className="rounded-xl border bg-white p-6 shadow-sm lg:col-span-2">
                         <div className="mb-4 flex items-start justify-between">
@@ -111,7 +126,9 @@ export default function VolunteerDashboardPage() {
                                 className="rounded-md border px-3 py-1 text-sm text-gray-500 bg-white cursor-pointer"
                             >
                                 {(Object.keys(RANGE_LABELS) as ChartRange[]).map((r) => (
-                                    <option key={r} value={r}>{RANGE_LABELS[r]}</option>
+                                    <option key={r} value={r}>
+                                        {RANGE_LABELS[r]}
+                                    </option>
                                 ))}
                             </select>
                         </div>
@@ -170,10 +187,7 @@ export default function VolunteerDashboardPage() {
                                 ))}
                             </div>
                         )}
-                        <button
-                            className="mt-5 w-full border py-2 rounded-lg"
-                            onClick={() => setShowAllPartners(true)}
-                        >
+                        <button className="mt-5 w-full border py-2 rounded-lg" onClick={() => setShowAllPartners(true)}>
                             Expand All
                         </button>
                     </div>
@@ -184,10 +198,7 @@ export default function VolunteerDashboardPage() {
                         className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
                         onClick={() => setShowAllPartners(false)}
                     >
-                        <div
-                            className="w-full max-w-2xl bg-white rounded-xl p-6"
-                            onClick={(e) => e.stopPropagation()}
-                        >
+                        <div className="w-full max-w-2xl bg-white rounded-xl p-6" onClick={(e) => e.stopPropagation()}>
                             <div className="flex justify-between mb-4">
                                 <h2 className="text-lg font-semibold">All Partner Organizations</h2>
                                 <button onClick={() => setShowAllPartners(false)}>✕</button>
@@ -213,7 +224,7 @@ export default function VolunteerDashboardPage() {
                             </div>
                         </div>
                     </div>
-                )} 
+                )}
 
                 {/* Your Opportunities */}
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
@@ -244,19 +255,36 @@ export default function VolunteerDashboardPage() {
                                     opportunities.map((opp) => (
                                         <tr key={opp.id} className="hover:bg-gray-50">
                                             <td className="py-3 pr-4 font-medium text-gray-800">
-                                                {opp.organization?.orgName ?? "—"}
+                                                {opp.organization?.id ? (
+                                                    <button
+                                                        onClick={() =>
+                                                            router.push(
+                                                                `/volunteer/organizations/${opp.organization!.id}`,
+                                                            )
+                                                        }
+                                                        className="text-left hover:underline"
+                                                    >
+                                                        {opp.organization.orgName}
+                                                    </button>
+                                                ) : (
+                                                    (opp.organization?.orgName ?? "—")
+                                                )}
                                             </td>
                                             <td className="py-3 pr-4 text-gray-600">{opp.category}</td>
                                             <td className="py-3 pr-4 text-gray-600">{opp.commitmentLevel}</td>
                                             <td className="py-3 pr-4 text-gray-800">{opp.hours}h</td>
                                             <td className="py-3 pr-4">
-                                                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[opp.status]}`}>
+                                                <span
+                                                    className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[opp.status]}`}
+                                                >
                                                     {opp.status}
                                                 </span>
                                             </td>
                                             <td className="py-3 pr-4 text-gray-500">
                                                 {new Date(opp.updatedAt).toLocaleDateString("en-US", {
-                                                    month: "short", day: "numeric", year: "numeric"
+                                                    month: "short",
+                                                    day: "numeric",
+                                                    year: "numeric",
                                                 })}
                                             </td>
                                             <td className="py-3">
@@ -274,8 +302,13 @@ export default function VolunteerDashboardPage() {
                         </table>
                     </div>
                 </div>
-
             </main>
+
+            <SubmitTicketModal
+                open={isTicketModalOpen}
+                onClose={() => setIsTicketModalOpen(false)}
+                onSubmitted={(ticket) => router.push(`/volunteer/messages?conversationId=${ticket.conversationId}`)}
+            />
         </div>
     );
 }

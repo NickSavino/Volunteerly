@@ -5,15 +5,8 @@ import { useModDashboardViewModel } from "./ModDashboardVm";
 import { ModStatCard } from "@/components/custom/mod_stat_card";
 
 export default function ModeratorDashboardPage() {
-    const {
-        loading,
-        session,
-        router,
-        currentModerator,
-        pendingOrgsCount,
-        recentPendingOrgs,
-        error,
-    } = useModDashboardViewModel();
+    const { loading, session, router, currentModerator, pendingOrgsCount, recentPendingOrgs, error } =
+        useModDashboardViewModel();
 
     if (loading || !session) {
         return <main className="p-6">Loading...</main>;
@@ -21,7 +14,6 @@ export default function ModeratorDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">
@@ -37,21 +29,9 @@ export default function ModeratorDashboardPage() {
                 )}
 
                 <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    <ModStatCard
-                        icon={Building2}
-                        label="Pending Organizations"
-                        count={pendingOrgsCount}
-                    />
-                    <ModStatCard
-                        icon={Flag}
-                        label="Flagged Accounts"
-                        count={0}
-                    />
-                    <ModStatCard
-                        icon={Ticket}
-                        label="Open Tickets"
-                        count={0}
-                    />
+                    <ModStatCard icon={Building2} label="Pending Organizations" count={pendingOrgsCount} />
+                    <ModStatCard icon={Flag} label="Flagged Accounts" count={0} />
+                    <ModStatCard icon={Ticket} label="Open Tickets" count={0} />
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -69,9 +49,7 @@ export default function ModeratorDashboardPage() {
                         </div>
 
                         {recentPendingOrgs.length === 0 ? (
-                            <p className="py-8 text-center text-sm text-gray-400">
-                                No Pending Organizations Found.
-                            </p>
+                            <p className="py-8 text-center text-sm text-gray-400">No Pending Organizations Found.</p>
                         ) : (
                             <ul className="divide-y">
                                 {recentPendingOrgs.map((org) => (
@@ -83,7 +61,12 @@ export default function ModeratorDashboardPage() {
                                             <div>
                                                 <p className="text-sm font-medium text-gray-700">{org.orgName}</p>
                                                 <p className="text-xs text-gray-400">
-                                                    Submitted {new Date(org.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                                    Submitted{" "}
+                                                    {new Date(org.createdAt).toLocaleDateString("en-US", {
+                                                        month: "short",
+                                                        day: "numeric",
+                                                        year: "numeric",
+                                                    })}
                                                 </p>
                                             </div>
                                         </div>
@@ -109,9 +92,7 @@ export default function ModeratorDashboardPage() {
                                 View All
                             </button>
                         </div>
-                        <p className="py-4 text-center text-sm text-gray-400">
-                            No Flagged Accounts Found.
-                        </p>
+                        <p className="py-4 text-center text-sm text-gray-400">No Flagged Accounts Found.</p>
                     </div>
                 </div>
 

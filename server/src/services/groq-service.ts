@@ -49,7 +49,7 @@ ${resumeText}`;
         throw new Error(`Groq API error: ${response.status} ${errorText}`);
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
         choices: { message: { content: string } }[];
     };
 
@@ -61,18 +61,14 @@ ${resumeText}`;
         return {
             technical: parsed.technical ?? [],
             nonTechnical: parsed.nonTechnical ?? [],
-            hourlyRate: parsed.hourlyRate ?? []
+            hourlyRate: parsed.hourlyRate ?? [],
         };
     } catch {
         throw new Error(`Failed to parse Groq response as JSON: ${content}`);
     }
 }
 
-
-export async function calculateHourlyRate(
-    workExperience: string,
-    education: string
-): Promise<number> {
+export async function calculateHourlyRate(workExperience: string, education: string): Promise<number> {
     const prompt = `
 You are a hourly rate guesser in Alberta, Canada. Based on the following work experience and education, calculate a reasonable hourly rate in Canadian dollars (CAD) for this person, consider their base salary rom their work experience and add or subtract slightly based on additional responsibilities or education.
 
@@ -117,7 +113,6 @@ ${workExperience}
 Education:
 ${education}`;
 
-
     const response = await fetch(GROQ_API_URL, {
         method: "POST",
         headers: {
@@ -137,7 +132,7 @@ ${education}`;
         throw new Error(`Groq API error: ${response.status} ${errorText}`);
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
         choices: { message: { content: string } }[];
     };
 
@@ -149,4 +144,70 @@ ${education}`;
     }
 
     return rate;
+}
+
+export async function extractSkillsFromOpportunity(
+    name: string,
+    category: string,
+    description: string,
+    candidateDesc: string,
+): Promise<{ technical: string[]; nonTechnical: string[] }> {
+    const prompt = `
+You are a professional job analyst. Based on the following volunteer opportunity details, extract the top 10 technical skills and top 10 non-technical skills that would be ideal for a candidate.
+
+Guidelines:
+1. For technical skills: list programming languages, frameworks, tools, platforms, and domain-specific technical knowledge relevant to this role.
+2. For non-technical skills: include soft skills and leadership skills such as communication, collaboration, adaptability, mentoring, project ownership, etc.
+3. Base your extraction on all four fields provided — name, category, description, and ideal candidate profile.
+4. Return ONLY valid JSON with this exact shape and nothing else:
+
+{
+  "technical": ["skill1", "skill2", ..., "skill10"],
+  "nonTechnical": ["skill1", "skill2", ..., "skill10"]
+}
+
+5. If fewer than 10 skills are found for a category, return as many as you can confidently extract.
+6. Do not invent skills not supported by the opportunity details.
+7. Order skills by confidence, most confident first.
+
+Opportunity Name: ${name}
+Category: ${category}
+Description: ${description}
+Ideal Candidate: ${candidateDesc}`;
+
+    const response = await fetch(GROQ_API_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${env.GROQ_API_KEY}`,
+        },
+        body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.2,
+            max_tokens: 1024,
+        }),
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Groq API error: ${response.status} ${errorText}`);
+    }
+
+    const data = (await response.json()) as {
+        choices: { message: { content: string } }[];
+    };
+
+    const content = data.choices[0]?.message?.content ?? "";
+    const cleaned = content.replace(/```json|```/g, "").trim();
+
+    try {
+        const parsed = JSON.parse(cleaned) as { technical: string[]; nonTechnical: string[] };
+        return {
+            technical: parsed.technical ?? [],
+            nonTechnical: parsed.nonTechnical ?? [],
+        };
+    } catch {
+        throw new Error(`Failed to parse Groq response as JSON: ${content}`);
+    }
 }

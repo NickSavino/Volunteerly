@@ -6,61 +6,74 @@ import { useAuth } from "@/providers/auth-provider";
 import { CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { toast } from "sonner";
 
 export function useOrgOpportunitiesViewModel() {
-  const router = useRouter();
-  const { session, user, loading, signOut } = useAuth();
-  const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
-  const [error, setError] = useState<string | null>(null);
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([])
-  const [currentTab, setCurrentTab] = useState("OPEN")
-  const [fetching, setFetching] = useState(true)
-  const filteredOpportunities = opportunities.filter(
-  (opp) => opp.status === currentTab);
+    const router = useRouter();
+    const { session, user, loading, signOut } = useAuth();
+    const [currentUser, setCurrentUser] = useState<CurrentOrganization | undefined>(undefined);
+    const [error, setError] = useState<string | null>(null);
+    const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+    const [currentTab, setCurrentTab] = useState("OPEN");
+    const [fetching, setFetching] = useState(true);
+    const filteredOpportunities = opportunities.filter((opp) => opp.status === currentTab);
 
-  // TODO: remove this logic and tie it to useAppSession()
-  useEffect(() => {
-    async function loadCurrentUser() {
-      if (!session?.access_token) return;
-      try {
-        const org = await OrganizationService.getCurrentOrganization()
-        
-        if (!org.success) {
-          console.error(org.error);
-          setError("Received invalid user data from the server.");
-          return;
+    useEffect(() => {
+        async function loadCurrentUser() {
+            if (!session?.access_token) return;
+            try {
+                const org = await OrganizationService.getCurrentOrganization();
+
+                if (!org.success) {
+                    console.error(org.error);
+                    setError("Received invalid user data from the server.");
+                    toast.error("Failed to load Organization.", { position: "top-right" });
+                    return;
+                }
+                if (org.data.status == "CREATED") {
+                    router.replace("/organization/application");
+                    return;
+                } else if (org.data.status == "APPLIED") {
+                    router.replace("/organization/appliedDashboard");
+                    return;
+                }
+                setCurrentUser(org.data);
+            } catch (error) {
+                console.error(error);
+                toast.error("Failed to load Organization.", { position: "top-right" });
+                return;
+            }
         }
-        if (org.data.status == "CREATED") {
-            router.replace("/organization/application");
-            return;
-        } else if (org.data.status == "APPLIED") {
-            router.replace("/organization/appliedDashboard");
-            return;
-        }
-        setCurrentUser(org.data);
-      } catch (error) {
-        console.error(error);
-        return
-      }
-    }
-    loadCurrentUser();
+        loadCurrentUser();
     }, [session, router]);
 
     useEffect(() => {
-      async function loadOpportunities() {
-
-        const opps = await OrganizationService.getAllOpportunities()
-        if (!opps.success) {         
-          console.error(opps.error)
-          setError("Failed to load opportunities."); 
-          setFetching(false)
-          return; 
+        async function loadOpportunities() {
+            const opps = await OrganizationService.getAllOpportunities();
+            if (!opps.success) {
+                console.error(opps.error);
+                setError("Failed to load opportunities.");
+                toast.error("Failed to load Opportunities.", { position: "top-right" });
+                setFetching(false);
+                return;
+            }
+            setOpportunities(opps.data);
+            setFetching(false);
         }
-        setOpportunities(opps.data);  
-        setFetching(false)
-      }
-      loadOpportunities()
-    }, [])
+        loadOpportunities();
+    }, []);
 
-    return {loading, session,fetching, signOut, router, user, error, currentUser, filteredOpportunities, currentTab, setCurrentTab} 
+    return {
+        loading,
+        session,
+        fetching,
+        signOut,
+        router,
+        user,
+        error,
+        currentUser,
+        filteredOpportunities,
+        currentTab,
+        setCurrentTab,
+    };
 }

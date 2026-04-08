@@ -44,7 +44,7 @@ export async function updateCurrentVolunteer(
 
 export async function getYourOpportunities(volunteerId: string) {
     return prisma.opportunity.findMany({
-        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] }},
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
         include: {
             organization: {
                 select: { id: true, orgName: true },
@@ -134,6 +134,7 @@ export async function postReview(
         where: { revieweeId },
         select: { rating: true },
     });
+
     const newAverage = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
     await prisma.volunteer.update({
         where: { id: revieweeId },
@@ -141,23 +142,48 @@ export async function postReview(
     });
 }
 
-export async function postFlag(
-    issuerId: string,
-    flaggedUserId: string,
-    reason: string,
-) {
-    return prisma.flag.create({
-        data: {
-            flagIssuerId: issuerId,
-            flaggedUserId,
-            reason,
-        },
+export async function postFlag(issuerId: string, flaggedUserId: string, reason: string) {
+    return prisma.$transaction(async (tx) => {
+        const flag = await tx.flag.create({
+            data: {
+                flagIssuerId: issuerId,
+                flaggedUserId,
+                reason,
+            },
+        });
+
+        const flaggedVolunteer = await tx.volunteer.findUnique({
+            where: { id: flaggedUserId },
+            select: { id: true },
+        });
+
+        if (flaggedVolunteer) {
+            await tx.volunteerReport.create({
+                data: {
+                    reportedUserId: flaggedUserId,
+                    reportingUserId: issuerId,
+                    reason,
+                },
+            });
+
+            await tx.volunteer.update({
+                where: { id: flaggedUserId },
+                data: { status: "FLAGGED" },
+            });
+
+            await tx.user.update({
+                where: { id: flaggedUserId },
+                data: { status: "FLAGGED" },
+            });
+        }
+
+        return flag;
     });
 }
 
 export async function getVolunteerOrganizations(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
-        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] }},
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
         select: {
             orgId: true,
             hours: true,
@@ -209,13 +235,13 @@ export async function browseOpportunities(filters: OpportunityFilters) {
             status: "OPEN",
             ...(filters.search
                 ? {
-                    OR: [
-                        { name: { contains: filters.search, mode: "insensitive" } },
-                        { description: { contains: filters.search, mode: "insensitive" } },
-                        { category: { contains: filters.search, mode: "insensitive" } },
-                        { organization: { orgName: { contains: filters.search, mode: "insensitive" } } },
-                    ],
-                }
+                      OR: [
+                          { name: { contains: filters.search, mode: "insensitive" } },
+                          { description: { contains: filters.search, mode: "insensitive" } },
+                          { category: { contains: filters.search, mode: "insensitive" } },
+                          { organization: { orgName: { contains: filters.search, mode: "insensitive" } } },
+                      ],
+                  }
                 : {}),
             ...(filters.category ? { category: { equals: filters.category, mode: "insensitive" } } : {}),
             ...(filters.workType ? { workType: filters.workType } : {}),
@@ -253,4 +279,42 @@ export async function getAppliedOppIds(volId: string): Promise<string[]> {
         select: { oppId: true },
     });
     return applications.map((a) => a.oppId);
+}
+export async function logOpportunitySkills(volId: string, oppId: string, skills: string[]) {
+    const existing = await prisma.opportunitySkill.findFirst({
+        where: { volId, opportunityId: oppId },
+    });
+    if (existing) throw new Error("ALREADY_SUBMITTED");
+
+    if (skills.length === 0) return;
+
+    await prisma.opportunitySkill.createMany({
+        data: skills.map((skillName) => ({
+            volId,
+            opportunityId: oppId,
+            skillName,
+        })),
+        skipDuplicates: true,
+    });
+}
+
+export async function getOpportunitySkills(volId: string, oppId: string): Promise<string[]> {
+    const skills = await prisma.opportunitySkill.findMany({
+        where: { volId, opportunityId: oppId },
+        select: { skillName: true },
+    });
+    return skills.map((s) => s.skillName);
+}
+
+export async function getVolunteerSkillCounts(volId: string): Promise<Record<string, number>> {
+    const skills = await prisma.opportunitySkill.findMany({
+        where: { volId },
+        select: { skillName: true },
+    });
+
+    const counts: Record<string, number> = {};
+    for (const { skillName } of skills) {
+        counts[skillName] = (counts[skillName] ?? 0) + 1;
+    }
+    return counts;
 }

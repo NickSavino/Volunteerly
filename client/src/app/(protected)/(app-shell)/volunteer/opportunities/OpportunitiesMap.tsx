@@ -5,7 +5,7 @@ import type { Opportunity } from "@volunteerly/shared";
 
 async function geocodeAddress(address: string): Promise<[number, number] | null> {
     try {
-        const parts = address.split(",").map(s => s.trim());
+        const parts = address.split(",").map((s) => s.trim());
         const street = parts[0] ?? "";
         const city = parts[1] ?? "Calgary";
         const postalCode = parts[parts.length - 1] ?? "";

@@ -1,13 +1,16 @@
 import { Router } from "express";
-import { createChatMessage, getChatConversationDetail, getChatConversationList } from "../../services/chat/chat-service.js";
+import {
+    createChatMessage,
+    getChatConversationDetail,
+    getChatConversationList,
+} from "../../services/chat/chat-service.js";
 import { CreateChatMessageSchema } from "@volunteerly/shared";
-
 
 export const conversationsRouter = Router();
 
 conversationsRouter.get("/", async (req, res, next) => {
     try {
-        const userId = req.auth!.userId
+        const userId = req.auth!.userId;
 
         const conversations = await getChatConversationList(userId);
 
@@ -19,12 +22,9 @@ conversationsRouter.get("/", async (req, res, next) => {
 
 conversationsRouter.get("/:conversationId", async (req, res, next) => {
     try {
-        const userId = req.auth!.userId
+        const userId = req.auth!.userId;
 
-        const conversation = await getChatConversationDetail(
-            userId,
-            req.params.conversationId
-        );
+        const conversation = await getChatConversationDetail(userId, req.params.conversationId);
 
         if (!conversation) {
             return res.status(404).json({
@@ -53,11 +53,7 @@ conversationsRouter.post("/:conversationId/messages", async (req, res, next) => 
             });
         }
 
-        const message = await createChatMessage(
-            userId,
-            req.params.conversationId,
-            parsed.data.content
-        );
+        const message = await createChatMessage(userId, req.params.conversationId, parsed.data.content);
 
         if (!message) {
             return res.status(404).json({
@@ -66,8 +62,15 @@ conversationsRouter.post("/:conversationId/messages", async (req, res, next) => 
             });
         }
 
-        return res.status(201).json(message)
-    } catch (error) {
+        return res.status(201).json(message);
+    } catch (error: any) {
+        if (error?.message === "TICKET_CLOSED") {
+            return res.status(409).json({
+                error: "Conflict",
+                message: "This ticket is closed. Replies are disabled.",
+            });
+        }
+
         next(error);
     }
-})
+});

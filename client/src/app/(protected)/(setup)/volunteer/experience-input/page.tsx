@@ -24,24 +24,22 @@ export default function ExperienceInputPage() {
         signOut,
         fullName,
         removeEducation,
-        removeWorkExperience
+        removeWorkExperience,
     } = useExperienceInputViewModel();
-
 
     return (
         <div className="min-h-screen">
             <title>Volunteer - Experience Input</title>
-        
-        <UnverifiedNavbar
-            fullName={fullName}
-            onSignOut={signOut}
-        />
+
+            <UnverifiedNavbar fullName={fullName} onSignOut={signOut} />
 
             <main className="flex flex-col items-center px-8 py-10 gap-6 max-w-3xl mx-auto">
                 <div className="text-center">
                     <h1 className="text-3xl font-bold">Experience Input</h1>
                     <p className="text-muted-foreground mt-2">
-                        To help us match you with the most suitable organizations, all volunteers are asked to provide their resume, work experience, and education.                    </p>
+                        To help us match you with the most suitable organizations, all volunteers are asked to provide
+                        their resume, work experience, and education.{" "}
+                    </p>
                 </div>
 
                 {/* Resume Upload */}
@@ -57,9 +55,7 @@ export default function ExperienceInputPage() {
                         >
                             <p className="font-medium">Upload your Resume</p>
                             <p className="text-sm text-muted-foreground">PDF up to 10MB.</p>
-                            {resumeFile && (
-                                <p className="text-sm text-green-600 font-medium">{resumeFile.name}</p>
-                            )}
+                            {resumeFile && <p className="text-sm text-green-600 font-medium">{resumeFile.name}</p>}
                             <Label
                                 htmlFor="resume-upload"
                                 className="cursor-pointer bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium"
@@ -74,9 +70,7 @@ export default function ExperienceInputPage() {
                                 onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
                             />
                         </div>
-                        {errors.resume && (
-                            <p className="text-destructive text-sm mt-2">{errors.resume}</p>
-                        )}
+                        {errors.resume && <p className="text-destructive text-sm mt-2">{errors.resume}</p>}
                     </CardContent>
                 </Card>
 
@@ -97,7 +91,12 @@ export default function ExperienceInputPage() {
                         {workExperiences.map((work, i) => (
                             <div key={i} className="flex flex-col gap-3 relative">
                                 {i > 0 && (
-                                    <Button variant="ghost" size="sm" className="absolute top-0 right-0 text-destructive" onClick={() => removeWorkExperience(i)}>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="absolute top-0 right-0 text-destructive"
+                                        onClick={() => removeWorkExperience(i)}
+                                    >
                                         Remove
                                     </Button>
                                 )}
@@ -109,7 +108,9 @@ export default function ExperienceInputPage() {
                                             placeholder="e.g. Project Manager"
                                             value={work.jobTitle}
                                             onChange={(e) => updateWorkExperience(i, "jobTitle", e.target.value)}
-                                            className={errors.workExperience && !work.jobTitle ? "border-destructive" : ""}
+                                            className={
+                                                errors.workExperience && !work.jobTitle ? "border-destructive" : ""
+                                            }
                                         />
                                     </div>
                                     <div className="flex flex-col gap-1">
@@ -118,7 +119,9 @@ export default function ExperienceInputPage() {
                                             placeholder="Company Name"
                                             value={work.company}
                                             onChange={(e) => updateWorkExperience(i, "company", e.target.value)}
-                                            className={errors.workExperience && !work.company ? "border-destructive" : ""}
+                                            className={
+                                                errors.workExperience && !work.company ? "border-destructive" : ""
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -129,7 +132,9 @@ export default function ExperienceInputPage() {
                                             type="date"
                                             value={work.startDate}
                                             onChange={(e) => updateWorkExperience(i, "startDate", e.target.value)}
-                                            className={errors.workExperience && !work.startDate ? "border-destructive" : ""}
+                                            className={
+                                                errors.workExperience && !work.startDate ? "border-destructive" : ""
+                                            }
                                         />
                                     </div>
                                     <div className="flex flex-col gap-1">
@@ -137,7 +142,8 @@ export default function ExperienceInputPage() {
                                         <Input
                                             type="date"
                                             value={work.endDate || ""}
-                                            onChange={(e) => updateWorkExperience(i, "endDate", e.target.value)}                                        />
+                                            onChange={(e) => updateWorkExperience(i, "endDate", e.target.value)}
+                                        />
                                         <p className="text-xs text-muted-foreground">
                                             leave blank if this is your current role.
                                         </p>
@@ -149,7 +155,9 @@ export default function ExperienceInputPage() {
                                         placeholder="Describe your key achievements..."
                                         value={work.responsibilities}
                                         onChange={(e) => updateWorkExperience(i, "responsibilities", e.target.value)}
-                                        className={errors.workExperience && !work.responsibilities ? "border-destructive" : ""}
+                                        className={
+                                            errors.workExperience && !work.responsibilities ? "border-destructive" : ""
+                                        }
                                     />
                                 </div>
                             </div>
@@ -162,9 +170,7 @@ export default function ExperienceInputPage() {
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle className="text-base">Education</CardTitle>
-                            {errors.education && (
-                                <p className="text-destructive text-sm mt-1">{errors.education}</p>
-                            )}
+                            {errors.education && <p className="text-destructive text-sm mt-1">{errors.education}</p>}
                         </div>
                         <Button variant="ghost" size="sm" onClick={addEducation}>
                             + Add New
@@ -174,7 +180,12 @@ export default function ExperienceInputPage() {
                         {educations.map((edu, i) => (
                             <div key={i} className="flex flex-col gap-3 relative">
                                 {i > 0 && (
-                                    <Button variant="ghost" size="sm" className="absolute top-0 right-0 text-destructive" onClick={() => removeEducation(i)}>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="absolute top-0 right-0 text-destructive"
+                                        onClick={() => removeEducation(i)}
+                                    >
                                         Remove
                                     </Button>
                                 )}
@@ -211,11 +222,7 @@ export default function ExperienceInputPage() {
                     </CardContent>
                 </Card>
 
-                <Button
-                    className="w-full"
-                    onClick={handleSubmit}
-                    disabled={submitting}
-                >
+                <Button className="w-full" onClick={handleSubmit} disabled={submitting}>
                     {submitting ? "Extracting skills..." : "Submit Application"}
                 </Button>
             </main>

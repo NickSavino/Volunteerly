@@ -31,6 +31,8 @@ export function useVolOppDetailViewModel(oppId: string) {
     const [progressModalOpen, setProgressModalOpen] = useState(false);
     const [reviewModalOpen, setReviewModalOpen] = useState(false);
     const [completeConfirmOpen, setCompleteConfirmOpen] = useState(false);
+    const [skillModalOpen, setSkillModalOpen] = useState(false);
+    const [skillsAlreadySubmitted, setSkillsAlreadySubmitted] = useState(false);
 
     const [submitting, setSubmitting] = useState(false);
 
@@ -47,11 +49,20 @@ export function useVolOppDetailViewModel(oppId: string) {
                     VolunteerService.getOpportunityById(oppId),
                 ]);
 
-                if (!volResult.success) { setError("Failed to load volunteer."); return; }
+                if (!volResult.success) {
+                    setError("Failed to load volunteer.");
+                    return;
+                }
                 setCurrentVolunteer(volResult.data);
 
-                if (!oppResult.success) { setError("Failed to load opportunity."); return; }
+                if (!oppResult.success) {
+                    setError("Failed to load opportunity.");
+                    return;
+                }
                 setOpp(oppResult.data);
+
+                const existingSkills = await VolunteerService.getOppSkills(oppId);
+                if (existingSkills.length > 0) setSkillsAlreadySubmitted(true);
             } catch {
                 setError("Failed to load data.");
             } finally {
@@ -124,6 +135,27 @@ export function useVolOppDetailViewModel(oppId: string) {
         }
     }
 
+    async function submitSkills(skills: string[]) {
+        if (submitting) return;
+        setSubmitting(true);
+        try {
+            await VolunteerService.logOppSkills(oppId, skills);
+            setSkillsAlreadySubmitted(true);
+            setSkillModalOpen(false);
+            toast.success("Skills logged!", { description: "Your skills have been saved." });
+        } catch (err) {
+            setSkillModalOpen(false);
+            const msg = err instanceof Error ? err.message : String(err);
+            if (msg.includes("409") || msg.includes("ALREADY_SUBMITTED")) {
+                toast.error("Already submitted", { description: "You've already logged skills for this opportunity." });
+            } else {
+                toast.error("Failed to log skills. Please try again.");
+            }
+        } finally {
+            setSubmitting(false);
+        }
+    }
+
     const totalHours = opp?.progressUpdates?.reduce((sum, u) => sum + u.hoursContributed, 0) ?? 0;
     const economicValue = currentVolunteer ? Math.round(totalHours * currentVolunteer.hourlyValue) : 0;
 
@@ -141,9 +173,13 @@ export function useVolOppDetailViewModel(oppId: string) {
         setReviewModalOpen,
         completeConfirmOpen,
         setCompleteConfirmOpen,
+        skillModalOpen,
+        setSkillModalOpen,
+        skillsAlreadySubmitted,
         submitting,
         submitProgressUpdate,
         submitReview,
         requestCompletion,
+        submitSkills,
     };
 }

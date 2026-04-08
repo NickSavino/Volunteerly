@@ -5,7 +5,7 @@ import { VolunteerService, PartnerOrg } from "@/services/VolunteerService";
 import { useAuth } from "@/providers/auth-provider";
 import { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
 import { api } from "@/lib/api";
-import { CurrentUserSchema} from "@volunteerly/shared";
+import { CurrentUserSchema } from "@volunteerly/shared";
 
 export type ChartRange = "last_month" | "last_6_months" | "last_year" | "this_year" | "total";
 
@@ -38,8 +38,16 @@ export function useVltDashboardViewModel() {
             if (!session?.access_token) return;
             try {
                 const volResult = await VolunteerService.getCurrentVolunteer();
-                if (!volResult.success) { setError("Failed to load volunteer."); return; }
+                if (!volResult.success) {
+                    setError("Failed to load volunteer.");
+                    return;
+                }
                 setCurrentVolunteer(volResult.data);
+
+                //backfill skill vector for seeded vols
+                if (!volResult.data.skill_vector) {
+                    VolunteerService.backfillSkillVector().catch(() => {});
+                }
 
                 const oppResult = await VolunteerService.getYourOpportunities();
                 if (oppResult.success) {
@@ -61,23 +69,23 @@ export function useVltDashboardViewModel() {
                 } else {
                     console.warn("Failed to load monthly hours:", hoursResult.error);
                 }
-
             } catch (err) {
                 console.error(err);
                 setError("Failed to load data.");
             } finally {
-            setFetching(false);
+                setFetching(false);
             }
         }
         loadData();
     }, [session, router]);
 
-    const handleSignOut = async () => { await signOut(); router.push("/"); };
+    const handleSignOut = async () => {
+        await signOut();
+        router.push("/");
+    };
 
     //KPI cards
-    const totalHours = useMemo(() =>
-        opportunities.reduce((sum, opp) => sum + opp.hours, 0),
-    [opportunities]);
+    const totalHours = useMemo(() => opportunities.reduce((sum, opp) => sum + opp.hours, 0), [opportunities]);
 
     const hourlyRate = currentVolunteer?.hourlyValue ?? 0;
     const economicValue = useMemo(() => Math.round(totalHours * hourlyRate), [totalHours, hourlyRate]);
@@ -145,19 +153,24 @@ export function useVltDashboardViewModel() {
             return { chartLabels: labels, chartData: data };
         }
         return {
-            chartLabels: allKeys.map(k => {
+            chartLabels: allKeys.map((k) => {
                 const [year, month] = k.split("-");
                 const d = new Date(Number(year), Number(month) - 1, 1);
                 return `${d.toLocaleString("default", { month: "short" }).toUpperCase()} ${year}`;
             }),
-            chartData: allKeys.map(k => monthlyHoursMap[k] ?? 0),
+            chartData: allKeys.map((k) => monthlyHoursMap[k] ?? 0),
         };
-
     }, [monthlyHoursMap, chartRange]);
 
     return {
-        loading, session, router, user, error,
-        currentVolunteer, opportunities, partnerOrgs,
+        loading,
+        session,
+        router,
+        user,
+        error,
+        currentVolunteer,
+        opportunities,
+        partnerOrgs,
         handleSignOut,
         firstName: currentVolunteer?.firstName ?? "Volunteer",
         totalHours,
@@ -169,6 +182,6 @@ export function useVltDashboardViewModel() {
         chartRange,
         setChartRange,
         hourlyRate,
-        fetching
+        fetching,
     };
 }

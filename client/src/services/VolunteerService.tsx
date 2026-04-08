@@ -9,7 +9,7 @@ import {
     type ProgressUpdate,
     ExtractedSkills,
     ExtractedSkillsSchema,
-    volunteerAwardsSchema
+    volunteerAwardsSchema,
 } from "@volunteerly/shared";
 import { WorkExperience, Education } from "@/app/(protected)/(setup)/volunteer/experience-input/experienceInputVm";
 
@@ -25,7 +25,6 @@ const MonthlyHoursSchema = z.record(z.string(), z.number());
 export type MonthlyHours = z.infer<typeof MonthlyHoursSchema>;
 
 export class VolunteerService {
-
     static async getCurrentVolunteer() {
         const response = await api<unknown>("/current-volunteer");
         return CurrentVolunteerSchema.safeParse(response);
@@ -50,7 +49,10 @@ export class VolunteerService {
         return OpportunitySchema.safeParse(response);
     }
 
-    static async addProgressUpdate(oppId: string, input: { title: string; description: string; hoursContributed: number }) {
+    static async addProgressUpdate(
+        oppId: string,
+        input: { title: string; description: string; hoursContributed: number },
+    ) {
         return api<{ success: boolean }>(`/current-volunteer/opportunities/${oppId}/progress`, {
             method: "POST",
             body: JSON.stringify(input),
@@ -109,24 +111,30 @@ export class VolunteerService {
         if (filters.maxHours !== undefined) params.set("maxHours", String(filters.maxHours));
 
         const query = params.toString();
-        const response = await api<unknown>(
-            `/current-volunteer/opportunities/browse${query ? `?${query}` : ""}`
-        );
+        const response = await api<unknown>(`/current-volunteer/opportunities/browse${query ? `?${query}` : ""}`);
         const asArray = Array.isArray(response) ? response : [response];
         return OpportunitiesSchema.safeParse(asArray);
     }
-    
+
     static async getVolAwards() {
         const response = await api<unknown>("/current-volunteer/awards");
-        const parsed = volunteerAwardsSchema.safeParse(response)
-        return parsed
+        const parsed = volunteerAwardsSchema.safeParse(response);
+        return parsed;
     }
 
-    static async extractSkills(
-        resumeFile: File,
-        workExperience: string,
-        education: string
-    ) {
+    static async logOppSkills(oppId: string, skills: string[]) {
+        return api<{ success: boolean }>(`/current-volunteer/opportunities/${oppId}/skills`, {
+            method: "POST",
+            body: JSON.stringify({ skills }),
+        });
+    }
+
+    static async getOppSkills(oppId: string): Promise<string[]> {
+        const response = await api<unknown>(`/current-volunteer/opportunities/${oppId}/skills`);
+        return Array.isArray(response) ? (response as string[]) : [];
+    }
+
+    static async extractSkills(resumeFile: File, workExperience: string, education: string) {
         const formData = new FormData();
         formData.append("resume", resumeFile);
         if (workExperience) formData.append("workExperience", workExperience);
@@ -139,11 +147,7 @@ export class VolunteerService {
         return ExtractedSkillsSchema.safeParse(response);
     }
 
-    static async confirmSkills(
-        skills: ExtractedSkills,
-        workExperiences: WorkExperience[],
-        educations: Education[]
-    ) {
+    static async confirmSkills(skills: ExtractedSkills, workExperiences: WorkExperience[], educations: Education[]) {
         const response = await api<{ success: boolean }>("/current-volunteer/extract-skills/confirm", {
             method: "POST",
             body: JSON.stringify({
@@ -155,5 +159,27 @@ export class VolunteerService {
             }),
         });
         return response;
+    }
+
+    static async backfillSkillVector() {
+        return api<{ success: boolean; skipped?: boolean }>("/current-volunteer/extract-skills/backfill", {
+            method: "POST",
+        });
+    }
+
+    static async backfillOpportunityVectors() {
+        return api<{ success: boolean; skipped?: boolean; count?: number }>(
+            "/current-volunteer/opportunities/backfill-vectors",
+            { method: "POST" },
+        ).catch(() => {});
+    }
+
+    static async getOpportunityMatchScores(): Promise<Record<string, number>> {
+        try {
+            const response = await api<Record<string, number>>("/current-volunteer/opportunities/match-scores");
+            return response ?? {};
+        } catch {
+            return {};
+        }
     }
 }

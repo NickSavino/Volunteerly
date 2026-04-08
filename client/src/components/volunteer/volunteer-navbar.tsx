@@ -16,10 +16,10 @@ import avtImg from "@/assets/avatarImg.png";
 import type { CurrentVolunteer } from "@volunteerly/shared";
 
 const NAV_LINKS = [
-    { label: "Dashboard",     href: "/volunteer" },
+    { label: "Dashboard", href: "/volunteer" },
     { label: "Opportunities", href: "/volunteer/opportunities" },
-    { label: "Skills",        href: "/volunteer/skills" },
-    { label: "Messages",      href: "/volunteer/messages" },
+    { label: "Skills", href: "/volunteer/skills" },
+    { label: "Messages", href: "/volunteer/messages" },
 ] as const;
 
 type VolunteerNavbarProps = {
@@ -30,9 +30,7 @@ type VolunteerNavbarProps = {
 export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbarProps) {
     const pathname = usePathname();
 
-    const fullName = currentVolunteer
-        ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
-        : "Loading...";
+    const fullName = currentVolunteer ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}` : "Loading...";
 
     return (
         <header className="w-full flex-shrink-0 border-b bg-card px-6 py-3 relative z-[999]">
@@ -66,7 +64,9 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                             <NavigationMenuTrigger className="p-0">
                                 <div className="flex items-center gap-2">
                                     <div className="hidden text-right sm:block">
-                                        <p className="text-sm font-semibold text-foreground leading-tight">{fullName}</p>
+                                        <p className="text-sm font-semibold text-foreground leading-tight">
+                                            {fullName}
+                                        </p>
                                         <p className="text-xs text-muted-foreground">Verified Volunteer</p>
                                     </div>
                                     <Avatar className="h-9 w-9">

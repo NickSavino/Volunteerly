@@ -21,7 +21,7 @@ export function useSkillExtractionViewModel() {
     //Load skills from session storage
     useEffect(() => {
         const stored = sessionStorage.getItem("extractedSkills");
-        
+
         if (!stored) {
             router.replace("/volunteer/experience-input");
             return;
@@ -44,7 +44,6 @@ export function useSkillExtractionViewModel() {
         loadName();
     }, [session]);
 
-    
     function removeSkill(category: "technical" | "nonTechnical", skill: string) {
         setSkills((prev) => {
             if (!prev) return prev;
@@ -56,7 +55,7 @@ export function useSkillExtractionViewModel() {
     }
 
     function handleBack() {
-    router.replace("/volunteer/experience-input");
+        router.replace("/volunteer/experience-input");
     }
 
     async function handleConfirm() {
@@ -64,19 +63,15 @@ export function useSkillExtractionViewModel() {
         setConfirming(true);
         setError(null);
         try {
-            const workExperiences: WorkExperience[] = JSON.parse(
-                sessionStorage.getItem("workExperiences") ?? "[]"
-            );
-            const educations: Education[] = JSON.parse(
-                sessionStorage.getItem("educations") ?? "[]"
-            );
+            const workExperiences: WorkExperience[] = JSON.parse(sessionStorage.getItem("workExperiences") ?? "[]");
+            const educations: Education[] = JSON.parse(sessionStorage.getItem("educations") ?? "[]");
 
             await VolunteerService.confirmSkills(skills, workExperiences, educations);
 
             sessionStorage.removeItem("extractedSkills");
             sessionStorage.removeItem("workExperiences");
             sessionStorage.removeItem("educations");
-            
+
             await refresh();
             router.replace("/volunteer");
         } catch (err) {
@@ -95,6 +90,6 @@ export function useSkillExtractionViewModel() {
         handleConfirm,
         signOut,
         fullName,
-        handleBack
+        handleBack,
     };
 }

@@ -14,9 +14,26 @@ import {
     requestCompletion,
     postReview,
     postFlag,
+    logOpportunitySkills,
+    getOpportunitySkills,
+    getVolunteerSkillCounts,
 } from "../services/volunteer-service.js";
+import { prisma } from "../lib/prisma.js";
+import { extractSkillsFromOpportunity } from "../services/groq-service.js";
+import { embedText } from "../services/gemini-service.js";
 
 export const currentVolunteerRouter = Router();
+
+currentVolunteerRouter.get("/skill-counts", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const counts = await getVolunteerSkillCounts(userId);
+        res.status(200).json(counts);
+    } catch (error) {
+        next(error);
+    }
+});
 
 currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next) => {
     try {
@@ -118,6 +135,97 @@ currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
     }
 });
 
+// If the volunteer or an opportunity has no vector yet, those opps default to 1%.
+currentVolunteerRouter.get("/opportunities/match-scores", async (req, res, next) => {
+    console.log("MATCH SCORES ROUTE HIT");
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const volunteer = await prisma.$queryRaw<{ has_vector: boolean }[]>`
+            SELECT (skill_vector IS NOT NULL) AS has_vector
+            FROM volunteers
+            WHERE id = ${userId}
+            LIMIT 1
+        `;
+
+        //check if vol has a skill vector
+        const hasVector = volunteer?.[0]?.has_vector ?? false;
+        if (!hasVector) {
+            return res.status(200).json({});
+        }
+
+        // Cosine similarity via pgvector: 1 - (a <=> b) where <=> is cosine distance
+        // Multiply by 100 and round to integer percentage
+        const scores = await prisma.$queryRaw<{ id: string; match_pct: number }[]>`
+            SELECT
+                o.id,
+                GREATEST(1, ROUND(CAST((1 - (o.skill_vector <=> v.skill_vector)) * 100 AS NUMERIC), 0)::int) AS match_pct
+            FROM opportunities o, volunteers v
+            WHERE v.id = ${userId}
+              AND v.skill_vector IS NOT NULL
+              AND o.skill_vector IS NOT NULL
+        `;
+
+        const scoreMap: Record<string, number> = {};
+        for (const row of scores) {
+            scoreMap[row.id] = Math.min(100, Math.max(1, Number(row.match_pct)));
+        }
+
+        console.log("SCORE MAP HERE: ", scoreMap);
+
+        res.status(200).json(scoreMap);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/backfill-vectors", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const oppsWithoutVector = await prisma.$queryRaw<
+            { id: string; name: string; category: string; description: string; candidate_desc: string }[]
+        >`
+            SELECT id, name, category, description, candidate_desc
+            FROM opportunities
+            WHERE skill_vector IS NULL
+            AND status = 'OPEN'
+        `;
+
+        if (oppsWithoutVector.length === 0) {
+            return res.status(200).json({ skipped: true });
+        }
+
+        (async () => {
+            for (const opp of oppsWithoutVector) {
+                try {
+                    const skills = await extractSkillsFromOpportunity(
+                        opp.name,
+                        opp.category,
+                        opp.description,
+                        opp.candidate_desc,
+                    );
+                    const allSkills = [...skills.technical, ...skills.nonTechnical].join(", ");
+                    const vector = await embedText(allSkills);
+                    await prisma.$executeRaw`
+                        UPDATE opportunities
+                        SET skill_vector = ${JSON.stringify(vector)}::vector
+                        WHERE id = ${opp.id}
+                    `;
+                } catch (err) {
+                    console.warn(`Failed to backfill vector for opportunity ${opp.id}:`, err);
+                }
+            }
+        })();
+
+        res.status(200).json({ success: true, count: oppsWithoutVector.length });
+    } catch (error) {
+        next(error);
+    }
+});
+
 currentVolunteerRouter.get("/opportunities/:oppId", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -186,9 +294,18 @@ currentVolunteerRouter.put("/", async (req, res, next) => {
         if (!user) {
             modified_user = await createCurrentVolunteer(userId, firstName, lastName);
         } else {
-            modified_user = await updateCurrentVolunteer(userId, firstName, lastName, location, bio, availability, hourlyValue);
+            modified_user = await updateCurrentVolunteer(
+                userId,
+                firstName,
+                lastName,
+                location,
+                bio,
+                availability,
+                hourlyValue,
+            );
         }
-        if (!modified_user) return res.status(500).json({ error: "Cannot update/create Volunteer", message: "Internal server error." });
+        if (!modified_user)
+            return res.status(500).json({ error: "Cannot update/create Volunteer", message: "Internal server error." });
         res.status(200).json(modified_user);
     } catch (error) {
         console.error(error);
@@ -203,23 +320,23 @@ currentVolunteerRouter.get("/awards", async (req, res, next) => {
 
         const awards: Record<string, string> = {};
 
-        const vol = await getCurrentVolunteer(userId)
+        const vol = await getCurrentVolunteer(userId);
         const locationLength = vol?.location?.length || 0;
         const bioLength = vol?.bio?.length || 0;
-        
+
         if (locationLength >= 1 && bioLength >= 1) {
             awards["Profile Pro"] = "Completed all volunteer profile details!";
         }
 
         const opportunities = await getYourOpportunities(userId);
         const num_opporuntities = opportunities?.length || 0;
-        
+
         if (num_opporuntities >= 1) {
             awards["First Step"] = "Completed your first opportunity!";
         }
-        if (num_opporuntities >= 100){
+        if (num_opporuntities >= 100) {
             awards["Legendary Volunteer"] = "Completed 100 Opportunities on Volunteerly!";
-        } else if (num_opporuntities >= 50){
+        } else if (num_opporuntities >= 50) {
             awards["Master Volunteer"] = "Completed 50 Opportunities on Volunteerly!";
         } else if (num_opporuntities >= 10) {
             awards["Active Volunteer"] = "Completed Opportunities on Volunteerly!";
@@ -227,21 +344,48 @@ currentVolunteerRouter.get("/awards", async (req, res, next) => {
 
         const hours = await getVolunteerOrganizations(userId);
         const num_unique_orgs = hours?.length || 0;
-        
+
         if (num_unique_orgs >= 1) {
             awards["Helping Hand"] = "Assisted your first Organization!";
         }
-        
-        if (num_unique_orgs >= 100){
+
+        if (num_unique_orgs >= 100) {
             awards["Changemaker"] = "Assisted 100 Organizations!";
-        } else if (num_unique_orgs >= 50){
+        } else if (num_unique_orgs >= 50) {
             awards["Community Pillar"] = "Assisted 50 Organizations!";
         } else if (num_unique_orgs >= 10) {
             awards["Connector"] = "Assisted 10 Organizations!";
         }
-        
 
         res.status(200).json(awards);
+    } catch (error) {
+        next(error);
+    }
+});
+currentVolunteerRouter.post("/opportunities/:oppId/skills", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const { skills } = req.body;
+        if (!Array.isArray(skills)) return res.status(400).json({ error: "skills must be an array" });
+        await logOpportunitySkills(userId, oppId, skills);
+        res.status(201).json({ success: true });
+    } catch (error: any) {
+        if (error?.message === "ALREADY_SUBMITTED") {
+            return res.status(409).json({ error: "ALREADY_SUBMITTED" });
+        }
+        next(error);
+    }
+});
+
+currentVolunteerRouter.get("/opportunities/:oppId/skills", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+        const { oppId } = req.params;
+        const skills = await getOpportunitySkills(userId, oppId);
+        res.status(200).json(skills);
     } catch (error) {
         next(error);
     }

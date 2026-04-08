@@ -1,8 +1,7 @@
-
 type ModeratorPageHeaderProps = {
     title: string;
     subtitle: string;
-}
+};
 
 export function ModeratorPageHeader({ title, subtitle }: ModeratorPageHeaderProps) {
     return (
@@ -10,5 +9,5 @@ export function ModeratorPageHeader({ title, subtitle }: ModeratorPageHeaderProp
             <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
             <p className="text-sm text-gray-500">{subtitle}</p>
         </div>
-    )
+    );
 }

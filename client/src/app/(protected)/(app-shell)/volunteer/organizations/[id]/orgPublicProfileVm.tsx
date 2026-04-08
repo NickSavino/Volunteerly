@@ -25,7 +25,10 @@ export function useOrgPublicProfileViewModel(orgId: string) {
                 if (volResult.success) setCurrentVolunteer(volResult.data);
 
                 const orgResult = await VolunteerOrganizationService.getPublicOrgProfile(orgId);
-                if (!orgResult.success) { setError("Failed to load organization profile."); return; }
+                if (!orgResult.success) {
+                    setError("Failed to load organization profile.");
+                    return;
+                }
                 setOrg(orgResult.data);
             } catch (err) {
                 console.error(err);
@@ -37,7 +40,10 @@ export function useOrgPublicProfileViewModel(orgId: string) {
         loadData();
     }, [session, orgId]);
 
-    const handleSignOut = async () => { await signOut(); router.push("/"); };
+    const handleSignOut = async () => {
+        await signOut();
+        router.push("/");
+    };
 
     return {
         loading: loading || dataLoading,

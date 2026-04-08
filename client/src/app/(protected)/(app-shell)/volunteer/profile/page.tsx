@@ -12,6 +12,8 @@ import { Settings, Pencil } from "lucide-react";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award, type LucideIcon } from "lucide-react";
+import { useState } from "react";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
 export default function ProfilePage() {
     const {
@@ -19,10 +21,14 @@ export default function ProfilePage() {
         editing,
         saving,
         errors,
-        firstName, setFirstName,
-        lastName, setLastName,
-        location, setLocation,
-        bio, setBio,
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
+        location,
+        setLocation,
+        bio,
+        setBio,
         availability,
         toggleDay,
         memberSince,
@@ -37,11 +43,13 @@ export default function ProfilePage() {
         loading,
         session,
         fetching,
-        awards
+        awards,
     } = useProfileViewModel();
 
+    const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+
     if (loading || !session || fetching) {
-        return (<LoadingScreen />)
+        return <LoadingScreen />;
     }
 
     if (!currentVolunteer) {
@@ -59,9 +67,9 @@ export default function ProfilePage() {
         "Legendary Volunteer": Rocket,
 
         "Helping Hand": Handshake,
-        "Connector": Handshake,
+        Connector: Handshake,
         "Community Pillar": Handshake,
-        "Changemaker": Handshake,
+        Changemaker: Handshake,
     };
 
     return (
@@ -69,18 +77,15 @@ export default function ProfilePage() {
             <title>Volunteer - Profile</title>
             <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row gap-6 items-stretch">
-
                     {/* Left sidebar */}
                     <div className="flex flex-col gap-4 w-full lg:w-72 flex-shrink-0">
                         <div className="rounded-xl border bg-white p-6 flex flex-col items-center gap-3 shadow-sm">
                             <div className="relative">
                                 <Avatar className="w-24 h-24">
-                                    <AvatarImage
-                                        key={avatarKey}
-                                        src={UserService.getAvatarURL(currentVolunteer.id)}
-                                    />
+                                    <AvatarImage key={avatarKey} src={UserService.getAvatarURL(currentVolunteer.id)} />
                                     <AvatarFallback className="text-2xl">
-                                        {currentVolunteer.firstName[0]}{currentVolunteer.lastName[0]}
+                                        {currentVolunteer.firstName[0]}
+                                        {currentVolunteer.lastName[0]}
                                     </AvatarFallback>
                                 </Avatar>
                                 <Button
@@ -109,7 +114,10 @@ export default function ProfilePage() {
                                 <>
                                     <div className="flex items-center gap-0.5 mt-1">
                                         {[1, 2, 3, 4, 5].map((star) => {
-                                            const fill = Math.min(1, Math.max(0, currentVolunteer.averageRating - (star - 1)));
+                                            const fill = Math.min(
+                                                1,
+                                                Math.max(0, currentVolunteer.averageRating - (star - 1)),
+                                            );
                                             const pct = Math.round(fill * 100);
                                             return (
                                                 <span key={star} className="relative text-2xl leading-none">
@@ -117,7 +125,9 @@ export default function ProfilePage() {
                                                     <span
                                                         className="absolute inset-0 overflow-hidden text-yellow-400"
                                                         style={{ width: `${pct}%` }}
-                                                    >★</span>
+                                                    >
+                                                        ★
+                                                    </span>
                                                 </span>
                                             );
                                         })}
@@ -126,7 +136,8 @@ export default function ProfilePage() {
                                         {currentVolunteer.averageRating.toFixed(1)} / 5.0
                                     </p>
                                     <p className="text-xs text-gray-400">
-                                        Based on {currentVolunteer.reviewCount} {currentVolunteer.reviewCount === 1 ? "review" : "reviews"}
+                                        Based on {currentVolunteer.reviewCount}{" "}
+                                        {currentVolunteer.reviewCount === 1 ? "review" : "reviews"}
                                     </p>
                                 </>
                             ) : (
@@ -167,7 +178,7 @@ export default function ProfilePage() {
                             </div>
                             <Button
                                 className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
-                                onClick={() => {}}
+                                onClick={() => setIsTicketModalOpen(true)}
                             >
                                 Submit a Ticket
                             </Button>
@@ -255,9 +266,7 @@ export default function ProfilePage() {
                                         placeholder="Describe your passion for volunteering and what you hope to achieve..."
                                         className={`flex-1 resize-none ${!editing ? "text-gray-700" : ""} ${errors.bio ? "border-destructive" : ""}`}
                                     />
-                                    {errors.bio && (
-                                        <p className="text-destructive text-xs mt-1">{errors.bio}</p>
-                                    )}
+                                    {errors.bio && <p className="text-destructive text-xs mt-1">{errors.bio}</p>}
                                 </div>
 
                                 <div className="flex flex-col gap-2">
@@ -270,9 +279,11 @@ export default function ProfilePage() {
                                                 onPressedChange={() => editing && toggleDay(day)}
                                                 disabled={!editing}
                                                 className={`w-full px-1 py-2 rounded-lg border text-xs font-medium transition-colors text-center
-                                                    ${availability.includes(day)
-                                                        ? "bg-yellow-400 border-yellow-400 text-black hover:bg-yellow-500"
-                                                        : "bg-white border-gray-300 text-gray-600 hover:bg-gray-50"}
+                                                    ${
+                                                        availability.includes(day)
+                                                            ? "bg-yellow-400 border-yellow-400 text-black hover:bg-yellow-500"
+                                                            : "bg-white border-gray-300 text-gray-600 hover:bg-gray-50"
+                                                    }
                                                     ${!editing ? "opacity-70 cursor-default" : "cursor-pointer"}`}
                                             >
                                                 {day}
@@ -286,9 +297,10 @@ export default function ProfilePage() {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </main>
+
+            <SubmitTicketModal open={isTicketModalOpen} onClose={() => setIsTicketModalOpen(false)} />
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ModeratorVolunteerListItem, VolunteerModerationTab } from "@volunteerly/shared";
 import { useAuth } from "@/providers/auth-provider";
 import { ModeratorService } from "@/services/ModeratorService";
@@ -7,10 +7,10 @@ import { ModeratorService } from "@/services/ModeratorService";
 export type VolunteerSortKey = "alphabetical" | "highest-flags" | "highest-rating";
 
 export const VOLUNTEER_TABS: { key: VolunteerModerationTab; label: string }[] = [
-  { key: "ALL", label: "All Accounts" },
-  { key: "FLAGGED", label: "Flagged Accounts" },
-  { key: "RESOLVED", label: "Resolved" },
-  { key: "CLOSED", label: "Closed" },
+    { key: "ALL", label: "All Accounts" },
+    { key: "FLAGGED", label: "Flagged Accounts" },
+    { key: "RESOLVED", label: "Resolved" },
+    { key: "CLOSED", label: "Closed" },
 ];
 
 const PAGE_SIZE_OPTIONS = [3, 5, 10] as const;
@@ -23,7 +23,7 @@ export function useVolunteerListViewModel() {
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const [activeTab, setActiveTab] = useState<VolunteerModerationTab>("ALL")
+    const [activeTab, setActiveTab] = useState<VolunteerModerationTab>("ALL");
     const [searchQuery, setSearchQuery] = useState("");
     const [pendingSearch, setPendingSearch] = useState("");
     const [sortBy, setSortBy] = useState<VolunteerSortKey>("alphabetical");
@@ -32,22 +32,26 @@ export function useVolunteerListViewModel() {
     const [pendingPageSize, setPendingPageSize] = useState<number>(3);
     const [currentPage, setCurrentPage] = useState(1);
 
-    useEffect(() => {
-        async function load() {
-            if (!session?.access_token) return;
+    const accessToken = session?.access_token;
 
-            try {
-                const volunteers = await ModeratorService.getModeratorVolunteers();
-                setVolunteersList(volunteers);
-            } catch {
-                setError("Failed to load volunteers.");
-            } finally {
-                setLoadingData(false);
-            }
+    const loadVolunteers = useCallback(async () => {
+        if (!accessToken) return;
+
+        setLoadingData(true);
+        try {
+            const volunteers = await ModeratorService.getModeratorVolunteers();
+            setVolunteersList(volunteers);
+            setError(null);
+        } catch {
+            setError("Failed to load volunteers.");
+        } finally {
+            setLoadingData(false);
         }
+    }, [accessToken]);
 
-        load();
-    }, [session]);
+    useEffect(() => {
+        void loadVolunteers();
+    }, [loadVolunteers]);
 
     const tabCounts = useMemo(
         () => ({
@@ -56,40 +60,36 @@ export function useVolunteerListViewModel() {
             RESOLVED: volunteersList.filter((v) => v.state === "RESOLVED").length,
             CLOSED: volunteersList.filter((v) => v.state === "CLOSED").length,
         }),
-        [volunteersList]
+        [volunteersList],
     );
 
     const filteredVolunteers = useMemo(() => {
         let rows = volunteersList;
 
         if (activeTab !== "ALL") {
-            rows = rows.filter((v) => v.state == activeTab)
+            rows = rows.filter((v) => v.state == activeTab);
         }
 
         if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        rows = rows.filter((v) =>
-            `${v.firstName} ${v.lastName}`.toLowerCase().includes(q)
-        )}
+            const q = searchQuery.toLowerCase();
+            rows = rows.filter((v) => `${v.firstName} ${v.lastName}`.toLowerCase().includes(q));
+        }
 
         if (sortBy === "alphabetical") {
             rows = [...rows].sort((a, b) =>
-                `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)
-        )} else if (sortBy === "highest-flags") {
-            rows = [...rows].sort((a , b) => b.pastFlagsCount - a.pastFlagsCount);
+                `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`),
+            );
+        } else if (sortBy === "highest-flags") {
+            rows = [...rows].sort((a, b) => b.pastFlagsCount - a.pastFlagsCount);
         } else if (sortBy === "highest-rating") {
             rows = [...rows].sort((a, b) => b.averageRating - a.averageRating);
         }
 
         return rows;
-    }, 
-    [volunteersList, activeTab, searchQuery, sortBy]);
+    }, [volunteersList, activeTab, searchQuery, sortBy]);
 
     const totalPages = Math.max(1, Math.ceil(filteredVolunteers.length / pageSize));
-    const paginatedVolunteers = filteredVolunteers.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
-    )
+    const paginatedVolunteers = filteredVolunteers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     const startItem = filteredVolunteers.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, filteredVolunteers.length);
@@ -111,7 +111,7 @@ export function useVolunteerListViewModel() {
             loading: loading || loadingData,
             session,
             signOut,
-            router
+            router,
         },
         page: {
             title: "Volunteers",
@@ -119,6 +119,7 @@ export function useVolunteerListViewModel() {
             activeTab,
             tabCounts,
             error,
+            refreshVolunteers: loadVolunteers,
         },
         filters: {
             pendingSearch,
@@ -141,8 +142,7 @@ export function useVolunteerListViewModel() {
             setCurrentPage,
             startItem,
             endItem,
-            totalItems: volunteersList.length
-        }
-    }
-
+            totalItems: volunteersList.length,
+        },
+    };
 }

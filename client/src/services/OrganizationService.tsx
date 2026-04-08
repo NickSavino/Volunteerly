@@ -19,11 +19,11 @@ import {
     ProgressUpdateSchema,
     Opportunity,
     UpdateOpportunitySchema,
-    organizationAwardsSchema
+    organizationAwardsSchema,
+    OrganizationReviewStatsSchema,
 } from "@volunteerly/shared";
 
 export class OrganizationService {
-
     static async getCurrentOrganization() {
         const response = await api<unknown>("/current-organization");
         const parsed = CurrentOrganizationSchema.safeParse(response);
@@ -42,18 +42,18 @@ export class OrganizationService {
     static async apply(formData: FormData) {
         const response = await api<unknown>("/current-organization/apply", {
             method: "PUT",
-            body: formData
+            body: formData,
         });
         const parsed = CurrentOrganizationSchema.safeParse(response);
         return parsed;
     }
     static async getOrgAwards() {
         const response = await api<unknown>("/current-organization/awards");
-        const parsed = organizationAwardsSchema.safeParse(response)
-        return parsed
+        const parsed = organizationAwardsSchema.safeParse(response);
+        return parsed;
     }
 
-    static async getAllOrganizations(status?: "APPLIED") : Promise<ModeratorOrganizationList> {
+    static async getAllOrganizations(status?: "APPLIED"): Promise<ModeratorOrganizationList> {
         const url = status ? `/organization?status=${status}` : "/organization";
         const response = await api<unknown>(url);
         const parsed = ModeratorOrganizationListSchema.safeParse(response);
@@ -65,9 +65,9 @@ export class OrganizationService {
         return parsed.data;
     }
 
-    static async getOrganizationDocument(file_path:string) {
-        const url = `/organization/document/?file_path=${file_path}`
-        const response = await api<Blob>(url, {responseType: "blob"});
+    static async getOrganizationDocument(file_path: string) {
+        const url = `/organization/document/?file_path=${file_path}`;
+        const response = await api<Blob>(url, { responseType: "blob" });
         return response;
     }
 
@@ -103,44 +103,50 @@ export class OrganizationService {
 
     static async countAllOpportunities() {
         const response = await api<unknown>("/current-organization/opportunities/totalCount");
-        const parsed = CountSchema.safeParse(response)
-        return parsed
+        const parsed = CountSchema.safeParse(response);
+        return parsed;
     }
 
     static async countActiveVolunteers() {
         const response = await api<unknown>("/current-organization/opportunities/activeTotal");
-        const parsed = CountSchema.safeParse(response)
-        return parsed
+        const parsed = CountSchema.safeParse(response);
+        return parsed;
     }
 
     static async sumTotalHours() {
         const response = await api<unknown>("/current-organization/opportunities/hoursTotal");
-        const parsed = TotalHoursSchema.safeParse(response)
-        return parsed
+        const parsed = TotalHoursSchema.safeParse(response);
+        return parsed;
+    }
+
+    static async getReviewSummary() {
+        const response = await api<unknown>("/current-organization/reviews");
+        const parsed = OrganizationReviewStatsSchema.safeParse(response);
+        return parsed;
     }
 
     static async getOpportunity(oppId: string) {
-        const url = `/current-organization/opportunity/?opp_id=${oppId}`
+        const url = `/current-organization/opportunity/?opp_id=${oppId}`;
         const response = await api<unknown>(url);
-        const parsed = OpportunitySchema.safeParse(response)
-        return parsed
+        const parsed = OpportunitySchema.safeParse(response);
+        return parsed;
     }
 
     static async getApplications(oppId: string) {
-        const url = `/current-organization/opportunity/applications/?opp_id=${oppId}`
+        const url = `/current-organization/opportunity/applications/?opp_id=${oppId}`;
         const response = await api<unknown>(url);
         const asArray = Array.isArray(response) ? response : [response];
         return ApplicationsSchema.safeParse(asArray);
     }
 
     static async getApplication(appId: string) {
-        const url = `/current-organization/opportunity/application/?app_id=${appId}`
+        const url = `/current-organization/opportunity/application/?app_id=${appId}`;
         const response = await api<unknown>(url);
-        const parsed = ApplicationSchema.safeParse(response)
-        return parsed
+        const parsed = ApplicationSchema.safeParse(response);
+        return parsed;
     }
-    
-    static async selectOppVolunteer(oppId: string, vltId:string) {
+
+    static async selectOppVolunteer(oppId: string, vltId: string) {
         const response = await api<unknown>("/current-organization/opportunity/select", {
             method: "PUT",
             body: JSON.stringify({ oppId, vltId }),
@@ -151,16 +157,16 @@ export class OrganizationService {
     static async completeOpportunity(oppId: string) {
         const response = await api<unknown>("/current-organization/opportunity/complete", {
             method: "PUT",
-            body: JSON.stringify({oppId}),
+            body: JSON.stringify({ oppId }),
         });
         const parsed = OpportunitySchema.safeParse(response);
         return parsed;
     }
-    static async getOpportunityAnalytics(oppId:string) {
-        const url = `/current-organization/opportunity/analytics/?oppId=${oppId}`
+    static async getOpportunityAnalytics(oppId: string) {
+        const url = `/current-organization/opportunity/analytics/?oppId=${oppId}`;
         const response = await api<unknown>(url);
-        const parsed = OpportunityAnalyticsSchema.safeParse(response)
-        return parsed
+        const parsed = OpportunityAnalyticsSchema.safeParse(response);
+        return parsed;
     }
     static async addProgressUpdate(progressUpdate: ProgressUpdate) {
         const response = await api<unknown>("/current-organization/opportunity/progressUpdate", {
@@ -193,7 +199,7 @@ export class OrganizationService {
             body: JSON.stringify({ flaggedUserId, reason }),
         });
     }
-    static async updateOpportunity(opportunityId:string,opportunity: UpdateOpportunitySchema) {
+    static async updateOpportunity(opportunityId: string, opportunity: UpdateOpportunitySchema) {
         const response = await api<unknown>("/current-organization/opportunity", {
             method: "PUT",
             body: JSON.stringify({ ...opportunity, opportunityId }),
@@ -201,5 +207,4 @@ export class OrganizationService {
         const parsed = OpportunitySchema.safeParse(response);
         return parsed;
     }
-
 }

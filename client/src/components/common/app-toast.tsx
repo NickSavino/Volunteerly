@@ -3,7 +3,6 @@
 import { AlertCircle, CheckCircle2, X } from "lucide-react";
 import { toast } from "sonner";
 
-
 type ToastOptions = {
     message?: string;
     duration?: number;
@@ -18,11 +17,8 @@ type ToastContentProps = {
     message?: string;
 };
 
-function ToastContent({ id, kind, title, message} : ToastContentProps) {
-    const accent =
-        kind === "success"
-            ? "border-l-4 border-l-success"
-            : "border-l-4 border-l-destructive";
+function ToastContent({ id, kind, title, message }: ToastContentProps) {
+    const accent = kind === "success" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive";
 
     const Icon = kind === "success" ? CheckCircle2 : AlertCircle;
     const iconBg = kind === "success" ? "bg-success" : "bg-destructive";
@@ -37,9 +33,7 @@ function ToastContent({ id, kind, title, message} : ToastContentProps) {
 
             <div className="min-w-0 flex-1">
                 <p className="text-base font-bold text-foreground">{title}</p>
-                {message ? (
-                    <p className="mt-0.5 text-sm text-muted-foreground">{message}</p>
-                ) : null}
+                {message ? <p className="mt-0.5 text-sm text-muted-foreground">{message}</p> : null}
             </div>
 
             <button
@@ -56,10 +50,10 @@ function ToastContent({ id, kind, title, message} : ToastContentProps) {
 
 function renderToast(kind: ToastKind, title: string, message?: string) {
     function renderToastContent(id: string | number) {
-        return <ToastContent id={id} kind={kind} title={title} message={message} />
+        return <ToastContent id={id} kind={kind} title={title} message={message} />;
     }
 
-    return renderToastContent
+    return renderToastContent;
 }
 
 export const appToast = {
