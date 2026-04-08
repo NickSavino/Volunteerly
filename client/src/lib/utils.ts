@@ -17,10 +17,15 @@ type ResolveDefaultAppRouteArgs = {
  * @param currentOrganization
  * @returns  null
  */
-export function resolveDefaultAppRoute({ currentUser, currentOrganization }: ResolveDefaultAppRouteArgs) {
+export function resolveDefaultAppRoute({
+    currentUser,
+    currentOrganization,
+}: ResolveDefaultAppRouteArgs) {
     switch (currentUser.role) {
         case "VOLUNTEER":
-            return currentUser.status === "UNVERIFIED" ? "/volunteer/experience-input" : "/volunteer";
+            return currentUser.status === "UNVERIFIED"
+                ? "/volunteer/experience-input"
+                : "/volunteer";
 
         case "ORGANIZATION":
             switch (currentOrganization?.status) {

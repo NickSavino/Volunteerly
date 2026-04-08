@@ -10,7 +10,10 @@ import {
     ExtractedSkillsSchema,
     volunteerAwardsSchema,
 } from "@volunteerly/shared";
-import { WorkExperience, Education } from "@/app/(protected)/(setup)/volunteer/experience-input/experienceInputVm";
+import {
+    WorkExperience,
+    Education,
+} from "@/app/(protected)/(setup)/volunteer/experience-input/experienceInputVm";
 
 const PartnerOrgSchema = z.object({
     id: z.string().uuid(),
@@ -59,9 +62,12 @@ export class VolunteerService {
     }
 
     static async requestCompletion(oppId: string) {
-        return api<{ success: boolean }>(`/current-volunteer/opportunities/${oppId}/request-completion`, {
-            method: "POST",
-        });
+        return api<{ success: boolean }>(
+            `/current-volunteer/opportunities/${oppId}/request-completion`,
+            {
+                method: "POST",
+            },
+        );
     }
 
     static async postReview(orgUserId: string, opportunityId: string, input: { rating: number }) {
@@ -110,7 +116,9 @@ export class VolunteerService {
         if (filters.maxHours !== undefined) params.set("maxHours", String(filters.maxHours));
 
         const query = params.toString();
-        const response = await api<unknown>(`/current-volunteer/opportunities/browse${query ? `?${query}` : ""}`);
+        const response = await api<unknown>(
+            `/current-volunteer/opportunities/browse${query ? `?${query}` : ""}`,
+        );
         const asArray = Array.isArray(response) ? response : [response];
         return OpportunitiesSchema.safeParse(asArray);
     }
@@ -146,24 +154,34 @@ export class VolunteerService {
         return ExtractedSkillsSchema.safeParse(response);
     }
 
-    static async confirmSkills(skills: ExtractedSkills, workExperiences: WorkExperience[], educations: Education[]) {
-        const response = await api<{ success: boolean }>("/current-volunteer/extract-skills/confirm", {
-            method: "POST",
-            body: JSON.stringify({
-                technical: skills.technical,
-                nonTechnical: skills.nonTechnical,
-                hourlyRate: skills.hourlyRate,
-                workExperiences,
-                educations,
-            }),
-        });
+    static async confirmSkills(
+        skills: ExtractedSkills,
+        workExperiences: WorkExperience[],
+        educations: Education[],
+    ) {
+        const response = await api<{ success: boolean }>(
+            "/current-volunteer/extract-skills/confirm",
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    technical: skills.technical,
+                    nonTechnical: skills.nonTechnical,
+                    hourlyRate: skills.hourlyRate,
+                    workExperiences,
+                    educations,
+                }),
+            },
+        );
         return response;
     }
 
     static async backfillSkillVector() {
-        return api<{ success: boolean; skipped?: boolean }>("/current-volunteer/extract-skills/backfill", {
-            method: "POST",
-        });
+        return api<{ success: boolean; skipped?: boolean }>(
+            "/current-volunteer/extract-skills/backfill",
+            {
+                method: "POST",
+            },
+        );
     }
 
     static async backfillOpportunityVectors() {
@@ -175,7 +193,9 @@ export class VolunteerService {
 
     static async getOpportunityMatchScores(): Promise<Record<string, number>> {
         try {
-            const response = await api<Record<string, number>>("/current-volunteer/opportunities/match-scores");
+            const response = await api<Record<string, number>>(
+                "/current-volunteer/opportunities/match-scores",
+            );
             return response ?? {};
         } catch {
             return {};

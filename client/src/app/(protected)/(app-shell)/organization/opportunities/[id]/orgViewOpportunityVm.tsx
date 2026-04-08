@@ -140,7 +140,11 @@ export function useOrgViewOpportunityViewModel(id: string) {
         if (submitting || !opportunity?.volunteer?.id) return;
         setSubmitting(true);
         try {
-            await OrganizationService.postReview(opportunity.volunteer.id, opportunity.id, input.rating);
+            await OrganizationService.postReview(
+                opportunity.volunteer.id,
+                opportunity.id,
+                input.rating,
+            );
         } catch (err) {
             setReviewModalOpen(false);
             setSubmitting(false);
@@ -156,7 +160,10 @@ export function useOrgViewOpportunityViewModel(id: string) {
         }
         if (input.flagged && input.flagReason?.trim()) {
             try {
-                await OrganizationService.postFlag(opportunity.volunteer.id, input.flagReason.trim());
+                await OrganizationService.postFlag(
+                    opportunity.volunteer.id,
+                    input.flagReason.trim(),
+                );
             } catch {
                 setReviewModalOpen(false);
                 setSubmitting(false);
@@ -168,7 +175,9 @@ export function useOrgViewOpportunityViewModel(id: string) {
         }
         setReviewModalOpen(false);
         setSubmitting(false);
-        toast.success(input.flagged ? "Review and flag posted!" : "Review posted!", { position: "top-right" });
+        toast.success(input.flagged ? "Review and flag posted!" : "Review posted!", {
+            position: "top-right",
+        });
     }
 
     return {

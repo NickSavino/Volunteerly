@@ -20,7 +20,8 @@ import { useModProfileViewModel } from "@/app/(protected)/(app-shell)/moderator/
 export default function ModeratorProfilePage() {
     const vm = useModProfileViewModel();
 
-    const { sessionState, profileState, form, securityState, securityForm, actions, fileInputRef } = vm;
+    const { sessionState, profileState, form, securityState, securityForm, actions, fileInputRef } =
+        vm;
     const { loading, session } = sessionState;
     const { currentModerator, editing, saving, avatarKey, memberSince } = profileState;
     const { values, errors, setters } = form;
@@ -32,7 +33,11 @@ export default function ModeratorProfilePage() {
         setDeleteAccountOpen,
         deletingAccount,
     } = securityState;
-    const { values: securityValues, errors: securityErrors, setters: securitySetters } = securityForm;
+    const {
+        values: securityValues,
+        errors: securityErrors,
+        setters: securitySetters,
+    } = securityForm;
 
     if (loading || !session) {
         return <LoadingScreen />;
@@ -79,7 +84,10 @@ export default function ModeratorProfilePage() {
                                         <Avatar className="size-32">
                                             <AvatarImage
                                                 key={avatarKey}
-                                                src={UserService.getAvatarURL(currentModerator.id, avatarKey)}
+                                                src={UserService.getAvatarURL(
+                                                    currentModerator.id,
+                                                    avatarKey,
+                                                )}
                                             />
                                             <AvatarFallback className="text-3xl">
                                                 {currentModerator.firstName[0]}
@@ -109,7 +117,9 @@ export default function ModeratorProfilePage() {
                                     </div>
 
                                     <div>
-                                        <h2 className="text-4xl font-bold text-gray-900">{fullName}</h2>
+                                        <h2 className="text-4xl font-bold text-gray-900">
+                                            {fullName}
+                                        </h2>
                                         <div
                                             className="
                                             mt-3 flex items-center gap-2 text-lg text-gray-500
@@ -124,7 +134,9 @@ export default function ModeratorProfilePage() {
 
                             <div className="rounded-2xl border bg-white shadow-sm">
                                 <div className="border-b px-6 py-5">
-                                    <h2 className="text-2xl font-semibold text-gray-900">General Information</h2>
+                                    <h2 className="text-2xl font-semibold text-gray-900">
+                                        General Information
+                                    </h2>
                                 </div>
 
                                 <div className="space-y-5 p-6">
@@ -140,12 +152,18 @@ export default function ModeratorProfilePage() {
                                                 id="firstName"
                                                 value={values.firstName}
                                                 disabled={!editing}
-                                                onChange={(e) => setters.setFirstName(e.target.value)}
+                                                onChange={(e) =>
+                                                    setters.setFirstName(e.target.value)
+                                                }
                                                 placeholder="John"
-                                                className={errors.firstName ? "border-destructive" : ""}
+                                                className={
+                                                    errors.firstName ? "border-destructive" : ""
+                                                }
                                             />
                                             {errors.firstName && (
-                                                <p className="text-xs text-destructive">{errors.firstName}</p>
+                                                <p className="text-xs text-destructive">
+                                                    {errors.firstName}
+                                                </p>
                                             )}
                                         </div>
 
@@ -155,17 +173,25 @@ export default function ModeratorProfilePage() {
                                                 id="lastName"
                                                 value={values.lastName}
                                                 disabled={!editing}
-                                                onChange={(e) => setters.setLastName(e.target.value)}
+                                                onChange={(e) =>
+                                                    setters.setLastName(e.target.value)
+                                                }
                                                 placeholder="Smith"
-                                                className={errors.lastName ? "border-destructive" : ""}
+                                                className={
+                                                    errors.lastName ? "border-destructive" : ""
+                                                }
                                             />
                                             {errors.lastName && (
-                                                <p className="text-xs text-destructive">{errors.lastName}</p>
+                                                <p className="text-xs text-destructive">
+                                                    {errors.lastName}
+                                                </p>
                                             )}
                                         </div>
                                     </div>
 
-                                    {errors.general && <p className="text-sm text-destructive">{errors.general}</p>}
+                                    {errors.general && (
+                                        <p className="text-sm text-destructive">{errors.general}</p>
+                                    )}
                                 </div>
                             </div>
 
@@ -191,7 +217,11 @@ export default function ModeratorProfilePage() {
                                         hover:bg-yellow-500
                                     "
                                 >
-                                    {saving ? "Saving..." : editing ? "Save Changes" : "Edit Profile"}
+                                    {saving
+                                        ? "Saving..."
+                                        : editing
+                                          ? "Save Changes"
+                                          : "Edit Profile"}
                                 </Button>
                             </div>
                         </div>
@@ -200,7 +230,9 @@ export default function ModeratorProfilePage() {
                             <div className="rounded-2xl border bg-white shadow-sm">
                                 <div className="flex items-center gap-3 border-b px-6 py-5">
                                     <Shield className="size-5 text-gray-700" />
-                                    <h2 className="text-2xl font-semibold text-gray-900">Account Security</h2>
+                                    <h2 className="text-2xl font-semibold text-gray-900">
+                                        Account Security
+                                    </h2>
                                 </div>
 
                                 <div className="p-6">
@@ -234,10 +266,12 @@ export default function ModeratorProfilePage() {
                             <div className="rounded-2xl border border-red-200 bg-white shadow-sm">
                                 <div className="p-6">
                                     <div className="rounded-xl bg-red-50 p-5">
-                                        <h2 className="text-2xl font-semibold text-red-600">Danger Zone</h2>
+                                        <h2 className="text-2xl font-semibold text-red-600">
+                                            Danger Zone
+                                        </h2>
                                         <p className="mt-3 max-w-md text-sm text-red-400">
-                                            Deleting your account will permanently remove all of your moderator data and
-                                            access.
+                                            Deleting your account will permanently remove all of
+                                            your moderator data and access.
                                         </p>
 
                                         <Button
@@ -276,7 +310,9 @@ export default function ModeratorProfilePage() {
                                 onChange={(e) => securitySetters.setNewPassword(e.target.value)}
                             />
                             {securityErrors.password.newPassword && (
-                                <p className="text-xs text-destructive">{securityErrors.password.newPassword}</p>
+                                <p className="text-xs text-destructive">
+                                    {securityErrors.password.newPassword}
+                                </p>
                             )}
                         </div>
 
@@ -289,12 +325,16 @@ export default function ModeratorProfilePage() {
                                 onChange={(e) => securitySetters.setConfirmPassword(e.target.value)}
                             />
                             {securityErrors.password.confirmPassword && (
-                                <p className="text-xs text-destructive">{securityErrors.password.confirmPassword}</p>
+                                <p className="text-xs text-destructive">
+                                    {securityErrors.password.confirmPassword}
+                                </p>
                             )}
                         </div>
 
                         {securityErrors.password.general && (
-                            <p className="text-sm text-destructive">{securityErrors.password.general}</p>
+                            <p className="text-sm text-destructive">
+                                {securityErrors.password.general}
+                            </p>
                         )}
                     </div>
 
@@ -327,7 +367,8 @@ export default function ModeratorProfilePage() {
                     <DialogHeader>
                         <DialogTitle className="text-red-600">Delete Account</DialogTitle>
                         <DialogDescription>
-                            This action is permanent. Type <span className="font-semibold">DELETE</span> to confirm.
+                            This action is permanent. Type{" "}
+                            <span className="font-semibold">DELETE</span> to confirm.
                         </DialogDescription>
                     </DialogHeader>
 
@@ -337,16 +378,22 @@ export default function ModeratorProfilePage() {
                             <Input
                                 id="deleteConfirmation"
                                 value={securityValues.deleteConfirmation}
-                                onChange={(e) => securitySetters.setDeleteConfirmation(e.target.value)}
+                                onChange={(e) =>
+                                    securitySetters.setDeleteConfirmation(e.target.value)
+                                }
                                 placeholder='Type "DELETE"'
                             />
                             {securityErrors.delete.confirmation && (
-                                <p className="text-xs text-destructive">{securityErrors.delete.confirmation}</p>
+                                <p className="text-xs text-destructive">
+                                    {securityErrors.delete.confirmation}
+                                </p>
                             )}
                         </div>
 
                         {securityErrors.delete.general && (
-                            <p className="text-sm text-destructive">{securityErrors.delete.general}</p>
+                            <p className="text-sm text-destructive">
+                                {securityErrors.delete.general}
+                            </p>
                         )}
                     </div>
 

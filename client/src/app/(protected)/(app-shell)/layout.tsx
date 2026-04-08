@@ -12,7 +12,8 @@ import { getAvatarFallback } from "@/components/navigation/nav-utils";
 export default function AppShellLayout({ children }: { children: ReactNode }) {
     const router = useRouter();
     const { signOut } = useAuth();
-    const { loading, currentUser, currentVolunteer, currentOrganization, currentModerator } = useAppSession();
+    const { loading, currentUser, currentVolunteer, currentOrganization, currentModerator } =
+        useAppSession();
 
     if (loading || !currentUser) {
         return <main className="p-6">Loading...</main>;
@@ -48,8 +49,13 @@ export default function AppShellLayout({ children }: { children: ReactNode }) {
             navConfig.profileHref = NAV_CONFIG.ORGANIZATION.profileHref;
             navConfig.items = NAV_CONFIG.ORGANIZATION.items;
             displayName = currentOrganization?.orgName ?? "Loading...";
-            subtitle = currentOrganization?.status === "VERIFIED" ? "Verified Organization" : "Organization";
-            avatarUrl = currentOrganization?.id ? UserService.getAvatarURL(currentOrganization.id) : undefined;
+            subtitle =
+                currentOrganization?.status === "VERIFIED"
+                    ? "Verified Organization"
+                    : "Organization";
+            avatarUrl = currentOrganization?.id
+                ? UserService.getAvatarURL(currentOrganization.id)
+                : undefined;
             avatarFallback = getAvatarFallback(displayName, "ORG");
             break;
 
@@ -61,7 +67,9 @@ export default function AppShellLayout({ children }: { children: ReactNode }) {
                 ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
                 : "Loading...";
             subtitle = "Volunteer";
-            avatarUrl = currentVolunteer?.id ? UserService.getAvatarURL(currentVolunteer.id) : undefined;
+            avatarUrl = currentVolunteer?.id
+                ? UserService.getAvatarURL(currentVolunteer.id)
+                : undefined;
             avatarFallback = getAvatarFallback(displayName, "VLT");
             break;
     }

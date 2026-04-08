@@ -11,7 +11,8 @@ import { useState } from "react";
 import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
 export default function HomePage() {
-    const { loading, session, router, signOut, currentOrganization } = useAppliedOrgDashboardViewModel();
+    const { loading, session, router, signOut, currentOrganization } =
+        useAppliedOrgDashboardViewModel();
 
     const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
@@ -40,7 +41,9 @@ export default function HomePage() {
                 "
                 >
                     <div className="flex h-full flex-col justify-center text-center">
-                        <h1 className="text-2x1 font-bold">Welcome, {currentOrganization?.orgName}</h1>
+                        <h1 className="text-2x1 font-bold">
+                            Welcome, {currentOrganization?.orgName}
+                        </h1>
                         <div className="radius-2 m-5 rounded-sm bg-warning p-5">
                             {currentOrganization?.status === "REJECTED" ? (
                                 <>
@@ -107,7 +110,9 @@ export default function HomePage() {
                     <Card className="mx-5">
                         <CardHeader>
                             <CardTitle>Need Help?</CardTitle>
-                            <CardDescription>Open a ticket with our moderator team for assistance.</CardDescription>
+                            <CardDescription>
+                                Open a ticket with our moderator team for assistance.
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Button
@@ -128,7 +133,9 @@ export default function HomePage() {
             <SubmitTicketModal
                 open={isTicketModalOpen}
                 onClose={() => setIsTicketModalOpen(false)}
-                onSubmitted={(ticket) => router.push(`/organization/messages?conversationId=${ticket.conversationId}`)}
+                onSubmitted={(ticket) =>
+                    router.push(`/organization/messages?conversationId=${ticket.conversationId}`)
+                }
             />
         </div>
     );

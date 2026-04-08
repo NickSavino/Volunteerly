@@ -169,7 +169,10 @@ skillExtractionRouter.post("/backfill", async (req, res, next) => {
 
         if (!profile) return res.status(200).json({ skipped: true });
 
-        const allSkills = [...(profile.technical as string[]), ...(profile.nonTechnical as string[])].join(", ");
+        const allSkills = [
+            ...(profile.technical as string[]),
+            ...(profile.nonTechnical as string[]),
+        ].join(", ");
         const vector = await embedText(allSkills);
 
         await prisma.$executeRaw`

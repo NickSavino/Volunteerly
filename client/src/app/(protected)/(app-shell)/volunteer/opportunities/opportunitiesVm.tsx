@@ -10,7 +10,13 @@ import type { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
 
 export type WorkTypeFilter = "ALL" | "REMOTE" | "IN_PERSON" | "HYBRID";
 export type CommitmentFilter = "ALL" | "FLEXIBLE" | "PART_TIME" | "FULL_TIME";
-export type SortOption = "RELEVANT" | "MATCH_HIGH" | "MATCH_LOW" | "HOURS_LOW" | "HOURS_HIGH" | "NEWEST";
+export type SortOption =
+    | "RELEVANT"
+    | "MATCH_HIGH"
+    | "MATCH_LOW"
+    | "HOURS_LOW"
+    | "HOURS_HIGH"
+    | "NEWEST";
 
 export const OPPORTUNITY_CATEGORIES = [
     "Frontend Developer",
@@ -29,7 +35,11 @@ export const OPPORTUNITY_CATEGORIES = [
 
 const DEFAULT_MATCH_PCT = 1;
 
-function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Record<string, number>): Opportunity[] {
+function sortOpportunities(
+    opps: Opportunity[],
+    sort: SortOption,
+    scoreMap: Record<string, number>,
+): Opportunity[] {
     const arr = [...opps];
     const getScore = (opp: Opportunity) => scoreMap[opp.id] ?? DEFAULT_MATCH_PCT;
     switch (sort) {
@@ -42,7 +52,9 @@ function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Reco
         case "HOURS_HIGH":
             return arr.sort((a, b) => b.hours - a.hours);
         case "NEWEST":
-            return arr.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
+            return arr.sort(
+                (a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime(),
+            );
         case "RELEVANT":
         default:
             return arr.sort((a, b) => getScore(b) - getScore(a));
@@ -52,7 +64,9 @@ function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Reco
 export function useOpportunitiesViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
-    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
+    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(
+        undefined,
+    );
     const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
     const [matchScores, setMatchScores] = useState<Record<string, number>>({});
     const [error, setError] = useState<string | null>(null);
@@ -104,7 +118,8 @@ export function useOpportunitiesViewModel() {
                     );
                 }
 
-                const userAvailability = volunteer?.availability ?? currentVolunteer?.availability ?? [];
+                const userAvailability =
+                    volunteer?.availability ?? currentVolunteer?.availability ?? [];
                 if (userAvailability.length > 0) {
                     filtered = filtered.filter((opp) =>
                         opp.availability?.some((day) => userAvailability.includes(day)),
@@ -162,7 +177,9 @@ export function useOpportunitiesViewModel() {
     }, [sortBy, matchScores]);
 
     function toggleCategory(cat: string) {
-        setSelectedCategories((prev) => (prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]));
+        setSelectedCategories((prev) =>
+            prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat],
+        );
     }
 
     function applyFilters() {

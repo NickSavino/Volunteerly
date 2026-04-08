@@ -5,8 +5,15 @@ import { useModDashboardViewModel } from "./ModDashboardVm";
 import { ModStatCard } from "@/components/custom/mod_stat_card";
 
 export default function ModeratorDashboardPage() {
-    const { loading, session, router, currentModerator, pendingOrgsCount, recentPendingOrgs, error } =
-        useModDashboardViewModel();
+    const {
+        loading,
+        session,
+        router,
+        currentModerator,
+        pendingOrgsCount,
+        recentPendingOrgs,
+        error,
+    } = useModDashboardViewModel();
 
     if (loading || !session) {
         return <main className="p-6">Loading...</main>;
@@ -45,7 +52,11 @@ export default function ModeratorDashboardPage() {
                     sm:grid-cols-3
                 "
                 >
-                    <ModStatCard icon={Building2} label="Pending Organizations" count={pendingOrgsCount} />
+                    <ModStatCard
+                        icon={Building2}
+                        label="Pending Organizations"
+                        count={pendingOrgsCount}
+                    />
                     <ModStatCard icon={Flag} label="Flagged Accounts" count={0} />
                     <ModStatCard icon={Ticket} label="Open Tickets" count={0} />
                 </div>
@@ -64,7 +75,9 @@ export default function ModeratorDashboardPage() {
                     >
                         <div className="mb-4 flex items-start justify-between">
                             <div>
-                                <h2 className="font-semibold text-gray-800">Pending Organizations</h2>
+                                <h2 className="font-semibold text-gray-800">
+                                    Pending Organizations
+                                </h2>
                             </div>
                             <button
                                 className="
@@ -79,11 +92,16 @@ export default function ModeratorDashboardPage() {
                         </div>
 
                         {recentPendingOrgs.length === 0 ? (
-                            <p className="py-8 text-center text-sm text-gray-400">No Pending Organizations Found.</p>
+                            <p className="py-8 text-center text-sm text-gray-400">
+                                No Pending Organizations Found.
+                            </p>
                         ) : (
                             <ul className="divide-y">
                                 {recentPendingOrgs.map((org) => (
-                                    <li key={org.id} className="flex items-center justify-between py-3">
+                                    <li
+                                        key={org.id}
+                                        className="flex items-center justify-between py-3"
+                                    >
                                         <div className="flex items-center gap-3">
                                             <div
                                                 className="
@@ -94,14 +112,19 @@ export default function ModeratorDashboardPage() {
                                                 <Building2 className="size-4 text-gray-500" />
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-gray-700">{org.orgName}</p>
+                                                <p className="text-sm font-medium text-gray-700">
+                                                    {org.orgName}
+                                                </p>
                                                 <p className="text-xs text-gray-400">
                                                     Submitted{" "}
-                                                    {new Date(org.createdAt).toLocaleDateString("en-US", {
-                                                        month: "short",
-                                                        day: "numeric",
-                                                        year: "numeric",
-                                                    })}
+                                                    {new Date(org.createdAt).toLocaleDateString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                        },
+                                                    )}
                                                 </p>
                                             </div>
                                         </div>
@@ -135,7 +158,9 @@ export default function ModeratorDashboardPage() {
                                 View All
                             </button>
                         </div>
-                        <p className="py-4 text-center text-sm text-gray-400">No Flagged Accounts Found.</p>
+                        <p className="py-4 text-center text-sm text-gray-400">
+                            No Flagged Accounts Found.
+                        </p>
                     </div>
                 </div>
 

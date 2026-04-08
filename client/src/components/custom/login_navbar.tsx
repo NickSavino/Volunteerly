@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem } from "@/components/ui/navigation-menu";
+import {
+    NavigationMenu,
+    NavigationMenuList,
+    NavigationMenuItem,
+} from "@/components/ui/navigation-menu";
 
 import { usePathname } from "next/navigation";
 

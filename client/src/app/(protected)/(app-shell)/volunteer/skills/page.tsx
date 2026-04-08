@@ -32,7 +32,14 @@ function buildEdges(
     svgH: number,
 ): { x1: number; y1: number; x2: number; y2: number; lit: boolean; mastered: boolean }[] {
     const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
-    const edges: { x1: number; y1: number; x2: number; y2: number; lit: boolean; mastered: boolean }[] = [];
+    const edges: {
+        x1: number;
+        y1: number;
+        x2: number;
+        y2: number;
+        lit: boolean;
+        mastered: boolean;
+    }[] = [];
 
     for (const node of nodes) {
         const to = getPos(node.tier, node.col, svgH);
@@ -128,7 +135,12 @@ function SkillTree({
                             }}
                             style={{ cursor: "pointer" }}
                         >
-                            <TreeNode node={node} w={NODE_W} h={NODE_H} selected={selectedId === node.id} />
+                            <TreeNode
+                                node={node}
+                                w={NODE_W}
+                                h={NODE_H}
+                                selected={selectedId === node.id}
+                            />
                         </g>
                     );
                 })}
@@ -137,7 +149,17 @@ function SkillTree({
     );
 }
 
-function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: number; selected: boolean }) {
+function TreeNode({
+    node,
+    w,
+    h,
+    selected,
+}: {
+    node: SkillNode;
+    w: number;
+    h: number;
+    selected: boolean;
+}) {
     const r = 20;
     const fill =
         node.status === "mastered"
@@ -172,12 +194,23 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
                     width={w + 14}
                     height={h + 14}
                     rx={r + 7}
-                    fill={node.status === "mastered" ? "var(--mastered-glow)" : "var(--progress-glow)"}
+                    fill={
+                        node.status === "mastered" ? "var(--mastered-glow)" : "var(--progress-glow)"
+                    }
                     opacity={selected ? 0.6 : 0.18}
                 />
             )}
             <rect x={3} y={5} width={w} height={h} rx={r} fill="rgba(0,0,0,0.06)" />
-            <rect x={0} y={0} width={w} height={h} rx={r} fill={fill} stroke={stroke} strokeWidth={selected ? 3 : 2} />
+            <rect
+                x={0}
+                y={0}
+                width={w}
+                height={h}
+                rx={r}
+                fill={fill}
+                stroke={stroke}
+                strokeWidth={selected ? 3 : 2}
+            />
             <g
                 transform={`translate(${(w - 20) / 2}, ${h / 2 - 20}) scale(${scale})`}
                 opacity={dimmed ? 0.55 : 1}
@@ -202,7 +235,13 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
                 textAnchor="middle"
                 fontSize={9}
                 fontWeight="700"
-                fill={dimmed ? "var(--text-muted)" : node.status === "mastered" ? "#7C2D12" : "var(--node-text)"}
+                fill={
+                    dimmed
+                        ? "var(--text-muted)"
+                        : node.status === "mastered"
+                          ? "#7C2D12"
+                          : "var(--node-text)"
+                }
                 opacity={dimmed ? 0.75 : 1}
                 fontFamily="'DM Sans', sans-serif"
                 letterSpacing="0.04em"
@@ -230,9 +269,14 @@ function TreeNode({ node, w, h, selected }: { node: SkillNode; w: number; h: num
 }
 
 function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }) {
-    const pct = node.threshold > 0 ? Math.min(100, Math.round((node.current / node.threshold) * 100)) : 0;
+    const pct =
+        node.threshold > 0 ? Math.min(100, Math.round((node.current / node.threshold) * 100)) : 0;
     const statusLabel =
-        node.status === "mastered" ? "Mastered" : node.status === "in_progress" ? "In Progress" : "Locked";
+        node.status === "mastered"
+            ? "Mastered"
+            : node.status === "in_progress"
+              ? "In Progress"
+              : "Locked";
     const statusColor =
         node.status === "mastered"
             ? "#16A34A"
@@ -291,7 +335,14 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
                 {statusLabel}
             </span>
 
-            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginBottom: 16, lineHeight: 1.5 }}>
+            <p
+                style={{
+                    fontSize: "0.82rem",
+                    color: "var(--text-muted)",
+                    marginBottom: 16,
+                    lineHeight: 1.5,
+                }}
+            >
                 {node.description}
             </p>
 
@@ -302,7 +353,12 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
 
             <div className="st-section">
                 <div
-                    style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: 6,
+                    }}
                 >
                     <span className="st-section-label">Progress</span>
                     <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text)" }}>
@@ -310,9 +366,19 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
                     </span>
                 </div>
                 <div className="st-bar-bg">
-                    <div className="st-bar-fill" style={{ width: `${pct}%`, background: barColor }} />
+                    <div
+                        className="st-bar-fill"
+                        style={{ width: `${pct}%`, background: barColor }}
+                    />
                 </div>
-                <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", textAlign: "right", marginTop: 3 }}>
+                <div
+                    style={{
+                        fontSize: "0.7rem",
+                        color: "var(--text-muted)",
+                        textAlign: "right",
+                        marginTop: 3,
+                    }}
+                >
                     {pct}% complete
                 </div>
             </div>
@@ -331,18 +397,33 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
             {node.requiresAny.length > 0 && (
                 <div className="st-section">
                     <div className="st-section-label">Requires</div>
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                    <div
+                        style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}
+                    >
                         {node.requiresAny.map((orGroup, i) => (
                             <React.Fragment key={i}>
                                 {i > 0 && (
-                                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 600 }}>
+                                    <span
+                                        style={{
+                                            fontSize: "0.7rem",
+                                            color: "var(--text-muted)",
+                                            fontWeight: 600,
+                                        }}
+                                    >
                                         AND
                                     </span>
                                 )}
                                 {orGroup.map((id, j) => (
                                     <React.Fragment key={id}>
                                         {j > 0 && (
-                                            <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>or</span>
+                                            <span
+                                                style={{
+                                                    fontSize: "0.7rem",
+                                                    color: "var(--text-muted)",
+                                                }}
+                                            >
+                                                or
+                                            </span>
                                         )}
                                         <span className="st-tag">{getLabel(id)}</span>
                                     </React.Fragment>
@@ -357,7 +438,8 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
 }
 
 export default function SkillTreePage() {
-    const { tab, setTab, selected, setSelected, nodes, loading, error, mastered, inProg } = useSkillTreeViewModel();
+    const { tab, setTab, selected, setSelected, nodes, loading, error, mastered, inProg } =
+        useSkillTreeViewModel();
 
     return (
         <>
@@ -422,14 +504,17 @@ export default function SkillTreePage() {
                 <div className="st-header">
                     <h1>Skill Tree</h1>
                     <p>
-                        Nodes unlock based on the skills you log after completing an opportunity. Start at the bottom
-                        and work your way up.
+                        Nodes unlock based on the skills you log after completing an opportunity.
+                        Start at the bottom and work your way up.
                     </p>
 
                     {!loading && !error && (
                         <div className="st-stats">
                             <div className="st-chip">
-                                <div className="st-dot" style={{ background: "var(--mastered-stroke)" }} />
+                                <div
+                                    className="st-dot"
+                                    style={{ background: "var(--mastered-stroke)" }}
+                                />
                                 {mastered} Mastered
                             </div>
                             <div className="st-chip">
@@ -437,7 +522,10 @@ export default function SkillTreePage() {
                                 {inProg} In Progress
                             </div>
                             <div className="st-chip">
-                                <div className="st-dot" style={{ background: "var(--locked-stroke)" }} />
+                                <div
+                                    className="st-dot"
+                                    style={{ background: "var(--locked-stroke)" }}
+                                />
                                 {nodes.length - mastered - inProg} Locked
                             </div>
                         </div>
@@ -476,7 +564,11 @@ export default function SkillTreePage() {
 
                 {!loading && !error && (
                     <>
-                        {!selected && <p className="st-hint">Tap any node to see requirements and your progress</p>}
+                        {!selected && (
+                            <p className="st-hint">
+                                Tap any node to see requirements and your progress
+                            </p>
+                        )}
                         <div className="st-body">
                             <div className="st-canvas">
                                 <div className="st-legend">
@@ -513,14 +605,19 @@ export default function SkillTreePage() {
                                 </div>
                                 <SkillTree
                                     nodes={nodes}
-                                    onSelect={(n) => setSelected((p) => (p?.id === n.id ? null : n))}
+                                    onSelect={(n) =>
+                                        setSelected((p) => (p?.id === n.id ? null : n))
+                                    }
                                     selectedId={selected?.id ?? null}
                                 />
                             </div>
 
                             {selected && (
                                 <div className="st-panel-wrap" onClick={(e) => e.stopPropagation()}>
-                                    <DetailPanel node={selected} onClose={() => setSelected(null)} />
+                                    <DetailPanel
+                                        node={selected}
+                                        onClose={() => setSelected(null)}
+                                    />
                                 </div>
                             )}
                         </div>

@@ -37,8 +37,8 @@ export default function ExperienceInputPage() {
                 <div className="text-center">
                     <h1 className="text-3xl font-bold">Experience Input</h1>
                     <p className="mt-2 text-muted-foreground">
-                        To help us match you with the most suitable organizations, all volunteers are asked to provide
-                        their resume, work experience, and education.{" "}
+                        To help us match you with the most suitable organizations, all volunteers
+                        are asked to provide their resume, work experience, and education.{" "}
                     </p>
                 </div>
 
@@ -62,7 +62,11 @@ export default function ExperienceInputPage() {
                         >
                             <p className="font-medium">Upload your Resume</p>
                             <p className="text-sm text-muted-foreground">PDF up to 10MB.</p>
-                            {resumeFile && <p className="text-sm font-medium text-green-600">{resumeFile.name}</p>}
+                            {resumeFile && (
+                                <p className="text-sm font-medium text-green-600">
+                                    {resumeFile.name}
+                                </p>
+                            )}
                             <Label
                                 htmlFor="resume-upload"
                                 className="
@@ -80,7 +84,9 @@ export default function ExperienceInputPage() {
                                 onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
                             />
                         </div>
-                        {errors.resume && <p className="mt-2 text-sm text-destructive">{errors.resume}</p>}
+                        {errors.resume && (
+                            <p className="mt-2 text-sm text-destructive">{errors.resume}</p>
+                        )}
                     </CardContent>
                 </Card>
 
@@ -95,7 +101,9 @@ export default function ExperienceInputPage() {
                         <div>
                             <CardTitle className="text-base">Work Experience</CardTitle>
                             {errors.workExperience && (
-                                <p className="mt-1 text-sm text-destructive">{errors.workExperience}</p>
+                                <p className="mt-1 text-sm text-destructive">
+                                    {errors.workExperience}
+                                </p>
                             )}
                         </div>
                         <Button variant="ghost" size="sm" onClick={addWorkExperience}>
@@ -127,9 +135,13 @@ export default function ExperienceInputPage() {
                                         <Input
                                             placeholder="e.g. Project Manager"
                                             value={work.jobTitle}
-                                            onChange={(e) => updateWorkExperience(i, "jobTitle", e.target.value)}
+                                            onChange={(e) =>
+                                                updateWorkExperience(i, "jobTitle", e.target.value)
+                                            }
                                             className={
-                                                errors.workExperience && !work.jobTitle ? "border-destructive" : ""
+                                                errors.workExperience && !work.jobTitle
+                                                    ? "border-destructive"
+                                                    : ""
                                             }
                                         />
                                     </div>
@@ -138,9 +150,13 @@ export default function ExperienceInputPage() {
                                         <Input
                                             placeholder="Company Name"
                                             value={work.company}
-                                            onChange={(e) => updateWorkExperience(i, "company", e.target.value)}
+                                            onChange={(e) =>
+                                                updateWorkExperience(i, "company", e.target.value)
+                                            }
                                             className={
-                                                errors.workExperience && !work.company ? "border-destructive" : ""
+                                                errors.workExperience && !work.company
+                                                    ? "border-destructive"
+                                                    : ""
                                             }
                                         />
                                     </div>
@@ -151,9 +167,13 @@ export default function ExperienceInputPage() {
                                         <Input
                                             type="date"
                                             value={work.startDate}
-                                            onChange={(e) => updateWorkExperience(i, "startDate", e.target.value)}
+                                            onChange={(e) =>
+                                                updateWorkExperience(i, "startDate", e.target.value)
+                                            }
                                             className={
-                                                errors.workExperience && !work.startDate ? "border-destructive" : ""
+                                                errors.workExperience && !work.startDate
+                                                    ? "border-destructive"
+                                                    : ""
                                             }
                                         />
                                     </div>
@@ -162,7 +182,9 @@ export default function ExperienceInputPage() {
                                         <Input
                                             type="date"
                                             value={work.endDate || ""}
-                                            onChange={(e) => updateWorkExperience(i, "endDate", e.target.value)}
+                                            onChange={(e) =>
+                                                updateWorkExperience(i, "endDate", e.target.value)
+                                            }
                                         />
                                         <p className="text-xs text-muted-foreground">
                                             leave blank if this is your current role.
@@ -174,9 +196,17 @@ export default function ExperienceInputPage() {
                                     <Textarea
                                         placeholder="Describe your key achievements..."
                                         value={work.responsibilities}
-                                        onChange={(e) => updateWorkExperience(i, "responsibilities", e.target.value)}
+                                        onChange={(e) =>
+                                            updateWorkExperience(
+                                                i,
+                                                "responsibilities",
+                                                e.target.value,
+                                            )
+                                        }
                                         className={
-                                            errors.workExperience && !work.responsibilities ? "border-destructive" : ""
+                                            errors.workExperience && !work.responsibilities
+                                                ? "border-destructive"
+                                                : ""
                                         }
                                     />
                                 </div>
@@ -195,7 +225,9 @@ export default function ExperienceInputPage() {
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle className="text-base">Education</CardTitle>
-                            {errors.education && <p className="mt-1 text-sm text-destructive">{errors.education}</p>}
+                            {errors.education && (
+                                <p className="mt-1 text-sm text-destructive">{errors.education}</p>
+                            )}
                         </div>
                         <Button variant="ghost" size="sm" onClick={addEducation}>
                             + Add New
@@ -220,8 +252,14 @@ export default function ExperienceInputPage() {
                                     <Input
                                         placeholder="e.g. State University"
                                         value={edu.institution}
-                                        onChange={(e) => updateEducation(i, "institution", e.target.value)}
-                                        className={errors.education && !edu.institution ? "border-destructive" : ""}
+                                        onChange={(e) =>
+                                            updateEducation(i, "institution", e.target.value)
+                                        }
+                                        className={
+                                            errors.education && !edu.institution
+                                                ? "border-destructive"
+                                                : ""
+                                        }
                                     />
                                 </div>
                                 <div className="flex flex-col gap-1">
@@ -229,8 +267,14 @@ export default function ExperienceInputPage() {
                                     <Input
                                         placeholder="e.g. Bachelor of Science"
                                         value={edu.degree}
-                                        onChange={(e) => updateEducation(i, "degree", e.target.value)}
-                                        className={errors.education && !edu.degree ? "border-destructive" : ""}
+                                        onChange={(e) =>
+                                            updateEducation(i, "degree", e.target.value)
+                                        }
+                                        className={
+                                            errors.education && !edu.degree
+                                                ? "border-destructive"
+                                                : ""
+                                        }
                                     />
                                 </div>
                                 <div className="flex flex-col gap-1">
@@ -238,8 +282,14 @@ export default function ExperienceInputPage() {
                                     <Input
                                         placeholder="YYYY"
                                         value={edu.graduationYear}
-                                        onChange={(e) => updateEducation(i, "graduationYear", e.target.value)}
-                                        className={errors.education && !edu.graduationYear ? "border-destructive" : ""}
+                                        onChange={(e) =>
+                                            updateEducation(i, "graduationYear", e.target.value)
+                                        }
+                                        className={
+                                            errors.education && !edu.graduationYear
+                                                ? "border-destructive"
+                                                : ""
+                                        }
                                     />
                                 </div>
                             </div>

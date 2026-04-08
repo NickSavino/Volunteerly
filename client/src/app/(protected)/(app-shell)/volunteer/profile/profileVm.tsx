@@ -24,7 +24,9 @@ export function useProfileViewModel() {
     const { session, loading, signOut } = useAuth();
     const { refresh } = useAppSession();
 
-    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
+    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(
+        undefined,
+    );
     const [editing, setEditing] = useState(false);
     const [saving, setSaving] = useState(false);
     const [avatarKey, setAvatarKey] = useState(Date.now());
@@ -98,7 +100,9 @@ export function useProfileViewModel() {
     }
 
     function toggleDay(day: string) {
-        setAvailability((prev) => (prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]));
+        setAvailability((prev) =>
+            prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
+        );
     }
 
     function validate(): boolean {

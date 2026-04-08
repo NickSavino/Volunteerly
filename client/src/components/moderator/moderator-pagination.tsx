@@ -6,7 +6,11 @@ type ModeratorPaginationProps = {
     onPageChange: (page: number | ((prev: number) => number)) => void;
 };
 
-export function ModeratorPagination({ currentPage, totalPages, onPageChange }: ModeratorPaginationProps) {
+export function ModeratorPagination({
+    currentPage,
+    totalPages,
+    onPageChange,
+}: ModeratorPaginationProps) {
     return (
         <div className="flex items-center gap-2">
             <button

@@ -14,7 +14,8 @@ function formatStatValue(value: number): string {
 
 export default function OrgPublicProfilePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const { loading, session, error, org, currentVolunteer, handleSignOut, router } = useOrgPublicProfileViewModel(id);
+    const { loading, session, error, org, currentVolunteer, handleSignOut, router } =
+        useOrgPublicProfileViewModel(id);
 
     if (loading || !session) return <main className="p-6">Loading...</main>;
 
@@ -95,11 +96,17 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                             {[1, 2, 3, 4, 5].map((star) => {
                                                 const fill = Math.min(
                                                     1,
-                                                    Math.max(0, (org.averageRating ?? 0) - (star - 1)),
+                                                    Math.max(
+                                                        0,
+                                                        (org.averageRating ?? 0) - (star - 1),
+                                                    ),
                                                 );
                                                 const pct = Math.round(fill * 100);
                                                 return (
-                                                    <span key={star} className="relative text-2xl leading-none">
+                                                    <span
+                                                        key={star}
+                                                        className="relative text-2xl leading-none"
+                                                    >
                                                         <span className="text-gray-500">★</span>
                                                         <span
                                                             className="
@@ -114,9 +121,12 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                                 );
                                             })}
                                         </div>
-                                        <p className="text-xs text-gray-300">{org.averageRating.toFixed(1)} / 5.0</p>
+                                        <p className="text-xs text-gray-300">
+                                            {org.averageRating.toFixed(1)} / 5.0
+                                        </p>
                                         <p className="text-xs text-gray-400">
-                                            Based on {org.reviewCount} {org.reviewCount === 1 ? "review" : "reviews"}
+                                            Based on {org.reviewCount}{" "}
+                                            {org.reviewCount === 1 ? "review" : "reviews"}
                                         </p>
                                     </>
                                 ) : (
@@ -141,7 +151,9 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                 <p className="mt-1 text-2xl font-bold text-gray-900">
                                     {formatStatValue(org.totalVolunteersHired)}
                                 </p>
-                                <p className="mt-1 text-xs text-gray-400">Hired across all opportunities</p>
+                                <p className="mt-1 text-xs text-gray-400">
+                                    Hired across all opportunities
+                                </p>
                             </div>
 
                             <div className="rounded-xl border bg-white p-5 shadow-sm">
@@ -151,7 +163,9 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                     </div>
                                 </div>
                                 <p className="text-xs text-gray-500">Active Postings</p>
-                                <p className="mt-1 text-2xl font-bold text-gray-900">{org.activeOpportunities}</p>
+                                <p className="mt-1 text-2xl font-bold text-gray-900">
+                                    {org.activeOpportunities}
+                                </p>
                                 <p className="mt-1 text-xs text-gray-400">Open opportunities now</p>
                             </div>
 
@@ -162,11 +176,15 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                             <span className="text-base leading-none">✦</span>
                                         </div>
                                     </div>
-                                    <p className="text-xs text-gray-500 capitalize">{highlight.label}</p>
+                                    <p className="text-xs text-gray-500 capitalize">
+                                        {highlight.label}
+                                    </p>
                                     <p className="mt-1 text-2xl font-bold text-gray-900">
                                         {formatStatValue(highlight.value)}
                                     </p>
-                                    <p className="mt-1 text-xs text-gray-400">Organization metric</p>
+                                    <p className="mt-1 text-xs text-gray-400">
+                                        Organization metric
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -199,7 +217,9 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                         >
                                             Cause Category
                                         </p>
-                                        <p className="text-sm font-medium text-gray-800">{org.causeCategory}</p>
+                                        <p className="text-sm font-medium text-gray-800">
+                                            {org.causeCategory}
+                                        </p>
                                     </div>
                                 )}
                                 {org.website && (
@@ -246,7 +266,9 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                     </p>
                                     <div className="flex items-start gap-1.5">
                                         <MapPin className="mt-0.5 size-4 shrink-0 text-gray-400" />
-                                        <p className="text-sm whitespace-pre-line text-gray-700">{org.hqAdr}</p>
+                                        <p className="text-sm whitespace-pre-line text-gray-700">
+                                            {org.hqAdr}
+                                        </p>
                                     </div>
                                 </div>
                             )}

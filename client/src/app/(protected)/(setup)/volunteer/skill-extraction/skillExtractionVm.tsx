@@ -62,8 +62,12 @@ export function useSkillExtractionViewModel() {
         setConfirming(true);
         setError(null);
         try {
-            const workExperiences: WorkExperience[] = JSON.parse(sessionStorage.getItem("workExperiences") ?? "[]");
-            const educations: Education[] = JSON.parse(sessionStorage.getItem("educations") ?? "[]");
+            const workExperiences: WorkExperience[] = JSON.parse(
+                sessionStorage.getItem("workExperiences") ?? "[]",
+            );
+            const educations: Education[] = JSON.parse(
+                sessionStorage.getItem("educations") ?? "[]",
+            );
 
             await VolunteerService.confirmSkills(skills, workExperiences, educations);
 

@@ -10,7 +10,13 @@ type ChatThreadHeaderProps = {
     avatarFallback: string;
 };
 
-export function ChatThreadHeader({ title, subtitle, meta, avatarUrl, avatarFallback }: ChatThreadHeaderProps) {
+export function ChatThreadHeader({
+    title,
+    subtitle,
+    meta,
+    avatarUrl,
+    avatarFallback,
+}: ChatThreadHeaderProps) {
     return (
         <div className="flex items-center gap-4 border-b border-border bg-background px-6 py-5">
             <Avatar className="size-14 border border-border">

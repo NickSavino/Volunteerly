@@ -12,7 +12,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
 import { User } from "lucide-react";
 
-export function Navbar({ name, role, onLogout }: { name: string; role: string; onLogout: () => void }) {
+export function Navbar({
+    name,
+    role,
+    onLogout,
+}: {
+    name: string;
+    role: string;
+    onLogout: () => void;
+}) {
     return (
         <header className="w-full border-b bg-white px-6 py-3">
             <div className="mx-auto flex max-w-7xl items-center justify-between">

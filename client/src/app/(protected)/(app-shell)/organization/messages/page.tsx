@@ -60,7 +60,9 @@ export default function OrganizationMessagesPage() {
                                     onSend={vm.sendMessage}
                                     sending={vm.sending}
                                     placeholder={
-                                        vm.isTicketConversation ? "Reply to support ticket..." : "Type a message..."
+                                        vm.isTicketConversation
+                                            ? "Reply to support ticket..."
+                                            : "Type a message..."
                                     }
                                 />
                             )}

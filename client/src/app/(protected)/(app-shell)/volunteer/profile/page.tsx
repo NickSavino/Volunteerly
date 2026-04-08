@@ -103,7 +103,10 @@ export default function ProfilePage() {
                         >
                             <div className="relative">
                                 <Avatar className="size-24">
-                                    <AvatarImage key={avatarKey} src={UserService.getAvatarURL(currentVolunteer.id)} />
+                                    <AvatarImage
+                                        key={avatarKey}
+                                        src={UserService.getAvatarURL(currentVolunteer.id)}
+                                    />
                                     <AvatarFallback className="text-2xl">
                                         {currentVolunteer.firstName[0]}
                                         {currentVolunteer.lastName[0]}
@@ -145,11 +148,17 @@ export default function ProfilePage() {
                                         {[1, 2, 3, 4, 5].map((star) => {
                                             const fill = Math.min(
                                                 1,
-                                                Math.max(0, currentVolunteer.averageRating - (star - 1)),
+                                                Math.max(
+                                                    0,
+                                                    currentVolunteer.averageRating - (star - 1),
+                                                ),
                                             );
                                             const pct = Math.round(fill * 100);
                                             return (
-                                                <span key={star} className="relative text-2xl leading-none">
+                                                <span
+                                                    key={star}
+                                                    className="relative text-2xl leading-none"
+                                                >
                                                     <span className="text-gray-300">★</span>
                                                     <span
                                                         className="
@@ -203,7 +212,9 @@ export default function ProfilePage() {
                                         );
                                     })
                                 ) : (
-                                    <p className="text-sm text-gray-500">No milestones reached yet.</p>
+                                    <p className="text-sm text-gray-500">
+                                        No milestones reached yet.
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -229,14 +240,21 @@ export default function ProfilePage() {
                         <div className="rounded-xl border bg-white p-6 shadow-sm">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
+                                    <h1 className="text-2xl font-bold text-gray-900">
+                                        Edit Profile
+                                    </h1>
                                     <p className="mt-1 text-sm text-gray-500">
-                                        A complete profile increases your chances of being selected by organizations.
+                                        A complete profile increases your chances of being selected
+                                        by organizations.
                                     </p>
                                 </div>
                                 <div className="ml-4 flex shrink-0 items-center gap-2">
                                     {editing && (
-                                        <Button variant="ghost" onClick={handleCancel} disabled={saving}>
+                                        <Button
+                                            variant="ghost"
+                                            onClick={handleCancel}
+                                            disabled={saving}
+                                        >
                                             Cancel
                                         </Button>
                                     )}
@@ -248,7 +266,11 @@ export default function ProfilePage() {
                                         onClick={editing ? handleSave : handleEdit}
                                         disabled={saving}
                                     >
-                                        {saving ? "Saving..." : editing ? "Save Edits" : "Edit Profile"}
+                                        {saving
+                                            ? "Saving..."
+                                            : editing
+                                              ? "Save Edits"
+                                              : "Edit Profile"}
                                     </Button>
                                 </div>
                             </div>
@@ -259,7 +281,9 @@ export default function ProfilePage() {
                             flex flex-1 flex-col rounded-xl border bg-white p-6 shadow-sm
                         "
                         >
-                            <h2 className="mb-5 text-lg font-semibold text-gray-800">General Information</h2>
+                            <h2 className="mb-5 text-lg font-semibold text-gray-800">
+                                General Information
+                            </h2>
                             <div className="flex flex-1 flex-col gap-4">
                                 <div
                                     className="
@@ -280,7 +304,9 @@ export default function ProfilePage() {
                                             `}
                                         />
                                         {errors.firstName && (
-                                            <p className="mt-1 text-xs text-destructive">{errors.firstName}</p>
+                                            <p className="mt-1 text-xs text-destructive">
+                                                {errors.firstName}
+                                            </p>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1">
@@ -296,7 +322,9 @@ export default function ProfilePage() {
                                             `}
                                         />
                                         {errors.lastName && (
-                                            <p className="mt-1 text-xs text-destructive">{errors.lastName}</p>
+                                            <p className="mt-1 text-xs text-destructive">
+                                                {errors.lastName}
+                                            </p>
                                         )}
                                     </div>
                                 </div>
@@ -314,7 +342,9 @@ export default function ProfilePage() {
                                         `}
                                     />
                                     {errors.location && (
-                                        <p className="mt-1 text-xs text-destructive">{errors.location}</p>
+                                        <p className="mt-1 text-xs text-destructive">
+                                            {errors.location}
+                                        </p>
                                     )}
                                 </div>
 
@@ -331,7 +361,11 @@ export default function ProfilePage() {
                                             ${errors.bio ? "border-destructive" : ""}
                                         `}
                                     />
-                                    {errors.bio && <p className="mt-1 text-xs text-destructive">{errors.bio}</p>}
+                                    {errors.bio && (
+                                        <p className="mt-1 text-xs text-destructive">
+                                            {errors.bio}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col gap-2">
@@ -366,7 +400,9 @@ export default function ProfilePage() {
                                         ))}
                                     </div>
                                     {errors.availability && (
-                                        <p className="mt-1 text-xs text-destructive">{errors.availability}</p>
+                                        <p className="mt-1 text-xs text-destructive">
+                                            {errors.availability}
+                                        </p>
                                     )}
                                 </div>
                             </div>
@@ -375,7 +411,10 @@ export default function ProfilePage() {
                 </div>
             </main>
 
-            <SubmitTicketModal open={isTicketModalOpen} onClose={() => setIsTicketModalOpen(false)} />
+            <SubmitTicketModal
+                open={isTicketModalOpen}
+                onClose={() => setIsTicketModalOpen(false)}
+            />
         </div>
     );
 }

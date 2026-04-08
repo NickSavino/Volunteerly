@@ -62,7 +62,9 @@ export function useLoginViewModel() {
 
                 if (currentUser.role === "VOLUNTEER") {
                     const nextRoute =
-                        currentUser.status === "UNVERIFIED" ? "/volunteer/experience-input" : "/volunteer";
+                        currentUser.status === "UNVERIFIED"
+                            ? "/volunteer/experience-input"
+                            : "/volunteer";
 
                     setPendingRoute(nextRoute);
                     return;

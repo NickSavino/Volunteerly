@@ -17,7 +17,11 @@ type ChatConversationListItemProps = {
     onClick: () => void;
 };
 
-export function ChatConversationListItem({ conversation, active, onClick }: ChatConversationListItemProps) {
+export function ChatConversationListItem({
+    conversation,
+    active,
+    onClick,
+}: ChatConversationListItemProps) {
     const fallback =
         conversation.kind === "TICKET"
             ? "TK"
@@ -25,7 +29,8 @@ export function ChatConversationListItem({ conversation, active, onClick }: Chat
 
     const conversationTitle =
         conversation.kind === "TICKET"
-            ? (conversation.title ?? `Ticket #${(conversation.ticketId ?? conversation.id).slice(-8).toUpperCase()}`)
+            ? (conversation.title ??
+              `Ticket #${(conversation.ticketId ?? conversation.id).slice(-8).toUpperCase()}`)
             : (conversation.otherParticipant?.displayName ?? conversation.title ?? "Conversation");
 
     const preview =
@@ -38,7 +43,9 @@ export function ChatConversationListItem({ conversation, active, onClick }: Chat
             onClick={onClick}
             className={cn(
                 "flex w-full items-start gap-3 border-l-4 p-4 text-left transition-colors",
-                active ? "border-l-primary bg-secondary" : "border-l-transparent hover:bg-secondary/60",
+                active
+                    ? "border-l-primary bg-secondary"
+                    : "border-l-transparent hover:bg-secondary/60",
             )}
         >
             <Avatar className="size-12 border border-border">
@@ -49,10 +56,14 @@ export function ChatConversationListItem({ conversation, active, onClick }: Chat
             <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                        <p className="truncate text-lg font-semibold text-foreground">{conversationTitle}</p>
+                        <p className="truncate text-lg font-semibold text-foreground">
+                            {conversationTitle}
+                        </p>
                         <p className="truncate text-sm text-muted-foreground">{preview}</p>
                     </div>
-                    <p className="shrink-0 text-xs text-muted-foreground">{formatTime(conversation.lastMessageAt)}</p>
+                    <p className="shrink-0 text-xs text-muted-foreground">
+                        {formatTime(conversation.lastMessageAt)}
+                    </p>
                 </div>
             </div>
         </button>

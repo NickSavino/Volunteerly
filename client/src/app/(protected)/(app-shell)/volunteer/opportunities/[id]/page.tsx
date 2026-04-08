@@ -51,7 +51,11 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
     const vm = useVolOppDetailViewModel(id);
 
     if (vm.pageLoading) {
-        return <div className="flex min-h-screen items-center justify-center text-sm text-gray-500">Loading...</div>;
+        return (
+            <div className="flex min-h-screen items-center justify-center text-sm text-gray-500">
+                Loading...
+            </div>
+        );
     }
 
     if (!vm.opp) {
@@ -157,7 +161,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                             <button
                                 onClick={() =>
                                     vm.opp?.organization?.id &&
-                                    vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)
+                                    vm.router.push(
+                                        `/volunteer/organizations/${vm.opp.organization.id}`,
+                                    )
                                 }
                                 className="
                                     flex size-14 shrink-0 items-center justify-center rounded-full
@@ -178,7 +184,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                 <button
                                     onClick={() =>
                                         vm.opp?.organization?.id &&
-                                        vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)
+                                        vm.router.push(
+                                            `/volunteer/organizations/${vm.opp.organization.id}`,
+                                        )
                                     }
                                     className="
                                         text-left text-lg font-bold text-gray-900
@@ -187,7 +195,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                 >
                                     {vm.opp.organization?.orgName ?? "—"}
                                 </button>
-                                <p className="text-sm text-gray-500">{vm.opp.organization?.causeCategory ?? ""}</p>
+                                <p className="text-sm text-gray-500">
+                                    {vm.opp.organization?.causeCategory ?? ""}
+                                </p>
                             </div>
                         </div>
                         <button
@@ -210,7 +220,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     </h2>
 
                     {sortedUpdates.length === 0 ? (
-                        <p className="py-4 text-center text-sm text-gray-400">No progress updates yet.</p>
+                        <p className="py-4 text-center text-sm text-gray-400">
+                            No progress updates yet.
+                        </p>
                     ) : (
                         <ol className="relative space-y-6 border-l border-gray-200 pl-6">
                             {sortedUpdates.map((update, idx) => {
@@ -239,8 +251,12 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                                 .toUpperCase()}
                                             {isFirst && " · TODAY"}
                                         </p>
-                                        <p className="mt-0.5 font-semibold text-gray-900">{update.title}</p>
-                                        <p className="mt-1 text-sm text-gray-500">{update.description}</p>
+                                        <p className="mt-0.5 font-semibold text-gray-900">
+                                            {update.title}
+                                        </p>
+                                        <p className="mt-1 text-sm text-gray-500">
+                                            {update.description}
+                                        </p>
                                     </li>
                                 );
                             })}
@@ -286,7 +302,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                     disabled:cursor-not-allowed disabled:opacity-50
                                 "
                             >
-                                {vm.skillsAlreadySubmitted ? "Skills Already Logged" : "Log Skills Used"}
+                                {vm.skillsAlreadySubmitted
+                                    ? "Skills Already Logged"
+                                    : "Log Skills Used"}
                             </button>
                         </div>
                     )}
@@ -361,9 +379,12 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                             <CheckCircle className="size-7 text-yellow-500" />
                         </div>
                     </div>
-                    <p className="text-sm text-gray-600">Are you sure you want to request to complete?</p>
+                    <p className="text-sm text-gray-600">
+                        Are you sure you want to request to complete?
+                    </p>
                     <p className="text-sm text-gray-400">
-                        This will email the organization letting them know they must review and mark as completed.
+                        This will email the organization letting them know they must review and mark
+                        as completed.
                     </p>
                 </div>
             </AppModal>
@@ -385,7 +406,9 @@ function SkillPickerModal({
     const [selected, setSelected] = useState<string[]>([]);
 
     function toggle(skill: string) {
-        setSelected((prev) => (prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]));
+        setSelected((prev) =>
+            prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill],
+        );
     }
 
     function handleClose() {
@@ -428,7 +451,9 @@ function SkillPickerModal({
                 </>
             }
         >
-            <p className="mb-4 text-sm text-gray-500">Select all the skills you used during this opportunity.</p>
+            <p className="mb-4 text-sm text-gray-500">
+                Select all the skills you used during this opportunity.
+            </p>
             <div
                 className="
                 grid max-h-96 grid-cols-2 gap-2 overflow-y-auto pr-1
@@ -466,7 +491,11 @@ function ProgressUpdateModal({
     open: boolean;
     submitting: boolean;
     onClose: () => void;
-    onSubmit: (input: { title: string; description: string; hoursContributed: number }) => Promise<void>;
+    onSubmit: (input: {
+        title: string;
+        description: string;
+        hoursContributed: number;
+    }) => Promise<void>;
 }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -547,10 +576,14 @@ function ProgressUpdateModal({
                             ${touched && titleEmpty ? "border-destructive" : "border-border"}
                         `}
                     />
-                    {touched && titleEmpty && <p className="mt-1 text-xs text-destructive">Title is required.</p>}
+                    {touched && titleEmpty && (
+                        <p className="mt-1 text-xs text-destructive">Title is required.</p>
+                    )}
                 </div>
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Description:</label>
+                    <label className="mb-1 block text-sm font-medium text-foreground">
+                        Description:
+                    </label>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -566,10 +599,14 @@ function ProgressUpdateModal({
                             ${touched && descEmpty ? "border-destructive" : "border-border"}
                         `}
                     />
-                    {touched && descEmpty && <p className="mt-1 text-xs text-destructive">Description is required.</p>}
+                    {touched && descEmpty && (
+                        <p className="mt-1 text-xs text-destructive">Description is required.</p>
+                    )}
                 </div>
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Time Contributed:</label>
+                    <label className="mb-1 block text-sm font-medium text-foreground">
+                        Time Contributed:
+                    </label>
                     <input
                         value={hours}
                         onChange={(e) => setHours(e.target.value)}
@@ -586,7 +623,9 @@ function ProgressUpdateModal({
                         `}
                     />
                     {touched && hoursInvalid && (
-                        <p className="mt-1 text-xs text-destructive">Enter a valid number of hours.</p>
+                        <p className="mt-1 text-xs text-destructive">
+                            Enter a valid number of hours.
+                        </p>
                     )}
                 </div>
             </div>
@@ -691,7 +730,13 @@ function ReviewModal({
                                     disabled:opacity-50
                                 "
                             >
-                                <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"}>
+                                <span
+                                    className={
+                                        (hovered || rating) >= star
+                                            ? "text-yellow-400"
+                                            : "text-gray-300"
+                                    }
+                                >
                                     ★
                                 </span>
                             </button>
@@ -715,7 +760,9 @@ function ReviewModal({
 
                 {flagged && (
                     <div>
-                        <label className="mb-1 block text-sm font-medium text-foreground">Reason for flagging:</label>
+                        <label className="mb-1 block text-sm font-medium text-foreground">
+                            Reason for flagging:
+                        </label>
                         <textarea
                             value={flagReason}
                             onChange={(e) => setFlagReason(e.target.value)}
@@ -731,7 +778,9 @@ function ReviewModal({
                                 ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
                         />
                         {touched && flagReasonEmpty && (
-                            <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>
+                            <p className="mt-1 text-xs text-destructive">
+                                Please provide a reason for flagging.
+                            </p>
                         )}
                     </div>
                 )}

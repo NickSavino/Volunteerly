@@ -11,7 +11,9 @@ export type ChartRange = "last_month" | "last_6_months" | "last_year" | "this_ye
 export function useVltDashboardViewModel() {
     const router = useRouter();
     const { session, user, loading, signOut } = useAuth();
-    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
+    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(
+        undefined,
+    );
     const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
     const [partnerOrgs, setPartnerOrgs] = useState<PartnerOrg[]>([]);
     const [monthlyHoursMap, setMonthlyHoursMap] = useState<Record<string, number>>({});
@@ -84,12 +86,21 @@ export function useVltDashboardViewModel() {
     };
 
     //KPI cards
-    const totalHours = useMemo(() => opportunities.reduce((sum, opp) => sum + opp.hours, 0), [opportunities]);
+    const totalHours = useMemo(
+        () => opportunities.reduce((sum, opp) => sum + opp.hours, 0),
+        [opportunities],
+    );
 
     const hourlyRate = currentVolunteer?.hourlyValue ?? 0;
-    const economicValue = useMemo(() => Math.round(totalHours * hourlyRate), [totalHours, hourlyRate]);
+    const economicValue = useMemo(
+        () => Math.round(totalHours * hourlyRate),
+        [totalHours, hourlyRate],
+    );
     const orgsAssisted = partnerOrgs.length;
-    const impactScore = useMemo(() => Math.round(economicValue * orgsAssisted), [economicValue, orgsAssisted]);
+    const impactScore = useMemo(
+        () => Math.round(economicValue * orgsAssisted),
+        [economicValue, orgsAssisted],
+    );
 
     const { chartLabels, chartData } = useMemo(() => {
         const now = new Date();

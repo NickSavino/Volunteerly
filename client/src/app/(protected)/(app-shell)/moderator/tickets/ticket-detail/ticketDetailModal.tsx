@@ -18,7 +18,13 @@ type TicketDetailModalProps = {
     onTicketUpdated?: () => Promise<void> | void;
 };
 
-export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTicketUpdated }: TicketDetailModalProps) {
+export function TicketDetailModal({
+    ticketId,
+    open,
+    onClose,
+    currentUserId,
+    onTicketUpdated,
+}: TicketDetailModalProps) {
     const vm = UseTicketDetailViewModel({
         ticketId,
         open,
@@ -146,7 +152,11 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                                 !isClosed ? (
                                     <>
                                         {vm.canClaim ? (
-                                            <Button type="button" onClick={vm.claimTicket} disabled={vm.updatingTicket}>
+                                            <Button
+                                                type="button"
+                                                onClick={vm.claimTicket}
+                                                disabled={vm.updatingTicket}
+                                            >
                                                 {vm.updatingTicket ? "Claiming..." : "Claim Ticket"}
                                             </Button>
                                         ) : null}
@@ -166,7 +176,9 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                             }
                         />
                     ) : (
-                        <div className="p-6 text-sm text-muted-foreground">Participant details unavailable.</div>
+                        <div className="p-6 text-sm text-muted-foreground">
+                            Participant details unavailable.
+                        </div>
                     )}
 
                     {ticket ? (

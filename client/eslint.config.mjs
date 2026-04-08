@@ -49,7 +49,10 @@ export default defineConfig([
             "better-tailwindcss/no-duplicate-classes": "warn",
             "better-tailwindcss/no-unnecessary-whitespace": "warn",
             "better-tailwindcss/no-deprecated-classes": "warn",
-            "better-tailwindcss/enforce-canonical-classes": ["warn", { collapse: true, logical: true }],
+            "better-tailwindcss/enforce-canonical-classes": [
+                "warn",
+                { collapse: true, logical: true },
+            ],
             "better-tailwindcss/enforce-shorthand-classes": "off",
             "better-tailwindcss/enforce-consistent-important-position": "off",
             "better-tailwindcss/enforce-consistent-variable-syntax": "off",

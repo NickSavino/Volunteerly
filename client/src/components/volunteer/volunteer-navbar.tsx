@@ -30,7 +30,9 @@ type VolunteerNavbarProps = {
 export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbarProps) {
     const pathname = usePathname();
 
-    const fullName = currentVolunteer ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}` : "Loading...";
+    const fullName = currentVolunteer
+        ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
+        : "Loading...";
 
     return (
         <header className="relative z-999 w-full shrink-0 border-b bg-card px-6 py-3">
@@ -78,8 +80,12 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                                         sm:block
                                     "
                                     >
-                                        <p className="text-sm/tight font-semibold text-foreground">{fullName}</p>
-                                        <p className="text-xs text-muted-foreground">Verified Volunteer</p>
+                                        <p className="text-sm/tight font-semibold text-foreground">
+                                            {fullName}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Verified Volunteer
+                                        </p>
                                     </div>
                                     <Avatar className="size-9">
                                         <AvatarImage src={avtImg.src} />
@@ -92,8 +98,12 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                             </NavigationMenuTrigger>
                             <NavigationMenuContent>
                                 <div className="w-40 p-1">
-                                    <p className="px-2 py-1 text-sm font-medium text-foreground">{fullName}</p>
-                                    <p className="px-2 pb-2 text-xs text-muted-foreground">Volunteer</p>
+                                    <p className="px-2 py-1 text-sm font-medium text-foreground">
+                                        {fullName}
+                                    </p>
+                                    <p className="px-2 pb-2 text-xs text-muted-foreground">
+                                        Volunteer
+                                    </p>
                                     <hr className="mb-1 border-border" />
                                     <button
                                         className="

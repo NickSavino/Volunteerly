@@ -64,7 +64,8 @@ export const ICON_PATHS: Record<string, string> = {
         "M12 2C6.477 2 2 4.477 2 7s4.477 5 10 5 10-2.477 10-5S17.523 2 12 2zM2 7v5c0 2.523 4.477 5 10 5s10-2.477 10-5V7M2 12v5c0 2.523 4.477 5 10 5s10-2.477 10-5v-5",
     BarChart2: "M18 20V10M12 20V4M6 20v-6",
     Globe: "M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0c-3 4-3 12 0 20m0-20c3 4 3 12 0 20M2 12h20",
-    Smartphone: "M17 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2zm-5 17a1 1 0 110-2 1 1 0 010 2z",
+    Smartphone:
+        "M17 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2zm-5 17a1 1 0 110-2 1 1 0 010 2z",
     TrendingUp: "M23 6l-9.5 9.5-5-5L1 18M17 6h6v6",
     Settings:
         "M12 15a3 3 0 100-6 3 3 0 000 6zm6.9-3a6.9 6.9 0 01-.07 1l1.57 1.23a.4.4 0 01.09.49l-1.5 2.6a.4.4 0 01-.48.17l-1.85-.74a7 7 0 01-1.73 1l-.28 1.96a.39.39 0 01-.39.34h-3a.39.39 0 01-.39-.34l-.28-1.97a7 7 0 01-1.73-1l-1.85.75a.4.4 0 01-.48-.17l-1.5-2.6a.39.39 0 01.09-.49l1.57-1.22A6.9 6.9 0 015.1 12a6.9 6.9 0 01.07-1L3.6 9.77a.4.4 0 01-.09-.49l1.5-2.6a.4.4 0 01.48-.17l1.85.74a7 7 0 011.73-1l.28-1.96A.39.39 0 019.74 4h3c.2 0 .36.14.39.34l.28 1.97a7 7 0 011.73 1l1.85-.75a.4.4 0 01.48.17l1.5 2.6a.39.39 0 01-.09.49L17.83 11A6.9 6.9 0 0118.9 12z",
@@ -212,7 +213,8 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["excel"]],
         description: "Build dashboards and BI reports to drive org decisions.",
-        requirementLabel: "Unlock Spreadsheets, then log Excel or Data Analysis across 3 combined opportunities",
+        requirementLabel:
+            "Unlock Spreadsheets, then log Excel or Data Analysis across 3 combined opportunities",
     },
     {
         id: "cybersecurity",
@@ -225,7 +227,8 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["javascript", "python", "mobile"]],
         description: "Apply security best practices across volunteer systems.",
-        requirementLabel: "Unlock JS Basics, Python Basics, or Mobile Dev, then log Cybersecurity in 2 opportunities",
+        requirementLabel:
+            "Unlock JS Basics, Python Basics, or Mobile Dev, then log Cybersecurity in 2 opportunities",
     },
 
     {
@@ -280,7 +283,8 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["cybersecurity"]],
         description: "Manage IT infrastructure and networking for volunteer organisations.",
-        requirementLabel: "Unlock Cyber Basics, then log Networking, IT Support, or Cybersecurity in 3 opportunities",
+        requirementLabel:
+            "Unlock Cyber Basics, then log Networking, IT Support, or Cybersecurity in 3 opportunities",
     },
     {
         id: "mobile_advanced",
@@ -308,7 +312,8 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 4,
         requiresAny: [["devops", "networking_infra"]],
         description: "Design and manage scalable cloud-based systems for nonprofits.",
-        requirementLabel: "Unlock DevOps or IT & Networks, then log Cloud or DevOps in 4 total opportunities",
+        requirementLabel:
+            "Unlock DevOps or IT & Networks, then log Cloud or DevOps in 4 total opportunities",
     },
     {
         id: "machine_learning",
@@ -382,7 +387,9 @@ export const TECH_NODES: SkillNodeDef[] = [
             "Cybersecurity",
         ],
         threshold: 6,
-        requiresAny: [["machine_learning", "cloud", "business_intelligence", "it_management", "product_dev"]],
+        requiresAny: [
+            ["machine_learning", "cloud", "business_intelligence", "it_management", "product_dev"],
+        ],
         description: "Recognised technical leader across engineering, data, and business paths.",
         requirementLabel:
             "Unlock any tier-4 node, then log Machine Learning, Cloud, DevOps, Data Analysis, Financial Analysis, or Cybersecurity in 6 total opportunities",
@@ -480,7 +487,8 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["nt_communication"]],
         description: "Drive fundraising efforts and build donor or sponsor networks.",
-        requirementLabel: "Unlock Clear Comms, then log Fundraising or Networking in 2 opportunities",
+        requirementLabel:
+            "Unlock Clear Comms, then log Fundraising or Networking in 2 opportunities",
     },
 
     {
@@ -522,7 +530,8 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["nt_fundraising"]],
         description: "Promote causes and grow audiences using marketing and social media.",
-        requirementLabel: "Unlock Fundraiser, then log Marketing or Social Media in 2 opportunities",
+        requirementLabel:
+            "Unlock Fundraiser, then log Marketing or Social Media in 2 opportunities",
     },
 
     {
@@ -536,7 +545,8 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["nt_event_planning", "nt_project_mgmt"]],
         description: "Lead volunteers, coordinate multi-person teams, own outcomes.",
-        requirementLabel: "Unlock Event Planning or Project Mgmt, then log Leadership in 3 opportunities",
+        requirementLabel:
+            "Unlock Event Planning or Project Mgmt, then log Leadership in 3 opportunities",
     },
     {
         id: "nt_strategy",
@@ -563,7 +573,8 @@ export const NT_NODES: SkillNodeDef[] = [
         trackedSkills: ["Leadership", "Project Management", "Communication"],
         threshold: 8,
         requiresAny: [["nt_leadership", "nt_strategy"]],
-        description: "Recognised community leader with broad impact across people, projects, and organisations.",
+        description:
+            "Recognised community leader with broad impact across people, projects, and organisations.",
         requirementLabel:
             "Unlock Team Leader or Strategy, then log Leadership, Project Management, or Communication in 8 total opportunities",
     },
@@ -575,10 +586,15 @@ export const NT_NODES: SkillNodeDef[] = [
 
 function prereqsMet(node: SkillNode, byId: Record<string, SkillNode>): boolean {
     if (node.requiresAny.length === 0) return true;
-    return node.requiresAny.every((orGroup) => orGroup.some((id) => byId[id]?.status === "mastered"));
+    return node.requiresAny.every((orGroup) =>
+        orGroup.some((id) => byId[id]?.status === "mastered"),
+    );
 }
 
-export function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, number>): SkillNode[] {
+export function computeNodes(
+    defs: SkillNodeDef[],
+    skillCounts: Record<string, number>,
+): SkillNode[] {
     const map: Record<string, SkillNode> = {};
     for (const def of defs) {
         map[def.id] = { ...def, status: "locked", current: 0 };
@@ -590,7 +606,9 @@ export function computeNodes(defs: SkillNodeDef[], skillCounts: Record<string, n
             const node = map[id];
             const unlocked = prereqsMet(node, map);
             const current = unlocked
-                ? defs.find((d) => d.id === id)!.trackedSkills.reduce((s, k) => s + (skillCounts[k] ?? 0), 0)
+                ? defs
+                      .find((d) => d.id === id)!
+                      .trackedSkills.reduce((s, k) => s + (skillCounts[k] ?? 0), 0)
                 : 0;
             let status: NodeStatus;
             if (!unlocked) {

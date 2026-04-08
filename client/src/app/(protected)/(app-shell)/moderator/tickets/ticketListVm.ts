@@ -4,7 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { ModeratorService } from "@/services/ModeratorService";
-import type { CurrentModerator, ModeratorTicketList, ModeratorTicketStatus } from "@volunteerly/shared";
+import type {
+    CurrentModerator,
+    ModeratorTicketList,
+    ModeratorTicketStatus,
+} from "@volunteerly/shared";
 
 export type TicketTabKey = ModeratorTicketStatus;
 export type TicketSortKey = "ascending" | "descending";
@@ -20,7 +24,9 @@ export function useTicketListViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
 
-    const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(undefined);
+    const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(
+        undefined,
+    );
     const [tickets, setTickets] = useState<ModeratorTicketList>([]);
     const [loadingData, setLoadingData] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -106,7 +112,10 @@ export function useTicketListViewModel() {
 
     const totalPages = Math.max(1, Math.ceil(filteredTickets.length / pageSize));
 
-    const paginatedTickets = filteredTickets.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const paginatedTickets = filteredTickets.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    );
 
     const startItem = filteredTickets.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, filteredTickets.length);

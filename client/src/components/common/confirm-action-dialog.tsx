@@ -64,13 +64,17 @@ export function ConfirmActionDialog({
                     </div>
 
                     <AlertDialogTitle asChild>
-                        <h2 className="text-3xl font-extrabold tracking-tight text-foreground">{title}</h2>
+                        <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
+                            {title}
+                        </h2>
                     </AlertDialogTitle>
 
                     <AlertDialogDescription>
                         <p className="mt-3 text-base text-muted-foreground">{message}</p>
 
-                        {additionalInfo ? <p className="mt-2 text-sm text-muted-foreground">{additionalInfo}</p> : null}
+                        {additionalInfo ? (
+                            <p className="mt-2 text-sm text-muted-foreground">{additionalInfo}</p>
+                        ) : null}
                     </AlertDialogDescription>
 
                     <div className="mt-8 flex items-center justify-center gap-3">

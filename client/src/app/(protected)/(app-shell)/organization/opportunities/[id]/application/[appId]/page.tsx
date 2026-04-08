@@ -6,13 +6,24 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
+import {
+    Item,
+    ItemActions,
+    ItemContent,
+    ItemDescription,
+    ItemMedia,
+    ItemTitle,
+} from "@/components/ui/item";
 import { UserService } from "@/services/UserService";
 import { ArrowLeft, Briefcase, GraduationCap, MapPin, User } from "lucide-react";
 import { use } from "react";
 import { useOppApplicationViewModel } from "./oppApplicationVm";
 
-export default function ViewApplicationPage({ params }: { params: Promise<{ id: string; appId: string }> }) {
+export default function ViewApplicationPage({
+    params,
+}: {
+    params: Promise<{ id: string; appId: string }>;
+}) {
     const { id, appId } = use(params);
     const {
         loading,
@@ -49,7 +60,11 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                     "
                 >
                     <div>
-                        <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
+                        <Button
+                            variant="ghost"
+                            className="cursor-pointer"
+                            onClick={() => router.back()}
+                        >
                             <ArrowLeft className="size-4" />
                             Back
                         </Button>
@@ -72,7 +87,9 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                 "
                                 >
                                     <Avatar className="h-auto w-20">
-                                        <AvatarImage src={UserService.getAvatarURL(application?.volId || "")} />
+                                        <AvatarImage
+                                            src={UserService.getAvatarURL(application?.volId || "")}
+                                        />
                                         <AvatarFallback>
                                             {" "}
                                             <User className="h-auto w-20"></User>
@@ -93,7 +110,8 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                     "
                                     >
                                         <h3>
-                                            {application?.volunteer?.firstName} {application?.volunteer?.lastName}
+                                            {application?.volunteer?.firstName}{" "}
+                                            {application?.volunteer?.lastName}
                                         </h3>
                                         <Badge
                                             className={
@@ -108,9 +126,13 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                         </Badge>
                                     </div>
                                     {application?.volunteer?.workExperiences && (
-                                        <h4>{application?.volunteer?.workExperiences[0].jobTitle}</h4>
+                                        <h4>
+                                            {application?.volunteer?.workExperiences[0].jobTitle}
+                                        </h4>
                                     )}
-                                    <p className="text-sm">Applied {application?.dateApplied?.toLocaleDateString()}</p>
+                                    <p className="text-sm">
+                                        Applied {application?.dateApplied?.toLocaleDateString()}
+                                    </p>
                                     <p className="text-sm">{application?.volunteer?.bio}</p>
                                 </div>
 
@@ -141,7 +163,9 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                                         1,
                                                         Math.max(
                                                             0,
-                                                            (application?.volunteer?.averageRating ?? 0) - (star - 1),
+                                                            (application?.volunteer
+                                                                ?.averageRating ?? 0) -
+                                                                (star - 1),
                                                         ),
                                                     );
                                                     const pct = Math.round(fill * 100);
@@ -167,7 +191,10 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                                 })}
                                             </div>
                                             <p className="text-xs text-muted-foreground">
-                                                {(application?.volunteer?.averageRating || 0).toFixed(1)} / 5.0
+                                                {(
+                                                    application?.volunteer?.averageRating || 0
+                                                ).toFixed(1)}{" "}
+                                                / 5.0
                                             </p>
                                         </>
                                     )}
@@ -198,7 +225,9 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                             )}
                         {(application?.volunteer?.workExperiences?.length || 0) > 0 && (
                             <CardContent>
-                                <CardTitle className="text-sm text-muted-foreground">Employment Experience</CardTitle>
+                                <CardTitle className="text-sm text-muted-foreground">
+                                    Employment Experience
+                                </CardTitle>
                                 {application?.volunteer?.workExperiences?.map((exp) => (
                                     <Item key={exp.id}>
                                         <ItemMedia>
@@ -208,7 +237,9 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                             <ItemTitle>
                                                 {exp.jobTitle} | {exp.company}
                                             </ItemTitle>
-                                            <ItemDescription>{exp.responsibilities}</ItemDescription>
+                                            <ItemDescription>
+                                                {exp.responsibilities}
+                                            </ItemDescription>
                                         </ItemContent>
                                         <ItemActions>
                                             <ItemDescription>
@@ -222,7 +253,9 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                         )}
                         {(application?.volunteer?.educations?.length || 0) > 0 && (
                             <CardContent>
-                                <CardTitle className="text-sm text-muted-foreground">Education</CardTitle>
+                                <CardTitle className="text-sm text-muted-foreground">
+                                    Education
+                                </CardTitle>
                                 {application?.volunteer?.educations?.map((edu) => (
                                     <Item key={edu.id}>
                                         <ItemMedia>

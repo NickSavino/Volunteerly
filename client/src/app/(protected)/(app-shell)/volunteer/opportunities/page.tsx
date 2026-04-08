@@ -299,7 +299,8 @@ export default function OpportunitiesPage() {
                         <div className="shrink-0 border-b bg-card px-5 py-4">
                             <div className="flex items-center justify-between gap-3">
                                 <h1 className="font-bold text-foreground">
-                                    {oppCount} {oppCount === 1 ? "Opportunity" : "Opportunities"} Found
+                                    {oppCount} {oppCount === 1 ? "Opportunity" : "Opportunities"}{" "}
+                                    Found
                                 </h1>
                                 <input
                                     type="text"
@@ -355,18 +356,22 @@ export default function OpportunitiesPage() {
                                         </span>
                                         <select
                                             value={sortBy}
-                                            onChange={(e) => setSortBy(e.target.value as SortOption)}
+                                            onChange={(e) =>
+                                                setSortBy(e.target.value as SortOption)
+                                            }
                                             className="
                                                 cursor-pointer rounded-md border-0 bg-transparent
                                                 py-0 pr-6 text-sm font-medium text-foreground
                                                 focus:ring-0 focus:outline-none
                                             "
                                         >
-                                            {(Object.keys(SORT_LABELS) as SortOption[]).map((opt) => (
-                                                <option key={opt} value={opt}>
-                                                    {SORT_LABELS[opt]}
-                                                </option>
-                                            ))}
+                                            {(Object.keys(SORT_LABELS) as SortOption[]).map(
+                                                (opt) => (
+                                                    <option key={opt} value={opt}>
+                                                        {SORT_LABELS[opt]}
+                                                    </option>
+                                                ),
+                                            )}
                                         </select>
                                     </div>
                                 </div>
@@ -402,7 +407,9 @@ export default function OpportunitiesPage() {
                                         matchPct={getMatchPct(opp)}
                                         isSelected={selectedOpp?.id === opp.id}
                                         hasApplied={appliedOppIds.has(opp.id)}
-                                        onClick={() => setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)}
+                                        onClick={() =>
+                                            setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)
+                                        }
                                     />
                                 ))
                             )}

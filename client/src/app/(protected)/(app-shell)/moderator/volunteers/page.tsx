@@ -90,10 +90,15 @@ export default function ModeratorVolunteersPage() {
                     onChange={filters.handleTabChange}
                 />
 
-                <ModeratorListContainer isEmpty={data.isEmpty} emptyMessage="No Volunteers Found." className="p-6">
+                <ModeratorListContainer
+                    isEmpty={data.isEmpty}
+                    emptyMessage="No Volunteers Found."
+                    className="p-6"
+                >
                     <div className="space-y-5">
                         {data.rows.map((volunteer) => {
-                            const showFlaggedActions = page.activeTab === "FLAGGED" && volunteer.state === "FLAGGED";
+                            const showFlaggedActions =
+                                page.activeTab === "FLAGGED" && volunteer.state === "FLAGGED";
 
                             const severity = getSeverity(volunteer.pastFlagsCount);
 
@@ -129,7 +134,8 @@ export default function ModeratorVolunteersPage() {
                                                         text-xl font-semibold text-gray-500
                                                     "
                                                     >
-                                                        {volunteer.firstName[0]} {volunteer.lastName[0]}
+                                                        {volunteer.firstName[0]}{" "}
+                                                        {volunteer.lastName[0]}
                                                     </div>
                                                 )}
                                             </div>
@@ -139,11 +145,15 @@ export default function ModeratorVolunteersPage() {
                                                     {volunteer.firstName} {volunteer.lastName}
                                                 </p>
 
-                                                <p className="text-lg text-gray-500">{volunteer.location}</p>
+                                                <p className="text-lg text-gray-500">
+                                                    {volunteer.location}
+                                                </p>
 
                                                 {volunteer.flaggedByDisplayName ? (
                                                     <p className="mt-3 text-sm text-gray-700">
-                                                        <span className="font-semibold">Flagged By: </span>
+                                                        <span className="font-semibold">
+                                                            Flagged By:{" "}
+                                                        </span>
                                                         <span className="text-gray-500">
                                                             {volunteer.flaggedByDisplayName}
                                                         </span>
@@ -179,7 +189,12 @@ export default function ModeratorVolunteersPage() {
                                                             font-bold text-foreground
                                                             hover:opacity-90
                                                         "
-                                                        onClick={() => openVolunteerModal(volunteer.id, "profile")}
+                                                        onClick={() =>
+                                                            openVolunteerModal(
+                                                                volunteer.id,
+                                                                "profile",
+                                                            )
+                                                        }
                                                     >
                                                         View Profile
                                                         <ExternalLink className="size-5" />
@@ -193,14 +208,22 @@ export default function ModeratorVolunteersPage() {
                                                             hover:opacity-90
                                                         "
                                                         onClick={() =>
-                                                            openVolunteerModal(volunteer.id, "investigation")
+                                                            openVolunteerModal(
+                                                                volunteer.id,
+                                                                "investigation",
+                                                            )
                                                         }
                                                     >
                                                         View Investigation
                                                     </button>
 
                                                     <button
-                                                        onClick={() => openVolunteerModal(volunteer.id, "warning")}
+                                                        onClick={() =>
+                                                            openVolunteerModal(
+                                                                volunteer.id,
+                                                                "warning",
+                                                            )
+                                                        }
                                                         className="
                                                             rounded-xl border bg-card px-5 py-2.5
                                                             text-sm font-semibold text-foreground
@@ -211,7 +234,12 @@ export default function ModeratorVolunteersPage() {
                                                     </button>
 
                                                     <button
-                                                        onClick={() => openVolunteerModal(volunteer.id, "suspend")}
+                                                        onClick={() =>
+                                                            openVolunteerModal(
+                                                                volunteer.id,
+                                                                "suspend",
+                                                            )
+                                                        }
                                                         className="
                                                             rounded-xl border bg-card px-5 py-2.5
                                                             text-sm font-semibold text-foreground
@@ -224,7 +252,9 @@ export default function ModeratorVolunteersPage() {
                                             </div>
                                         ) : (
                                             <button
-                                                onClick={() => openVolunteerModal(volunteer.id, "profile")}
+                                                onClick={() =>
+                                                    openVolunteerModal(volunteer.id, "profile")
+                                                }
                                                 className="
                                                     inline-flex items-center gap-2 rounded-xl
                                                     bg-primary px-6 py-4 text-xl font-bold
@@ -246,7 +276,10 @@ export default function ModeratorVolunteersPage() {
                                     >
                                         <span>Past Flags: {volunteer.pastFlagsCount}</span>
                                         <span>&middot;</span>
-                                        <span>Completed Opportunities: {volunteer.completedOpportunities}</span>
+                                        <span>
+                                            Completed Opportunities:{" "}
+                                            {volunteer.completedOpportunities}
+                                        </span>
                                         <span>&middot;</span>
                                         <span>Average Rating: {volunteer.averageRating}</span>
                                         <Star className="size-4 fill-yellow-400 text-yellow-400" />

@@ -23,5 +23,12 @@ export function useAppliedOrgDashboardViewModel() {
         }
     }, [initialized, appLoading, currentOrganization, router]);
 
-    return { loading: authLoading || appLoading || !initialized, session, signOut, router, user, currentOrganization };
+    return {
+        loading: authLoading || appLoading || !initialized,
+        session,
+        signOut,
+        router,
+        user,
+        currentOrganization,
+    };
 }

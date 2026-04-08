@@ -47,8 +47,9 @@ export default function LandingPage() {
                             AI-Powered Matching for Skilled Volunteering
                         </h3>
                         <p className="text-lg text-muted">
-                            &quot;Through Volunteerly, we were able to find volunteers for our most complex tasks,
-                            allowing us to devote more funds to helping our cause.&quot;
+                            &quot;Through Volunteerly, we were able to find volunteers for our most
+                            complex tasks, allowing us to devote more funds to helping our
+                            cause.&quot;
                         </p>
                         <div className="flex items-center gap-3">
                             <Avatar>
@@ -68,7 +69,9 @@ export default function LandingPage() {
                     md:w-1/2
                 "
                 >
-                    <h1 className="text-4x1 pt-5 text-left font-bold tracking-tight">How It Works?</h1>
+                    <h1 className="text-4x1 pt-5 text-left font-bold tracking-tight">
+                        How It Works?
+                    </h1>
                     <div className="flex flex-1 flex-col justify-around">
                         <div className="space-y-0 text-left">
                             <h2
@@ -87,7 +90,8 @@ export default function LandingPage() {
                                 <ItemContent>
                                     <ItemTitle>UPLOAD EXPERIENCE</ItemTitle>
                                     <ItemDescription>
-                                        Share your professional background to find the perfect match.
+                                        Share your professional background to find the perfect
+                                        match.
                                     </ItemDescription>
                                 </ItemContent>
                             </Item>
@@ -98,7 +102,8 @@ export default function LandingPage() {
                                 <ItemContent>
                                     <ItemTitle>MATCH WITH OPPORTUNITIES</ItemTitle>
                                     <ItemDescription>
-                                        Browse curated high-impact projects that align with your passion.
+                                        Browse curated high-impact projects that align with your
+                                        passion.
                                     </ItemDescription>
                                 </ItemContent>
                             </Item>
@@ -153,7 +158,8 @@ export default function LandingPage() {
                                 <ItemContent>
                                     <ItemTitle>GROW YOUR IMPACT</ItemTitle>
                                     <ItemDescription>
-                                        Successfully complete projects and scale your organization&apos;s reach.
+                                        Successfully complete projects and scale your
+                                        organization&apos;s reach.
                                     </ItemDescription>
                                 </ItemContent>
                             </Item>

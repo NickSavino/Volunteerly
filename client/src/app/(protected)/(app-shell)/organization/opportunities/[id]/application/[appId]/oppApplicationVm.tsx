@@ -61,7 +61,9 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
                     return;
                 }
                 setMatchedSchedule(
-                    opp.data.availability.filter((day) => app.data.volunteer?.availability?.includes(day)),
+                    opp.data.availability.filter((day) =>
+                        app.data.volunteer?.availability?.includes(day),
+                    ),
                 );
                 setApplication(app.data);
                 setFetching(false);
@@ -76,7 +78,10 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
     async function selectVolunteer() {
         if (application?.volunteer?.id) {
             setFetching(true);
-            const updated_opp = await OrganizationService.selectOppVolunteer(oppId, application.volunteer.id);
+            const updated_opp = await OrganizationService.selectOppVolunteer(
+                oppId,
+                application.volunteer.id,
+            );
             if (updated_opp.success) {
                 toast.success("Opportunity is now filled. Selected Volunteer has been notified.", {
                     position: "top-right",

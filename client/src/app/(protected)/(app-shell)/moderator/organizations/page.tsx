@@ -73,7 +73,11 @@ export default function ModeratorOrganizationsPage() {
                     onChange={filters.handleTabChange}
                 />
 
-                <ModeratorListContainer isEmpty={data.isEmpty} emptyMessage="No Organizations Found." className="p-6">
+                <ModeratorListContainer
+                    isEmpty={data.isEmpty}
+                    emptyMessage="No Organizations Found."
+                    className="p-6"
+                >
                     <div className="space-y-5">
                         {data.rows.map((org) => (
                             <div
@@ -95,7 +99,9 @@ export default function ModeratorOrganizationsPage() {
                                         </div>
 
                                         <div>
-                                            <p className="font-medium text-foreground">{org.orgName}</p>
+                                            <p className="font-medium text-foreground">
+                                                {org.orgName}
+                                            </p>
                                             <div
                                                 className="
                                                 flex items-center gap-3 text-xs
@@ -104,19 +110,25 @@ export default function ModeratorOrganizationsPage() {
                                             >
                                                 <span>
                                                     Submitted{" "}
-                                                    {new Date(org.createdAt).toLocaleDateString("en-US", {
-                                                        month: "short",
-                                                        day: "numeric",
-                                                        year: "numeric",
-                                                    })}
+                                                    {new Date(org.createdAt).toLocaleDateString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                        },
+                                                    )}
                                                 </span>
                                                 <span>
                                                     Last Updated{" "}
-                                                    {new Date(org.updatedAt).toLocaleDateString("en-US", {
-                                                        month: "short",
-                                                        day: "numeric",
-                                                        year: "numeric",
-                                                    })}
+                                                    {new Date(org.updatedAt).toLocaleDateString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                        },
+                                                    )}
                                                 </span>
                                             </div>
                                         </div>
@@ -233,29 +245,43 @@ export default function ModeratorOrganizationsPage() {
                 {review.selectedOrg ? (
                     <>
                         <div className="mb-6">
-                            <h3 className="text-2xl font-bold text-foreground">{review.selectedOrg.orgName}</h3>
+                            <h3 className="text-2xl font-bold text-foreground">
+                                {review.selectedOrg.orgName}
+                            </h3>
                             <p className="text-sm text-muted-foreground">
                                 Submitted{" "}
-                                {new Date(review.selectedOrg.createdAt).toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                })}
+                                {new Date(review.selectedOrg.createdAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    },
+                                )}
                                 {" . "}Last Updated{" "}
-                                {new Date(review.selectedOrg.updatedAt).toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                })}
+                                {new Date(review.selectedOrg.updatedAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    },
+                                )}
                             </p>
                         </div>
 
                         <div className="mb-6 rounded-xl border p-5">
-                            <h4 className="mb-4 font-semibold text-foreground">Organization Details</h4>
+                            <h4 className="mb-4 font-semibold text-foreground">
+                                Organization Details
+                            </h4>
                             <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
                                 <div>
-                                    <span className="font-medium text-foreground">Organization Name:</span>
-                                    <span className="text-muted-foreground">{review.selectedOrg.orgName}</span>
+                                    <span className="font-medium text-foreground">
+                                        Organization Name:
+                                    </span>
+                                    <span className="text-muted-foreground">
+                                        {review.selectedOrg.orgName}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -269,12 +295,16 @@ export default function ModeratorOrganizationsPage() {
                                             <Square className="size-4" />
                                         )}
                                     </button>
-                                    <span className="text-muted-foreground">Charity number verified</span>
+                                    <span className="text-muted-foreground">
+                                        Charity number verified
+                                    </span>
                                 </div>
 
                                 <div>
                                     <span className="font-medium text-foreground">Website: </span>
-                                    <span className="text-muted-foreground">{review.selectedOrg.website}</span>
+                                    <span className="text-muted-foreground">
+                                        {review.selectedOrg.website}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -288,12 +318,16 @@ export default function ModeratorOrganizationsPage() {
                                             <Square className="size-4" />
                                         )}
                                     </button>
-                                    <span className="text-muted-foreground">Website matches name</span>
+                                    <span className="text-muted-foreground">
+                                        Website matches name
+                                    </span>
                                 </div>
 
                                 <div>
                                     <span className="font-medium text-foreground">Field: </span>
-                                    <span className="text-muted-foreground">{review.selectedOrg.causeCategory}</span>
+                                    <span className="text-muted-foreground">
+                                        {review.selectedOrg.causeCategory}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -307,12 +341,16 @@ export default function ModeratorOrganizationsPage() {
                                             <Square className="size-4" />
                                         )}
                                     </button>
-                                    <span className="text-muted-foreground">Supporting documents valid</span>
+                                    <span className="text-muted-foreground">
+                                        Supporting documents valid
+                                    </span>
                                 </div>
 
                                 <div>
                                     <span className="font-medium text-foreground">Address: </span>
-                                    <span className="text-muted-foreground">{review.selectedOrg.hqAdr}</span>
+                                    <span className="text-muted-foreground">
+                                        {review.selectedOrg.hqAdr}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -332,7 +370,9 @@ export default function ModeratorOrganizationsPage() {
                         </div>
 
                         <div className="rounded-xl border p-5">
-                            <h4 className="mb-4 font-semibold text-foreground">Verification Documents</h4>
+                            <h4 className="mb-4 font-semibold text-foreground">
+                                Verification Documents
+                            </h4>
 
                             {review.selectedOrg.docId ? (
                                 <div className="flex gap-4">
@@ -358,7 +398,9 @@ export default function ModeratorOrganizationsPage() {
                                     </div>
                                 </div>
                             ) : (
-                                <p className="text-sm text-muted-foreground">No documents uploaded.</p>
+                                <p className="text-sm text-muted-foreground">
+                                    No documents uploaded.
+                                </p>
                             )}
                         </div>
                     </>
@@ -415,9 +457,12 @@ export default function ModeratorOrganizationsPage() {
                             >
                                 Target Organization
                             </p>
-                            <p className="font-semibold text-foreground">Rejecting: {review.selectedOrg.orgName}</p>
+                            <p className="font-semibold text-foreground">
+                                Rejecting: {review.selectedOrg.orgName}
+                            </p>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                This action will notify the organization that their application has been declined.
+                                This action will notify the organization that their application has
+                                been declined.
                             </p>
                         </div>
 
@@ -437,7 +482,8 @@ export default function ModeratorOrganizationsPage() {
                                 onChange={(e) => review.setRejectionReason(e.target.value)}
                             />
                             <p className="mt-1 text-xs text-muted-foreground">
-                                Please be specific to help the organization improve their application.
+                                Please be specific to help the organization improve their
+                                application.
                             </p>
                         </div>
                     </>

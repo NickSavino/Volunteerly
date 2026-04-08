@@ -14,10 +14,24 @@ import {
     Clock4,
     User,
 } from "lucide-react";
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardAction,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { OrgStatCard } from "@/components/custom/org_stat_card";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
+import {
+    Item,
+    ItemActions,
+    ItemContent,
+    ItemDescription,
+    ItemMedia,
+    ItemTitle,
+} from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png";
@@ -86,7 +100,11 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                     "
                     >
                         <div>
-                            <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
+                            <Button
+                                variant="ghost"
+                                className="cursor-pointer"
+                                onClick={() => router.back()}
+                            >
                                 <ArrowLeft className="size-4" />
                                 Back
                             </Button>
@@ -97,7 +115,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                 ) : opportunity?.status == "FILLED" ? (
                                     <p>Started on {opportunity?.updatedAt.toLocaleDateString()}</p>
                                 ) : (
-                                    <p>Completed on {opportunity?.updatedAt.toLocaleDateString()}</p>
+                                    <p>
+                                        Completed on {opportunity?.updatedAt.toLocaleDateString()}
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -111,7 +131,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                 md:flex md:grid md:grid-cols-2 md:justify-around md:gap-3
                             "
                             >
-                                <OrgStatCard icon={Clock4} label="Hours Spent" count={totalHours} money={false} />
+                                <OrgStatCard
+                                    icon={Clock4}
+                                    label="Hours Spent"
+                                    count={totalHours}
+                                    money={false}
+                                />
                                 <OrgStatCard
                                     icon={CircleDollarSign}
                                     label="Monetary Valuation"
@@ -130,7 +155,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                 variant={"outline"}
                                                 className="cursor-pointer"
                                                 onClick={() =>
-                                                    router.replace(`/organization/opportunities/${id}/update`)
+                                                    router.replace(
+                                                        `/organization/opportunities/${id}/update`,
+                                                    )
                                                 }
                                             >
                                                 Edit
@@ -153,7 +180,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <Calendar className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Length</span>
-                                                <span className="text-sm">{opportunity?.length}</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.length}
+                                                </span>
                                             </div>
                                         </span>
                                         <span className="flex flex-1 items-center gap-3">
@@ -176,7 +205,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <AlarmClockCheck className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Availability</span>
-                                                <span className="text-sm">{opportunity?.availability.join(", ")}</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.availability.join(", ")}
+                                                </span>
                                             </div>
                                         </span>
 
@@ -184,7 +215,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
-                                                <span className="text-sm">{opportunity?.commitmentLevel}</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.commitmentLevel}
+                                                </span>
                                             </div>
                                         </span>
                                     </CardContent>
@@ -208,16 +241,25 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                     </Avatar>
                                                 </div>
                                                 <h3 className="text-lg">No Applications</h3>
-                                                <p>Volunteer Applications for this posting show up here.</p>
+                                                <p>
+                                                    Volunteer Applications for this posting show up
+                                                    here.
+                                                </p>
                                             </CardContent>
                                         ) : (
                                             applications.map((app) => (
-                                                <Item key={app.id} variant="outline" className="mb-2">
+                                                <Item
+                                                    key={app.id}
+                                                    variant="outline"
+                                                    className="mb-2"
+                                                >
                                                     <ItemMedia>
                                                         <Avatar size="lg">
                                                             <Avatar className="h-auto w-10">
                                                                 <AvatarImage
-                                                                    src={UserService.getAvatarURL(app?.volId || "")}
+                                                                    src={UserService.getAvatarURL(
+                                                                        app?.volId || "",
+                                                                    )}
                                                                 />
                                                                 <AvatarFallback>
                                                                     {" "}
@@ -228,7 +270,8 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                     </ItemMedia>
                                                     <ItemContent>
                                                         <ItemTitle className="text-md">
-                                                            {app.volunteer?.firstName} {app.volunteer?.lastName}
+                                                            {app.volunteer?.firstName}{" "}
+                                                            {app.volunteer?.lastName}
                                                         </ItemTitle>
                                                         <ItemDescription
                                                             className="
@@ -274,7 +317,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                 <Card className="mb-5">
                                     <CardHeader>
                                         <CardTitle>Opportunity Overview</CardTitle>
-                                        <CardDescription>{opportunity?.description}</CardDescription>
+                                        <CardDescription>
+                                            {opportunity?.description}
+                                        </CardDescription>
                                         {opportunity?.status == "FILLED" && (
                                             <CardAction
                                                 className="
@@ -304,7 +349,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <Calendar className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Length</span>
-                                                <span className="text-sm">{opportunity?.length}</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.length}
+                                                </span>
                                             </div>
                                         </span>
                                         <span className="flex flex-1 items-center gap-3">
@@ -339,7 +386,10 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                 md:col-span-2 md:w-full
                                             "
                                             >
-                                                <img src={avtImg.src} className="w-22 rounded-lg object-cover" />
+                                                <img
+                                                    src={avtImg.src}
+                                                    className="w-22 rounded-lg object-cover"
+                                                />
                                             </div>
 
                                             <div
@@ -390,30 +440,44 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <CardAction>
                                                 <Dialog>
                                                     <DialogTrigger asChild>
-                                                        <Button variant={"outline"} className="cursor-pointer">
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className="cursor-pointer"
+                                                        >
                                                             Add Update
                                                         </Button>
                                                     </DialogTrigger>
                                                     <DialogContent className="sm:max-w-sm">
                                                         <form onSubmit={addUpdate}>
                                                             <DialogHeader className="mb-5">
-                                                                <DialogTitle>Add Progress Update</DialogTitle>
+                                                                <DialogTitle>
+                                                                    Add Progress Update
+                                                                </DialogTitle>
                                                             </DialogHeader>
                                                             <FieldGroup>
-                                                                <Label htmlFor="progU-title">Title</Label>
+                                                                <Label htmlFor="progU-title">
+                                                                    Title
+                                                                </Label>
                                                                 <Input
                                                                     id="pu-title"
                                                                     name="title"
                                                                     onChange={(e) =>
                                                                         setProgressUpdate((prev) =>
                                                                             prev
-                                                                                ? { ...prev, title: e.target.value }
+                                                                                ? {
+                                                                                      ...prev,
+                                                                                      title: e
+                                                                                          .target
+                                                                                          .value,
+                                                                                  }
                                                                                 : prev,
                                                                         )
                                                                     }
                                                                     required
                                                                 />
-                                                                <Label htmlFor="progU-desc">Description</Label>
+                                                                <Label htmlFor="progU-desc">
+                                                                    Description
+                                                                </Label>
                                                                 <Textarea
                                                                     id="progU-desc"
                                                                     name="description"
@@ -422,14 +486,18 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                             prev
                                                                                 ? {
                                                                                       ...prev,
-                                                                                      description: e.target.value,
+                                                                                      description:
+                                                                                          e.target
+                                                                                              .value,
                                                                                   }
                                                                                 : prev,
                                                                         )
                                                                     }
                                                                     required
                                                                 />
-                                                                <Label htmlFor="progU-hours">Hours Contribuited</Label>
+                                                                <Label htmlFor="progU-hours">
+                                                                    Hours Contribuited
+                                                                </Label>
                                                                 <Input
                                                                     id="progU-hours"
                                                                     type="number"
@@ -439,9 +507,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                             prev
                                                                                 ? {
                                                                                       ...prev,
-                                                                                      hoursContributed: Number(
-                                                                                          e.target.value,
-                                                                                      ),
+                                                                                      hoursContributed:
+                                                                                          Number(
+                                                                                              e
+                                                                                                  .target
+                                                                                                  .value,
+                                                                                          ),
                                                                                   }
                                                                                 : prev,
                                                                         )
@@ -458,7 +529,10 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                         Cancel
                                                                     </Button>
                                                                 </DialogClose>
-                                                                <Button type="submit" className="cursor-pointer">
+                                                                <Button
+                                                                    type="submit"
+                                                                    className="cursor-pointer"
+                                                                >
                                                                     Add
                                                                 </Button>
                                                             </DialogFooter>
@@ -481,7 +555,10 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                 </Avatar>
                                             </div>
                                             <h3 className="text-lg">No Updates</h3>
-                                            <p>Progress Updates for this opportunity will show up here.</p>
+                                            <p>
+                                                Progress Updates for this opportunity will show up
+                                                here.
+                                            </p>
                                         </CardContent>
                                     ) : (
                                         <CardContent className="space-y-4">
@@ -505,7 +582,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                         <p className="text-sm text-muted-foreground">
                                                             {update.description}
                                                         </p>
-                                                        <p className="text-xs">{update.senderRole}</p>
+                                                        <p className="text-xs">
+                                                            {update.senderRole}
+                                                        </p>
                                                     </div>
                                                 ))}
                                             </div>
@@ -626,7 +705,13 @@ function ReviewModal({
                                     disabled:opacity-50
                                 "
                             >
-                                <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"}>
+                                <span
+                                    className={
+                                        (hovered || rating) >= star
+                                            ? "text-yellow-400"
+                                            : "text-gray-300"
+                                    }
+                                >
                                     ★
                                 </span>
                             </button>
@@ -650,7 +735,9 @@ function ReviewModal({
 
                 {flagged && (
                     <div>
-                        <label className="mb-1 block text-sm font-medium text-foreground">Reason for flagging:</label>
+                        <label className="mb-1 block text-sm font-medium text-foreground">
+                            Reason for flagging:
+                        </label>
                         <textarea
                             value={flagReason}
                             onChange={(e) => setFlagReason(e.target.value)}
@@ -666,7 +753,9 @@ function ReviewModal({
                                 ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
                         />
                         {touched && flagReasonEmpty && (
-                            <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>
+                            <p className="mt-1 text-xs text-destructive">
+                                Please provide a reason for flagging.
+                            </p>
                         )}
                     </div>
                 )}

@@ -13,8 +13,16 @@ import { Label } from "@/components/ui/label";
 import { LoadingScreen } from "@/components/common/loading-screen";
 
 export default function LoginPage() {
-    const { email, setEmail, password, setPassword, submitting, pendingRedirect, error, handleSubmit } =
-        useLoginViewModel();
+    const {
+        email,
+        setEmail,
+        password,
+        setPassword,
+        submitting,
+        pendingRedirect,
+        error,
+        handleSubmit,
+    } = useLoginViewModel();
 
     if (submitting || pendingRedirect) {
         return <LoadingScreen />;
@@ -53,8 +61,9 @@ export default function LoginPage() {
                             AI-Powered Matching for Skilled Volunteering
                         </h3>
                         <p className="text-lg text-muted">
-                            &quot;Through Volunteerly, we were able to find volunteers for our most complex tasks,
-                            allowing us to devote more funds to helping our cause.&quot;
+                            &quot;Through Volunteerly, we were able to find volunteers for our most
+                            complex tasks, allowing us to devote more funds to helping our
+                            cause.&quot;
                         </p>
                         <div className="flex items-center gap-3">
                             <Avatar>
@@ -103,7 +112,11 @@ export default function LoginPage() {
 
                                 {error ? <p className="text-sm text-red-500">{error}</p> : null}
 
-                                <Button type="submit" className="w-full cursor-pointer" disabled={submitting}>
+                                <Button
+                                    type="submit"
+                                    className="w-full cursor-pointer"
+                                    disabled={submitting}
+                                >
                                     {submitting ? "Logging in..." : "Log In"}
                                 </Button>
                                 <p className="text-center text-sm text-muted-foreground">

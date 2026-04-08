@@ -6,9 +6,20 @@ import { Field, FieldDescription } from "@/components/ui/field";
 import { useOrgApplicationViewModel } from "./orgApplicationVm";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+    InputGroupText,
+} from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import { Navbar } from "@/app/(protected)/(setup)/organization/application/navbar";
 import { LoadingScreen } from "@/components/common/loading-screen";
@@ -37,11 +48,19 @@ export default function OrgApplicationPage() {
     return (
         <div className="min-h-screen">
             <title>Organization Application - Volunteerly</title>
-            <Navbar name={currentOrg?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
+            <Navbar
+                name={currentOrg?.orgName || "Organization"}
+                role={"Unverified"}
+                onLogout={signOut}
+            ></Navbar>
             <main className="flex size-full flex-col items-center p-8">
                 <div className="flex w-full justify-start">
                     {isReadOnly && (
-                        <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
+                        <Button
+                            variant="ghost"
+                            className="cursor-pointer"
+                            onClick={() => router.back()}
+                        >
                             <ArrowLeft className="size-4" />
                             Back
                         </Button>
@@ -64,15 +83,18 @@ export default function OrgApplicationPage() {
 
                     <h1>Organization Application</h1>
                     <p className="text-center">
-                        To ensure the integrity of our platform, all organizations must be verified. <br /> Complete the
-                        application below and our moderators will review it.
+                        To ensure the integrity of our platform, all organizations must be verified.{" "}
+                        <br /> Complete the application below and our moderators will review it.
                     </p>
                 </div>
                 <Card className="w-full max-w-4xl">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <CardHeader>
                             <CardTitle>Organization Details</CardTitle>
-                            <CardDescription> Basic information about your non-profit </CardDescription>
+                            <CardDescription>
+                                {" "}
+                                Basic information about your non-profit{" "}
+                            </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-3">
                             <div
@@ -83,7 +105,8 @@ export default function OrgApplicationPage() {
                             >
                                 <Field>
                                     <Label htmlFor="orgName">
-                                        Organization Name <span className="text-destructive">*</span>
+                                        Organization Name{" "}
+                                        <span className="text-destructive">*</span>
                                     </Label>
                                     <Input
                                         id="orgName"
@@ -111,7 +134,9 @@ export default function OrgApplicationPage() {
                                         value={currentOrg?.causeCategory}
                                         onChange={(e) =>
                                             setCurrentOrg((prev) =>
-                                                prev ? { ...prev, causeCategory: e.target.value } : prev,
+                                                prev
+                                                    ? { ...prev, causeCategory: e.target.value }
+                                                    : prev,
                                             )
                                         }
                                         required
@@ -152,7 +177,9 @@ export default function OrgApplicationPage() {
                                     placeholder="2500 University Dr NW"
                                     value={address.streetAdr}
                                     onChange={(e) =>
-                                        setAddress((prev) => (prev ? { ...prev, streetAdr: e.target.value } : prev))
+                                        setAddress((prev) =>
+                                            prev ? { ...prev, streetAdr: e.target.value } : prev,
+                                        )
                                     }
                                     required
                                 />
@@ -174,7 +201,9 @@ export default function OrgApplicationPage() {
                                         placeholder="Calgary"
                                         value={address.city}
                                         onChange={(e) =>
-                                            setAddress((prev) => (prev ? { ...prev, city: e.target.value } : prev))
+                                            setAddress((prev) =>
+                                                prev ? { ...prev, city: e.target.value } : prev,
+                                            )
                                         }
                                         required
                                     />
@@ -188,7 +217,9 @@ export default function OrgApplicationPage() {
                                         value={address.province}
                                         disabled={isReadOnly}
                                         onValueChange={(e) =>
-                                            setAddress((prev) => (prev ? { ...prev, province: e } : prev))
+                                            setAddress((prev) =>
+                                                prev ? { ...prev, province: e } : prev,
+                                            )
                                         }
                                         required
                                     >
@@ -200,13 +231,17 @@ export default function OrgApplicationPage() {
                                             <SelectItem value="BC">British Columbia</SelectItem>
                                             <SelectItem value="MB">Manitoba</SelectItem>
                                             <SelectItem value="NB">New Brunswick</SelectItem>
-                                            <SelectItem value="NL">Newfoundland and Labrador</SelectItem>
+                                            <SelectItem value="NL">
+                                                Newfoundland and Labrador
+                                            </SelectItem>
                                             <SelectItem value="NS">Nova Scotia</SelectItem>
                                             <SelectItem value="ON">Ontario</SelectItem>
                                             <SelectItem value="PE">Prince Edward Island</SelectItem>
                                             <SelectItem value="QC">Quebec</SelectItem>
                                             <SelectItem value="SK">Saskatchewan</SelectItem>
-                                            <SelectItem value="NT">Northwest Territories</SelectItem>
+                                            <SelectItem value="NT">
+                                                Northwest Territories
+                                            </SelectItem>
                                             <SelectItem value="NU">Nunavut</SelectItem>
                                             <SelectItem value="YT">Yukon</SelectItem>
                                         </SelectContent>
@@ -225,7 +260,9 @@ export default function OrgApplicationPage() {
                                         value={address.postalCode}
                                         onChange={(e) =>
                                             setAddress((prev) =>
-                                                prev ? { ...prev, postalCode: e.target.value } : prev,
+                                                prev
+                                                    ? { ...prev, postalCode: e.target.value }
+                                                    : prev,
                                             )
                                         }
                                         required
@@ -243,7 +280,9 @@ export default function OrgApplicationPage() {
                                     value={currentOrg?.missionStatement}
                                     onChange={(e) =>
                                         setCurrentOrg((prev) =>
-                                            prev ? { ...prev, missionStatement: e.target.value } : prev,
+                                            prev
+                                                ? { ...prev, missionStatement: e.target.value }
+                                                : prev,
                                         )
                                     }
                                     required
@@ -253,7 +292,10 @@ export default function OrgApplicationPage() {
 
                         <CardHeader>
                             <CardTitle>Non-Profit Verification</CardTitle>
-                            <CardDescription> Official documentation for verification </CardDescription>
+                            <CardDescription>
+                                {" "}
+                                Official documentation for verification{" "}
+                            </CardDescription>
                         </CardHeader>
 
                         <CardContent>
@@ -272,15 +314,26 @@ export default function OrgApplicationPage() {
                                         disabled={isReadOnly}
                                         type="number"
                                         placeholder="XXXXXXXXX"
-                                        value={currentOrg?.charityNum === 0 ? "" : currentOrg?.charityNum}
+                                        value={
+                                            currentOrg?.charityNum === 0
+                                                ? ""
+                                                : currentOrg?.charityNum
+                                        }
                                         onChange={(e) =>
                                             setCurrentOrg((prev) =>
-                                                prev ? { ...prev, charityNum: Number(e.target.value) } : prev,
+                                                prev
+                                                    ? {
+                                                          ...prev,
+                                                          charityNum: Number(e.target.value),
+                                                      }
+                                                    : prev,
                                             )
                                         }
                                         required
                                     />
-                                    <FieldDescription>9-Digit Charity Number obtained from CRA.</FieldDescription>
+                                    <FieldDescription>
+                                        9-Digit Charity Number obtained from CRA.
+                                    </FieldDescription>
                                 </Field>
                                 <Field>
                                     <Label htmlFor="documentUpload">Upload Document</Label>
@@ -294,8 +347,8 @@ export default function OrgApplicationPage() {
                                         }}
                                     />
                                     <FieldDescription>
-                                        Upload CRA Notice of Registration or any other document verifying non-profit
-                                        status.
+                                        Upload CRA Notice of Registration or any other document
+                                        verifying non-profit status.
                                     </FieldDescription>
                                 </Field>
                             </div>
@@ -325,7 +378,9 @@ export default function OrgApplicationPage() {
                                         value={currentOrg?.contactName}
                                         onChange={(e) =>
                                             setCurrentOrg((prev) =>
-                                                prev ? { ...prev, contactName: e.target.value } : prev,
+                                                prev
+                                                    ? { ...prev, contactName: e.target.value }
+                                                    : prev,
                                             )
                                         }
                                         required
@@ -343,7 +398,9 @@ export default function OrgApplicationPage() {
                                         value={currentOrg?.contactNum}
                                         onChange={(e) =>
                                             setCurrentOrg((prev) =>
-                                                prev ? { ...prev, contactNum: e.target.value } : prev,
+                                                prev
+                                                    ? { ...prev, contactNum: e.target.value }
+                                                    : prev,
                                             )
                                         }
                                         required
@@ -371,14 +428,22 @@ export default function OrgApplicationPage() {
                         </CardContent>
 
                         <div className="px-6 pb-6">
-                            <Button type="submit" disabled={isReadOnly || submitting} className="pointer-cursor w-full">
+                            <Button
+                                type="submit"
+                                disabled={isReadOnly || submitting}
+                                className="pointer-cursor w-full"
+                            >
                                 {submitting ? "Submitting..." : "Submit"}
                             </Button>
                         </div>
                     </form>
                     {isReadOnly && (
                         <div className="px-6 pb-6">
-                            <Button type="button" onClick={viewSubmittedDoc} className="pointer-cursor w-full">
+                            <Button
+                                type="button"
+                                onClick={viewSubmittedDoc}
+                                className="pointer-cursor w-full"
+                            >
                                 View Submitted Document
                             </Button>
                         </div>

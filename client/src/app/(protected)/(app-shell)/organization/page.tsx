@@ -20,7 +20,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
 import { OrgStatCard } from "@/components/custom/org_stat_card";
 import { UserService } from "@/services/UserService";
-import { Card, CardHeader, CardTitle, CardAction, CardContent, CardDescription } from "@/components/ui/card";
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardAction,
+    CardContent,
+    CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { getAvatarFallback } from "@/components/navigation/nav-utils";
@@ -88,9 +95,24 @@ export default function HomePage() {
                     </div>
 
                     <div className="md:flex md:grid md:grid-cols-3 md:justify-around md:gap-3">
-                        <OrgStatCard icon={PersonStanding} label="Active Volunteers" count={activeVlt} money={false} />
-                        <OrgStatCard icon={FolderKanban} label="All-Time Projects" count={totalOpps} money={false} />
-                        <OrgStatCard icon={Hourglass} label="All-Time Hours" count={totalHours} money={false} />
+                        <OrgStatCard
+                            icon={PersonStanding}
+                            label="Active Volunteers"
+                            count={activeVlt}
+                            money={false}
+                        />
+                        <OrgStatCard
+                            icon={FolderKanban}
+                            label="All-Time Projects"
+                            count={totalOpps}
+                            money={false}
+                        />
+                        <OrgStatCard
+                            icon={Hourglass}
+                            label="All-Time Hours"
+                            count={totalHours}
+                            money={false}
+                        />
                     </div>
 
                     <div className="flex-1 overflow-y-auto">
@@ -124,8 +146,8 @@ export default function HomePage() {
                                     </div>
                                     <h3 className="text-lg">No Opportunities</h3>
                                     <p>
-                                        Posted Opportunities awaiting selection, or in-progress opportunities show up
-                                        here.
+                                        Posted Opportunities awaiting selection, or in-progress
+                                        opportunities show up here.
                                     </p>
                                 </CardContent>
                             ) : (
@@ -143,15 +165,18 @@ export default function HomePage() {
                                                     "
                                                     >
                                                         <span className="flex items-center gap-1">
-                                                            <Users /> {opp._count?.applications} Applicant(s)
+                                                            <Users /> {opp._count?.applications}{" "}
+                                                            Applicant(s)
                                                         </span>
 
                                                         <span className="flex items-center gap-1">
-                                                            <Calendar /> Posted {opp.postedDate.toLocaleDateString()}
+                                                            <Calendar /> Posted{" "}
+                                                            {opp.postedDate.toLocaleDateString()}
                                                         </span>
 
                                                         <span className="flex items-center gap-1">
-                                                            <Hourglass /> Due {opp.deadlineDate?.toLocaleDateString()}
+                                                            <Hourglass /> Due{" "}
+                                                            {opp.deadlineDate?.toLocaleDateString()}
                                                         </span>
                                                     </ItemDescription>
                                                 ) : (
@@ -161,7 +186,8 @@ export default function HomePage() {
                                                     "
                                                     >
                                                         <span className="flex items-center gap-1">
-                                                            <PersonStanding /> {opp.volunteer?.firstName}{" "}
+                                                            <PersonStanding />{" "}
+                                                            {opp.volunteer?.firstName}{" "}
                                                             {opp.volunteer?.lastName}
                                                         </span>
 
@@ -181,7 +207,9 @@ export default function HomePage() {
                                                     className="cursor-pointer"
                                                     size="sm"
                                                     onClick={async () => {
-                                                        router.push(`/organization/opportunities/${opp.id}`);
+                                                        router.push(
+                                                            `/organization/opportunities/${opp.id}`,
+                                                        );
                                                     }}
                                                 >
                                                     View
@@ -204,8 +232,13 @@ export default function HomePage() {
                         <CardContent className="text-center">
                             <div className="mb-4 flex justify-center">
                                 <Avatar className="h-auto w-20">
-                                    <AvatarImage src={UserService.getAvatarURL(currentUser?.id || "")} />
-                                    <AvatarFallback> {getAvatarFallback(currentUser?.orgName)}</AvatarFallback>
+                                    <AvatarImage
+                                        src={UserService.getAvatarURL(currentUser?.id || "")}
+                                    />
+                                    <AvatarFallback>
+                                        {" "}
+                                        {getAvatarFallback(currentUser?.orgName)}
+                                    </AvatarFallback>
                                 </Avatar>
                             </div>
                             <h3>{currentUser?.orgName}</h3>
@@ -242,7 +275,9 @@ export default function HomePage() {
                     <Card className="mx-5">
                         <CardHeader>
                             <CardTitle>Need Help?</CardTitle>
-                            <CardDescription>Open a ticket with our moderator team for assistance.</CardDescription>
+                            <CardDescription>
+                                Open a ticket with our moderator team for assistance.
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Button
@@ -263,7 +298,9 @@ export default function HomePage() {
             <SubmitTicketModal
                 open={isTicketModalOpen}
                 onClose={() => setIsTicketModalOpen(false)}
-                onSubmitted={(ticket) => router.push(`/organization/messages?conversationId=${ticket.conversationId}`)}
+                onSubmitted={(ticket) =>
+                    router.push(`/organization/messages?conversationId=${ticket.conversationId}`)
+                }
             />
         </div>
     );

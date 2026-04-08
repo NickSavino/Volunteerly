@@ -38,6 +38,8 @@ describe("ModeratorService", () => {
         const response: unknown = [validModeratorVolunteerResponse, { id: "bad-uuid" }];
         apiMockFn.mockResolvedValueOnce(response);
 
-        await expect(ModeratorService.getModeratorVolunteers()).rejects.toThrow("Error fetching volunteers.");
+        await expect(ModeratorService.getModeratorVolunteers()).rejects.toThrow(
+            "Error fetching volunteers.",
+        );
     });
 });

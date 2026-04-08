@@ -3,7 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/components/ui/navigation-menu";
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuList,
+} from "@/components/ui/navigation-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
 import type { AppNavItem } from "./nav-config";
@@ -100,7 +104,9 @@ export function AppNavbar({
                         >
                             <div className="flex min-w-0 items-center gap-3">
                                 <div className="min-w-0">
-                                    <p className="truncate text-sm font-medium text-yellow-600">{displayName}</p>
+                                    <p className="truncate text-sm font-medium text-yellow-600">
+                                        {displayName}
+                                    </p>
                                     <p className="truncate text-sm text-gray-400">{subtitle}</p>
                                 </div>
 
@@ -121,7 +127,9 @@ export function AppNavbar({
                             md:hidden
                         "
                         >
-                            <p className="truncate text-sm font-medium text-gray-900">{displayName}</p>
+                            <p className="truncate text-sm font-medium text-gray-900">
+                                {displayName}
+                            </p>
                             <p className="truncate text-xs text-gray-500">{subtitle}</p>
                         </div>
 
@@ -132,7 +140,12 @@ export function AppNavbar({
 
                                 return (
                                     <DropdownMenuItem key={href} asChild>
-                                        <Link href={href} className={isActive ? "font-medium text-yellow-600" : ""}>
+                                        <Link
+                                            href={href}
+                                            className={
+                                                isActive ? "font-medium text-yellow-600" : ""
+                                            }
+                                        >
                                             {label}
                                         </Link>
                                     </DropdownMenuItem>

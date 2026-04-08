@@ -5,7 +5,12 @@ type ModeratorListContainerProps = {
     className?: string;
 };
 
-export function ModeratorListContainer({ children, isEmpty, emptyMessage, className }: ModeratorListContainerProps) {
+export function ModeratorListContainer({
+    children,
+    isEmpty,
+    emptyMessage,
+    className,
+}: ModeratorListContainerProps) {
     return (
         <div
             className={`
@@ -13,7 +18,11 @@ export function ModeratorListContainer({ children, isEmpty, emptyMessage, classN
             ${className ?? ""}
         `}
         >
-            {isEmpty ? <p className="py-16 text-center text-sm text-gray-400">{emptyMessage}</p> : children}
+            {isEmpty ? (
+                <p className="py-16 text-center text-sm text-gray-400">{emptyMessage}</p>
+            ) : (
+                children
+            )}
         </div>
     );
 }

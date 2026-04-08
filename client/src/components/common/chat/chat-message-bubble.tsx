@@ -40,8 +40,12 @@ export function ChatMessageBubble({
             <div className={cn("max-w-[78%]", isOwnMessage && "items-end")}>
                 {!isOwnMessage && (showRole || variant === "ticket") ? (
                     <div className="mb-1 flex items-center gap-2 px-1">
-                        <p className="text-sm font-semibold text-foreground">{message.senderDisplayName}</p>
-                        {showRole ? <p className="text-sm text-muted-foreground">{message.senderRole}</p> : null}
+                        <p className="text-sm font-semibold text-foreground">
+                            {message.senderDisplayName}
+                        </p>
+                        {showRole ? (
+                            <p className="text-sm text-muted-foreground">{message.senderRole}</p>
+                        ) : null}
                     </div>
                 ) : null}
 
@@ -58,7 +62,12 @@ export function ChatMessageBubble({
                     <p className="whitespace-pre-wrap">{message.content}</p>
                 </div>
 
-                <p className={cn("mt-2 px-1 text-xs text-muted-foreground", isOwnMessage && "text-right")}>
+                <p
+                    className={cn(
+                        "mt-2 px-1 text-xs text-muted-foreground",
+                        isOwnMessage && "text-right",
+                    )}
+                >
                     {formatTime(message.sentAt)}
                 </p>
             </div>

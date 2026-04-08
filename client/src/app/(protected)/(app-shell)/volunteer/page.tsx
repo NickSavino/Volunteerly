@@ -46,7 +46,9 @@ export default function VolunteerDashboardPage() {
     } = useVltDashboardViewModel();
 
     const pathname = usePathname();
-    const fullName = currentVolunteer ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}` : "Loading...";
+    const fullName = currentVolunteer
+        ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
+        : "Loading...";
 
     const [showAllPartners, setShowAllPartners] = useState(false);
 
@@ -136,7 +138,9 @@ export default function VolunteerDashboardPage() {
                         <div className="mb-4 flex items-start justify-between">
                             <div>
                                 <h2 className="font-semibold text-gray-800">Contribution Trends</h2>
-                                <p className="text-xs text-gray-400">Monthly Breakdown of your Volunteer Hours</p>
+                                <p className="text-xs text-gray-400">
+                                    Monthly Breakdown of your Volunteer Hours
+                                </p>
                             </div>
                             <select
                                 value={chartRange}
@@ -153,9 +157,15 @@ export default function VolunteerDashboardPage() {
                                 ))}
                             </select>
                         </div>
-                        <div className="flex items-end justify-between gap-2 px-2" style={{ height: "200px" }}>
+                        <div
+                            className="flex items-end justify-between gap-2 px-2"
+                            style={{ height: "200px" }}
+                        >
                             {chartData.map((h, i) => {
-                                const heightPct = Math.max(Math.round((h / maxHours) * 100), h > 0 ? 4 : 0);
+                                const heightPct = Math.max(
+                                    Math.round((h / maxHours) * 100),
+                                    h > 0 ? 4 : 0,
+                                );
                                 const isLatest = i === chartData.length - 1;
                                 return (
                                     <div
@@ -181,10 +191,15 @@ export default function VolunteerDashboardPage() {
                                                 className={`
                                                     w-full rounded-t-md
                                                     ${h > 0 ? (isLatest ? "bg-yellow-400" : "bg-yellow-200") : "bg-gray-100"}`}
-                                                style={{ height: `${heightPct}%`, minHeight: h > 0 ? "4px" : "2px" }}
+                                                style={{
+                                                    height: `${heightPct}%`,
+                                                    minHeight: h > 0 ? "4px" : "2px",
+                                                }}
                                             />
                                         </div>
-                                        <span className="text-xs text-gray-400">{chartLabels[i]}</span>
+                                        <span className="text-xs text-gray-400">
+                                            {chartLabels[i]}
+                                        </span>
                                     </div>
                                 );
                             })}
@@ -195,7 +210,9 @@ export default function VolunteerDashboardPage() {
                     <div className="rounded-xl border bg-white p-6 shadow-sm">
                         <h2 className="mb-4 font-semibold text-gray-800">Partner Organizations</h2>
                         {partnerOrgs.length === 0 ? (
-                            <p className="py-4 text-center text-sm text-gray-400">No organizations yet.</p>
+                            <p className="py-4 text-center text-sm text-gray-400">
+                                No organizations yet.
+                            </p>
                         ) : (
                             <div className="space-y-3">
                                 {partnerOrgs.map((org) => (
@@ -205,7 +222,9 @@ export default function VolunteerDashboardPage() {
                                             flex w-full items-center gap-3 rounded-lg p-1 text-left
                                             hover:bg-gray-50
                                         "
-                                        onClick={() => router.push(`/volunteer/organizations/${org.id}`)}
+                                        onClick={() =>
+                                            router.push(`/volunteer/organizations/${org.id}`)
+                                        }
                                     >
                                         <div
                                             className="
@@ -226,14 +245,19 @@ export default function VolunteerDashboardPage() {
                                             </p>
                                         </div>
                                         <div className="shrink-0 text-right">
-                                            <p className="text-sm font-semibold text-gray-800">{org.totalHours}h</p>
+                                            <p className="text-sm font-semibold text-gray-800">
+                                                {org.totalHours}h
+                                            </p>
                                             <p className="text-xs text-gray-400">TOTAL</p>
                                         </div>
                                     </button>
                                 ))}
                             </div>
                         )}
-                        <button className="mt-5 w-full rounded-lg border py-2" onClick={() => setShowAllPartners(true)}>
+                        <button
+                            className="mt-5 w-full rounded-lg border py-2"
+                            onClick={() => setShowAllPartners(true)}
+                        >
                             Expand All
                         </button>
                     </div>
@@ -244,7 +268,10 @@ export default function VolunteerDashboardPage() {
                         className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
                         onClick={() => setShowAllPartners(false)}
                     >
-                        <div className="w-full max-w-2xl rounded-xl bg-white p-6" onClick={(e) => e.stopPropagation()}>
+                        <div
+                            className="w-full max-w-2xl rounded-xl bg-white p-6"
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <div className="mb-4 flex justify-between">
                                 <h2 className="text-lg font-semibold">All Partner Organizations</h2>
                                 <button onClick={() => setShowAllPartners(false)}>✕</button>
@@ -306,7 +333,10 @@ export default function VolunteerDashboardPage() {
                             <tbody className="divide-y divide-gray-100">
                                 {opportunities.length === 0 ? (
                                     <tr>
-                                        <td colSpan={7} className="py-8 text-center text-sm text-gray-400">
+                                        <td
+                                            colSpan={7}
+                                            className="py-8 text-center text-sm text-gray-400"
+                                        >
                                             No opportunities found.
                                         </td>
                                     </tr>
@@ -332,9 +362,15 @@ export default function VolunteerDashboardPage() {
                                                     (opp.organization?.orgName ?? "—")
                                                 )}
                                             </td>
-                                            <td className="py-3 pr-4 text-gray-600">{opp.category}</td>
-                                            <td className="py-3 pr-4 text-gray-600">{opp.commitmentLevel}</td>
-                                            <td className="py-3 pr-4 text-gray-800">{opp.hours}h</td>
+                                            <td className="py-3 pr-4 text-gray-600">
+                                                {opp.category}
+                                            </td>
+                                            <td className="py-3 pr-4 text-gray-600">
+                                                {opp.commitmentLevel}
+                                            </td>
+                                            <td className="py-3 pr-4 text-gray-800">
+                                                {opp.hours}h
+                                            </td>
                                             <td className="py-3 pr-4">
                                                 <span
                                                     className={`
@@ -346,11 +382,14 @@ export default function VolunteerDashboardPage() {
                                                 </span>
                                             </td>
                                             <td className="py-3 pr-4 text-gray-500">
-                                                {new Date(opp.updatedAt).toLocaleDateString("en-US", {
-                                                    month: "short",
-                                                    day: "numeric",
-                                                    year: "numeric",
-                                                })}
+                                                {new Date(opp.updatedAt).toLocaleDateString(
+                                                    "en-US",
+                                                    {
+                                                        month: "short",
+                                                        day: "numeric",
+                                                        year: "numeric",
+                                                    },
+                                                )}
                                             </td>
                                             <td className="py-3">
                                                 <button
@@ -359,7 +398,11 @@ export default function VolunteerDashboardPage() {
                                                         font-medium text-black
                                                         hover:bg-yellow-500
                                                     "
-                                                    onClick={() => router.push(`/volunteer/opportunities/${opp.id}`)}
+                                                    onClick={() =>
+                                                        router.push(
+                                                            `/volunteer/opportunities/${opp.id}`,
+                                                        )
+                                                    }
                                                 >
                                                     View More
                                                 </button>
@@ -376,7 +419,9 @@ export default function VolunteerDashboardPage() {
             <SubmitTicketModal
                 open={isTicketModalOpen}
                 onClose={() => setIsTicketModalOpen(false)}
-                onSubmitted={(ticket) => router.push(`/volunteer/messages?conversationId=${ticket.conversationId}`)}
+                onSubmitted={(ticket) =>
+                    router.push(`/volunteer/messages?conversationId=${ticket.conversationId}`)
+                }
             />
         </div>
     );

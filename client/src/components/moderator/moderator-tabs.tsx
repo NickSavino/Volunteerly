@@ -23,8 +23,15 @@ export function ModeratorTabs<T extends string>({
     className,
 }: ModeratorTabProps<T>) {
     return (
-        <Tabs value={activeTab} onValueChange={(value) => onChange(value as T)} className={className}>
-            <TabsList variant="line" className="mb-0 w-full justify-start rounded-none border-b bg-card p-0">
+        <Tabs
+            value={activeTab}
+            onValueChange={(value) => onChange(value as T)}
+            className={className}
+        >
+            <TabsList
+                variant="line"
+                className="mb-0 w-full justify-start rounded-none border-b bg-card p-0"
+            >
                 {tabs.map(({ key, label }) => (
                     <TabsTrigger
                         key={key}

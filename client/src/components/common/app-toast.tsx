@@ -18,7 +18,8 @@ type ToastContentProps = {
 };
 
 function ToastContent({ id, kind, title, message }: ToastContentProps) {
-    const accent = kind === "success" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive";
+    const accent =
+        kind === "success" ? "border-l-4 border-l-success" : "border-l-4 border-l-destructive";
 
     const Icon = kind === "success" ? CheckCircle2 : AlertCircle;
     const iconBg = kind === "success" ? "bg-success" : "bg-destructive";

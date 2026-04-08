@@ -35,7 +35,13 @@ function DetailRow({ label, value }: { label: string; value: string }) {
     );
 }
 
-export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onApply }: OppDetailModalProps) {
+export function OpportunityDetailModal({
+    opp,
+    matchPct,
+    hasApplied,
+    onClose,
+    onApply,
+}: OppDetailModalProps) {
     const router = useRouter();
 
     if (!opp) return null;
@@ -126,10 +132,14 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                         >
                             {opp.organization?.orgName ?? "—"}
                         </button>
-                        <p className="text-sm text-muted-foreground">{opp.organization?.hqAdr ?? ""}</p>
+                        <p className="text-sm text-muted-foreground">
+                            {opp.organization?.hqAdr ?? ""}
+                        </p>
                     </div>
                     <div className="ml-auto flex flex-col items-end gap-1.5">
-                        <span className={cn("rounded-full px-3 py-1 text-sm font-semibold", matchCls)}>
+                        <span
+                            className={cn("rounded-full px-3 py-1 text-sm font-semibold", matchCls)}
+                        >
                             {matchPct}% Match
                         </span>
                         {hasApplied && (
@@ -203,13 +213,17 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                 )}
 
                 <div>
-                    <h3 className="mb-2 text-sm font-semibold text-foreground">About This Opportunity</h3>
+                    <h3 className="mb-2 text-sm font-semibold text-foreground">
+                        About This Opportunity
+                    </h3>
                     <p className="text-sm/relaxed text-muted-foreground">{opp.description}</p>
                 </div>
 
                 {opp.candidateDesc && (
                     <div>
-                        <h3 className="mb-2 text-sm font-semibold text-foreground">Ideal Candidate</h3>
+                        <h3 className="mb-2 text-sm font-semibold text-foreground">
+                            Ideal Candidate
+                        </h3>
                         <p className="text-sm/relaxed text-muted-foreground">{opp.candidateDesc}</p>
                     </div>
                 )}

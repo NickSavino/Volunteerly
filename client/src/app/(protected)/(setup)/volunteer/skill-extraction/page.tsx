@@ -26,7 +26,8 @@ export default function SkillExtractionPage() {
                         <p className="mt-1 text-muted-foreground">
                             We&apos;ve finished extracting your skills from your profile.
                             <br />
-                            Please verify your skills before proceeding. Click the × to remove any incorrect skills.
+                            Please verify your skills before proceeding. Click the × to remove any
+                            incorrect skills.
                         </p>
                         {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
                     </CardContent>

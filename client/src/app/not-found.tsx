@@ -75,8 +75,8 @@ export default function NotFound() {
                                 sm:text-lg
                             "
                             >
-                                The page you were looking for does not exist, may have moved, or the link was
-                                incomplete.
+                                The page you were looking for does not exist, may have moved, or the
+                                link was incomplete.
                             </p>
 
                             <div className="flex flex-wrap gap-3 pt-2">
@@ -84,7 +84,12 @@ export default function NotFound() {
                                     <Link href="/">Go Home</Link>
                                 </Button>
 
-                                <Button asChild variant="outline" size="lg" className="cursor-pointer">
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="lg"
+                                    className="cursor-pointer"
+                                >
                                     <Link href="/login">Go to Login</Link>
                                 </Button>
                             </div>

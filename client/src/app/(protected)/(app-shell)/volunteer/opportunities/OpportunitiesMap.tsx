@@ -42,7 +42,8 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
             if (!mapRef.current || mapInstance.current) return;
 
             const L = LeafletModule.default;
-            const defaultIconPrototype = L.Icon.Default.prototype as typeof L.Icon.Default.prototype & {
+            const defaultIconPrototype = L.Icon.Default
+                .prototype as typeof L.Icon.Default.prototype & {
                 _getIconUrl?: string;
             };
 

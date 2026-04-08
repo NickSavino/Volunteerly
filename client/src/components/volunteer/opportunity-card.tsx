@@ -40,7 +40,11 @@ function MatchBadge({ pct }: { pct: number }) {
               ? "bg-secondary text-primary"
               : "bg-muted text-muted-foreground";
 
-    return <span className={cn("shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold", cls)}>{pct}% Match</span>;
+    return (
+        <span className={cn("shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold", cls)}>
+            {pct}% Match
+        </span>
+    );
 }
 
 export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick }: OppCardProps) {

@@ -10,7 +10,16 @@ import {
     CurrentVolunteer,
     CurrentVolunteerSchema,
 } from "@volunteerly/shared";
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+    createContext,
+    ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { api } from "@/lib/api";
 import { useAuth } from "./auth-provider";
 
@@ -36,7 +45,9 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
 
     const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
     const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | null>(null);
-    const [currentOrganization, setCurrentOrganization] = useState<CurrentOrganization | null>(null);
+    const [currentOrganization, setCurrentOrganization] = useState<CurrentOrganization | null>(
+        null,
+    );
     const [currentModerator, setCurrentModerator] = useState<CurrentModerator | null>(null);
 
     const requestIdRef = useRef(0);

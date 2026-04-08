@@ -8,7 +8,10 @@ const mockPrisma = {
 
 jest.mock("../../src/lib/prisma.js", () => ({ prisma: mockPrisma }));
 
-import { createCurrentModerator, getModeratorDashboardSummary } from "../../src/services/moderator-service.js";
+import {
+    createCurrentModerator,
+    getModeratorDashboardSummary,
+} from "../../src/services/moderator-service.js";
 
 describe("moderator-service", () => {
     beforeEach(() => {

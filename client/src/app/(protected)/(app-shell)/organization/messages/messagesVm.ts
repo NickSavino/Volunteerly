@@ -12,8 +12,12 @@ export function useOrganizationMessagesViewModel() {
     const { currentUser, currentOrganization } = useAppSession();
 
     const [conversations, setConversations] = useState<ChatConversationList>([]);
-    const [selectedConversationId, setSelectedConversationId] = useState<string | undefined>(undefined);
-    const [selectedConversation, setSelectedConversation] = useState<ChatConversationDetail | null>(null);
+    const [selectedConversationId, setSelectedConversationId] = useState<string | undefined>(
+        undefined,
+    );
+    const [selectedConversation, setSelectedConversation] = useState<ChatConversationDetail | null>(
+        null,
+    );
     const [messageDraft, setMessageDraft] = useState("");
     const [loadingData, setLoadingData] = useState(true);
     const [sending, setSending] = useState(false);
@@ -32,7 +36,8 @@ export function useOrganizationMessagesViewModel() {
                 setConversations(list);
 
                 const preferredId =
-                    requestedConversationId && list.some((conversation) => conversation.id === requestedConversationId)
+                    requestedConversationId &&
+                    list.some((conversation) => conversation.id === requestedConversationId)
                         ? requestedConversationId
                         : list[0]?.id;
 
@@ -85,7 +90,9 @@ export function useOrganizationMessagesViewModel() {
             setSending(true);
             setError(null);
 
-            const latestDetail = await api<ChatConversationDetail>(`/chat/${selectedConversationId}`);
+            const latestDetail = await api<ChatConversationDetail>(
+                `/chat/${selectedConversationId}`,
+            );
 
             setSelectedConversation(latestDetail);
 
@@ -109,7 +116,8 @@ export function useOrganizationMessagesViewModel() {
         } catch (err) {
             console.error(err);
 
-            const isClosedTicketError = err instanceof Error && err.message.includes("Replies are disabled");
+            const isClosedTicketError =
+                err instanceof Error && err.message.includes("Replies are disabled");
 
             if (isClosedTicketError) {
                 markSelectedTicketClosed();
@@ -123,12 +131,15 @@ export function useOrganizationMessagesViewModel() {
     }
 
     const headerName = useMemo(() => {
-        return selectedConversation?.participants.find((participant) => participant.userId !== currentUser?.id)
-            ?.displayName;
+        return selectedConversation?.participants.find(
+            (participant) => participant.userId !== currentUser?.id,
+        )?.displayName;
     }, [selectedConversation, currentUser?.id]);
 
     const selectedOtherParticipant = useMemo(() => {
-        return selectedConversation?.participants.find((participant) => participant.userId !== currentUser?.id);
+        return selectedConversation?.participants.find(
+            (participant) => participant.userId !== currentUser?.id,
+        );
     }, [selectedConversation, currentUser?.id]);
 
     const isTicketConversation = selectedConversation?.kind === "TICKET";
@@ -167,7 +178,9 @@ export function useOrganizationMessagesViewModel() {
     const threadMeta = useMemo(() => {
         if (selectedConversation?.kind !== "TICKET") return undefined;
 
-        const shortId = (selectedConversation.ticketId ?? selectedConversation.id).slice(-8).toUpperCase();
+        const shortId = (selectedConversation.ticketId ?? selectedConversation.id)
+            .slice(-8)
+            .toUpperCase();
 
         const statusLabel =
             selectedConversation.ticketStatus === "CLOSED"

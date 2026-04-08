@@ -62,7 +62,8 @@ export function useSignUpViewModel() {
                     lastName: lName,
                 });
 
-                const volunteerResult = await VolunteerService.update_create_Volunteer(createdVolunteer);
+                const volunteerResult =
+                    await VolunteerService.update_create_Volunteer(createdVolunteer);
 
                 if (!volunteerResult.success) {
                     console.error("Failed to create volunteer:", volunteerResult.error);
@@ -85,7 +86,10 @@ export function useSignUpViewModel() {
             }
 
             if (data.session) {
-                const nextRoute = role === "VOLUNTEER" ? "/volunteer/experience-input" : "/organization/application";
+                const nextRoute =
+                    role === "VOLUNTEER"
+                        ? "/volunteer/experience-input"
+                        : "/organization/application";
 
                 setPendingRoute(nextRoute);
                 return;

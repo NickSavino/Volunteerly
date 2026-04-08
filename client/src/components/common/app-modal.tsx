@@ -3,7 +3,13 @@
 import { X } from "lucide-react";
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 type AppModalProps = {
     open: boolean;
@@ -65,10 +71,17 @@ export function AppModal({
                     </DialogClose>
                 </DialogHeader>
 
-                <div className={cn("min-h-0 flex-1 overflow-y-auto px-6 py-5", bodyClassName)}>{children}</div>
+                <div className={cn("min-h-0 flex-1 overflow-y-auto px-6 py-5", bodyClassName)}>
+                    {children}
+                </div>
 
                 {footer ? (
-                    <div className={cn("flex items-center justify-between border border-t px-6 py-4", footerClassName)}>
+                    <div
+                        className={cn(
+                            "flex items-center justify-between border border-t px-6 py-4",
+                            footerClassName,
+                        )}
+                    >
                         {footer}
                     </div>
                 ) : null}

@@ -64,8 +64,9 @@ export default function LoginPage() {
                             AI-Powered Matching for Skilled Volunteering
                         </h3>
                         <p className="text-lg text-muted">
-                            &quot;Through Volunteerly, we were able to find volunteers for our most complex tasks,
-                            allowing us to devote more funds to helping our cause.&quot;
+                            &quot;Through Volunteerly, we were able to find volunteers for our most
+                            complex tasks, allowing us to devote more funds to helping our
+                            cause.&quot;
                         </p>
                         <div className="flex items-center gap-3">
                             <Avatar>
@@ -136,9 +137,15 @@ export default function LoginPage() {
                                             />
                                         </div>
 
-                                        {error ? <p className="text-sm text-red-500">{error}</p> : null}
+                                        {error ? (
+                                            <p className="text-sm text-red-500">{error}</p>
+                                        ) : null}
 
-                                        <Button type="submit" className="w-full cursor-pointer" disabled={submitting}>
+                                        <Button
+                                            type="submit"
+                                            className="w-full cursor-pointer"
+                                            disabled={submitting}
+                                        >
                                             {submitting ? "Creating account..." : "Sign up"}
                                         </Button>
 
@@ -193,9 +200,15 @@ export default function LoginPage() {
                                             />
                                         </div>
 
-                                        {error ? <p className="text-sm text-red-500">{error}</p> : null}
+                                        {error ? (
+                                            <p className="text-sm text-red-500">{error}</p>
+                                        ) : null}
 
-                                        <Button type="submit" className="w-full cursor-pointer" disabled={submitting}>
+                                        <Button
+                                            type="submit"
+                                            className="w-full cursor-pointer"
+                                            disabled={submitting}
+                                        >
                                             {submitting ? "Creating account..." : "Sign up"}
                                         </Button>
 

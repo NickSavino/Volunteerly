@@ -25,9 +25,20 @@ import { useOrgProfileViewModel } from "./orgProfileVm";
 import { Field } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+    InputGroupText,
+} from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { UserService } from "@/services/UserService";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { LoadingScreen } from "@/components/common/loading-screen";
@@ -80,7 +91,11 @@ export default function OrgProfilePage() {
                 md:h-[calc(100vh-64px)] md:px-10
             "
             >
-                <Button variant="ghost" className="cursor-pointer pb-8" onClick={() => router.back()}>
+                <Button
+                    variant="ghost"
+                    className="cursor-pointer pb-8"
+                    onClick={() => router.back()}
+                >
                     <ArrowLeft className="size-4" />
                     Back
                 </Button>
@@ -101,7 +116,10 @@ export default function OrgProfilePage() {
                         <div className="relative">
                             <Avatar className="size-20">
                                 <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")} />
-                                <AvatarFallback> {getAvatarFallback(currentOrg?.orgName)}</AvatarFallback>
+                                <AvatarFallback>
+                                    {" "}
+                                    {getAvatarFallback(currentOrg?.orgName)}
+                                </AvatarFallback>
                             </Avatar>
                             <Button
                                 className="
@@ -123,7 +141,8 @@ export default function OrgProfilePage() {
                         <div>
                             <h1 className="text-xl font-bold text-white">{currentOrg?.orgName}</h1>
                             <p className="text-sm font-bold text-white">
-                                Member Since {new Date(currentOrg?.createdAt || "").toLocaleDateString()}
+                                Member Since{" "}
+                                {new Date(currentOrg?.createdAt || "").toLocaleDateString()}
                             </p>
                             {currentOrg?.causeCategory && (
                                 <span
@@ -164,11 +183,17 @@ export default function OrgProfilePage() {
                                         {[1, 2, 3, 4, 5].map((star) => {
                                             const fill = Math.min(
                                                 1,
-                                                Math.max(0, (reviewSummary.avgRating ?? 0) - (star - 1)),
+                                                Math.max(
+                                                    0,
+                                                    (reviewSummary.avgRating ?? 0) - (star - 1),
+                                                ),
                                             );
                                             const pct = Math.round(fill * 100);
                                             return (
-                                                <span key={star} className="relative text-2xl leading-none">
+                                                <span
+                                                    key={star}
+                                                    className="relative text-2xl leading-none"
+                                                >
                                                     <span className="text-gray-500">★</span>
                                                     <span
                                                         className="
@@ -185,7 +210,9 @@ export default function OrgProfilePage() {
                                     </Button>
                                 </HoverCardTrigger>
                                 <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
-                                    <div className="font-semibold">Rating {reviewSummary.avgRating || 0} / 5</div>
+                                    <div className="font-semibold">
+                                        Rating {reviewSummary.avgRating || 0} / 5
+                                    </div>
                                     <div>Based on {reviewSummary.totalReviews} Review(s)</div>
                                 </HoverCardContent>
                             </HoverCard>
@@ -233,9 +260,13 @@ export default function OrgProfilePage() {
                             <form onSubmit={handleSubmit}>
                                 <CardContent className="space-y-3">
                                     <Field>
-                                        <Label className="text-lg text-muted-foreground">Mission Statement</Label>
+                                        <Label className="text-lg text-muted-foreground">
+                                            Mission Statement
+                                        </Label>
                                         {!editing ? (
-                                            <Label className="text-md">{currentOrg?.missionStatement}</Label>
+                                            <Label className="text-md">
+                                                {currentOrg?.missionStatement}
+                                            </Label>
                                         ) : (
                                             <Textarea
                                                 id="mission_statement"
@@ -243,7 +274,12 @@ export default function OrgProfilePage() {
                                                 value={currentOrg?.missionStatement}
                                                 onChange={(e) =>
                                                     setCurrentOrg((prev) =>
-                                                        prev ? { ...prev, missionStatement: e.target.value } : prev,
+                                                        prev
+                                                            ? {
+                                                                  ...prev,
+                                                                  missionStatement: e.target.value,
+                                                              }
+                                                            : prev,
                                                     )
                                                 }
                                                 required
@@ -257,9 +293,13 @@ export default function OrgProfilePage() {
                                     "
                                     >
                                         <Field>
-                                            <Label className="text-lg text-muted-foreground">Cause Category</Label>
+                                            <Label className="text-lg text-muted-foreground">
+                                                Cause Category
+                                            </Label>
                                             {!editing ? (
-                                                <Label className="text-md">{currentOrg?.causeCategory}</Label>
+                                                <Label className="text-md">
+                                                    {currentOrg?.causeCategory}
+                                                </Label>
                                             ) : (
                                                 <Input
                                                     id="causeCategory"
@@ -268,7 +308,12 @@ export default function OrgProfilePage() {
                                                     value={currentOrg?.causeCategory}
                                                     onChange={(e) =>
                                                         setCurrentOrg((prev) =>
-                                                            prev ? { ...prev, causeCategory: e.target.value } : prev,
+                                                            prev
+                                                                ? {
+                                                                      ...prev,
+                                                                      causeCategory: e.target.value,
+                                                                  }
+                                                                : prev,
                                                         )
                                                     }
                                                     required
@@ -276,7 +321,9 @@ export default function OrgProfilePage() {
                                             )}
                                         </Field>
                                         <Field>
-                                            <Label className="text-lg text-muted-foreground">Website</Label>
+                                            <Label className="text-lg text-muted-foreground">
+                                                Website
+                                            </Label>
                                             {!editing ? (
                                                 <Label className="text-md">
                                                     <a
@@ -298,7 +345,12 @@ export default function OrgProfilePage() {
                                                         value={currentOrg?.website}
                                                         onChange={(e) =>
                                                             setCurrentOrg((prev) =>
-                                                                prev ? { ...prev, website: e.target.value } : prev,
+                                                                prev
+                                                                    ? {
+                                                                          ...prev,
+                                                                          website: e.target.value,
+                                                                      }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -311,14 +363,17 @@ export default function OrgProfilePage() {
                                         </Field>
                                     </div>
                                     <Field>
-                                        <Label className="text-lg text-muted-foreground">Address</Label>
+                                        <Label className="text-lg text-muted-foreground">
+                                            Address
+                                        </Label>
                                         {!editing ? (
                                             <Label className="text-md">{currentOrg?.hqAdr}</Label>
                                         ) : (
                                             <div className="space-y-3">
                                                 <Field>
                                                     <Label htmlFor="address">
-                                                        Street Address<span className="text-destructive">*</span>
+                                                        Street Address
+                                                        <span className="text-destructive">*</span>
                                                     </Label>
                                                     <Input
                                                         id="address"
@@ -327,7 +382,12 @@ export default function OrgProfilePage() {
                                                         value={address.streetAdr}
                                                         onChange={(e) =>
                                                             setAddress((prev) =>
-                                                                prev ? { ...prev, streetAdr: e.target.value } : prev,
+                                                                prev
+                                                                    ? {
+                                                                          ...prev,
+                                                                          streetAdr: e.target.value,
+                                                                      }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -335,7 +395,8 @@ export default function OrgProfilePage() {
                                                 </Field>
                                                 <Field>
                                                     <Label htmlFor="city">
-                                                        City<span className="text-destructive">*</span>
+                                                        City
+                                                        <span className="text-destructive">*</span>
                                                     </Label>
                                                     <Input
                                                         id="city"
@@ -344,7 +405,12 @@ export default function OrgProfilePage() {
                                                         value={address.city}
                                                         onChange={(e) =>
                                                             setAddress((prev) =>
-                                                                prev ? { ...prev, city: e.target.value } : prev,
+                                                                prev
+                                                                    ? {
+                                                                          ...prev,
+                                                                          city: e.target.value,
+                                                                      }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -353,13 +419,16 @@ export default function OrgProfilePage() {
 
                                                 <Field>
                                                     <Label htmlFor="province">
-                                                        Province<span className="text-destructive">*</span>
+                                                        Province
+                                                        <span className="text-destructive">*</span>
                                                     </Label>
                                                     <Select
                                                         value={address.province}
                                                         onValueChange={(e) =>
                                                             setAddress((prev) =>
-                                                                prev ? { ...prev, province: e } : prev,
+                                                                prev
+                                                                    ? { ...prev, province: e }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -368,28 +437,53 @@ export default function OrgProfilePage() {
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            <SelectItem value="AB">Alberta</SelectItem>
-                                                            <SelectItem value="BC">British Columbia</SelectItem>
-                                                            <SelectItem value="MB">Manitoba</SelectItem>
-                                                            <SelectItem value="NB">New Brunswick</SelectItem>
+                                                            <SelectItem value="AB">
+                                                                Alberta
+                                                            </SelectItem>
+                                                            <SelectItem value="BC">
+                                                                British Columbia
+                                                            </SelectItem>
+                                                            <SelectItem value="MB">
+                                                                Manitoba
+                                                            </SelectItem>
+                                                            <SelectItem value="NB">
+                                                                New Brunswick
+                                                            </SelectItem>
                                                             <SelectItem value="NL">
                                                                 Newfoundland and Labrador
                                                             </SelectItem>
-                                                            <SelectItem value="NS">Nova Scotia</SelectItem>
-                                                            <SelectItem value="ON">Ontario</SelectItem>
-                                                            <SelectItem value="PE">Prince Edward Island</SelectItem>
-                                                            <SelectItem value="QC">Quebec</SelectItem>
-                                                            <SelectItem value="SK">Saskatchewan</SelectItem>
-                                                            <SelectItem value="NT">Northwest Territories</SelectItem>
-                                                            <SelectItem value="NU">Nunavut</SelectItem>
-                                                            <SelectItem value="YT">Yukon</SelectItem>
+                                                            <SelectItem value="NS">
+                                                                Nova Scotia
+                                                            </SelectItem>
+                                                            <SelectItem value="ON">
+                                                                Ontario
+                                                            </SelectItem>
+                                                            <SelectItem value="PE">
+                                                                Prince Edward Island
+                                                            </SelectItem>
+                                                            <SelectItem value="QC">
+                                                                Quebec
+                                                            </SelectItem>
+                                                            <SelectItem value="SK">
+                                                                Saskatchewan
+                                                            </SelectItem>
+                                                            <SelectItem value="NT">
+                                                                Northwest Territories
+                                                            </SelectItem>
+                                                            <SelectItem value="NU">
+                                                                Nunavut
+                                                            </SelectItem>
+                                                            <SelectItem value="YT">
+                                                                Yukon
+                                                            </SelectItem>
                                                         </SelectContent>
                                                     </Select>
                                                 </Field>
 
                                                 <Field>
                                                     <Label htmlFor="postalCode">
-                                                        Postal Code<span className="text-destructive">*</span>
+                                                        Postal Code
+                                                        <span className="text-destructive">*</span>
                                                     </Label>
                                                     <Input
                                                         id="postalCode"
@@ -398,7 +492,13 @@ export default function OrgProfilePage() {
                                                         value={address.postalCode}
                                                         onChange={(e) =>
                                                             setAddress((prev) =>
-                                                                prev ? { ...prev, postalCode: e.target.value } : prev,
+                                                                prev
+                                                                    ? {
+                                                                          ...prev,
+                                                                          postalCode:
+                                                                              e.target.value,
+                                                                      }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -416,25 +516,30 @@ export default function OrgProfilePage() {
                                         md:grid-cols-2
                                     "
                                     >
-                                        {(!currentOrg?.impactHighlights || currentOrg?.impactHighlights.length == 0) &&
+                                        {(!currentOrg?.impactHighlights ||
+                                            currentOrg?.impactHighlights.length == 0) &&
                                             !editing && <p>No Highlights</p>}
                                         {!editing ? (
                                             <>
-                                                {currentOrg?.impactHighlights?.map((item, index) => {
-                                                    const [[key, value]] = Object.entries(item);
-                                                    return (
-                                                        <Field key={index}>
-                                                            <Label
-                                                                className="
+                                                {currentOrg?.impactHighlights?.map(
+                                                    (item, index) => {
+                                                        const [[key, value]] = Object.entries(item);
+                                                        return (
+                                                            <Field key={index}>
+                                                                <Label
+                                                                    className="
                                                                 text-lg text-muted-foreground
                                                             "
-                                                            >
-                                                                {key}
-                                                            </Label>
-                                                            <Label className="text-md">{value as string}</Label>
-                                                        </Field>
-                                                    );
-                                                })}
+                                                                >
+                                                                    {key}
+                                                                </Label>
+                                                                <Label className="text-md">
+                                                                    {value as string}
+                                                                </Label>
+                                                            </Field>
+                                                        );
+                                                    },
+                                                )}
                                             </>
                                         ) : (
                                             <>
@@ -525,7 +630,11 @@ export default function OrgProfilePage() {
                                 </CardContent>
                                 {editing && (
                                     <CardFooter className="cursor-pointer pt-5">
-                                        <Button type="submit" variant={"outline"} className="w-full cursor-pointer">
+                                        <Button
+                                            type="submit"
+                                            variant={"outline"}
+                                            className="w-full cursor-pointer"
+                                        >
                                             Save
                                         </Button>
                                     </CardFooter>
@@ -545,26 +654,33 @@ export default function OrgProfilePage() {
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 <Field>
-                                    <Label className="text-lg text-muted-foreground">Charity Number</Label>
+                                    <Label className="text-lg text-muted-foreground">
+                                        Charity Number
+                                    </Label>
                                     <Label className="text-sm">{currentOrg?.charityNum}</Label>
                                 </Field>
 
                                 <Field>
-                                    <Label className="text-lg text-muted-foreground">Primary Contact</Label>
+                                    <Label className="text-lg text-muted-foreground">
+                                        Primary Contact
+                                    </Label>
                                     <Label className="text-sm">
-                                        {currentOrg?.contactName}, {currentOrg?.contactNum}, {currentOrg?.contactEmail}
+                                        {currentOrg?.contactName}, {currentOrg?.contactNum},{" "}
+                                        {currentOrg?.contactEmail}
                                     </Label>
                                 </Field>
                                 <Field>
-                                    <Label className="text-lg text-muted-foreground">Verification Document</Label>
+                                    <Label className="text-lg text-muted-foreground">
+                                        Verification Document
+                                    </Label>
                                     <Button onClick={viewSubmittedDoc} className="cursor-pointer">
                                         View Document
                                     </Button>
                                 </Field>
                                 <hr className="mx-2 border-gray-300" />
                                 <CardDescription>
-                                    Due to platform integrity, our moderator team can help you update private
-                                    information.
+                                    Due to platform integrity, our moderator team can help you
+                                    update private information.
                                 </CardDescription>
                                 <Button
                                     onClick={() => setIsTicketModalOpen(true)}
@@ -584,7 +700,9 @@ export default function OrgProfilePage() {
             <SubmitTicketModal
                 open={isTicketModalOpen}
                 onClose={() => setIsTicketModalOpen(false)}
-                onSubmitted={(ticket) => router.push(`/organization/messages?conversationId=${ticket.conversationId}`)}
+                onSubmitted={(ticket) =>
+                    router.push(`/organization/messages?conversationId=${ticket.conversationId}`)
+                }
             />
         </div>
     );

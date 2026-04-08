@@ -106,14 +106,22 @@ export default function OrgOpportunitiesPage() {
                                                     </Avatar>
                                                 </div>
                                                 <h3 className="text-lg">No Posted Opportunities</h3>
-                                                <p>Posted Opportunities awaiting selection show up here.</p>
+                                                <p>
+                                                    Posted Opportunities awaiting selection show up
+                                                    here.
+                                                </p>
                                             </CardContent>
                                         ) : (
                                             filteredOpportunities.map((opp) => (
-                                                <Item key={opp.id} variant="outline" className="mb-2">
+                                                <Item
+                                                    key={opp.id}
+                                                    variant="outline"
+                                                    className="mb-2"
+                                                >
                                                     <ItemContent>
                                                         <ItemTitle>
-                                                            {opp.name} <Badge>{opp.status}</Badge>{" "}
+                                                            {opp.name}{" "}
+                                                            <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
                                                         <ItemDescription
                                                             className="
@@ -121,7 +129,8 @@ export default function OrgOpportunitiesPage() {
                                                         "
                                                         >
                                                             <span className="flex items-center gap-1">
-                                                                <Users /> {opp._count?.applications} Applicant(s)
+                                                                <Users /> {opp._count?.applications}{" "}
+                                                                Applicant(s)
                                                             </span>
 
                                                             <span className="flex items-center gap-1">
@@ -141,7 +150,9 @@ export default function OrgOpportunitiesPage() {
                                                             className="cursor-pointer"
                                                             size="sm"
                                                             onClick={async () => {
-                                                                router.push(`/organization/opportunities/${opp.id}`);
+                                                                router.push(
+                                                                    `/organization/opportunities/${opp.id}`,
+                                                                );
                                                             }}
                                                         >
                                                             View Applications
@@ -165,15 +176,22 @@ export default function OrgOpportunitiesPage() {
                                                         <AvatarFallback></AvatarFallback>
                                                     </Avatar>
                                                 </div>
-                                                <h3 className="text-lg">No In-Progress Opportunities</h3>
+                                                <h3 className="text-lg">
+                                                    No In-Progress Opportunities
+                                                </h3>
                                                 <p> In-progress opportunities show up here.</p>
                                             </CardContent>
                                         ) : (
                                             filteredOpportunities.map((opp) => (
-                                                <Item key={opp.id} variant="outline" className="mb-2">
+                                                <Item
+                                                    key={opp.id}
+                                                    variant="outline"
+                                                    className="mb-2"
+                                                >
                                                     <ItemContent>
                                                         <ItemTitle>
-                                                            {opp.name} <Badge>{opp.status}</Badge>{" "}
+                                                            {opp.name}{" "}
+                                                            <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
                                                         <ItemDescription
                                                             className="
@@ -181,7 +199,8 @@ export default function OrgOpportunitiesPage() {
                                                         "
                                                         >
                                                             <span className="flex items-center gap-1">
-                                                                <PersonStanding /> {opp.volunteer?.firstName}{" "}
+                                                                <PersonStanding />{" "}
+                                                                {opp.volunteer?.firstName}{" "}
                                                                 {opp.volunteer?.lastName}
                                                             </span>
 
@@ -200,7 +219,9 @@ export default function OrgOpportunitiesPage() {
                                                             className="cursor-pointer"
                                                             size="sm"
                                                             onClick={async () => {
-                                                                router.push(`/organization/opportunities/${opp.id}`);
+                                                                router.push(
+                                                                    `/organization/opportunities/${opp.id}`,
+                                                                );
                                                             }}
                                                         >
                                                             View Progress
@@ -224,15 +245,22 @@ export default function OrgOpportunitiesPage() {
                                                         <AvatarFallback></AvatarFallback>
                                                     </Avatar>
                                                 </div>
-                                                <h3 className="text-lg">No Completed Opportunities</h3>
+                                                <h3 className="text-lg">
+                                                    No Completed Opportunities
+                                                </h3>
                                                 <p>Completed Opportunities show up here.</p>
                                             </CardContent>
                                         ) : (
                                             filteredOpportunities.map((opp) => (
-                                                <Item key={opp.id} variant="outline" className="mb-2">
+                                                <Item
+                                                    key={opp.id}
+                                                    variant="outline"
+                                                    className="mb-2"
+                                                >
                                                     <ItemContent>
                                                         <ItemTitle>
-                                                            {opp.name} <Badge>{opp.status}</Badge>{" "}
+                                                            {opp.name}{" "}
+                                                            <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
                                                         <ItemDescription
                                                             className="
@@ -240,7 +268,8 @@ export default function OrgOpportunitiesPage() {
                                                         "
                                                         >
                                                             <span className="flex items-center gap-1">
-                                                                <PersonStanding /> {opp.volunteer?.firstName}{" "}
+                                                                <PersonStanding />{" "}
+                                                                {opp.volunteer?.firstName}{" "}
                                                                 {opp.volunteer?.lastName}
                                                             </span>
 
@@ -259,7 +288,9 @@ export default function OrgOpportunitiesPage() {
                                                             className="cursor-pointer"
                                                             size="sm"
                                                             onClick={async () => {
-                                                                router.push(`/organization/opportunities/${opp.id}`);
+                                                                router.push(
+                                                                    `/organization/opportunities/${opp.id}`,
+                                                                );
                                                             }}
                                                         >
                                                             View History

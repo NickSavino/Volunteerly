@@ -106,7 +106,11 @@ export default function ModeratorTicketsPage() {
                     onChange={filters.handleTabChange}
                 />
 
-                <ModeratorListContainer isEmpty={data.isEmpty} emptyMessage="No Tickets Found." className="p-6">
+                <ModeratorListContainer
+                    isEmpty={data.isEmpty}
+                    emptyMessage="No Tickets Found."
+                    className="p-6"
+                >
                     <div className="space-y-5">
                         {data.rows.map((ticket) => (
                             <div
@@ -171,10 +175,14 @@ export default function ModeratorTicketsPage() {
                                         </div>
 
                                         <div>
-                                            <p className="text-2xl font-bold text-foreground">{ticket.title}</p>
+                                            <p className="text-2xl font-bold text-foreground">
+                                                {ticket.title}
+                                            </p>
 
                                             <p className="mt-2 text-sm text-muted-foreground">
-                                                <span className="font-semibold text-foreground">Time Open:</span>{" "}
+                                                <span className="font-semibold text-foreground">
+                                                    Time Open:
+                                                </span>{" "}
                                                 {getTimeOpen(ticket.createdAt)}
                                             </p>
 

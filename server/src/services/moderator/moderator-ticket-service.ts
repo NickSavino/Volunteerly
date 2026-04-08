@@ -1,7 +1,10 @@
 import { ModeratorTicketDetail, ModeratorTicketList } from "@volunteerly/shared";
 import { prisma } from "../../lib/prisma.js";
 import { getDisplayName } from "../helpers/service-utils.js";
-import { moderatorTicketDetailInclude, ModeratorTicketDetailRecord } from "./moderator-ticket.queries.js";
+import {
+    moderatorTicketDetailInclude,
+    ModeratorTicketDetailRecord,
+} from "./moderator-ticket.queries.js";
 import { ensureTicketConversation } from "../ticket-service.js";
 
 function toModeratorTicketDetail(ticket: ModeratorTicketDetailRecord): ModeratorTicketDetail {
@@ -80,7 +83,9 @@ export async function getModeratorTicketList(): Promise<ModeratorTicketList> {
     }));
 }
 
-export async function getModeratorTicketDetail(ticketId: string): Promise<ModeratorTicketDetail | null> {
+export async function getModeratorTicketDetail(
+    ticketId: string,
+): Promise<ModeratorTicketDetail | null> {
     const ticket = await prisma.ticket.findUnique({
         where: { id: ticketId },
         ...moderatorTicketDetailInclude,
@@ -89,7 +94,10 @@ export async function getModeratorTicketDetail(ticketId: string): Promise<Modera
     return ticket ? toModeratorTicketDetail(ticket) : null;
 }
 
-export async function claimModeratorTicket(ticketId: string, moderatorId: string): Promise<ModeratorTicketDetail> {
+export async function claimModeratorTicket(
+    ticketId: string,
+    moderatorId: string,
+): Promise<ModeratorTicketDetail> {
     await prisma.$transaction(async (tx) => {
         const ticket = await tx.ticket.findUnique({
             where: { id: ticketId },
@@ -134,7 +142,10 @@ export async function claimModeratorTicket(ticketId: string, moderatorId: string
     return detail;
 }
 
-export async function closeModeratorTicket(ticketId: string, moderatorId: string): Promise<ModeratorTicketDetail> {
+export async function closeModeratorTicket(
+    ticketId: string,
+    moderatorId: string,
+): Promise<ModeratorTicketDetail> {
     const ticket = await prisma.ticket.findUnique({
         where: { id: ticketId },
         select: {
