@@ -19,6 +19,10 @@ import {
     getVolunteerSkillCounts
 } from "../services/volunteer-service.js";
 import { prisma } from "../lib/prisma.js";
+import { extractSkillsFromOpportunity } from "../services/groq-service.js";
+import { embedText } from "../services/gemini-service.js";
+
+
 
 export const currentVolunteerRouter = Router();
 
@@ -173,6 +177,50 @@ currentVolunteerRouter.get("/opportunities/match-scores", async (req, res, next)
         console.log("SCORE MAP HERE: ", scoreMap)
 
         res.status(200).json(scoreMap);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/backfill-vectors", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const oppsWithoutVector = await prisma.$queryRaw<{ id: string; name: string; category: string; description: string; candidate_desc: string }[]>`
+            SELECT id, name, category, description, candidate_desc
+            FROM opportunities
+            WHERE skill_vector IS NULL
+            AND status = 'OPEN'
+        `;
+
+        if (oppsWithoutVector.length === 0) {
+            return res.status(200).json({ skipped: true });
+        }
+
+        (async () => {
+            for (const opp of oppsWithoutVector) {
+                try {
+                    const skills = await extractSkillsFromOpportunity(
+                        opp.name,
+                        opp.category,
+                        opp.description,
+                        opp.candidate_desc
+                    );
+                    const allSkills = [...skills.technical, ...skills.nonTechnical].join(", ");
+                    const vector = await embedText(allSkills);
+                    await prisma.$executeRaw`
+                        UPDATE opportunities
+                        SET skill_vector = ${JSON.stringify(vector)}::vector
+                        WHERE id = ${opp.id}
+                    `;
+                } catch (err) {
+                    console.warn(`Failed to backfill vector for opportunity ${opp.id}:`, err);
+                }
+            }
+        })();
+
+        res.status(200).json({ success: true, count: oppsWithoutVector.length });
     } catch (error) {
         next(error);
     }
