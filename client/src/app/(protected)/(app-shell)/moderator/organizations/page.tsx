@@ -26,18 +26,22 @@ export default function ModeratorOrganizationsPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="
+            <main
+                className="
                 mx-auto max-w-7xl px-4 py-8
                 sm:px-6
                 lg:px-8
-            ">
+            "
+            >
                 <ModeratorPageHeader title={page.title} subtitle={page.subtitle} />
 
                 {page.error && (
-                    <p className="
+                    <p
+                        className="
                         mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
                         text-red-600
-                    ">
+                    "
+                    >
                         {page.error}
                     </p>
                 )}
@@ -81,19 +85,23 @@ export default function ModeratorOrganizationsPage() {
                             >
                                 <div className="flex items-center justify-between px-6 py-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="
+                                        <div
+                                            className="
                                             flex size-10 items-center justify-center rounded-full
                                             bg-secondary
-                                        ">
+                                        "
+                                        >
                                             <Building2 className="size-5 text-muted-foreground" />
                                         </div>
 
                                         <div>
                                             <p className="font-medium text-foreground">{org.orgName}</p>
-                                            <div className="
+                                            <div
+                                                className="
                                                 flex items-center gap-3 text-xs
                                                 text-muted-foreground
-                                            ">
+                                            "
+                                            >
                                                 <span>
                                                     Submitted{" "}
                                                     {new Date(org.createdAt).toLocaleDateString("en-US", {
@@ -129,28 +137,34 @@ export default function ModeratorOrganizationsPage() {
                                         )}
 
                                         {org.status === "VERIFIED" && (
-                                            <span className="
+                                            <span
+                                                className="
                                                 rounded-full bg-green-100 px-3 py-1 text-xs
                                                 font-medium text-green-700
-                                            ">
+                                            "
+                                            >
                                                 Approved
                                             </span>
                                         )}
 
                                         {org.status === "REJECTED" && (
-                                            <span className="
+                                            <span
+                                                className="
                                                 rounded-full bg-red-100 px-3 py-1 text-xs
                                                 font-medium text-red-700
-                                            ">
+                                            "
+                                            >
                                                 Rejected
                                             </span>
                                         )}
 
                                         {org.status === "CREATED" && (
-                                            <span className="
+                                            <span
+                                                className="
                                                 rounded-full bg-secondary px-3 py-1 text-xs
                                                 font-medium text-muted-foreground
-                                            ">
+                                            "
+                                            >
                                                 Not Applied
                                             </span>
                                         )}
@@ -201,13 +215,13 @@ export default function ModeratorOrganizationsPage() {
                                 rounded-md px-6 py-2 text-sm font-medium text-foreground
                                 transition-colors
                                 ${
-                                review.allChecked
-                                    ? `
+                                    review.allChecked
+                                        ? `
                                         bg-primary
                                         hover:opacity-90
                                     `
-                                    : "cursor-not-allowed bg-secondary text-muted-foreground"
-                            }
+                                        : "cursor-not-allowed bg-secondary text-muted-foreground"
+                                }
                             `}
                             onClick={review.requestApprove}
                         >
@@ -322,9 +336,11 @@ export default function ModeratorOrganizationsPage() {
 
                             {review.selectedOrg.docId ? (
                                 <div className="flex gap-4">
-                                    <div className="
+                                    <div
+                                        className="
                                         flex flex-col items-center gap-2 rounded-xl border p-4
-                                    ">
+                                    "
+                                    >
                                         <Building2 className="size-8 text-primary" />
                                         <p className="text-xs text-muted-foreground">Document</p>
                                         <a
@@ -374,13 +390,13 @@ export default function ModeratorOrganizationsPage() {
                                 rounded-md px-6 py-2 text-sm font-medium text-foreground
                                 transition-colors
                                 ${
-                                review.rejectionReason.trim()
-                                    ? `
+                                    review.rejectionReason.trim()
+                                        ? `
                                         bg-primary
                                         hover:opacity-90
                                     `
-                                    : "cursor-not-allowed bg-secondary text-muted-foreground"
-                            }
+                                        : "cursor-not-allowed bg-secondary text-muted-foreground"
+                                }
                             `}
                             onClick={review.handleReject}
                         >
@@ -392,9 +408,11 @@ export default function ModeratorOrganizationsPage() {
                 {review.selectedOrg ? (
                     <>
                         <div className="mb-4">
-                            <p className="
+                            <p
+                                className="
                                 text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                            ">
+                            "
+                            >
                                 Target Organization
                             </p>
                             <p className="font-semibold text-foreground">Rejecting: {review.selectedOrg.orgName}</p>

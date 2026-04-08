@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-    ALL_NODE_LABELS,
-    ICON_PATHS,
-    useSkillTreeViewModel,
-    type SkillNode,
-} from "./skillTreeVm";
+import { ALL_NODE_LABELS, ICON_PATHS, useSkillTreeViewModel, type SkillNode } from "./skillTreeVm";
 
 const NODE_W = 88;
 const NODE_H = 88;

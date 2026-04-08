@@ -35,18 +35,26 @@ export default function LoginPage() {
         <div className="min-h-screen">
             <title>Sign Up - Volunteerly</title>
             <Navbar></Navbar>
-            <main className="
+            <main
+                className="
                 flex h-screen flex-col
                 md:h-[calc(100vh-64px)] md:flex-row
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     relative hidden h-screen w-full flex-col overflow-hidden
                     md:flex md:h-full md:w-1/2
-                ">
-                    <img src={tms.src} alt="Preview" className="
+                "
+                >
+                    <img
+                        src={tms.src}
+                        alt="Preview"
+                        className="
                         h-auto w-full
                         md:h-full
-                    " />
+                    "
+                    />
                     <div className="absolute inset-0 w-full bg-black/50"></div>
                     <div className="absolute bottom-20 left-12 text-left">
                         <h1 className="text-4x1 pb-2 font-bold tracking-tight text-muted">
@@ -71,10 +79,12 @@ export default function LoginPage() {
                         </div>
                     </div>
                 </div>
-                <div className="
+                <div
+                    className="
                     flex w-full flex-1 items-center justify-center px-8
                     md:w-1/2 md:justify-around
-                ">
+                "
+                >
                     <Card className="w-full max-w-md min-w-0">
                         <CardHeader>Sign Up</CardHeader>
                         <CardContent>
@@ -142,10 +152,12 @@ export default function LoginPage() {
                                 </TabsContent>
                                 <TabsContent value="ORGANIZATION">
                                     <div>
-                                        <p className="
+                                        <p
+                                            className="
                                             radius-2 my-2 rounded-sm bg-warning p-1 text-center
                                             text-sm text-foreground
-                                        ">
+                                        "
+                                        >
                                             Must Complete Application upon account creation.
                                         </p>
                                     </div>

@@ -86,9 +86,7 @@ export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps
                         placeholder:text-muted-foreground
                         focus:ring-2 focus:ring-ring focus:outline-none
                         disabled:opacity-50
-                        ${
-                        touched && isEmpty ? "border-destructive" : "border-border"
-                    }
+                        ${touched && isEmpty ? "border-destructive" : "border-border"}
                     `}
                 />
                 {touched && isEmpty && (

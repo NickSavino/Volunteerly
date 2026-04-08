@@ -43,10 +43,12 @@ export default function ExperienceInputPage() {
                 </div>
 
                 {/* Resume Upload */}
-                <Card className={`
+                <Card
+                    className={`
                     w-full
                     ${errors.resume ? "border-destructive" : ""}
-                `}>
+                `}
+                >
                     <CardHeader>
                         <CardTitle className="text-base">Resume Upload – Required</CardTitle>
                     </CardHeader>
@@ -55,9 +57,7 @@ export default function ExperienceInputPage() {
                             className={`
                                 flex flex-col items-center justify-center gap-3 rounded-lg border-2
                                 border-dashed p-8
-                                ${
-                                errors.resume ? "border-destructive bg-destructive/5" : "border-muted-foreground/30"
-                            }
+                                ${errors.resume ? "border-destructive bg-destructive/5" : "border-muted-foreground/30"}
                             `}
                         >
                             <p className="font-medium">Upload your Resume</p>
@@ -85,10 +85,12 @@ export default function ExperienceInputPage() {
                 </Card>
 
                 {/* Work Experience */}
-                <Card className={`
+                <Card
+                    className={`
                     w-full
                     ${errors.workExperience ? "border-destructive" : ""}
-                `}>
+                `}
+                >
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle className="text-base">Work Experience</CardTitle>
@@ -114,10 +116,12 @@ export default function ExperienceInputPage() {
                                     </Button>
                                 )}
                                 {i > 0 && <hr className="border-muted" />}
-                                <div className="
+                                <div
+                                    className="
                                     grid grid-cols-1 gap-3
                                     md:grid-cols-2
-                                ">
+                                "
+                                >
                                     <div className="flex flex-col gap-1">
                                         <Label>Job Title</Label>
                                         <Input
@@ -182,10 +186,12 @@ export default function ExperienceInputPage() {
                 </Card>
 
                 {/* Education */}
-                <Card className={`
+                <Card
+                    className={`
                     w-full
                     ${errors.education ? "border-destructive" : ""}
-                `}>
+                `}
+                >
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle className="text-base">Education</CardTitle>

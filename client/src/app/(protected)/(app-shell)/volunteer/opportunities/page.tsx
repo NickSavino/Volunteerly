@@ -75,9 +75,13 @@ function FiltersContent({
     return (
         <>
             <div className="mb-6">
-                <p className="
+                <p
+                    className="
                     mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                ">Roles</p>
+                "
+                >
+                    Roles
+                </p>
                 <div className="space-y-2">
                     {OPPORTUNITY_CATEGORIES.map((cat) => (
                         <label key={cat} className="flex cursor-pointer items-center gap-2">
@@ -94,9 +98,13 @@ function FiltersContent({
             </div>
 
             <div className="mb-6">
-                <p className="
+                <p
+                    className="
                     mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                ">Engagement</p>
+                "
+                >
+                    Engagement
+                </p>
                 <div className="flex flex-wrap gap-2">
                     {(["REMOTE", "IN_PERSON", "HYBRID"] as const).map((wt) => (
                         <button
@@ -119,9 +127,13 @@ function FiltersContent({
             </div>
 
             <div className="mb-6">
-                <p className="
+                <p
+                    className="
                     mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                ">Commitment</p>
+                "
+                >
+                    Commitment
+                </p>
                 <div className="flex flex-wrap gap-2">
                     {(["FLEXIBLE", "PART_TIME", "FULL_TIME"] as const).map((cl) => (
                         <button
@@ -145,9 +157,13 @@ function FiltersContent({
 
             <div className="mb-6">
                 <div className="mb-2 flex items-center justify-between">
-                    <p className="
+                    <p
+                        className="
                         text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                    ">Max Hours</p>
+                    "
+                    >
+                        Max Hours
+                    </p>
                     <span className="text-xs font-semibold text-primary">{maxHours}h/wk</span>
                 </div>
                 <input
@@ -268,10 +284,12 @@ export default function OpportunitiesPage() {
     return (
         <div className="flex h-screen flex-col overflow-hidden bg-background">
             <div className="flex flex-1 overflow-hidden">
-                <aside className="
+                <aside
+                    className="
                     hidden w-56 shrink-0 overflow-y-auto border-r bg-card p-5
                     lg:block
-                ">
+                "
+                >
                     <p className="mb-5 text-sm font-semibold text-foreground">= Filters</p>
                     <FiltersContent {...filterProps} />
                 </aside>
@@ -321,14 +339,20 @@ export default function OpportunitiesPage() {
                                         Map
                                     </button>
 
-                                    <div className="
+                                    <div
+                                        className="
                                         flex items-center gap-1.5 text-sm text-muted-foreground
-                                    ">
+                                    "
+                                    >
                                         <ArrowUpDown className="size-3.5 shrink-0" />
-                                        <span className="
+                                        <span
+                                            className="
                                             hidden
                                             sm:inline
-                                        ">Sort:</span>
+                                        "
+                                        >
+                                            Sort:
+                                        </span>
                                         <select
                                             value={sortBy}
                                             onChange={(e) => setSortBy(e.target.value as SortOption)}
@@ -350,20 +374,24 @@ export default function OpportunitiesPage() {
                         </div>
 
                         {error && (
-                            <div className="
+                            <div
+                                className="
                                 mx-5 mt-4 rounded-xl border border-destructive/20 bg-destructive/10
                                 px-4 py-2 text-sm text-destructive
-                            ">
+                            "
+                            >
                                 {error}
                             </div>
                         )}
 
                         <div className="flex-1 space-y-4 overflow-y-auto p-5">
                             {opportunities.length === 0 ? (
-                                <div className="
+                                <div
+                                    className="
                                     flex h-40 items-center justify-center text-sm
                                     text-muted-foreground
-                                ">
+                                "
+                                >
                                     No opportunities found. Try adjusting your filters.
                                 </div>
                             ) : (
@@ -391,10 +419,12 @@ export default function OpportunitiesPage() {
                         "
                         title="Drag to resize map"
                     >
-                        <div className="
+                        <div
+                            className="
                             h-8 w-0.5 rounded-full bg-muted-foreground/30 transition-colors
                             group-hover:bg-primary/60
-                        " />
+                        "
+                        />
                     </div>
 
                     <div
@@ -411,10 +441,12 @@ export default function OpportunitiesPage() {
             </div>
 
             <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
-                <DialogContent className="
+                <DialogContent
+                    className="
                     max-h-[85vh] overflow-y-auto
                     sm:max-w-sm
-                ">
+                "
+                >
                     <DialogHeader>
                         <DialogTitle>Filters</DialogTitle>
                     </DialogHeader>
@@ -423,10 +455,12 @@ export default function OpportunitiesPage() {
             </Dialog>
 
             <Dialog open={mapOpen} onOpenChange={setMapOpen}>
-                <DialogContent className="
+                <DialogContent
+                    className="
                     flex h-[80vh] max-w-full flex-col p-0
                     sm:max-w-2xl
-                ">
+                "
+                >
                     <DialogHeader className="shrink-0 px-4 pt-4 pb-2">
                         <DialogTitle>Map</DialogTitle>
                     </DialogHeader>

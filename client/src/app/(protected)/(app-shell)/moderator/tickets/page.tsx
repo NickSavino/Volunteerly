@@ -60,18 +60,22 @@ export default function ModeratorTicketsPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="
+            <main
+                className="
                 mx-auto max-w-7xl px-4 py-8
                 sm:px-6
                 lg:px-8
-            ">
+            "
+            >
                 <ModeratorPageHeader title={page.title} subtitle={page.subtitle} />
 
                 {page.error && (
-                    <p className="
+                    <p
+                        className="
                         mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
                         text-red-600
-                    ">
+                    "
+                    >
                         {page.error}
                     </p>
                 )}
@@ -112,19 +116,23 @@ export default function ModeratorTicketsPage() {
                                     shadow-sm
                                 "
                             >
-                                <div className="
+                                <div
+                                    className="
                                     flex flex-col gap-4 border-b px-6 py-4
                                     lg:flex-row lg:items-center lg:justify-between
-                                ">
+                                "
+                                >
                                     <div className="flex flex-wrap items-center gap-3">
                                         <h3 className="text-2xl font-bold text-foreground">
                                             Ticket #{ticket.id.slice(-8).toUpperCase()}
                                         </h3>
 
-                                        <span className="
+                                        <span
+                                            className="
                                             rounded-full bg-blue-100 px-3 py-1 text-xs font-bold
                                             tracking-wide text-blue-700 uppercase
-                                        ">
+                                        "
+                                        >
                                             {formatCategory(ticket.category)}
                                         </span>
                                     </div>
@@ -134,9 +142,7 @@ export default function ModeratorTicketsPage() {
                                             className={`
                                                 rounded-full px-5 py-1.5 text-xs font-bold
                                                 tracking-wide uppercase
-                                                ${getUrgencyClasses(
-                                                ticket.urgencyRating,
-                                            )}
+                                                ${getUrgencyClasses(ticket.urgencyRating)}
                                             `}
                                         >
                                             {ticket.urgencyRating}
@@ -148,15 +154,19 @@ export default function ModeratorTicketsPage() {
                                     </div>
                                 </div>
 
-                                <div className="
+                                <div
+                                    className="
                                     flex flex-col gap-6 px-6 py-5
                                     lg:flex-row lg:items-center lg:justify-between
-                                ">
+                                "
+                                >
                                     <div className="flex items-start gap-4">
-                                        <div className="
+                                        <div
+                                            className="
                                             flex size-20 items-center justify-center rounded-2xl
                                             bg-secondary
-                                        ">
+                                        "
+                                        >
                                             <MessageSquareText className="size-10 text-muted-foreground" />
                                         </div>
 
@@ -168,9 +178,11 @@ export default function ModeratorTicketsPage() {
                                                 {getTimeOpen(ticket.createdAt)}
                                             </p>
 
-                                            <p className="
+                                            <p
+                                                className="
                                                 mt-2 max-w-3xl text-base text-muted-foreground
-                                            ">
+                                            "
+                                            >
                                                 {ticket.description}
                                             </p>
                                         </div>

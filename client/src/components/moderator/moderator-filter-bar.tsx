@@ -50,21 +50,27 @@ export function ModeratorFilterBar({
 }: ModeratorFilterBarProps) {
     return (
         <div className="mb-4 rounded-xl border bg-card p-4 shadow-sm">
-            <div className="
+            <div
+                className="
                 flex flex-col gap-4
                 lg:flex-row lg:items-end
-            ">
+            "
+            >
                 <div className="min-w-0 flex-1">
-                    <label className="
+                    <label
+                        className="
                         mb-1 block text-xs font-semibold tracking-wide text-muted-foreground
                         uppercase
-                    ">
+                    "
+                    >
                         {searchLabel}
                     </label>
                     <div className="relative">
-                        <Search className="
+                        <Search
+                            className="
                             absolute top-1/2 left-3 h-4 w-max -translate-y-1/2 text-muted-foreground
-                        " />
+                        "
+                        />
                         <input
                             type="text"
                             placeholder={searchPlaceholder}
@@ -79,14 +85,18 @@ export function ModeratorFilterBar({
                     </div>
                 </div>
 
-                <div className="
+                <div
+                    className="
                     w-full
                     lg:w-40
-                ">
-                    <label className="
+                "
+                >
+                    <label
+                        className="
                         mb-1 block text-xs font-semibold tracking-wide text-muted-foreground
                         uppercase
-                    ">
+                    "
+                    >
                         {sortLabel}
                     </label>
                     <select
@@ -105,13 +115,17 @@ export function ModeratorFilterBar({
                     </select>
                 </div>
 
-                <div className="
+                <div
+                    className="
                     w-full
                     lg:w-24
-                ">
-                    <label className="
+                "
+                >
+                    <label
+                        className="
                         mb-1 block text-xs font-semibold tracking-wide text-gray-400 uppercase
-                    ">
+                    "
+                    >
                         {pageSizeLabel}
                     </label>
                     <select

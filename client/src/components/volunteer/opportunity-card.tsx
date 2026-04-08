@@ -40,9 +40,7 @@ function MatchBadge({ pct }: { pct: number }) {
               ? "bg-secondary text-primary"
               : "bg-muted text-muted-foreground";
 
-    return (
-        <span className={cn("shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold", cls)}>{pct}% Match</span>
-    );
+    return <span className={cn("shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold", cls)}>{pct}% Match</span>;
 }
 
 export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick }: OppCardProps) {
@@ -103,10 +101,12 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                 <div className="flex flex-col items-end gap-1.5">
                     <MatchBadge pct={matchPct} />
                     {hasApplied && (
-                        <span className="
+                        <span
+                            className="
                             rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold
                             text-green-700
-                        ">
+                        "
+                        >
                             ✓ Applied
                         </span>
                     )}

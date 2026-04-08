@@ -75,10 +75,12 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                         Close
                     </button>
                     {hasApplied ? (
-                        <span className="
+                        <span
+                            className="
                             flex h-11 min-w-36 items-center justify-center rounded-xl bg-green-100
                             px-5 text-sm font-semibold text-green-700
-                        ">
+                        "
+                        >
                             ✓ Applied
                         </span>
                     ) : (
@@ -131,10 +133,12 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                             {matchPct}% Match
                         </span>
                         {hasApplied && (
-                            <span className="
+                            <span
+                                className="
                                 rounded-full bg-green-100 px-3 py-1 text-sm font-semibold
                                 text-green-700
-                            ">
+                            "
+                            >
                                 ✓ Applied
                             </span>
                         )}

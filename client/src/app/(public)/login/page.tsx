@@ -24,18 +24,26 @@ export default function LoginPage() {
         <div className="min-h-screen">
             <title>Log In - Volunteerly</title>
             <Navbar></Navbar>
-            <main className="
+            <main
+                className="
                 flex h-screen flex-col
                 md:h-[calc(100vh-64px)] md:flex-row
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     relative hidden h-screen w-full flex-col overflow-hidden
                     md:flex md:h-full md:w-1/2
-                ">
-                    <img src={tms.src} alt="Preview" className="
+                "
+                >
+                    <img
+                        src={tms.src}
+                        alt="Preview"
+                        className="
                         h-auto w-full
                         md:h-full
-                    " />
+                    "
+                    />
                     <div className="absolute inset-0 w-full bg-black/50"></div>
                     <div className="absolute bottom-20 left-12 text-left">
                         <h1 className="text-4x1 pb-2 font-bold tracking-tight text-muted">
@@ -60,10 +68,12 @@ export default function LoginPage() {
                         </div>
                     </div>
                 </div>
-                <div className="
+                <div
+                    className="
                     flex w-full flex-1 items-center justify-center px-8
                     md:w-1/2 md:justify-around
-                ">
+                "
+                >
                     <Card className="w-full max-w-md">
                         <CardHeader>Log In</CardHeader>
                         <CardContent>

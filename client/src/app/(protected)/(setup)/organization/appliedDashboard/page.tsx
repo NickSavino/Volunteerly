@@ -27,14 +27,18 @@ export default function HomePage() {
                 onLogout={signOut}
             ></Navbar>
 
-            <main className="
+            <main
+                className="
                 flex flex-col p-6
                 md:h-[calc(100vh-64px)] md:flex-row
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
                     md:mb-0 md:w-2/3
-                ">
+                "
+                >
                     <div className="flex h-full flex-col justify-center text-center">
                         <h1 className="text-2x1 font-bold">Welcome, {currentOrganization?.orgName}</h1>
                         <div className="radius-2 m-5 rounded-sm bg-warning p-5">
@@ -53,10 +57,12 @@ export default function HomePage() {
                         </div>
                     </div>
                 </div>
-                <div className="
+                <div
+                    className="
                     mx-auto min-h-full w-full max-w-3xl space-y-6
                     md:w-1/3
-                ">
+                "
+                >
                     <Card className="mx-5">
                         <CardContent className="text-center">
                             <div className="mb-4 flex justify-center">

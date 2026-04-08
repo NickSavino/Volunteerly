@@ -39,10 +39,12 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                     <Image src={logo} alt="Volunteerly" width={140} height={40} priority />
                 </Link>
 
-                <NavigationMenu className="
+                <NavigationMenu
+                    className="
                     hidden
                     md:flex
-                ">
+                "
+                >
                     <NavigationMenuList className="flex gap-6">
                         {NAV_LINKS.map(({ label, href }) => (
                             <NavigationMenuItem key={href}>
@@ -52,10 +54,10 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                                         text-sm font-medium transition-colors
                                         hover:text-primary
                                         ${
-                                        pathname === href
-                                            ? "border-b-2 border-primary text-primary"
-                                            : "text-muted-foreground"
-                                    }
+                                            pathname === href
+                                                ? "border-b-2 border-primary text-primary"
+                                                : "text-muted-foreground"
+                                        }
                                     `}
                                 >
                                     {label}
@@ -70,13 +72,13 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                         <NavigationMenuItem>
                             <NavigationMenuTrigger className="p-0">
                                 <div className="flex items-center gap-2">
-                                    <div className="
+                                    <div
+                                        className="
                                         hidden text-right
                                         sm:block
-                                    ">
-                                        <p className="text-sm/tight font-semibold text-foreground">
-                                            {fullName}
-                                        </p>
+                                    "
+                                    >
+                                        <p className="text-sm/tight font-semibold text-foreground">{fullName}</p>
                                         <p className="text-xs text-muted-foreground">Verified Volunteer</p>
                                     </div>
                                     <Avatar className="size-9">

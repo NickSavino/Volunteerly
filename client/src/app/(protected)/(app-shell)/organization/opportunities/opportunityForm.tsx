@@ -37,10 +37,12 @@ export default function OpportunityForm({
                 </CardHeader>
 
                 <CardContent className="space-y-3">
-                    <div className="
+                    <div
+                        className="
                         grid grid-cols-1 gap-4
                         md:grid-cols-2
-                    ">
+                    "
+                    >
                         <Field>
                             <Label htmlFor="name">
                                 Name<span className="text-destructive">*</span>
@@ -104,10 +106,12 @@ export default function OpportunityForm({
                         <FieldDescription>Provide technical and non-technical requirements</FieldDescription>
                     </Field>
 
-                    <div className="
+                    <div
+                        className="
                         grid grid-cols-1 gap-4
                         md:grid-cols-2
-                    ">
+                    "
+                    >
                         <Field>
                             <Label htmlFor="wrkType">
                                 Work Type<span className="text-destructive">*</span>
@@ -159,10 +163,12 @@ export default function OpportunityForm({
                         </Field>
                     </div>
 
-                    <div className="
+                    <div
+                        className="
                         grid grid-cols-1 gap-4
                         md:grid-cols-2
-                    ">
+                    "
+                    >
                         <Field>
                             <Label htmlFor="length">
                                 Opportunity Length<span className="text-destructive">*</span>
@@ -201,10 +207,12 @@ export default function OpportunityForm({
                         <Label htmlFor="availability">
                             Availability<span className="text-destructive">*</span>
                         </Label>
-                        <div className="
+                        <div
+                            className="
                             w-full gap-2
                             md:grid md:grid-cols-7
-                        ">
+                        "
+                        >
                             {daysOfWeek.map((day) => (
                                 <Toggle
                                     key={day}

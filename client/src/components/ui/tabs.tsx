@@ -12,10 +12,13 @@ function Tabs({ className, orientation = "horizontal", ...props }: React.Compone
             data-slot="tabs"
             data-orientation={orientation}
             orientation={orientation}
-            className={cn(`
+            className={cn(
+                `
                 group/tabs flex gap-2
                 data-[orientation=horizontal]:flex-col
-            `, className)}
+            `,
+                className,
+            )}
             {...props}
         />
     );

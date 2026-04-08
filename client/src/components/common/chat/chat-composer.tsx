@@ -23,9 +23,11 @@ export function ChatComposer({
 }: ChatComposerProps) {
     return (
         <div className="border-t bg-background p-4">
-            <div className="
+            <div
+                className="
                 flex items-end gap-3 rounded-2xl border border-border bg-background p-3 shadow-sm
-            ">
+            "
+            >
                 <Textarea
                     value={value}
                     onChange={(e) => onChange(e.target.value)}

@@ -74,24 +74,30 @@ export default function OrgProfilePage() {
     return (
         <div className="min-h-screen">
             <title>Organization Profile - Volunteerly</title>
-            <main className="
+            <main
+                className="
                 py-5
                 md:h-[calc(100vh-64px)] md:px-10
-            ">
+            "
+            >
                 <Button variant="ghost" className="cursor-pointer pb-8" onClick={() => router.back()}>
                     <ArrowLeft className="size-4" />
                     Back
                 </Button>
 
-                <div className="
+                <div
+                    className="
                     relative mb-6 min-h-48 w-full overflow-hidden rounded-xl bg-gray-800
                     md:h-40
-                ">
+                "
+                >
                     <div className="absolute inset-0 bg-linear-to-br from-gray-700 to-gray-900" />
-                    <div className="
+                    <div
+                        className="
                         absolute top-4 left-6 flex items-end gap-4
                         md:bottom-4
-                    ">
+                    "
+                    >
                         <div className="relative">
                             <Avatar className="size-20">
                                 <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")} />
@@ -120,10 +126,12 @@ export default function OrgProfilePage() {
                                 Member Since {new Date(currentOrg?.createdAt || "").toLocaleDateString()}
                             </p>
                             {currentOrg?.causeCategory && (
-                                <span className="
+                                <span
+                                    className="
                                     inline-flex items-center gap-1 rounded-full bg-yellow-400 px-2.5
                                     py-0.5 text-xs font-medium text-black
-                                ">
+                                "
+                                >
                                     {currentOrg?.causeCategory}
                                 </span>
                             )}
@@ -185,14 +193,18 @@ export default function OrgProfilePage() {
                     </div>
                 </div>
 
-                <div className="
+                <div
+                    className="
                     flex flex-col px-3 pb-6
                     md:flex-row
-                ">
-                    <div className="
+                "
+                >
+                    <div
+                        className="
                         max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
                         md:mb-0 md:w-2/3
-                    ">
+                    "
+                    >
                         <Card>
                             <CardHeader>
                                 <CardTitle className="text-xl">Public Details</CardTitle>
@@ -238,10 +250,12 @@ export default function OrgProfilePage() {
                                             />
                                         )}
                                     </Field>
-                                    <div className="
+                                    <div
+                                        className="
                                         grid grid-cols-1 gap-4
                                         md:grid-cols-2
-                                    ">
+                                    "
+                                    >
                                         <Field>
                                             <Label className="text-lg text-muted-foreground">Cause Category</Label>
                                             {!editing ? (
@@ -396,10 +410,12 @@ export default function OrgProfilePage() {
 
                                     <hr className="mx-2 border-gray-300" />
                                     <CardTitle className="text-xl">Impact Highlights</CardTitle>
-                                    <div className="
+                                    <div
+                                        className="
                                         grid grid-cols-1 gap-4
                                         md:grid-cols-2
-                                    ">
+                                    "
+                                    >
                                         {(!currentOrg?.impactHighlights || currentOrg?.impactHighlights.length == 0) &&
                                             !editing && <p>No Highlights</p>}
                                         {!editing ? (
@@ -408,9 +424,11 @@ export default function OrgProfilePage() {
                                                     const [[key, value]] = Object.entries(item);
                                                     return (
                                                         <Field key={index}>
-                                                            <Label className="
+                                                            <Label
+                                                                className="
                                                                 text-lg text-muted-foreground
-                                                            ">
+                                                            "
+                                                            >
                                                                 {key}
                                                             </Label>
                                                             <Label className="text-md">{value as string}</Label>
@@ -515,10 +533,12 @@ export default function OrgProfilePage() {
                             </form>
                         </Card>
                     </div>
-                    <div className="
+                    <div
+                        className="
                         mx-auto size-full max-w-3xl space-y-6
                         md:w-1/3
-                    ">
+                    "
+                    >
                         <Card className="md:ml-5">
                             <CardHeader>
                                 <CardTitle className="text-xl">Private Details</CardTitle>

@@ -73,14 +73,18 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
             <div className="min-h-screen">
                 <title>Organization View Opportunity - Volunteerly</title>
 
-                <main className="
+                <main
+                    className="
                     flex flex-col p-6
                     md:mx-10 md:h-[calc(100vh-64px)] md:flex-row
-                ">
-                    <div className="
+                "
+                >
+                    <div
+                        className="
                         max-w-3x1 mx-auto mb-5 mb-10 flex min-h-full w-full flex-col gap-6
                         md:mb-0 md:w-3/4
-                    ">
+                    "
+                    >
                         <div>
                             <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
                                 <ArrowLeft className="size-4" />
@@ -102,9 +106,11 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             {opportunity?.name} - {opportunity?.workType} - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
-                            <div className="
+                            <div
+                                className="
                                 md:flex md:grid md:grid-cols-2 md:justify-around md:gap-3
-                            ">
+                            "
+                            >
                                 <OrgStatCard icon={Clock4} label="Hours Spent" count={totalHours} money={false} />
                                 <OrgStatCard
                                     icon={CircleDollarSign}
@@ -137,10 +143,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                     </CardHeader>
                                     <CardContent>{opportunity?.candidateDesc}</CardContent>
 
-                                    <CardContent className="
+                                    <CardContent
+                                        className="
                                         justify-around
                                         md:flex
-                                    ">
+                                    "
+                                    >
                                         <span className="flex flex-1 items-center gap-3">
                                             <Calendar className="size-9" />
                                             <div className="flex flex-col">
@@ -158,10 +166,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             </div>
                                         </span>
                                     </CardContent>
-                                    <CardContent className="
+                                    <CardContent
+                                        className="
                                         justify-around
                                         md:flex
-                                    ">
+                                    "
+                                    >
                                         <span className="flex flex-1 items-center gap-3">
                                             <AlarmClockCheck className="size-9" />
                                             <div className="flex flex-col">
@@ -186,9 +196,11 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
 
                                     <CardContent>
                                         {applications.length === 0 ? (
-                                            <CardContent className="
+                                            <CardContent
+                                                className="
                                                 flex h-full flex-col justify-center text-center
-                                            ">
+                                            "
+                                            >
                                                 <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
@@ -218,9 +230,11 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                         <ItemTitle className="text-md">
                                                             {app.volunteer?.firstName} {app.volunteer?.lastName}
                                                         </ItemTitle>
-                                                        <ItemDescription className="
+                                                        <ItemDescription
+                                                            className="
                                                             flex flex-wrap items-center gap-2
-                                                        ">
+                                                        "
+                                                        >
                                                             {app.message}
                                                         </ItemDescription>
                                                     </ItemContent>
@@ -262,10 +276,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         <CardTitle>Opportunity Overview</CardTitle>
                                         <CardDescription>{opportunity?.description}</CardDescription>
                                         {opportunity?.status == "FILLED" && (
-                                            <CardAction className="
+                                            <CardAction
+                                                className="
                                                 mt-2 w-full
                                                 md:mt-0 md:w-auto
-                                            ">
+                                            "
+                                            >
                                                 <Button
                                                     className="
                                                         w-full cursor-pointer
@@ -278,10 +294,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             </CardAction>
                                         )}
                                     </CardHeader>
-                                    <CardContent className="
+                                    <CardContent
+                                        className="
                                         justify-around
                                         md:flex
-                                    ">
+                                    "
+                                    >
                                         <span className="flex flex-1 items-center gap-3">
                                             <Calendar className="size-9" />
                                             <div className="flex flex-col">
@@ -309,21 +327,27 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
 
                                 <Card className="mb-5">
                                     <CardContent>
-                                        <div className="
+                                        <div
+                                            className="
                                             gap-6 text-center
                                             md:grid md:grid-cols-8 md:text-left
-                                        ">
-                                            <div className="
+                                        "
+                                        >
+                                            <div
+                                                className="
                                                 flex justify-center
                                                 md:col-span-2 md:w-full
-                                            ">
+                                            "
+                                            >
                                                 <img src={avtImg.src} className="w-22 rounded-lg object-cover" />
                                             </div>
 
-                                            <div className="
+                                            <div
+                                                className="
                                                 flex flex-col gap-3
                                                 md:col-span-4
-                                            ">
+                                            "
+                                            >
                                                 <p>Assigned Volunteer</p>
                                                 <h3>
                                                     {opportunity?.volunteer?.firstName}{" "}
@@ -331,10 +355,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                 </h3>
                                             </div>
 
-                                            <div className="
+                                            <div
+                                                className="
                                                 flex flex-col gap-3
                                                 md:col-span-2
-                                            ">
+                                            "
+                                            >
                                                 <Button
                                                     variant="outline"
                                                     data-icon="inline-end"
@@ -443,9 +469,11 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         )}
                                     </CardHeader>
                                     {opportunity?.progressUpdates?.length === 0 ? (
-                                        <CardContent className="
+                                        <CardContent
+                                            className="
                                             flex h-full flex-col justify-center text-center
-                                        ">
+                                        "
+                                        >
                                             <div className="mb-4 flex justify-center">
                                                 <Avatar size="lg">
                                                     <AvatarImage src={volunteerly_logo.src} />
@@ -457,15 +485,19 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         </CardContent>
                                     ) : (
                                         <CardContent className="space-y-4">
-                                            <div className="
+                                            <div
+                                                className="
                                                 max-h-40 space-y-4 overflow-y-auto border-l-2 pl-4
-                                            ">
+                                            "
+                                            >
                                                 {opportunity?.progressUpdates?.map((update) => (
                                                     <div key={update.id}>
-                                                        <span className="
+                                                        <span
+                                                            className="
                                                             absolute top-1 -left-3 size-3
                                                             rounded-full bg-primary
-                                                        " />
+                                                        "
+                                                        />
                                                         <p className="text-xs">
                                                             {update.createdAt.toLocaleDateString()}
                                                         </p>

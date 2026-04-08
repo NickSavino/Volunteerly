@@ -46,9 +46,11 @@ export default function OrganizationMessagesPage() {
                             </div>
 
                             {vm.isClosedTicketConversation ? (
-                                <div className="
+                                <div
+                                    className="
                                     border-t border-border p-4 text-sm text-muted-foreground
-                                ">
+                                "
+                                >
                                     This ticket is closed. Replies are disabled.
                                 </div>
                             ) : (

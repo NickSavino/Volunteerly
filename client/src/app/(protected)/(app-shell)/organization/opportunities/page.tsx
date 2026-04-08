@@ -33,15 +33,19 @@ export default function OrgOpportunitiesPage() {
     return (
         <div className="min-h-screen">
             <title>Organization Opportunities - Volunteerly</title>
-            <main className="
+            <main
+                className="
                 flex flex-col py-6
                 md:h-[calc(100vh-64px)] md:flex-row md:p-6
-            ">
+            "
+            >
                 <div className="max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6 md:mb-0">
-                    <div className="
+                    <div
+                        className="
                         mx-3 items-center justify-between
                         md:mx-0 md:flex
-                    ">
+                    "
+                    >
                         <div>
                             <h1 className="text-2x1 font-bold">Opportunities</h1>
                             <p>Manage and track your organization&apos;s volunteer projects.</p>
@@ -70,10 +74,13 @@ export default function OrgOpportunitiesPage() {
                                     className="flex h-full flex-col"
                                 >
                                     <div className="mb-5 w-full border-b border-gray-300">
-                                        <TabsList className="
+                                        <TabsList
+                                            className="
                                             flex
                                             md:w-1/2
-                                        " variant="line">
+                                        "
+                                            variant="line"
+                                        >
                                             <TabsTrigger value="OPEN" className="cursor-pointer">
                                                 Posted
                                             </TabsTrigger>
@@ -87,9 +94,11 @@ export default function OrgOpportunitiesPage() {
                                     </div>
                                     <TabsContent value={"OPEN"}>
                                         {filteredOpportunities.length === 0 ? (
-                                            <CardContent className="
+                                            <CardContent
+                                                className="
                                                 flex h-full flex-col justify-center text-center
-                                            ">
+                                            "
+                                            >
                                                 <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
@@ -106,9 +115,11 @@ export default function OrgOpportunitiesPage() {
                                                         <ItemTitle>
                                                             {opp.name} <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
-                                                        <ItemDescription className="
+                                                        <ItemDescription
+                                                            className="
                                                             flex flex-wrap items-center gap-2
-                                                        ">
+                                                        "
+                                                        >
                                                             <span className="flex items-center gap-1">
                                                                 <Users /> {opp._count?.applications} Applicant(s)
                                                             </span>
@@ -143,9 +154,11 @@ export default function OrgOpportunitiesPage() {
 
                                     <TabsContent value={"FILLED"}>
                                         {filteredOpportunities.length === 0 ? (
-                                            <CardContent className="
+                                            <CardContent
+                                                className="
                                                 flex h-full flex-col justify-center text-center
-                                            ">
+                                            "
+                                            >
                                                 <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
@@ -162,9 +175,11 @@ export default function OrgOpportunitiesPage() {
                                                         <ItemTitle>
                                                             {opp.name} <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
-                                                        <ItemDescription className="
+                                                        <ItemDescription
+                                                            className="
                                                             flex flex-wrap items-center gap-2
-                                                        ">
+                                                        "
+                                                        >
                                                             <span className="flex items-center gap-1">
                                                                 <PersonStanding /> {opp.volunteer?.firstName}{" "}
                                                                 {opp.volunteer?.lastName}
@@ -198,9 +213,11 @@ export default function OrgOpportunitiesPage() {
 
                                     <TabsContent value={"CLOSED"}>
                                         {filteredOpportunities.length === 0 ? (
-                                            <CardContent className="
+                                            <CardContent
+                                                className="
                                                 flex h-full flex-col justify-center text-center
-                                            ">
+                                            "
+                                            >
                                                 <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
@@ -217,9 +234,11 @@ export default function OrgOpportunitiesPage() {
                                                         <ItemTitle>
                                                             {opp.name} <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
-                                                        <ItemDescription className="
+                                                        <ItemDescription
+                                                            className="
                                                             flex flex-wrap items-center gap-2
-                                                        ">
+                                                        "
+                                                        >
                                                             <span className="flex items-center gap-1">
                                                                 <PersonStanding /> {opp.volunteer?.firstName}{" "}
                                                                 {opp.volunteer?.lastName}

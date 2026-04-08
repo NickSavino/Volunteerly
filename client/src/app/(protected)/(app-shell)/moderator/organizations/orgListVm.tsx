@@ -3,11 +3,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
-import type {
-    CurrentModerator,
-    ModeratorOrganizationList,
-    ModeratorOrganizationListItem,
-} from "@volunteerly/shared";
+import type { CurrentModerator, ModeratorOrganizationList, ModeratorOrganizationListItem } from "@volunteerly/shared";
 import { appToast } from "@/components/common/app-toast";
 
 export type TabKey = "ALL" | "APPLIED" | "VERIFIED" | "REJECTED";

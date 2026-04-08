@@ -9,10 +9,12 @@ type OrgStatCardProps = {
 
 export function OrgStatCard({ icon: Icon, label, count, money }: OrgStatCardProps) {
     return (
-        <div className="
+        <div
+            className="
             my-3 flex items-center gap-4 rounded-xl border bg-white p-5 shadow-sm
             md:my-0
-        ">
+        "
+        >
             <div className="rounded-md bg-yellow-50 p-3">
                 <Icon className="size-6 text-yellow-500" />
             </div>

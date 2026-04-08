@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import { Clock, Star, DollarSign, Building2 } from "lucide-react";
 import { useState } from "react";
 
-
 import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
 import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
@@ -61,29 +60,35 @@ export default function VolunteerDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="
+            <main
+                className="
                 px=4 mx-auto max-w-7xl py-8
                 sm:px-6
                 lg:px-8
-            ">
+            "
+            >
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">Welcome back, {firstName}!</h1>
                 </div>
 
                 {error && (
-                    <p className="
+                    <p
+                        className="
                         mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
                         text-red-600
-                    ">
+                    "
+                    >
                         {error}
                     </p>
                 )}
 
                 {/* KPI Cards */}
-                <div className="
+                <div
+                    className="
                     mb-8 grid grid-cols-2 gap-4
                     lg:grid-cols-4
-                ">
+                "
+                >
                     <StatCard
                         icon={<Clock className="size-5 text-gray-700" />}
                         label="Total Hours"
@@ -115,15 +120,19 @@ export default function VolunteerDashboardPage() {
                 </div>
 
                 {/* Chart + Partner Orgs */}
-                <div className="
+                <div
+                    className="
                     mb-6 grid grid-cols-1 gap-6
                     lg:grid-cols-3
-                ">
+                "
+                >
                     {/* Contribution Trends */}
-                    <div className="
+                    <div
+                        className="
                         rounded-xl border bg-white p-6 shadow-sm
                         lg:col-span-2
-                    ">
+                    "
+                    >
                         <div className="mb-4 flex items-start justify-between">
                             <div>
                                 <h2 className="font-semibold text-gray-800">Contribution Trends</h2>
@@ -154,13 +163,17 @@ export default function VolunteerDashboardPage() {
                                         className="flex flex-1 flex-col items-center gap-1"
                                         style={{ height: "100%" }}
                                     >
-                                        <div className="
+                                        <div
+                                            className="
                                             flex w-full flex-1 flex-col items-center justify-end
-                                        ">
+                                        "
+                                        >
                                             {h > 0 && (
-                                                <span className="
+                                                <span
+                                                    className="
                                                     mb-1 text-xs font-medium text-gray-500
-                                                ">
+                                                "
+                                                >
                                                     {h % 1 === 0 ? h : h.toFixed(1)}
                                                 </span>
                                             )}
@@ -194,17 +207,23 @@ export default function VolunteerDashboardPage() {
                                         "
                                         onClick={() => router.push(`/volunteer/organizations/${org.id}`)}
                                     >
-                                        <div className="
+                                        <div
+                                            className="
                                             flex size-10 shrink-0 items-center justify-center
                                             rounded-full bg-yellow-100 text-xs font-semibold
                                             text-yellow-700
-                                        ">
+                                        "
+                                        >
                                             {org.orgName.slice(0, 2).toUpperCase()}
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <p className="
+                                            <p
+                                                className="
                                                 truncate text-sm font-medium text-gray-800
-                                            ">{org.orgName}</p>
+                                            "
+                                            >
+                                                {org.orgName}
+                                            </p>
                                         </div>
                                         <div className="shrink-0 text-right">
                                             <p className="text-sm font-semibold text-gray-800">{org.totalHours}h</p>
@@ -244,10 +263,12 @@ export default function VolunteerDashboardPage() {
                                             router.push(`/volunteer/organizations/${org.id}`);
                                         }}
                                     >
-                                        <div className="
+                                        <div
+                                            className="
                                             flex size-10 items-center justify-center rounded-full
                                             bg-yellow-100
-                                        ">
+                                        "
+                                        >
                                             {org.orgName.slice(0, 2).toUpperCase()}
                                         </div>
                                         <p className="flex-1 text-left">{org.orgName}</p>
@@ -267,10 +288,12 @@ export default function VolunteerDashboardPage() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="
+                                <tr
+                                    className="
                                     border-b text-left text-xs font-medium tracking-wide
                                     text-gray-400 uppercase
-                                ">
+                                "
+                                >
                                     <th className="pr-4 pb-3">Charity</th>
                                     <th className="pr-4 pb-3">Category</th>
                                     <th className="pr-4 pb-3">Commitment</th>

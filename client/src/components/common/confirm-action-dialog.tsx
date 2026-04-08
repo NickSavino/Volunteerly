@@ -54,10 +54,12 @@ export function ConfirmActionDialog({
                         <X className="size-5" />
                     </button>
 
-                    <div className="
+                    <div
+                        className="
                         mx-auto mb-5 flex size-16 items-center justify-center rounded-full
                         bg-secondary
-                    ">
+                    "
+                    >
                         {icon ?? <Check className="size-7 text-primary" />}
                     </div>
 

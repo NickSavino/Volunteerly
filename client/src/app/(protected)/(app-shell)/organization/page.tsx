@@ -51,18 +51,24 @@ export default function HomePage() {
     return (
         <div className="min-h-screen">
             <title>Organization Dashboard - Volunteerly</title>
-            <main className="
+            <main
+                className="
                 flex flex-col p-6
                 md:h-[calc(100vh-64px)] md:flex-row
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
                     md:mb-0 md:w-2/3
-                ">
-                    <div className="
+                "
+                >
+                    <div
+                        className="
                         items-center justify-between
                         md:flex
-                    ">
+                    "
+                    >
                         <div>
                             <h1 className="text-2x1 font-bold">Welcome, {currentUser?.orgName}</h1>
                             <p>Here&apos;s what&apos;s happening with your projects today.</p>
@@ -105,9 +111,11 @@ export default function HomePage() {
                             </CardHeader>
 
                             {opportunities.length === 0 ? (
-                                <CardContent className="
+                                <CardContent
+                                    className="
                                     flex h-full flex-col justify-center text-center
-                                ">
+                                "
+                                >
                                     <div className="mb-4 flex justify-center">
                                         <Avatar size="lg">
                                             <AvatarImage src={volunteerly_logo.src} />
@@ -129,9 +137,11 @@ export default function HomePage() {
                                                     {opp.name} <Badge>{opp.status}</Badge>{" "}
                                                 </ItemTitle>
                                                 {opp.status == "OPEN" ? (
-                                                    <ItemDescription className="
+                                                    <ItemDescription
+                                                        className="
                                                         flex flex-wrap items-center gap-2
-                                                    ">
+                                                    "
+                                                    >
                                                         <span className="flex items-center gap-1">
                                                             <Users /> {opp._count?.applications} Applicant(s)
                                                         </span>
@@ -145,9 +155,11 @@ export default function HomePage() {
                                                         </span>
                                                     </ItemDescription>
                                                 ) : (
-                                                    <ItemDescription className="
+                                                    <ItemDescription
+                                                        className="
                                                         flex flex-wrap items-center gap-2
-                                                    ">
+                                                    "
+                                                    >
                                                         <span className="flex items-center gap-1">
                                                             <PersonStanding /> {opp.volunteer?.firstName}{" "}
                                                             {opp.volunteer?.lastName}
@@ -182,10 +194,12 @@ export default function HomePage() {
                         </Card>
                     </div>
                 </div>
-                <div className="
+                <div
+                    className="
                     mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center space-y-6
                     md:w-1/3
-                ">
+                "
+                >
                     <Card className="mx-5">
                         <CardContent className="text-center">
                             <div className="mb-4 flex justify-center">

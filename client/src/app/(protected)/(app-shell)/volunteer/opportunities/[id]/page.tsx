@@ -69,10 +69,12 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="
+            <main
+                className="
                 mx-auto max-w-3xl px-4 py-8
                 sm:px-6
-            ">
+            "
+            >
                 <button
                     onClick={() => vm.router.push("/volunteer")}
                     className="
@@ -85,27 +87,33 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 </button>
 
                 {vm.error && (
-                    <p className="
+                    <p
+                        className="
                         mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm
                         text-red-600
-                    ">
+                    "
+                    >
                         {vm.error}
                     </p>
                 )}
 
                 <div className="mb-1 flex items-center gap-2">
                     {isCompleted ? (
-                        <span className="
+                        <span
+                            className="
                             flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs
                             font-semibold text-green-700
-                        ">
+                        "
+                        >
                             <CheckCircle className="size-3.5" /> COMPLETE
                         </span>
                     ) : (
-                        <span className="
+                        <span
+                            className="
                             flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs
                             font-semibold text-yellow-700
-                        ">
+                        "
+                        >
                             <TrendingUp className="size-3.5" /> IN PROGRESS
                         </span>
                     )}
@@ -160,9 +168,11 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                 {vm.opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
                             </button>
                             <div>
-                                <p className="
+                                <p
+                                    className="
                                     text-xs font-medium tracking-wide text-gray-400 uppercase
-                                ">
+                                "
+                                >
                                     Parent Organization
                                 </p>
                                 <button
@@ -214,10 +224,12 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                                 ${isFirst ? "bg-yellow-400" : "bg-gray-300"}
                                             `}
                                         />
-                                        <p className="
+                                        <p
+                                            className="
                                             text-xs font-semibold tracking-wide text-gray-400
                                             uppercase
-                                        ">
+                                        "
+                                        >
                                             {new Date(update.createdAt)
                                                 .toLocaleDateString("en-US", {
                                                     month: "short",
@@ -340,10 +352,12 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
             >
                 <div className="space-y-3 py-2 text-center">
                     <div className="flex justify-center">
-                        <div className="
+                        <div
+                            className="
                             flex size-14 items-center justify-center rounded-full border-4
                             border-yellow-400
-                        ">
+                        "
+                        >
                             <CheckCircle className="size-7 text-yellow-500" />
                         </div>
                     </div>
@@ -415,10 +429,12 @@ function SkillPickerModal({
             }
         >
             <p className="mb-4 text-sm text-gray-500">Select all the skills you used during this opportunity.</p>
-            <div className="
+            <div
+                className="
                 grid max-h-96 grid-cols-2 gap-2 overflow-y-auto pr-1
                 sm:grid-cols-3
-            ">
+            "
+            >
                 {ALL_SKILLS.map((skill) => (
                     <label
                         key={skill}

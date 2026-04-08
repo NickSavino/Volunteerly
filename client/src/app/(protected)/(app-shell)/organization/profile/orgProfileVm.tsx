@@ -2,10 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import {
-    CurrentOrganization,
-    CurrentOrganizationUpdate,
-} from "@volunteerly/shared";
+import { CurrentOrganization, CurrentOrganizationUpdate } from "@volunteerly/shared";
 import { OrganizationService } from "@/services/OrganizationService";
 import { toast } from "sonner";
 import { useAppSession } from "@/providers/app-session-provider";

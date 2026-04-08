@@ -78,19 +78,23 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
             maxWidthClassName="sm:max-w-6xl"
             bodyClassName="p-0"
         >
-            <div className="
+            <div
+                className="
                 grid max-h-[78vh] grid-cols-1 overflow-hidden
                 lg:grid-cols-[1.45fr_0.8fr]
-            ">
+            "
+            >
                 <div className="grid min-h-[70vh] grid-rows-[1fr_auto] border-r border-border">
                     {vm.loading && !ticket ? (
                         <LoadingScreen label="Loading ticket conversation..." />
                     ) : vm.error ? (
                         <div className="p-6">
-                            <p className="
+                            <p
+                                className="
                                 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3
                                 text-sm text-destructive
-                            ">
+                            "
+                            >
                                 {vm.error}
                             </p>
                         </div>
@@ -104,9 +108,11 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                             />
 
                             {isClosed ? (
-                                <div className="
+                                <div
+                                    className="
                                     border-t border-border p-4 text-sm text-muted-foreground
-                                ">
+                                "
+                                >
                                     This ticket is closed. Replies are disabled.
                                 </div>
                             ) : vm.canReply ? (
@@ -118,9 +124,11 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                                     placeholder="Reply to ticket..."
                                 />
                             ) : (
-                                <div className="
+                                <div
+                                    className="
                                     border-t border-border p-4 text-sm text-muted-foreground
-                                ">
+                                "
+                                >
                                     Claim this ticket to reply.
                                 </div>
                             )}
@@ -167,18 +175,22 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
 
                             <div className="mt-5 overflow-hidden rounded-2xl border border-border">
                                 <div className="grid grid-cols-[auto_1fr]">
-                                    <p className="
+                                    <p
+                                        className="
                                         border-r border-b p-4 text-lg font-semibold text-foreground
-                                    ">
+                                    "
+                                    >
                                         Category:
                                     </p>
                                     <p className="border-b p-4 text-lg text-muted-foreground">
                                         {formatCategory(ticket.category)}
                                     </p>
 
-                                    <p className="
+                                    <p
+                                        className="
                                         border-r border-b p-4 text-lg font-semibold text-foreground
-                                    ">
+                                    "
+                                    >
                                         Priority:
                                     </p>
                                     <div className="border-b p-4">
@@ -193,18 +205,24 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                                         </span>
                                     </div>
 
-                                    <p className="
+                                    <p
+                                        className="
                                         border-r border-b p-4 text-lg font-semibold text-foreground
-                                    ">
+                                    "
+                                    >
                                         Time Open:
                                     </p>
                                     <p className="border-b p-4 text-lg text-muted-foreground">
                                         {getTimeOpen(ticket.createdAt)}
                                     </p>
 
-                                    <p className="
+                                    <p
+                                        className="
                                         border-r p-4 text-lg font-semibold text-foreground
-                                    ">Status:</p>
+                                    "
+                                    >
+                                        Status:
+                                    </p>
                                     <p className="p-4 text-lg text-muted-foreground">
                                         {ticket.status === "OPEN" ? "Open" : "Closed"}
                                     </p>

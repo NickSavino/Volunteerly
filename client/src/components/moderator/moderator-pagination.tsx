@@ -27,9 +27,7 @@ export function ModeratorPagination({ currentPage, totalPages, onPageChange }: M
                     onClick={() => onPageChange(page)}
                     className={`
                         size-8 rounded-md text-sm font-medium
-                        ${
-                        page === currentPage ? "bg-yellow-400 text-black" : "border text-gray-600 hover:bg-gray-100"
-                    }
+                        ${page === currentPage ? "bg-yellow-400 text-black" : "border text-gray-600 hover:bg-gray-100"}
                     `}
                 >
                     {page}

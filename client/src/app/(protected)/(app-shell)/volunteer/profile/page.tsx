@@ -75,24 +75,32 @@ export default function ProfilePage() {
     return (
         <div className="min-h-screen bg-gray-50">
             <title>Volunteer - Profile</title>
-            <main className="
+            <main
+                className="
                 mx-auto max-w-5xl px-4 py-10
                 sm:px-6
                 lg:px-8
-            ">
-                <div className="
+            "
+            >
+                <div
+                    className="
                     flex flex-col items-stretch gap-6
                     lg:flex-row
-                ">
+                "
+                >
                     {/* Left sidebar */}
-                    <div className="
+                    <div
+                        className="
                         flex w-full shrink-0 flex-col gap-4
                         lg:w-72
-                    ">
-                        <div className="
+                    "
+                    >
+                        <div
+                            className="
                             flex flex-col items-center gap-3 rounded-xl border bg-white p-6
                             shadow-sm
-                        ">
+                        "
+                        >
                             <div className="relative">
                                 <Avatar className="size-24">
                                     <AvatarImage key={avatarKey} src={UserService.getAvatarURL(currentVolunteer.id)} />
@@ -124,10 +132,12 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        <div className="
+                        <div
+                            className="
                             flex flex-col items-center gap-2 rounded-xl border bg-white p-6
                             shadow-sm
-                        ">
+                        "
+                        >
                             <h2 className="text-lg font-semibold text-gray-800">Your Rating</h2>
                             {currentVolunteer.reviewCount > 0 ? (
                                 <>
@@ -167,10 +177,12 @@ export default function ProfilePage() {
                             )}
                         </div>
 
-                        <div className="
+                        <div
+                            className="
                             flex flex-col items-center gap-3 rounded-xl border bg-white p-6
                             shadow-sm
-                        ">
+                        "
+                        >
                             <h2 className="mb-3 text-lg font-semibold text-gray-800">Milestones</h2>
                             <div className="flex flex-wrap justify-center gap-2">
                                 {Object.entries(awards).length > 0 ? (
@@ -242,15 +254,19 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        <div className="
+                        <div
+                            className="
                             flex flex-1 flex-col rounded-xl border bg-white p-6 shadow-sm
-                        ">
+                        "
+                        >
                             <h2 className="mb-5 text-lg font-semibold text-gray-800">General Information</h2>
                             <div className="flex flex-1 flex-col gap-4">
-                                <div className="
+                                <div
+                                    className="
                                     grid grid-cols-1 gap-4
                                     md:grid-cols-2
-                                ">
+                                "
+                                >
                                     <div className="flex flex-col gap-1">
                                         <Label>First Name</Label>
                                         <Input

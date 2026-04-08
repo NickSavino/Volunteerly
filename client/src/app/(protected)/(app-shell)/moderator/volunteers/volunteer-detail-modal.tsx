@@ -425,10 +425,12 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
             {loading ? (
                 <p className="py-10 text-center text-sm text-muted-foreground">Loading volunteer detail...</p>
             ) : error ? (
-                <p className="
+                <p
+                    className="
                     rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm
                     text-destructive
-                ">
+                "
+                >
                     {error}
                 </p>
             ) : !detail ? (
@@ -449,19 +451,23 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                                 {detail.firstName} {detail.lastName}
                             </p>
                             <p className="text-sm text-muted-foreground">{detail.location || "No location provided"}</p>
-                            <p className="
+                            <p
+                                className="
                                 mt-3 w-fit rounded-full bg-secondary px-3 py-1 text-xs font-semibold
                                 tracking-wide uppercase
-                            ">
+                            "
+                            >
                                 {stateLabel(detail.state)}
                             </p>
                         </div>
                     </div>
 
-                    <div className="
+                    <div
+                        className="
                         grid gap-4
                         md:grid-cols-4
-                    ">
+                    "
+                    >
                         <div className="rounded-xl border p-4">
                             <p className="text-xs text-muted-foreground">Past Flags</p>
                             <p className="mt-1 text-2xl font-bold">{detail.pastFlagsCount}</p>
@@ -531,20 +537,24 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                             ) : null}
 
                             {!hasOpenReport ? (
-                                <p className="
+                                <p
+                                    className="
                                     mt-4 rounded-md border border-border bg-secondary/30 px-4 py-3
                                     text-sm text-muted-foreground
-                                ">
+                                "
+                                >
                                     This investigation is already closed. You can review the history, but no further
                                     action can be taken.
                                 </p>
                             ) : null}
 
                             {isSuspended ? (
-                                <p className="
+                                <p
+                                    className="
                                     mt-4 rounded-md border border-destructive/20 bg-destructive/5
                                     px-4 py-3 text-sm text-destructive
-                                ">
+                                "
+                                >
                                     This volunteer is already suspended. Additional suspension or escalation actions are
                                     disabled.
                                 </p>

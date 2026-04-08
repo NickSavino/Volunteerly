@@ -20,11 +20,13 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="
+            <main
+                className="
                 mx-auto max-w-5xl px-4 py-8
                 sm:px-6
                 lg:px-8
-            ">
+            "
+            >
                 <button
                     className="
                         mb-6 flex items-center gap-1 text-sm text-gray-500
@@ -36,45 +38,57 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                 </button>
 
                 {error && (
-                    <p className="
+                    <p
+                        className="
                         mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
                         text-red-600
-                    ">
+                    "
+                    >
                         {error}
                     </p>
                 )}
 
                 {org && (
                     <>
-                        <div className="
+                        <div
+                            className="
                             relative mb-6 h-40 w-full overflow-hidden rounded-xl bg-gray-800
-                        ">
-                            <div className="
+                        "
+                        >
+                            <div
+                                className="
                                 absolute inset-0 bg-linear-to-br from-gray-700 to-gray-900
-                            " />
+                            "
+                            />
                             <div className="absolute bottom-4 left-6 flex items-end gap-4">
-                                <div className="
+                                <div
+                                    className="
                                     flex size-16 items-center justify-center rounded-xl bg-white
                                     text-lg font-bold text-gray-800 shadow-sm
-                                ">
+                                "
+                                >
                                     {org.orgName.slice(0, 2).toUpperCase()}
                                 </div>
                                 <div>
                                     <h1 className="text-xl font-bold text-white">{org.orgName}</h1>
                                     {org.causeCategory && (
-                                        <span className="
+                                        <span
+                                            className="
                                             inline-flex items-center gap-1 rounded-full
                                             bg-yellow-400 px-2.5 py-0.5 text-xs font-medium
                                             text-black
-                                        ">
+                                        "
+                                        >
                                             {org.causeCategory}
                                         </span>
                                     )}
                                 </div>
                             </div>
-                            <div className="
+                            <div
+                                className="
                                 absolute right-6 bottom-2 flex flex-col items-end gap-0.5
-                            ">
+                            "
+                            >
                                 {org.averageRating !== null ? (
                                     <>
                                         <div className="flex items-center gap-0.5">
@@ -111,10 +125,12 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                             </div>
                         </div>
 
-                        <div className="
+                        <div
+                            className="
                             mb-6 grid grid-cols-2 gap-4
                             sm:grid-cols-4
-                        ">
+                        "
+                        >
                             <div className="rounded-xl border bg-white p-5 shadow-sm">
                                 <div className="mb-3">
                                     <div className="w-fit rounded-md bg-gray-100 p-2">
@@ -160,10 +176,12 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
 
                             {org.missionStatement && (
                                 <div className="mb-5">
-                                    <p className="
+                                    <p
+                                        className="
                                         mb-1 text-xs font-medium tracking-wide text-gray-400
                                         uppercase
-                                    ">
+                                    "
+                                    >
                                         Mission Statement
                                     </p>
                                     <p className="text-sm text-gray-700">{org.missionStatement}</p>
@@ -173,10 +191,12 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                             <div className="grid grid-cols-2 gap-4">
                                 {org.causeCategory && (
                                     <div className="rounded-lg border p-4">
-                                        <p className="
+                                        <p
+                                            className="
                                             mb-2 text-xs font-medium tracking-wide text-gray-400
                                             uppercase
-                                        ">
+                                        "
+                                        >
                                             Cause Category
                                         </p>
                                         <p className="text-sm font-medium text-gray-800">{org.causeCategory}</p>
@@ -184,10 +204,12 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                 )}
                                 {org.website && (
                                     <div className="rounded-lg border p-4">
-                                        <p className="
+                                        <p
+                                            className="
                                             mb-2 text-xs font-medium tracking-wide text-gray-400
                                             uppercase
-                                        ">
+                                        "
+                                        >
                                             Website
                                         </p>
                                         <div className="flex items-center gap-1.5">
@@ -214,10 +236,12 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
 
                             {org.hqAdr && (
                                 <div className="mt-4 rounded-lg border p-4">
-                                    <p className="
+                                    <p
+                                        className="
                                         mb-2 text-xs font-medium tracking-wide text-gray-400
                                         uppercase
-                                    ">
+                                    "
+                                    >
                                         Address
                                     </p>
                                     <div className="flex items-start gap-1.5">

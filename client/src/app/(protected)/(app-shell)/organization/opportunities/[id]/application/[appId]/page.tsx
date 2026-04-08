@@ -1,16 +1,16 @@
 "use client";
 
-import { ArrowLeft, Briefcase, GraduationCap, MapPin, User } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { use } from "react";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
-import { useOppApplicationViewModel } from "./oppApplicationVm";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { UserService } from "@/services/UserService";
+import { ArrowLeft, Briefcase, GraduationCap, MapPin, User } from "lucide-react";
+import { use } from "react";
+import { useOppApplicationViewModel } from "./oppApplicationVm";
 
 export default function ViewApplicationPage({ params }: { params: Promise<{ id: string; appId: string }> }) {
     const { id, appId } = use(params);
@@ -36,14 +36,18 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
         <div className="min-h-screen">
             <title>Organization View Opportunity - Volunteerly</title>
 
-            <main className="
+            <main
+                className="
                 flex flex-col p-6
                 md:mx-10 md:flex-row
-            ">
-                <div className="
-                    mx-auto mb-5 mb-10 flex w-full max-w-3xl flex-col gap-6
-                    md:mb-0 md:w-3/4
-                ">
+            "
+            >
+                <div
+                    className="
+                        mx-auto mb-5 flex w-full max-w-3xl flex-col gap-6
+                        md:mb-0 md:w-3/4
+                    "
+                >
                     <div>
                         <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
                             <ArrowLeft className="size-4" />
@@ -55,14 +59,18 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
 
                     <Card>
                         <CardContent>
-                            <div className="
+                            <div
+                                className="
                                 gap-6 text-center
                                 md:grid md:grid-cols-8 md:text-left
-                            ">
-                                <div className="
+                            "
+                            >
+                                <div
+                                    className="
                                     flex justify-center
                                     md:col-span-2 md:w-full
-                                ">
+                                "
+                                >
                                     <Avatar className="h-auto w-20">
                                         <AvatarImage src={UserService.getAvatarURL(application?.volId || "")} />
                                         <AvatarFallback>
@@ -72,14 +80,18 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                     </Avatar>
                                 </div>
 
-                                <div className="
+                                <div
+                                    className="
                                     flex flex-col gap-1
                                     md:col-span-4
-                                ">
-                                    <div className="
+                                "
+                                >
+                                    <div
+                                        className="
                                         gap-3
                                         md:flex
-                                    ">
+                                    "
+                                    >
                                         <h3>
                                             {application?.volunteer?.firstName} {application?.volunteer?.lastName}
                                         </h3>
@@ -102,14 +114,18 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                     <p className="text-sm">{application?.volunteer?.bio}</p>
                                 </div>
 
-                                <div className="
+                                <div
+                                    className="
                                     flex flex-col items-center gap-3 pt-3
                                     md:col-span-2 md:pt-0
-                                ">
-                                    <span className="
+                                "
+                                >
+                                    <span
+                                        className="
                                         flex flex-1 items-center justify-center gap-3
                                         md:justify-start
-                                    ">
+                                    "
+                                    >
                                         <MapPin className="text-primary" />
                                         <div className="flex flex-col">
                                             <span className="text-sm text-muted-foreground">
@@ -130,9 +146,12 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                                     );
                                                     const pct = Math.round(fill * 100);
                                                     return (
-                                                        <span key={star} className="
+                                                        <span
+                                                            key={star}
+                                                            className="
                                                             relative text-2xl leading-none
-                                                        ">
+                                                        "
+                                                        >
                                                             <span className="text-gray-500">★</span>
                                                             <span
                                                                 className="
@@ -163,9 +182,11 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                         </CardHeader>
                         {application?.volunteer?.workExperiences?.length === 0 &&
                             application?.volunteer?.educations?.length === 0 && (
-                                <CardContent className="
+                                <CardContent
+                                    className="
                                     flex h-full flex-col justify-center text-center
-                                ">
+                                "
+                                >
                                     <div className="mb-4 flex justify-center">
                                         <Avatar size="lg">
                                             <AvatarImage src={volunteerly_logo.src} />
@@ -225,11 +246,11 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                             <CardTitle>Opportunity Specific Details</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <CardTitle className="text-md pb-2">Message to Organization</CardTitle>
+                            <CardTitle className="pb-2">Message to Organization</CardTitle>
                             <p>{application?.message}</p>
                         </CardContent>
                         <CardContent>
-                            <CardTitle className="text-md pb-2">Availability Match</CardTitle>
+                            <CardTitle className="pb-2">Availability Match</CardTitle>
                             {matchedSchedule?.length === 0 ? (
                                 <p className="text-destructive">No Days Match</p>
                             ) : (

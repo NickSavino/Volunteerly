@@ -34,10 +34,12 @@ export default function SkillExtractionPage() {
 
                 <div className="w-full">
                     <h2 className="mb-4 text-lg font-semibold">Extracted Skills</h2>
-                    <div className="
+                    <div
+                        className="
                         grid grid-cols-1 gap-4
                         md:grid-cols-2
-                    ">
+                    "
+                    >
                         <SkillCard
                             title="Technical Skills"
                             icon=""
