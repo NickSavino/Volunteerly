@@ -8,11 +8,11 @@ function toChatMessage(message: ChatMessageRecord): ChatMessage {
         id: message.id,
         content: message.content,
         conversationId: message.conversationId,
-        senderDisplayName: getDisplayName(message.sender),
-        senderRole: message.sender.role,
+        senderDisplayName: getDisplayName(message.sender ?? undefined),
+        senderRole: message.sender?.role ?? message.senderRoleSnapshot ?? "UNKNOWN",
         senderAvatarUrl: undefined,
         sentAt: message.sentAt.toISOString(),
-        senderId: message.senderId
+        senderId: message.senderId ?? undefined,
     }
 }
 

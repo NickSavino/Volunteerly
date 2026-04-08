@@ -27,7 +27,7 @@ export const ModeratorTicketSchema = z.object({
   urgencyRating: ModeratorUrgencyRatingSchema,
   createdAt: z.iso.datetime(),
   issuerId: z.uuid(),
-  targetId: z.uuid(),
+  targetId: z.uuid().nullable().optional(),
 });
 export type ModeratorTicket = z.infer<typeof ModeratorTicketSchema>;
 

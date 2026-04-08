@@ -5,7 +5,7 @@ import { ModeratorTicketSchema } from "./moderator-tickets.js";
 
 export const ModeratorTicketDetailSchema = ModeratorTicketSchema.extend({
     issuer: ChatParticipantSummarySchema,
-    target: ChatParticipantSummarySchema,
+    target: ChatParticipantSummarySchema.nullable().optional(),
     conversation: ChatConversationDetailSchema.optional(),
 });
 

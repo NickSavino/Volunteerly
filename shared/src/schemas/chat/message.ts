@@ -4,7 +4,7 @@ import { UserRoleSchema } from "../user.js";
 export const ChatMessageSchema = z.object({
     id: z.uuid(),
     conversationId: z.uuid(),
-    senderId: z.uuid(),
+    senderId: z.uuid().optional(),
     senderDisplayName: z.string(),
     senderRole: UserRoleSchema,
     senderAvatarUrl: z.string().optional(),
