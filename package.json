@@ -36,7 +36,7 @@
         "format": "prettier . --write",
         "format:check": "prettier . --check",
         "lint": "npm run lint -w client",
-        "lint:fix": "npm run typecheck -w shared && npm run typecheck -w server && npm run typecheck -w client",
+        "lint:fix": "npm run lint:fix -w client",
         "test": "npm run test -w shared && npm run test -w server && npm run test -w client"
     },
     "version": "1.0.0",
