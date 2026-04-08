@@ -1,20 +1,24 @@
-import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier";
+import betterTailwindcss from "eslint-plugin-better-tailwindcss";
+import { defineConfig, globalIgnores } from "eslint/config";
 
-const eslintConfig = defineConfig([
+export default defineConfig([
     ...nextVitals,
     ...nextTs,
+    {
+        ...betterTailwindcss.configs.recommended,
+        files: ["src/**/*.{js,jsx,ts,tsx}"],
+        settings: {
+            "better-tailwindcss": {
+                entryPoint: "src/app/globals.css",
+            },
+        },
+        rules: {
+            "better-tailwindcss/enforce-consistent-line-wrapping": ["warn", { printWidth: 100 }],
+        },
+    },
     prettier,
-    // Override default ignores of eslint-config-next.
-    globalIgnores([
-        // Default ignores of eslint-config-next:
-        ".next/**",
-        "out/**",
-        "build/**",
-        "next-env.d.ts",
-    ]),
+    globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
 ]);
-
-export default eslintConfig;
