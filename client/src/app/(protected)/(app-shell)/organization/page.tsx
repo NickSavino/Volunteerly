@@ -17,10 +17,14 @@ import { Card, CardHeader, CardTitle, CardAction, CardContent, CardDescription }
 import { Button } from "@/components/ui/button";
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { getAvatarFallback } from "@/components/navigation/nav-utils";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
 
 export default function HomePage() {
   const {loading, session, fetching, signOut, router, user, error, currentUser, opportunities, totalOpps, totalHours, activeVlt} = useOrgDashboardViewModel()
+
+  const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+
 
   if (loading || !session || fetching) {
     return (<LoadingScreen />)
@@ -171,7 +175,11 @@ export default function HomePage() {
                         <CardDescription>Open a ticket with our moderator team for assistance.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Button variant="ghost" className="w-full text-md py-6 cursor-pointer flex items-center gap-3 cursor-pointer">
+                        <Button 
+                            variant="ghost" className="w-full text-md py-6 cursor-pointer flex items-center gap-3 cursor-pointer"
+                            onClick={() => setIsTicketModalOpen(true)}
+                        >
+                        
                             <MessageCircleQuestionMark className="!w-7 !h-7 shrink-0"/>
                             Contact Support
                         </Button>
@@ -179,6 +187,11 @@ export default function HomePage() {
                 </Card>
             </div>
         </main>
+
+        <SubmitTicketModal
+            open={isTicketModalOpen}
+            onClose={() => setIsTicketModalOpen(false)}
+        />
     </div>
     );
 }

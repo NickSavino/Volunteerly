@@ -89,6 +89,49 @@ export function useOrganizationMessagesViewModel() {
     )?.displayName;
   }, [selectedConversation, currentUser?.id]);
 
+    const selectedOtherParticipant = useMemo(() => {
+    return selectedConversation?.participants.find(
+      (participant) => participant.userId !== currentUser?.id
+    );
+  }, [selectedConversation, currentUser?.id]);
+
+  const isTicketConversation = selectedConversation?.kind === "TICKET";
+
+  const threadTitle = useMemo(() => {
+    if (!selectedConversation) return "Conversation";
+
+    if (selectedConversation.kind === "TICKET") {
+      return (
+        selectedConversation.title ??
+        `Ticket #${(selectedConversation.ticketId ?? selectedConversation.id)
+          .slice(-8)
+          .toUpperCase()}`
+      );
+    }
+
+    return selectedOtherParticipant?.displayName ?? "Conversation";
+  }, [selectedConversation, selectedOtherParticipant]);
+
+  const threadSubtitle = useMemo(() => {
+    if (!selectedConversation) return undefined;
+
+    if (selectedConversation.kind === "TICKET") {
+      return selectedOtherParticipant
+        ? `Moderator: ${selectedOtherParticipant.displayName}`
+        : "Awaiting moderator claim";
+    }
+
+    return selectedOtherParticipant?.role;
+  }, [selectedConversation, selectedOtherParticipant]);
+
+  const threadMeta = useMemo(() => {
+    if (selectedConversation?.kind !== "TICKET") return undefined;
+    const shortId = (selectedConversation.ticketId ?? selectedConversation.id)
+      .slice(-8)
+      .toUpperCase();
+    return `Ticket #${shortId}`;
+  }, [selectedConversation]);
+
   return {
     loading: loading || loadingData,
     error,
@@ -103,5 +146,9 @@ export function useOrganizationMessagesViewModel() {
     selectConversation,
     sendMessage,
     headerName,
+    isTicketConversation,
+    threadTitle,
+    threadSubtitle,
+    threadMeta,
   };
 }
