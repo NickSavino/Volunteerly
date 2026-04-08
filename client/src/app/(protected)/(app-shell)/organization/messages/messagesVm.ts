@@ -68,11 +68,39 @@ export function useOrganizationMessagesViewModel() {
     }
   }
 
+  function markSelectedTicketClosed() {
+    setSelectedConversation((current) => 
+      current && current.kind === "TICKET"
+        ? { ...current, ticketStatus: "CLOSED" }
+        : current
+    );
+
+    setConversations((current) =>
+      current.map((conversation) =>
+        conversation.id === selectedConversationId && conversation.kind === "TICKET"
+          ? { ...conversation, ticketStatus: "CLOSED" }
+          : conversation
+      )
+    )
+  }
+
   async function sendMessage() {
     if (!selectedConversationId || !messageDraft.trim()) return;
 
     try {
       setSending(true);
+      setError(null);
+
+      const latestDetail = await api<ChatConversationDetail>(`/chat/${selectedConversationId}`);
+
+      setSelectedConversation(latestDetail);
+
+      if (latestDetail.kind === "TICKET" && latestDetail.ticketStatus === "CLOSED") {
+        markSelectedTicketClosed();
+        setError("This ticket is closed. Replies are disabled.");
+        return;
+      }
+
       await api(`/chat/${selectedConversationId}/messages`, {
         method: "POST",
         body: JSON.stringify({ content: messageDraft.trim() }),
@@ -86,30 +114,17 @@ export function useOrganizationMessagesViewModel() {
       setMessageDraft("");
     } catch (err) {
       console.error(err);
+
       const isClosedTicketError =
         err instanceof Error && err.message.includes("Replies are disabled");
 
       if (isClosedTicketError) {
-        setSelectedConversation((current) =>
-          current && current.kind === "TICKET"
-            ? { ...current, ticketStatus: "CLOSED" }
-            : current
-        );
-
-        setConversations((current) =>
-          current.map((conversation) =>
-            conversation.id === selectedConversationId && conversation.kind === "TICKET"
-              ? { ...conversation, ticketStatus: "CLOSED" }
-              : conversation
-          )
-        );
-
+        markSelectedTicketClosed();
         setError("This ticket is closed. Replies are disabled.");
       } else {
         setError("Failed to send message.");
       }
     } finally {
-
       setSending(false);
     }
   }
@@ -167,7 +182,12 @@ export function useOrganizationMessagesViewModel() {
       .slice(-8)
       .toUpperCase();
 
-    const statusLabel = selectedConversation.ticketStatus === "CLOSED" ? "Closed" : "Open";
+    const statusLabel =
+      selectedConversation.ticketStatus === "CLOSED"
+        ? "Closed"
+        : selectedConversation.ticketStatus === "OPEN"
+          ? "Open"
+          : "Status unavailable";
     return `Ticket #${shortId} • ${statusLabel}`;
   }, [selectedConversation]);
 

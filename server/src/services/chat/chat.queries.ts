@@ -18,6 +18,7 @@ export const chatConversationListArgs = {
             select: {
                 id: true,
                 title: true,
+                status: true,
             },
         },
         participants: {
@@ -44,6 +45,7 @@ export const chatConversationDetailArgs = {
             select: {
                 id: true,
                 title: true,
+                status: true,
             },
         },
         participants: {
