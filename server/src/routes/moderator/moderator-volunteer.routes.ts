@@ -12,6 +12,12 @@ moderatorVolunteersRouter.get("/", async (_, res, next) => {
 
         res.status(200).json(volunteers);
     } catch (error) {
+        if ((error as Error)?.message === "VOLUNTEER_NOT_FOUND") {
+            return res.status(404).json({ error: "Not Found", message: "Volunteer not found." });
+        }
+        if ((error as Error)?.message === "VOLUNTEER_ALREADY_SUSPENDED") {
+            return res.status(409).json({ error: "Conflict", message: "Volunteer is already suspended." });
+        }
         next(error);
     }
 });
@@ -58,6 +64,12 @@ moderatorVolunteersRouter.post("/:volunteerId/warn", async (req, res, next) => {
         await warnVolunteer(req.params.volunteerId, moderatorId, parsed.data);
         res.status(200).json({ success: true });
     } catch (error: any) {
+        if (error?.message === "VOLUNTEER_NOT_FOUND") {
+            return res.status(404).json({ error: "Not Found", message: "Volunteer not found." });
+        }
+        if (error?.message === "VOLUNTEER_ALREADY_SUSPENDED") {
+            return res.status(409).json({ error: "Conflict", message: "Volunteer is already suspended." });
+        }
         if (error?.message === "REPORT_NOT_FOUND") {
             return res.status(404).json({ error: "Not Found", message: "Open report not found." });
         }

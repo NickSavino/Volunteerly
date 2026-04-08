@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { ModeratorVolunteerDetail, ModeratorVolunteerEscalateInput, ModeratorVolunteerFlagInput, ModeratorVolunteerList, ModeratorVolunteerSuspendInput, ModeratorVolunteerWarnInput } from "@volunteerly/shared";
 import { prisma } from "../../lib/prisma.js";
 
@@ -24,6 +25,27 @@ function buildModeratorName(moderator: { firstName: string; lastName: string } |
 
 function toStringArray(value: unknown): string[] {
     return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+}
+
+async function getVolunteerStatusSnapshot(
+    tx: Prisma.TransactionClient,
+    volunteerId: string,
+) {
+    return tx.volunteer.findUnique({
+        where: { id: volunteerId },
+        select: {
+            status: true,
+            user: {
+                select: {
+                    status: true,
+                },
+            },
+        },
+    });
+}
+
+function isVolunteerSuspended(snapshot: Awaited<ReturnType<typeof getVolunteerStatusSnapshot>>) {
+    return snapshot?.status === "CLOSED" || snapshot?.user.status === "BANNED";
 }
 
 export async function getModeratorVolunteerList(): Promise<ModeratorVolunteerList> {
@@ -140,6 +162,11 @@ export async function flagVolunteerByModerator(
     input: ModeratorVolunteerFlagInput,
 ) {
     return prisma.$transaction(async (tx) => {
+        const volunteer = await getVolunteerStatusSnapshot(tx, volunteerId);
+
+        if (!volunteer) throw new Error("VOLUNTEER_NOT_FOUND");
+        if (isVolunteerSuspended(volunteer)) throw new Error("VOLUNTEER_ALREADY_SUSPENDED");
+
         await tx.flag.create({
             data: {
                 flagIssuerId: moderatorId,
@@ -223,6 +250,11 @@ export async function suspendVolunteer(
     input: ModeratorVolunteerSuspendInput,
 ) {
     return prisma.$transaction(async (tx) => {
+        const volunteer = await getVolunteerStatusSnapshot(tx, volunteerId);
+
+        if (!volunteer) throw new Error("VOLUNTEER_NOT_FOUND");
+        if (isVolunteerSuspended(volunteer)) throw new Error("VOLUNTEER_ALREADY_SUSPENDED");
+
         const report = await tx.volunteerReport.findFirst({
             where: {
                 id: input.reportId,

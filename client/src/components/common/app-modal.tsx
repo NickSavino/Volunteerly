@@ -9,6 +9,7 @@ type AppModalProps = {
     open: boolean;
     onClose: () => void;
     title: string;
+    description?: string;
     icon?: ReactNode;
     children: ReactNode;
     footer?: ReactNode;
@@ -21,6 +22,7 @@ export function AppModal({
     open,
     onClose,
     title,
+    description,
     icon,
     children,
     footer,
@@ -31,6 +33,7 @@ export function AppModal({
     return (
         <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
             <DialogContent
+                aria-describedby={description ? undefined : undefined}
                 className={cn(
                     "flex max-h-[90vh] flex-col gap-0 overflow-hidden rounded-2xl border bg-card p-0 shadow-2xl [&>button]:hidden",
                     maxWidthClassName

@@ -53,6 +53,14 @@ export function useLoginViewModel() {
 
                 const currentUser = userResult.data;
 
+                if (currentUser.status === "BANNED") {
+                    await AuthService.signOutUser();
+                    setError("This account has been suspended.")
+                    setSubmitting(false);
+                    setPendingRedirect(false);
+                    return;
+                }
+
                 if (currentUser.role === "VOLUNTEER") {
                     const nextRoute =
                         currentUser.status === "UNVERIFIED"

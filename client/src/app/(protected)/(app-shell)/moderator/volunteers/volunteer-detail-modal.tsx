@@ -107,10 +107,19 @@ export function VolunteerDetailModal({
         void loadDetail(volunteerId);
     }, [open, volunteerId]);
 
-    const activeReport = useMemo(
-        () => detail?.reports.find((report) => report.isOpen) ?? detail?.reports[0],
+    const openReport = useMemo(
+        () => detail?.reports.find((report) => report.isOpen),
         [detail]
     );
+
+    const reportForView = useMemo(
+        () => openReport ?? detail?.reports[0],
+        [detail, openReport]
+    )
+
+    const hasOpenReport = !!openReport;
+    const hasReportHistory = !!detail?.reports.length;
+    const isSuspended = detail?.state === "CLOSED";
 
     async function loadDetail(id: string) {
         setLoading(true);
@@ -140,6 +149,13 @@ export function VolunteerDetailModal({
     }
 
     async function submitFlag() {
+        if (isSuspended) {
+            appToast.error("Volunteer already suspended", {
+                message: "Suspended accounts cannot be flagged again.",
+            });
+            return;
+        }
+
         if (!volunteerId || !flagForm.reason.trim()) return;
         setSubmitting(true);
         try {
@@ -159,11 +175,26 @@ export function VolunteerDetailModal({
     }
 
     async function submitWarning() {
-        if (!volunteerId || !activeReport?.id || !warnForm.reason.trim()) return;
+        if (isSuspended) {
+            appToast.error("Volunteer already suspended", {
+                message: "Suspended accounts can no longer receive additional moderation actions.",
+            });
+            return;
+        }
+
+        if (!volunteerId || !openReport?.id || !warnForm.reason.trim()) {
+            if (!openReport) {
+                appToast.error("No open investigation", {
+                    message: "This report is already closed and can no longer be actioned.",
+                });
+            }
+            return;
+        }
+
         setSubmitting(true);
         try {
             await ModeratorService.warnVolunteer(volunteerId, {
-                reportId: activeReport.id,
+                reportId: openReport.id,
                 reason: warnForm.reason.trim(),
                 severity: warnForm.severity,
             });
@@ -178,11 +209,25 @@ export function VolunteerDetailModal({
     }
 
     async function submitSuspension() {
-        if (!volunteerId || !activeReport?.id || !suspendForm.reason.trim()) return;
+        if (isSuspended) {
+            appToast.error("Volunteer already suspended", {
+                message: "This account is already suspended.",
+            });
+            return;
+        }
+
+        if (!volunteerId || !openReport?.id || !suspendForm.reason.trim()) {
+            if (!openReport) {
+                appToast.error("No open investigation", {
+                    message: "This report is already closed and can no longer be actioned.",
+                });
+            }
+            return;
+        }
         setSubmitting(true);
         try {
             await ModeratorService.suspendVolunteer(volunteerId, {
-                reportId: activeReport.id,
+                reportId: openReport.id,
                 reason: suspendForm.reason.trim(),
                 durationDays: suspendForm.durationDays,
             });
@@ -197,11 +242,25 @@ export function VolunteerDetailModal({
     }
 
     async function submitEscalation() {
-        if (!volunteerId || !activeReport?.id || !escalateForm.reason.trim()) return;
+        if (isSuspended) {
+            appToast.error("Volunteer already suspended", {
+                message: "Suspended accounts can no longer receive additional moderation actions.",
+            });
+            return;
+        }
+
+        if (!volunteerId || !openReport?.id || !escalateForm.reason.trim()) {
+            if (!openReport) {
+                appToast.error("No open investigation", {
+                    message: "This report is already closed and can no longer be actioned.",
+                });
+            }
+            return;
+        }
         setSubmitting(true);
         try {
             await ModeratorService.escalateVolunteer(volunteerId, {
-                reportId: activeReport.id,
+                reportId: openReport.id,
                 reason: escalateForm.reason.trim(),
             });
             appToast.success("Investigation escalated", { message: "The account was moved to the suspended tab." });
@@ -288,48 +347,59 @@ export function VolunteerDetailModal({
             footer={
                 currentMode === "profile" ? (
                     <>
-                        <Button variant="outline" onClick={handleClose}>Close</Button>
+                        <Button 
+                            variant="outline" 
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button>
                         <div className="flex items-center gap-2">
-                            <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={!detail?.reports.length}>
+                            <Button 
+                                variant="outline" 
+                                onClick={() => setCurrentMode("investigation")}
+                                disabled={!hasReportHistory}
+                            >
                                 View Investigation
                             </Button>
-                            <Button onClick={() => setCurrentMode("flag")}>Flag Account</Button>
+                            <Button onClick={() => setCurrentMode("flag")} disabled={isSuspended}>
+                                Flag Account
+                            </Button>
                         </div>
                     </>
                 ) : currentMode === "investigation" ? (
                     <>
                         <Button variant="outline" onClick={() => setCurrentMode("profile")}>Back</Button>
                         <div className="flex items-center gap-2">
-                            <Button variant="outline" onClick={() => setCurrentMode("escalate")} disabled={!activeReport}>Escalate</Button>
-                            <Button variant="outline" onClick={() => setCurrentMode("warning")} disabled={!activeReport}>Issue Warning</Button>
-                            <Button variant="destructive" onClick={() => setCurrentMode("suspend")} disabled={!activeReport}>Suspend</Button>
+                            <Button variant="outline" onClick={() => setCurrentMode("escalate")} disabled={!hasOpenReport || isSuspended}>Escalate</Button>
+                            <Button variant="outline" onClick={() => setCurrentMode("warning")} disabled={!hasOpenReport || isSuspended}>Issue Warning</Button>
+                            <Button variant="destructive" onClick={() => setCurrentMode("suspend")} disabled={!hasOpenReport || isSuspended}>Suspend</Button>
                         </div>
                     </>
                 ) : currentMode === "flag" ? (
                     <>
                         <Button variant="outline" onClick={() => setCurrentMode("profile")} disabled={submitting}>Cancel</Button>
-                        <Button onClick={submitFlag} disabled={submitting || !flagForm.reason.trim()}>
+                        <Button onClick={submitFlag} disabled={submitting || !flagForm.reason.trim() || isSuspended}>
                             {submitting ? "Saving..." : "Flag Account"}
                         </Button>
                     </>
                 ) : currentMode === "warning" ? (
                     <>
                         <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>Cancel</Button>
-                        <Button onClick={submitWarning} disabled={submitting || !warnForm.reason.trim() || !activeReport?.id}>
+                        <Button onClick={submitWarning} disabled={submitting || !warnForm.reason.trim() || !openReport?.id || isSuspended}>
                             {submitting ? "Saving..." : "Issue Warning"}
                         </Button>
                     </>
                 ) : currentMode === "suspend" ? (
                     <>
                         <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>Cancel</Button>
-                        <Button variant="destructive" onClick={submitSuspension} disabled={submitting || !suspendForm.reason.trim() || !activeReport?.id}>
+                        <Button variant="destructive" onClick={submitSuspension} disabled={submitting || !suspendForm.reason.trim() || !openReport?.id || isSuspended}>
                             {submitting ? "Saving..." : "Suspend Account"}
                         </Button>
                     </>
                 ) : (
                     <>
                         <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>Cancel</Button>
-                        <Button onClick={submitEscalation} disabled={submitting || !escalateForm.reason.trim() || !activeReport?.id}>
+                        <Button onClick={submitEscalation} disabled={submitting || !escalateForm.reason.trim() || !openReport?.id || isSuspended}>
                             {submitting ? "Saving..." : "Confirm Escalation"}
                         </Button>
                     </>
@@ -399,20 +469,32 @@ export function VolunteerDetailModal({
                 </div>
             ) : currentMode === "investigation" ? (
                 <div className="space-y-6">
-                    {activeReport ? (
+                    {reportForView ? (
                         <div className="rounded-xl border p-5">
-                            <p className="text-xl font-bold text-foreground">{activeReport.reason}</p>
+                            <p className="text-xl font-bold text-foreground">{reportForView.reason}</p>
                             <p className="mt-2 text-sm text-muted-foreground">
-                                Reported by {activeReport.reporterDisplayName} on{" "}
-                                {new Date(activeReport.createdAt).toLocaleDateString("en-US")}
+                                Reported by {reportForView.reporterDisplayName} on{" "}
+                                {new Date(reportForView.createdAt).toLocaleDateString("en-US")}
                             </p>
-                            {activeReport.severity ? (
+                            {reportForView.severity ? (
                                 <p className="mt-2 text-sm text-muted-foreground">
-                                    Severity: {activeReport.severity}
+                                    Severity: {reportForView.severity}
                                 </p>
                             ) : null}
-                            {activeReport.details ? (
-                                <p className="mt-4 text-sm text-muted-foreground">{activeReport.details}</p>
+                            {reportForView.details ? (
+                                <p className="mt-4 text-sm text-muted-foreground">{reportForView.details}</p>
+                            ) : null}
+
+                            {!hasOpenReport ? (
+                                <p className="mt-4 rounded-md border border-border bg-secondary/30 px-4 py-3 text-sm text-muted-foreground">
+                                    This investigation is already closed. You can review the history, but no further action can be taken.
+                                </p>
+                            ) : null}
+
+                            {isSuspended ? (
+                                <p className="mt-4 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                                    This volunteer is already suspended. Additional suspension or escalation actions are disabled.
+                                </p>
                             ) : null}
                         </div>
                     ) : (
