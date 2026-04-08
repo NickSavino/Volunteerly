@@ -27,5 +27,6 @@
         "@typescript-eslint/*"
     ],
     "eslint.useFlatConfig": true,
-    "js/ts.preferences.importModuleSpecifier": "non-relative"
+    "js/ts.preferences.importModuleSpecifier": "non-relative",
+    "tailwindCSS.lint.suggestCanonicalClasses": "ignore"
 }
