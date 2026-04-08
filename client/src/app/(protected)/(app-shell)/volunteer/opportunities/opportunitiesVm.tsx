@@ -140,6 +140,9 @@ export function useOpportunitiesViewModel() {
                 setMatchScores(scores);
 
                 await fetchOpportunities([], "ALL", "ALL", 40, "", "RELEVANT", scores, volunteer);
+            
+                //backfill opps
+                VolunteerService.backfillOpportunityVectors();
             } catch (err) {
                 console.error(err);
                 setError("Failed to load data.");
