@@ -40,6 +40,7 @@ export async function getChatConversationList(userId: string): Promise<ChatConve
                 id: conversation.id,
                 kind: conversation.kind,
                 ticketId: conversation.ticketId ?? undefined,
+                ticketStatus: conversation.ticket?.status ?? undefined,
                 title: conversation.ticket?.title ?? undefined,
                 otherParticipant: otherParticipant
                     ? {
@@ -75,6 +76,7 @@ export async function getChatConversationDetail(userId: string, conversationId: 
     id: conversation.id,
     kind: conversation.kind,
     ticketId: conversation.ticketId ?? undefined,
+    ticketStatus: conversation.ticket?.status ?? undefined,
     title: conversation.ticket?.title ?? undefined,
     participants: conversation.participants.map((participant) => ({
       userId: participant.user.id,
@@ -98,10 +100,22 @@ export async function createChatMessage(userId: string, conversationId: string, 
         some: { userId },
       },
     },
-    select: { id: true },
+    select: {
+      id: true,
+      kind: true,
+      ticket: {
+        select: {
+          status: true,
+        }
+      }
+    }
   });
 
   if (!conversation) return null;
+
+  if (conversation.kind === "TICKET" && conversation.ticket?.status === "CLOSED") {
+    throw new Error("TICKET_CLOSED");
+  }
 
   const message = await prisma.$transaction(async (tx) => {
     const createdMessage = await tx.chatMessage.create({

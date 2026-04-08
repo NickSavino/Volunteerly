@@ -12,6 +12,8 @@ import { Settings, Pencil } from "lucide-react";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award, type LucideIcon } from "lucide-react";
+import { useState } from "react";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
 export default function ProfilePage() {
     const {
@@ -39,6 +41,8 @@ export default function ProfilePage() {
         fetching,
         awards
     } = useProfileViewModel();
+
+    const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
     if (loading || !session || fetching) {
         return (<LoadingScreen />)
@@ -167,7 +171,7 @@ export default function ProfilePage() {
                             </div>
                             <Button
                                 className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
-                                onClick={() => {}}
+                                onClick={() => setIsTicketModalOpen(true)}
                             >
                                 Submit a Ticket
                             </Button>
@@ -289,6 +293,11 @@ export default function ProfilePage() {
 
                 </div>
             </main>
+
+            <SubmitTicketModal
+                open={isTicketModalOpen}
+                onClose={() => setIsTicketModalOpen(false)}
+            />
         </div>
     );
 }

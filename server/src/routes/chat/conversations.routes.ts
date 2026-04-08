@@ -67,7 +67,14 @@ conversationsRouter.post("/:conversationId/messages", async (req, res, next) => 
         }
 
         return res.status(201).json(message)
-    } catch (error) {
+    } catch (error: any) {
+        if (error?.message === "TICKET_CLOSED") {
+            return res.status(409).json({
+                error: "Conflict",
+                message: "This ticket is closed. Replies are disabled.",
+            });
+        }
+
         next(error);
     }
 })

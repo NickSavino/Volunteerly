@@ -8,9 +8,13 @@ import { Avatar, AvatarFallback, AvatarImage,  } from "@/components/ui/avatar";
 import { LogOut, MessageCircleQuestionMark, FileText, User } from "lucide-react";
 import { Navbar } from "../application/navbar";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { useState } from "react";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
 export default function HomePage() {
   const {loading, session, router, signOut, currentOrganization} = useAppliedOrgDashboardViewModel()
+
+  const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
   if (loading || !session || !currentOrganization) {
     return (<LoadingScreen />)
@@ -74,7 +78,10 @@ export default function HomePage() {
                         <CardDescription>Open a ticket with our moderator team for assistance.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Button variant="ghost" className="w-full text-md py-6 cursor-pointer flex items-center gap-3">
+                        <Button
+                            variant="ghost" className="w-full text-md py-6 cursor-pointer flex items-center gap-3"
+                            onClick={() => setIsTicketModalOpen(true)}
+                        >
                             <MessageCircleQuestionMark className="w-7! h-7! shrink-0"/>
                             Contact Support
                         </Button>
@@ -82,6 +89,12 @@ export default function HomePage() {
                 </Card>
             </div>
         </main>
+
+        <SubmitTicketModal
+            open={isTicketModalOpen}
+            onClose={() => setIsTicketModalOpen(false)}
+            onSubmitted={(ticket) => router.push(`/organization/messages?conversationId=${ticket.conversationId}`)}
+        />
     </div>
     );
 }
