@@ -12,7 +12,7 @@ export function useLoginViewModel() {
     const { session, loading } = useAuth();
 
     const [pendingRedirect, setPendingRedirect] = useState(false);
-    const [pendingRoute, setPendingRoute] = useState<string | null>(null)
+    const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -24,7 +24,7 @@ export function useLoginViewModel() {
         setSubmitting(true);
         setError(null);
 
-        const {error} = await AuthService.loginUserWithEmailPass(email, password)
+        const { error } = await AuthService.loginUserWithEmailPass(email, password);
 
         if (error) {
             setError(error.message);
@@ -55,7 +55,7 @@ export function useLoginViewModel() {
 
                 if (currentUser.status === "BANNED") {
                     await AuthService.signOutUser();
-                    setError("This account has been suspended.")
+                    setError("This account has been suspended.");
                     setSubmitting(false);
                     setPendingRedirect(false);
                     return;
@@ -63,9 +63,7 @@ export function useLoginViewModel() {
 
                 if (currentUser.role === "VOLUNTEER") {
                     const nextRoute =
-                        currentUser.status === "UNVERIFIED"
-                            ? "/volunteer/experience-input"
-                            : "/volunteer";
+                        currentUser.status === "UNVERIFIED" ? "/volunteer/experience-input" : "/volunteer";
 
                     setPendingRoute(nextRoute);
                     return;
@@ -87,8 +85,8 @@ export function useLoginViewModel() {
                         org.status === "CREATED"
                             ? "/organization/application"
                             : org.status === "APPLIED" || org.status === "REJECTED"
-                                ? "/organization/appliedDashboard"
-                                : "/organization";
+                              ? "/organization/appliedDashboard"
+                              : "/organization";
 
                     setPendingRoute(nextRoute);
                     return;
@@ -147,6 +145,6 @@ export function useLoginViewModel() {
         setPassword,
         submitting,
         error,
-        handleSubmit
-    }
+        handleSubmit,
+    };
 }

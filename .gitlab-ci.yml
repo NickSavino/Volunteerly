@@ -1,52 +1,52 @@
 image: public.ecr.aws/docker/library/node:20
 
 workflow:
-  rules:
-  - if: $CI_MERGE_REQUEST_ID
-  - if: $CI_COMMIT_BRANCH == "main"
-  - if: $CI_COMMIT_BRANCH == "development"
+    rules:
+        - if: $CI_MERGE_REQUEST_ID
+        - if: $CI_COMMIT_BRANCH == "main"
+        - if: $CI_COMMIT_BRANCH == "development"
 
 stages:
-  - typecheck
-  - test
-  - build
-  - deploy
+    - typecheck
+    - test
+    - build
+    - deploy
 
 cache:
-  key:
-    files:
-      - package-lock.json
-  paths:
-    - .npm/
-    - client/.next/cache/
-  policy: pull-push
+    key:
+        files:
+            - package-lock.json
+    paths:
+        - .npm/
+        - client/.next/cache/
+    policy: pull-push
 
 default:
-  before_script:
-    - npm ci --cache .npm --prefer-offline
+    before_script:
+        - npm ci --cache .npm --prefer-offline
 
 typecheck:
-  stage: typecheck
-  script:
-    - npm run typecheck
+    stage: typecheck
+    script:
+        - npm run typecheck
 
 test:
-  stage: test
-  script:
-    - npm run test
-  needs: ["typecheck"]
+    stage: test
+    script:
+        - npm run test
+    needs: ["typecheck"]
 
 build:
-  stage: build
-  script:
-    - npm run build
-  needs: ["test"]
+    stage: build
+    script:
+        - npm run build
+    needs: ["test"]
 
 deploy:
-  stage: deploy
-  script:
-    - apt-get update && apt-get install -y curl
-    - curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_MAIN"
-  needs: ["build"]
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    stage: deploy
+    script:
+        - apt-get update && apt-get install -y curl
+        - curl -fsS -X POST "$VERCEL_DEPLOY_HOOK_MAIN"
+    needs: ["build"]
+    rules:
+        - if: $CI_COMMIT_BRANCH == "main"

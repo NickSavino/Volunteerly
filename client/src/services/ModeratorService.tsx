@@ -35,18 +35,18 @@ export class ModeratorService {
     }
 
     static async getModeratorVolunteers(): Promise<ModeratorVolunteerList> {
-                const json = await api<unknown>("/moderator/volunteers");
-                const parsed = ModeratorVolunteerListSchema.safeParse(json);
+        const json = await api<unknown>("/moderator/volunteers");
+        const parsed = ModeratorVolunteerListSchema.safeParse(json);
 
-                if (!parsed.success) {
-                    throw new Error("Error fetching volunteers.");
-                }
-                
-                return parsed.data;
+        if (!parsed.success) {
+            throw new Error("Error fetching volunteers.");
         }
 
+        return parsed.data;
+    }
+
     static async getModeratorTickets(): Promise<ModeratorTicketList> {
-        const json = await api<unknown>("/moderator/tickets")
+        const json = await api<unknown>("/moderator/tickets");
         const parsed = ModeratorTicketListSchema.safeParse(json);
 
         if (!parsed.success) {
@@ -56,7 +56,7 @@ export class ModeratorService {
         return parsed.data;
     }
 
-        static async getModeratorTicketDetail(ticketId: string): Promise<ModeratorTicketDetail> {
+    static async getModeratorTicketDetail(ticketId: string): Promise<ModeratorTicketDetail> {
         const json = await api<unknown>(`/moderator/tickets/${ticketId}`);
         const parsed = ModeratorTicketDetailSchema.safeParse(json);
 

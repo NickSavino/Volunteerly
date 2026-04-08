@@ -31,13 +31,7 @@ export function useModProfileViewModel() {
     const router = useRouter();
     const { session, user, loading: authLoading, signOut } = useAuth();
 
-    const {
-        loading: appLoading,
-        initialized,
-        currentModerator,
-        refresh,
-        clear,
-    } = useAppSession();
+    const { loading: appLoading, initialized, currentModerator, refresh, clear } = useAppSession();
 
     const [editing, setEditing] = useState(false);
     const [saving, setSaving] = useState(false);

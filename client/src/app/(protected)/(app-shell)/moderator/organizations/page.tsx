@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, X, CheckSquare, Square, BuildingIcon, } from "lucide-react";
+import { Building2, X, CheckSquare, Square, BuildingIcon } from "lucide-react";
 import { SortKey, useOrgListViewModel, type TabKey } from "./orgListVm";
 import { AppModal } from "@/components/common/app-modal";
 import { ConfirmActionDialog } from "@/components/common/confirm-action-dialog";
@@ -27,10 +27,7 @@ export default function ModeratorOrganizationsPage() {
     return (
         <div className="min-h-screen bg-gray-50">
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                <ModeratorPageHeader 
-                    title={page.title}
-                    subtitle={page.subtitle}
-                />
+                <ModeratorPageHeader title={page.title} subtitle={page.subtitle} />
 
                 {page.error && (
                     <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
@@ -58,83 +55,79 @@ export default function ModeratorOrganizationsPage() {
                     onApply={filters.applyFilters}
                 />
 
-                <ModeratorTabs 
+                <ModeratorTabs
                     tabs={TABS}
                     activeTab={page.activeTab}
                     counts={page.tabCounts}
                     onChange={filters.handleTabChange}
                 />
 
-                <ModeratorListContainer
-                    isEmpty={data.isEmpty}
-                    emptyMessage="No Organizations Found."
-                    className="p-6"
-                    >
+                <ModeratorListContainer isEmpty={data.isEmpty} emptyMessage="No Organizations Found." className="p-6">
                     <div className="space-y-5">
                         {data.rows.map((org) => (
-                        <div
-                            key={org.id}
-                            className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
-                        >
-                            <div className="flex items-center justify-between px-6 py-4">
-                            <div className="flex items-center gap-4">
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                <Building2 className="h-5 w-5 text-muted-foreground" />
-                                </div>
+                            <div
+                                key={org.id}
+                                className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+                            >
+                                <div className="flex items-center justify-between px-6 py-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                                            <Building2 className="h-5 w-5 text-muted-foreground" />
+                                        </div>
 
-                                <div>
-                                <p className="font-medium text-foreground">{org.orgName}</p>
-                                <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                                    <span>
-                                    Submitted{" "}
-                                    {new Date(org.createdAt).toLocaleDateString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    })}
-                                    </span>
-                                    <span>
-                                    Last Updated{" "}
-                                    {new Date(org.updatedAt).toLocaleDateString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    })}
-                                    </span>
-                                </div>
+                                        <div>
+                                            <p className="font-medium text-foreground">{org.orgName}</p>
+                                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                                <span>
+                                                    Submitted{" "}
+                                                    {new Date(org.createdAt).toLocaleDateString("en-US", {
+                                                        month: "short",
+                                                        day: "numeric",
+                                                        year: "numeric",
+                                                    })}
+                                                </span>
+                                                <span>
+                                                    Last Updated{" "}
+                                                    {new Date(org.updatedAt).toLocaleDateString("en-US", {
+                                                        month: "short",
+                                                        day: "numeric",
+                                                        year: "numeric",
+                                                    })}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-3">
+                                        {org.status === "APPLIED" && (
+                                            <button
+                                                className="rounded-md border border-border bg-card px-4 py-1.5 text-sm font-medium text-foreground hover:bg-secondary"
+                                                onClick={() => review.openReviewModal(org)}
+                                            >
+                                                Review Application
+                                            </button>
+                                        )}
+
+                                        {org.status === "VERIFIED" && (
+                                            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                                                Approved
+                                            </span>
+                                        )}
+
+                                        {org.status === "REJECTED" && (
+                                            <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+                                                Rejected
+                                            </span>
+                                        )}
+
+                                        {org.status === "CREATED" && (
+                                            <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
+                                                Not Applied
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-
-                            <div className="flex items-center gap-3">
-                                {org.status === "APPLIED" && (
-                                <button
-                                    className="rounded-md border border-border bg-card px-4 py-1.5 text-sm font-medium text-foreground hover:bg-secondary"
-                                    onClick={() => review.openReviewModal(org)}
-                                >
-                                    Review Application
-                                </button>
-                                )}
-
-                                {org.status === "VERIFIED" && (
-                                <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-                                    Approved
-                                </span>
-                                )}
-
-                                {org.status === "REJECTED" && (
-                                <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
-                                    Rejected
-                                </span>
-                                )}
-
-                                {org.status === "CREATED" && (
-                                <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
-                                    Not Applied
-                                </span>
-                                )}
-                            </div>
-                            </div>
-                        </div>
                         ))}
                     </div>
                 </ModeratorListContainer>
@@ -145,7 +138,7 @@ export default function ModeratorOrganizationsPage() {
                             ? "No organizations found"
                             : `Showing ${pagination.startItem}–${pagination.endItem} of ${pagination.totalItems} organizations`}
                     </p>
-                    
+
                     <ModeratorPagination
                         currentPage={pagination.currentPage}
                         totalPages={pagination.totalPages}
@@ -186,9 +179,7 @@ export default function ModeratorOrganizationsPage() {
                 {review.selectedOrg ? (
                     <>
                         <div className="mb-6">
-                            <h3 className="text-2xl font-bold text-foreground">
-                                {review.selectedOrg.orgName}
-                            </h3>
+                            <h3 className="text-2xl font-bold text-foreground">{review.selectedOrg.orgName}</h3>
                             <p className="text-sm text-muted-foreground">
                                 Submitted{" "}
                                 {new Date(review.selectedOrg.createdAt).toLocaleDateString("en-US", {
@@ -220,7 +211,7 @@ export default function ModeratorOrganizationsPage() {
                                     >
                                         {review.checks.charityVerified ? (
                                             <CheckSquare className="h-4 w-4" />
-                                        ): (
+                                        ) : (
                                             <Square className="h-4 w-4" />
                                         )}
                                     </button>
@@ -310,7 +301,6 @@ export default function ModeratorOrganizationsPage() {
                         </div>
                     </>
                 ) : null}
-                    
             </AppModal>
 
             <AppModal
@@ -321,7 +311,7 @@ export default function ModeratorOrganizationsPage() {
                 maxWidthClassName="sm:max-w-lg"
                 footer={
                     <>
-                        <button 
+                        <button
                             className="rounded-md border bg-card px-5 py-2 text-sm font-medium text-foreground hover:bg-secondary"
                             onClick={() => review.setShowRejectModal(false)}
                         >
@@ -348,9 +338,7 @@ export default function ModeratorOrganizationsPage() {
                             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                                 Target Organization
                             </p>
-                            <p className="font-semibold text-foreground">
-                                Rejecting: {review.selectedOrg.orgName}
-                            </p>
+                            <p className="font-semibold text-foreground">Rejecting: {review.selectedOrg.orgName}</p>
                             <p className="mt-1 text-sm text-muted-foreground">
                                 This action will notify the organization that their application has been declined.
                             </p>
@@ -360,7 +348,7 @@ export default function ModeratorOrganizationsPage() {
                             <label className="mb-1 block text-sm font-medium text-foreground">
                                 Reason For Rejection
                             </label>
-                            <textarea 
+                            <textarea
                                 className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2"
                                 rows={5}
                                 placeholder="Describe reasons for rejecting organization..."

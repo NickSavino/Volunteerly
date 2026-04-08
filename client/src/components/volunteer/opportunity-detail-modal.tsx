@@ -8,12 +8,12 @@ import type { Opportunity } from "@volunteerly/shared";
 
 const WORK_TYPE_LABELS: Record<string, string> = {
     IN_PERSON: "On-site",
-    REMOTE:    "Remote",
-    HYBRID:    "Hybrid",
+    REMOTE: "Remote",
+    HYBRID: "Hybrid",
 };
 
 const COMMITMENT_LABELS: Record<string, string> = {
-    FLEXIBLE:  "Flexible",
+    FLEXIBLE: "Flexible",
     PART_TIME: "Part-Time",
     FULL_TIME: "Full-Time",
 };
@@ -49,9 +49,11 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
     }
 
     const matchCls =
-        matchPct >= 80 ? "bg-green-100 text-green-700"
-        : matchPct >= 65 ? "bg-secondary text-primary"
-        : "bg-muted text-muted-foreground";
+        matchPct >= 80
+            ? "bg-green-100 text-green-700"
+            : matchPct >= 65
+              ? "bg-secondary text-primary"
+              : "bg-muted text-muted-foreground";
 
     return (
         <AppModal
@@ -89,7 +91,7 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                         onClick={handleOrgClick}
                         className={cn(
                             "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-bold text-primary transition-opacity hover:opacity-75",
-                            !orgId && "pointer-events-none"
+                            !orgId && "pointer-events-none",
                         )}
                     >
                         {opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
@@ -99,7 +101,7 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                             onClick={handleOrgClick}
                             className={cn(
                                 "font-semibold text-foreground text-left hover:underline",
-                                !orgId && "pointer-events-none"
+                                !orgId && "pointer-events-none",
                             )}
                         >
                             {opp.organization?.orgName ?? "—"}
@@ -138,38 +140,40 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                         value={
                             opp.deadlineDate
                                 ? new Date(opp.deadlineDate).toLocaleDateString("en-US", {
-                                    month: "short", day: "numeric", year: "numeric",
-                                })
+                                      month: "short",
+                                      day: "numeric",
+                                      year: "numeric",
+                                  })
                                 : "Open"
                         }
                     />
                     <DetailRow
                         label="Posted"
                         value={new Date(opp.postedDate).toLocaleDateString("en-US", {
-                            month: "short", day: "numeric", year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
                         })}
                     />
                 </div>
 
+                {opp?.availability && opp.availability.length > 0 && (
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm font-semibold text-gray-800">Availability</p>
 
-                    {opp?.availability && opp.availability.length > 0 && (
-                        <div className="flex flex-col gap-2">
-                            <p className="text-sm font-semibold text-gray-800">Availability</p>
-
-                            <div className="flex flex-wrap gap-2">
-                                {opp.availability.map((day: string) => (
-                                    <span
-                                        key={day}
-                                        className="px-3 py-1.5 rounded-lg border text-xs font-medium
+                        <div className="flex flex-wrap gap-2">
+                            {opp.availability.map((day: string) => (
+                                <span
+                                    key={day}
+                                    className="px-3 py-1.5 rounded-lg border text-xs font-medium
                                             border-yellow-400 text-gray-800 bg-yellow-50"
-                                    >
-                                        {day}
-                                    </span>
-                                ))}
-                            </div>
+                                >
+                                    {day}
+                                </span>
+                            ))}
                         </div>
-                    )}
-
+                    </div>
+                )}
 
                 <div>
                     <h3 className="mb-2 text-sm font-semibold text-foreground">About This Opportunity</h3>

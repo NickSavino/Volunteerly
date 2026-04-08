@@ -28,6 +28,6 @@ apiRouter.use("/moderator", auth, requireRole("MODERATOR"), moderatorRouter);
 apiRouter.use("/organization", auth, OrganizationRouter);
 apiRouter.use("/volunteer-organization", auth, requireRole("VOLUNTEER"), volunteerOrganizationRouter);
 
-apiRouter.use("/chat", auth, requireRole("MODERATOR", "VOLUNTEER", "ORGANIZATION"), chatRouter)
+apiRouter.use("/chat", auth, requireRole("MODERATOR", "VOLUNTEER", "ORGANIZATION"), chatRouter);
 
 apiRouter.use("/tickets", auth, requireRole("VOLUNTEER", "MODERATOR", "ORGANIZATION"), ticketsRouter);

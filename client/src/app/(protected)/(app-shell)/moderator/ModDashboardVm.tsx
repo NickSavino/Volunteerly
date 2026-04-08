@@ -11,11 +11,7 @@ export function useModDashboardViewModel() {
     const router = useRouter();
     const { session, user, loading: authLoading, signOut } = useAuth();
 
-    const {
-        loading: appLoading,
-        initialized,
-        currentModerator,
-    } = useAppSession();
+    const { loading: appLoading, initialized, currentModerator } = useAppSession();
 
     const [pendingOrgsCount, setPendingOrgsCount] = useState(0);
     const [recentPendingOrgs, setRecentPendingOrgs] = useState<ModeratorOrganizationList>([]);
@@ -26,20 +22,20 @@ export function useModDashboardViewModel() {
             if (!session?.access_token || !initialized || !currentModerator) return;
 
             try {
-                const orgsResult = await OrganizationService.getAllOrganizations("APPLIED")
+                const orgsResult = await OrganizationService.getAllOrganizations("APPLIED");
 
                 if (orgsResult) {
                     setPendingOrgsCount(orgsResult.length);
                     setRecentPendingOrgs(orgsResult.slice(0, 2));
                 }
             } catch (err) {
-                console.error(err)
-                setError("Failed to load moderator dashboard data.")
+                console.error(err);
+                setError("Failed to load moderator dashboard data.");
             }
         }
-        
+
         void loadDashboardData();
-    }, [session, initialized, currentModerator])
+    }, [session, initialized, currentModerator]);
 
     return {
         loading: authLoading || appLoading || !initialized || !currentModerator,

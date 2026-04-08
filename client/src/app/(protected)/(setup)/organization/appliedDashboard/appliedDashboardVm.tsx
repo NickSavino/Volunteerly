@@ -9,28 +9,24 @@ import { OrganizationService } from "@/services/OrganizationService";
 import { useAppSession } from "@/providers/app-session-provider";
 
 export function useAppliedOrgDashboardViewModel() {
-  const router = useRouter();
-  const { session, user, loading: authLoading, signOut } = useAuth();
+    const router = useRouter();
+    const { session, user, loading: authLoading, signOut } = useAuth();
 
-  const {
-    loading: appLoading,
-    initialized,
-    currentOrganization,
-  } = useAppSession();
+    const { loading: appLoading, initialized, currentOrganization } = useAppSession();
 
-  useEffect(() => {
-    if (!initialized || appLoading || !currentOrganization) return;
+    useEffect(() => {
+        if (!initialized || appLoading || !currentOrganization) return;
 
-    if (currentOrganization.status === "CREATED") {
-      router.replace("/organization/application");
-      return;
-    }
+        if (currentOrganization.status === "CREATED") {
+            router.replace("/organization/application");
+            return;
+        }
 
-    if (currentOrganization.status === "VERIFIED") {
-      router.replace("/organization");
-      return;
-    }
-  }, [initialized, appLoading, currentOrganization, router])
+        if (currentOrganization.status === "VERIFIED") {
+            router.replace("/organization");
+            return;
+        }
+    }, [initialized, appLoading, currentOrganization, router]);
 
-    return {loading: authLoading || appLoading || !initialized, session, signOut, router, user, currentOrganization} 
+    return { loading: authLoading || appLoading || !initialized, session, signOut, router, user, currentOrganization };
 }

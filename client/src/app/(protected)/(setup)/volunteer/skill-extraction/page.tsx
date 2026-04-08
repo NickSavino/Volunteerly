@@ -10,7 +10,6 @@ export default function SkillExtractionPage() {
     const { skills, confirming, error, removeSkill, handleConfirm, signOut, fullName, handleBack } =
         useSkillExtractionViewModel();
 
-
     if (!skills) {
         return <main className="p-6">Loading...</main>;
     }
@@ -19,24 +18,18 @@ export default function SkillExtractionPage() {
         <div className="min-h-screen">
             <title>Volunteer - Skill Extraction</title>
 
-            <UnverifiedNavbar
-                fullName={fullName}
-                onSignOut={signOut}
-            />
-
+            <UnverifiedNavbar fullName={fullName} onSignOut={signOut} />
 
             <main className="flex flex-col items-center px-8 py-10 gap-8 max-w-4xl mx-auto">
-
                 <Card className="w-full">
                     <CardContent className="pt-6">
                         <h1 className="text-2xl font-bold">Extraction Complete</h1>
                         <p className="text-muted-foreground mt-1">
-                            We&apos;ve finished extracting your skills from your profile.<br />
+                            We&apos;ve finished extracting your skills from your profile.
+                            <br />
                             Please verify your skills before proceeding. Click the × to remove any incorrect skills.
                         </p>
-                        {error && (
-                            <p className="text-destructive text-sm mt-3">{error}</p>
-                        )}
+                        {error && <p className="text-destructive text-sm mt-3">{error}</p>}
                     </CardContent>
                 </Card>
 
@@ -58,7 +51,6 @@ export default function SkillExtractionPage() {
                     </div>
                 </div>
 
-                
                 <div className="w-full flex items-center justify-between">
                     <Button variant="ghost" onClick={handleBack}>
                         Back to Experience Input
@@ -67,10 +59,8 @@ export default function SkillExtractionPage() {
                         {confirming ? "Saving..." : "Confirm & Continue"}
                     </Button>
                 </div>
-                
             </main>
         </div>
-        
     );
 }
 

@@ -1,26 +1,23 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
-	// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+    // See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+    // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 
-	// List of extensions which should be recommended for users of this workspace.
-	"recommendations": [
-		"ms-azuretools.vscode-containers",
-		"ms-vscode-remote.remote-containers",
-		"ms-azuretools.vscode-docker",
-		"mikestead.dotenv",
-		"dbaeumer.vscode-eslint",
-		"gitlab.gitlab-workflow",
-		"christian-kohler.path-intellisense",
-		"esbenp.prettier-vscode",
-		"ms-ossdata.vscode-pgsql",
-		"prisma.prisma",
-		"eliezerrangel.prisma-studio",
-		"supabase.vscode-supabase-extension",
-		"redhat.vscode-yaml"
-		
-	],
-	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
-	"unwantedRecommendations": [
-		
-	]
+    // List of extensions which should be recommended for users of this workspace.
+    "recommendations": [
+        "ms-azuretools.vscode-containers",
+        "ms-vscode-remote.remote-containers",
+        "ms-azuretools.vscode-docker",
+        "mikestead.dotenv",
+        "dbaeumer.vscode-eslint",
+        "gitlab.gitlab-workflow",
+        "christian-kohler.path-intellisense",
+        "esbenp.prettier-vscode",
+        "ms-ossdata.vscode-pgsql",
+        "prisma.prisma",
+        "eliezerrangel.prisma-studio",
+        "supabase.vscode-supabase-extension",
+        "redhat.vscode-yaml"
+    ],
+    // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
+    "unwantedRecommendations": []
 }

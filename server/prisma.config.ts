@@ -5,15 +5,15 @@ import { defineConfig, env } from "prisma/config";
 
 const databaseURL = env("DATABASE_URL");
 if (!databaseURL) {
-  throw new Error("DATABASE_URL is not set in environment variables");
+    throw new Error("DATABASE_URL is not set in environment variables");
 }
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
-  migrations: {
-    path: "prisma/migrations",
-  },
-  datasource: {
-    url: databaseURL,
-  },
+    schema: "prisma/schema.prisma",
+    migrations: {
+        path: "prisma/migrations",
+    },
+    datasource: {
+        url: databaseURL,
+    },
 });

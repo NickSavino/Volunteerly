@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 type SelectOption = {
     value: string | number;
     label: string;
-}
+};
 
 type ModeratorFilterBarProps = {
     // Search Options
@@ -29,7 +29,7 @@ type ModeratorFilterBarProps = {
 
     onApply: () => void;
     applyLabel?: string;
-}
+};
 
 export function ModeratorFilterBar({
     searchLabel,
@@ -55,57 +55,60 @@ export function ModeratorFilterBar({
                     <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                         {searchLabel}
                     </label>
-                <div className="relative">
-                    <Search className="absolute w-max left-3 top-1/2 h-4 -translate-y-1/2 text-muted-foreground" />
-                    <input
-                        type="text"
-                        placeholder={searchPlaceholder}
-                        value={searchValue}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && onSearchEnter?.()}
-                        className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                    />
+                    <div className="relative">
+                        <Search className="absolute w-max left-3 top-1/2 h-4 -translate-y-1/2 text-muted-foreground" />
+                        <input
+                            type="text"
+                            placeholder={searchPlaceholder}
+                            value={searchValue}
+                            onChange={(e) => onSearchChange(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && onSearchEnter?.()}
+                            className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <div className="w-full lg:w-40">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    {sortLabel}
-                </label>
-                <select
-                    value={sortValue}
-                    onChange={(e) => onSortChange(e.target.value)}
-                    className="w-full rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <div className="w-full lg:w-40">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        {sortLabel}
+                    </label>
+                    <select
+                        value={sortValue}
+                        onChange={(e) => onSortChange(e.target.value)}
+                        className="w-full rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    >
                         {sortOptions.map((option) => (
                             <option key={String(option.value)} value={option.value}>
                                 {option.label}
                             </option>
                         ))}
-                </select>
-            </div>
+                    </select>
+                </div>
 
-            <div className="w-full lg:w-24">
-                <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
-                    {pageSizeLabel}
-                </label>
-                <select
-                    value={pageSizeValue}
-                    onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                    className="w-full rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <div className="w-full lg:w-24">
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        {pageSizeLabel}
+                    </label>
+                    <select
+                        value={pageSizeValue}
+                        onChange={(e) => onPageSizeChange(Number(e.target.value))}
+                        className="w-full rounded-lg border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    >
                         {pageSizeOptions.map((n) => (
                             <option key={n} value={n}>
                                 {n}
                             </option>
                         ))}
-                </select>
-            </div>
+                    </select>
+                </div>
 
-            <button
-                onClick={onApply}
-                className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-black hover:opacity-90">
-                {applyLabel}
-            </button>
+                <button
+                    onClick={onApply}
+                    className="rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-black hover:opacity-90"
+                >
+                    {applyLabel}
+                </button>
+            </div>
         </div>
-    </div>
-    )
+    );
 }

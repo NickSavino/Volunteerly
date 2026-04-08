@@ -1,8 +1,7 @@
 services:
-
-  server:
-    command: npm run start -w server
-    restart: unless-stopped
-  client:
-    command: npm run start -w client
-    restart: unless-stopped
+    server:
+        command: npm run start -w server
+        restart: unless-stopped
+    client:
+        command: npm run start -w client
+        restart: unless-stopped

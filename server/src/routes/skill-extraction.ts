@@ -20,7 +20,6 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-
 skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) => {
     try {
         const file = req.file;
@@ -50,7 +49,9 @@ skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) 
             resumeText,
             workExperience ? `Work Experience:\n${workExperience}` : "",
             education ? `Education:\n${education}` : "",
-        ].filter(Boolean).join("\n\n");
+        ]
+            .filter(Boolean)
+            .join("\n\n");
 
         //make groq call to extract skills
         const skills = await extractSkillsFromResumeText(fullContext);
@@ -61,18 +62,11 @@ skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) 
     }
 });
 
-
 skillExtractionRouter.post("/confirm", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
 
-        const {
-            technical,
-            nonTechnical,
-            workExperiences,
-            educations,
-            hourlyRate,
-        } = req.body as {
+        const { technical, nonTechnical, workExperiences, educations, hourlyRate } = req.body as {
             technical: string[];
             nonTechnical: string[];
             workExperiences: {
@@ -150,7 +144,7 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
         //update the volunteers hourly rate
         await prisma.volunteer.update({
             where: { id: userId },
-            data: { hourlyValue: hourlyRate},
+            data: { hourlyValue: hourlyRate },
         });
 
         //mark user as VERIFIED
@@ -164,7 +158,6 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
         next(error);
     }
 });
-
 
 skillExtractionRouter.post("/backfill", async (req, res, next) => {
     try {

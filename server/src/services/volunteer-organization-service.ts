@@ -36,9 +36,7 @@ export async function getPublicOrgProfile(orgId: string) {
         where: { revieweeId: orgId },
         select: { rating: true },
     });
-    const averageRating = reviews.length > 0
-        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-        : null;
+    const averageRating = reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : null;
 
     const rawHighlights = Array.isArray(org.impactHighlights) ? org.impactHighlights : [];
     const impactHighlights = rawHighlights

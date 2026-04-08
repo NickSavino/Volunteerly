@@ -1,7 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import { ModeratorDashboardSummary } from "@volunteerly/shared";
 
-
 export async function getModeratorDashboardSummary(): Promise<ModeratorDashboardSummary> {
     // add real code/query once organization model is migrated
     const pendingOrgs: ModeratorDashboardSummary["recentPendingOrganizations"] = [];
@@ -29,10 +28,10 @@ export async function getCurrentModerator(moderatorId: string) {
     const moderator = await prisma.moderator.findUnique({
         where: { id: moderatorId },
     });
- 
+
     return moderator;
 }
- 
+
 export async function createCurrentModerator(userId: string, firstName: string, lastName: string) {
     const moderator = await prisma.moderator.create({
         data: {
@@ -41,14 +40,14 @@ export async function createCurrentModerator(userId: string, firstName: string, 
             lastName: lastName,
         },
     });
- 
+
     if (!moderator) {
         throw new Error("Error creating the Moderator.");
     }
- 
+
     return moderator;
 }
- 
+
 export async function updateCurrentModerator(userId: string, firstName: string, lastName: string) {
     const moderator = await prisma.moderator.update({
         where: { id: userId },
@@ -57,10 +56,10 @@ export async function updateCurrentModerator(userId: string, firstName: string, 
             lastName: lastName,
         },
     });
- 
+
     if (!moderator) {
         throw new Error("Error updating the Moderator.");
     }
- 
+
     return moderator;
 }

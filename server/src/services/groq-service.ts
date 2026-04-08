@@ -49,7 +49,7 @@ ${resumeText}`;
         throw new Error(`Groq API error: ${response.status} ${errorText}`);
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
         choices: { message: { content: string } }[];
     };
 
@@ -61,18 +61,14 @@ ${resumeText}`;
         return {
             technical: parsed.technical ?? [],
             nonTechnical: parsed.nonTechnical ?? [],
-            hourlyRate: parsed.hourlyRate ?? []
+            hourlyRate: parsed.hourlyRate ?? [],
         };
     } catch {
         throw new Error(`Failed to parse Groq response as JSON: ${content}`);
     }
 }
 
-
-export async function calculateHourlyRate(
-    workExperience: string,
-    education: string
-): Promise<number> {
+export async function calculateHourlyRate(workExperience: string, education: string): Promise<number> {
     const prompt = `
 You are a hourly rate guesser in Alberta, Canada. Based on the following work experience and education, calculate a reasonable hourly rate in Canadian dollars (CAD) for this person, consider their base salary rom their work experience and add or subtract slightly based on additional responsibilities or education.
 
@@ -117,7 +113,6 @@ ${workExperience}
 Education:
 ${education}`;
 
-
     const response = await fetch(GROQ_API_URL, {
         method: "POST",
         headers: {
@@ -137,7 +132,7 @@ ${education}`;
         throw new Error(`Groq API error: ${response.status} ${errorText}`);
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
         choices: { message: { content: string } }[];
     };
 
@@ -151,12 +146,11 @@ ${education}`;
     return rate;
 }
 
-
 export async function extractSkillsFromOpportunity(
     name: string,
     category: string,
     description: string,
-    candidateDesc: string
+    candidateDesc: string,
 ): Promise<{ technical: string[]; nonTechnical: string[] }> {
     const prompt = `
 You are a professional job analyst. Based on the following volunteer opportunity details, extract the top 10 technical skills and top 10 non-technical skills that would be ideal for a candidate.
@@ -200,7 +194,7 @@ Ideal Candidate: ${candidateDesc}`;
         throw new Error(`Groq API error: ${response.status} ${errorText}`);
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
         choices: { message: { content: string } }[];
     };
 

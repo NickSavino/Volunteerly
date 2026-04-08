@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         async function loadSession() {
             const { data } = await supabase.auth.getSession();
-            
+
             if (!mounted) return;
 
             setSession(data.session);
@@ -50,20 +50,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const signOut = useCallback(async () => {
-        router.replace("/")
+        router.replace("/");
         await supabase.auth.signOut();
-    }, [router])
+    }, [router]);
 
-    const value = useMemo<AuthContextValue>(() => ({
-        session,
-        user,
-        loading,
-        signOut
-    }),
-    [session, user, loading, signOut]
+    const value = useMemo<AuthContextValue>(
+        () => ({
+            session,
+            user,
+            loading,
+            signOut,
+        }),
+        [session, user, loading, signOut],
     );
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
