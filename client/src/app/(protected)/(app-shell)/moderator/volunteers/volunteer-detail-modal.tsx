@@ -422,7 +422,7 @@ export function VolunteerDetailModal({
                     <div className="rounded-xl border p-4">
                         <p className="text-sm font-semibold text-foreground">Volunteer Snapshot</p>
                         <p className="mt-2 text-sm text-muted-foreground">
-                            {detail.firstName} {detail.lastName} • {detail.location || "No location"} • {stateLabel(detail.state)}
+                            {detail.firstName} {detail.lastName} - {detail.location || "No location"} - {stateLabel(detail.state)}
                         </p>
                     </div>
 

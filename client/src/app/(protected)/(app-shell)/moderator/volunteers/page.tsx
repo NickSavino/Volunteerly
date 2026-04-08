@@ -34,13 +34,12 @@ export default function ModeratorVolunteersPage() {
         setVolunteerModalMode("profile");
     }
 
-    if (auth.loading || !auth.session) {
+    if (auth.loading && !auth.session) {
         return <main className="p-6">Loading...</main>
     }
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="h-20 border-b border-border bg-card" />
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <ModeratorPageHeader
                     title={page.title}
