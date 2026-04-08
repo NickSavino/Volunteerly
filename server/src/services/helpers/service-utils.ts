@@ -1,13 +1,17 @@
 import { UserRole } from "@volunteerly/shared";
 
-export function getDisplayName(user: {
+export function getDisplayName(user?: {
     email: string;
     role: UserRole;
     volunteer: { firstName: string; lastName: string } | null;
     organization: { orgName: string } | null;
     moderator: { firstName: string; lastName: string } | null;
 }) {
-     switch (user.role) {
+  if (!user) {
+    return "Unkown User"
+  }
+
+  switch (user.role) {
     case "VOLUNTEER":
       return (
         `${user.volunteer?.firstName ?? ""} ${user.volunteer?.lastName ?? ""}`.trim() ||

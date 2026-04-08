@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { AppNavbar } from "@/components/navigation/app-navbar";
-import { AppNavItem, NAV_CONFIG } from "@/components/navigation/nav-config";
+import { AppNavConfig, AppNavItem, NAV_CONFIG } from "@/components/navigation/nav-config";
 import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { useRouter } from "next/navigation";
@@ -24,8 +24,13 @@ export default function AppShellLayout({ children }: { children: ReactNode }) {
     return <main className="p-6">Loading...</main>
   }
 
-  let homeHref = "/";
-  let items: AppNavItem[] = [];
+  const navConfig: AppNavConfig = {
+    homeHref: "/",
+    profileHref: "/",
+    items: [],
+    profileSubtitle: ""
+  }
+
   let displayName = "Loading...";
   let subtitle = "";
   let avatarUrl: string | undefined;
@@ -33,18 +38,21 @@ export default function AppShellLayout({ children }: { children: ReactNode }) {
 
   switch (currentUser.role) {
     case "MODERATOR":
-      homeHref = NAV_CONFIG.MODERATOR.homeHref;
-      items = NAV_CONFIG.MODERATOR.items;
+      navConfig.homeHref = NAV_CONFIG.MODERATOR.homeHref;
+      navConfig.profileHref = NAV_CONFIG.MODERATOR.profileHref
+      navConfig.items = NAV_CONFIG.MODERATOR.items;
       displayName = currentModerator
         ? `${currentModerator.firstName} ${currentModerator.lastName}`
         : "Loading...";
       subtitle = "Moderator";
+      avatarUrl = UserService.getAvatarURL(currentModerator!.id)
       avatarFallback = getAvatarFallback(displayName, "MOD");
       break;
 
     case "ORGANIZATION":
-      homeHref = NAV_CONFIG.ORGANIZATION.homeHref;
-      items = NAV_CONFIG.ORGANIZATION.items;
+      navConfig.homeHref = NAV_CONFIG.ORGANIZATION.homeHref;
+      navConfig.profileHref = NAV_CONFIG.ORGANIZATION.profileHref
+      navConfig.items = NAV_CONFIG.ORGANIZATION.items;
       displayName = currentOrganization?.orgName ?? "Loading...";
       subtitle =
         currentOrganization?.status === "VERIFIED"
@@ -57,8 +65,9 @@ export default function AppShellLayout({ children }: { children: ReactNode }) {
       break;
 
     case "VOLUNTEER":
-      homeHref = NAV_CONFIG.VOLUNTEER.homeHref;
-      items = NAV_CONFIG.VOLUNTEER.items;
+      navConfig.homeHref = NAV_CONFIG.VOLUNTEER.homeHref;
+      navConfig.profileHref = NAV_CONFIG.VOLUNTEER.profileHref
+      navConfig.items = NAV_CONFIG.VOLUNTEER.items;
       displayName = currentVolunteer
         ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
         : "Loading...";
@@ -73,8 +82,9 @@ export default function AppShellLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <AppNavbar
-        homeHref={homeHref}
-        items={items}
+        homeHref={navConfig.homeHref}
+        profileHref={navConfig.profileHref}
+        items={navConfig.items}
         displayName={displayName}
         subtitle={subtitle}
         avatarUrl={avatarUrl}

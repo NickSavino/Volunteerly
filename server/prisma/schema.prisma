@@ -209,7 +209,7 @@ model ProgressUpdate {
 model Ticket {
   id            String         @id @default(uuid())
   issuerId      String         @map("issuer_id")
-  targetId      String         @map("target_id")
+  targetId      String?         @map("target_id")
   category      TicketCategory
   title         String
   description   String
@@ -218,7 +218,7 @@ model Ticket {
   createdAt     DateTime       @default(now()) @map("created_at")
 
   issuer User @relation("TicketIssuer", fields: [issuerId], references: [id])
-  target User @relation("TicketTarget", fields: [targetId], references: [id])
+  target User? @relation("TicketTarget", fields: [targetId], references: [id], onDelete: SetNull)
 
   conversation ChatConversation?
 
@@ -233,12 +233,14 @@ enum ConversationKind {
 model ChatMessage {
   id             String   @id @default(uuid())
   conversationId String   @map("conversation_id")
-  senderId       String   @map("sender_id")
+  senderId       String?   @map("sender_id")
+  senderDisplayNameSnapshot String? @map("sender_display_name_snapshot")
+  senderRoleSnapshot UserRole? @map("sender_role_snapshot")
   content        String
   sentAt         DateTime @default(now()) @map("sent_at")
 
   conversation ChatConversation @relation(fields: [conversationId], references: [id])
-  sender       User             @relation("ChatMessageSender", fields: [senderId], references: [id])
+  sender       User?             @relation("ChatMessageSender", fields: [senderId], references: [id], onDelete: SetNull)
 
   @@index([conversationId, sentAt])
   @@index([senderId])

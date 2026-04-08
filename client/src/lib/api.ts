@@ -35,7 +35,8 @@ export async function api<T>(path: string, init?: RequestInit & { responseType?:
     });
 
     if (!res.ok) throw new Error(await res.text());
-      
+    
+    if (res.status === 204) return undefined as T;
     if (responseType === "blob") return res.blob() as Promise<T>;
     return res.json() as Promise<T>;
     

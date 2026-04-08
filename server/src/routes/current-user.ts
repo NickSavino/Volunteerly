@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCurrentUser, getCurrentUser, saveAvatar, updateCurrentUser } from "../services/user-service.js";
+import { createCurrentUser, deleteCurrentUser, getCurrentUser, saveAvatar, updateCurrentUser } from "../services/user-service.js";
 import multer from "multer";
 
 
@@ -65,6 +65,18 @@ currentUserRouter.put("/", async (req, res, next) => {
     next(error);
     }
 });
+
+currentUserRouter.delete("/", async (req, res, next) => {
+  try {
+    const userId = req.auth!.userId;
+
+    await deleteCurrentUser(userId);
+
+    res.status(204).send();
+  } catch (error) {
+    next(error)
+  }
+})
 
 currentUserRouter.post("/avatar", upload.single("image") ,async (req, res, next) => {
   try {

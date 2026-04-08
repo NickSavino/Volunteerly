@@ -17,7 +17,7 @@ export async function getModeratorTicketList(): Promise<ModeratorTicketList> {
         category: ticket.category,
         createdAt: ticket.createdAt.toISOString(),
         issuerId: ticket.issuerId,
-        targetId: ticket.targetId,
+        targetId: ticket.targetId ?? undefined,
         urgencyRating: ticket.urgencyRating,
     }));
 }
@@ -39,7 +39,7 @@ export async function getModeratorTicketDetail(ticketId: string): Promise<Modera
         urgencyRating: ticket.urgencyRating,
         createdAt: ticket.createdAt.toISOString(),
         issuerId: ticket.issuerId,
-        targetId: ticket.targetId,
+        targetId: ticket.targetId ?? undefined,
         issuer: {
             userId: ticket.issuer.id,
             role: ticket.issuer.role,
@@ -47,13 +47,13 @@ export async function getModeratorTicketDetail(ticketId: string): Promise<Modera
             subtitle: undefined,
             displayName: getDisplayName(ticket.issuer)
         },
-        target: {
+        target: ticket.target ? {
             userId: ticket.target.id,
             role: ticket.target.role,
             avatarUrl: undefined,
             subtitle: undefined,
             displayName: getDisplayName(ticket.target)
-        },
+        } : undefined,
         conversation: ticket.conversation
             ? {
                 id: ticket.conversation.id,
@@ -70,9 +70,9 @@ export async function getModeratorTicketDetail(ticketId: string): Promise<Modera
                 messages: ticket.conversation.messages.map((message) => ({
                     id: message.id,
                     conversationId: message.conversationId,
-                    senderId: message.senderId,
-                    senderDisplayName: getDisplayName(message.sender),
-                    senderRole: message.sender.role,
+                    senderId: message.senderId ?? undefined,
+                    senderDisplayName: getDisplayName(message.sender ?? undefined),
+                    senderRole: message.sender?.role ?? message.senderRoleSnapshot ?? "UNKNOWN",
                     senderAvatarUrl: undefined,
                     content: message.content,
                     sentAt: message.sentAt.toISOString(),
