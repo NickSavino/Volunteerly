@@ -17,6 +17,8 @@ import { UserService } from "@/services/UserService";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { getAvatarFallback } from "@/components/navigation/nav-utils";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { useState } from "react";
 
 const awardIcons: Record<string, LucideIcon> = {
   "First Step": Rocket,
@@ -28,6 +30,9 @@ export default function OrgProfilePage() {
   const {loading, session, fetching, signOut, router, currentOrg,setCurrentOrg, 
     address, setAddress, viewSubmittedDoc, editing, setEditing, handleSubmit, resetEdit, 
     impactHighlights, setImpactHighlights, reviewSummary, fileInputRef, handleAvatarChange, awards} = useOrgProfileViewModel()
+
+    const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+    
 
   if (loading || !session || fetching) {
     return (<LoadingScreen />)
@@ -282,7 +287,9 @@ export default function OrgProfilePage() {
                             </Field>
                             <hr className="mx-2 border-gray-300" />
                             <CardDescription>Due to platform integrity, our moderator team can help you update private information.</CardDescription>
-                            <Button variant="ghost" className="w-full text-md py-6 cursor-pointer flex items-center gap-3 cursor-pointer">
+                            <Button 
+                                onClick={() => setIsTicketModalOpen(true)}
+                                variant="ghost" className="w-full text-md py-6 cursor-pointer flex items-center gap-3 cursor-pointer">
                                 <MessageCircleQuestionMark className="!w-7 !h-7 shrink-0"/>
                                 Contact Support
                             </Button>
@@ -293,6 +300,10 @@ export default function OrgProfilePage() {
     
 
         </main>
+        <SubmitTicketModal
+            open={isTicketModalOpen}
+            onClose={() => setIsTicketModalOpen(false)}
+        />
     </div>
     );
 }
