@@ -33,22 +33,20 @@ export function useExperienceInputViewModel() {
     const [workExperiences, setWorkExperiences] = useState<WorkExperience[]>([
         { jobTitle: "", company: "", startDate: "", endDate: "", responsibilities: "" },
     ]);
-    const [educations, setEducations] = useState<Education[]>([
-        { institution: "", degree: "", graduationYear: "" },
-    ]);
+    const [educations, setEducations] = useState<Education[]>([{ institution: "", degree: "", graduationYear: "" }]);
     const [errors, setErrors] = useState<FormErrors>({});
     const [submitting, setSubmitting] = useState(false);
     const [fullName, setFullName] = useState("Volunteer");
 
     useEffect(() => {
-    async function loadName() {
-        if (!session) return;
-        const result = await VolunteerService.getCurrentVolunteer();
-        if (result.success) {
-            setFullName(`${result.data.firstName} ${result.data.lastName}`.trim());
+        async function loadName() {
+            if (!session) return;
+            const result = await VolunteerService.getCurrentVolunteer();
+            if (result.success) {
+                setFullName(`${result.data.firstName} ${result.data.lastName}`.trim());
+            }
         }
-    }
-    loadName();
+        loadName();
     }, [session]);
 
     function addWorkExperience() {
@@ -59,30 +57,23 @@ export function useExperienceInputViewModel() {
     }
 
     const removeWorkExperience = (index: number) => {
-    setWorkExperiences((prev) => prev.filter((_, i) => i !== index));
+        setWorkExperiences((prev) => prev.filter((_, i) => i !== index));
     };
 
     function updateWorkExperience(index: number, field: keyof WorkExperience, value: string) {
-        setWorkExperiences((prev) =>
-            prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
-        );
+        setWorkExperiences((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
     }
 
     function addEducation() {
-        setEducations((prev) => [
-            ...prev,
-            { institution: "", degree: "", graduationYear: "" },
-        ]);
+        setEducations((prev) => [...prev, { institution: "", degree: "", graduationYear: "" }]);
     }
 
     const removeEducation = (index: number) => {
-    setEducations((prev) => prev.filter((_, i) => i !== index));
+        setEducations((prev) => prev.filter((_, i) => i !== index));
     };
 
     function updateEducation(index: number, field: keyof Education, value: string) {
-        setEducations((prev) =>
-            prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
-        );
+        setEducations((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
     }
 
     function validate(): boolean {
@@ -93,15 +84,13 @@ export function useExperienceInputViewModel() {
         }
 
         const hasIncompleteWork = workExperiences.some(
-            (w) => !w.jobTitle || !w.company || !w.startDate || !w.responsibilities
+            (w) => !w.jobTitle || !w.company || !w.startDate || !w.responsibilities,
         );
         if (hasIncompleteWork) {
             newErrors.workExperience = "Please fill in all fields.";
         }
 
-        const hasIncompleteEdu = educations.some(
-            (e) => !e.institution || !e.degree || !e.graduationYear
-        );
+        const hasIncompleteEdu = educations.some((e) => !e.institution || !e.degree || !e.graduationYear);
         if (hasIncompleteEdu) {
             newErrors.education = "Please fill in all fields.";
         }
@@ -118,7 +107,7 @@ export function useExperienceInputViewModel() {
             const workText = workExperiences
                 .map(
                     (w) =>
-                        `${w.jobTitle} at ${w.company} (${w.startDate}${w.endDate ? ` - ${w.endDate}` : " - Present"}): ${w.responsibilities}`
+                        `${w.jobTitle} at ${w.company} (${w.startDate}${w.endDate ? ` - ${w.endDate}` : " - Present"}): ${w.responsibilities}`,
                 )
                 .join("\n");
 
@@ -161,6 +150,6 @@ export function useExperienceInputViewModel() {
         fullName,
         signOut,
         removeWorkExperience,
-        removeEducation
+        removeEducation,
     };
 }

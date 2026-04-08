@@ -4,7 +4,6 @@ import { supabase } from "../lib/supabase.js";
 import { getDisplayName } from "./helpers/service-utils.js";
 import { chatUserArgs } from "./helpers/prisma-shapes.js";
 
-
 export async function getCurrentUser(userId: string) {
     const user = await prisma.user.findUnique({
         where: { id: userId },
@@ -15,12 +14,12 @@ export async function getCurrentUser(userId: string) {
 
 export async function createCurrentUser(userId: string, userRole: string, email: string) {
     const user = await prisma.user.create({
-            data: {
+        data: {
             id: userId,
             email: email,
             role: userRole ? (userRole as UserRole) : UserRole.VOLUNTEER,
-            },
-        });
+        },
+    });
     if (!user) {
         throw new Error("Error creating the User.");
     }
@@ -32,8 +31,8 @@ export async function updateCurrentUser(userId: string, userRole: string, email:
     const user = await prisma.user.update({
         where: { id: userId },
         data: {
-        email: email,
-        role: userRole ? (userRole as UserRole) : UserRole.VOLUNTEER,
+            email: email,
+            role: userRole ? (userRole as UserRole) : UserRole.VOLUNTEER,
         },
     });
     if (!user) {
@@ -47,9 +46,12 @@ export async function deleteCurrentUser(userId: string) {
     const user = await prisma.user.findUniqueOrThrow({
         where: { id: userId },
         ...chatUserArgs,
-    })
+    });
 
-    await supabase.storage.from("avatars").remove([`${userId}.jpeg`]).catch(() => {});
+    await supabase.storage
+        .from("avatars")
+        .remove([`${userId}.jpeg`])
+        .catch(() => {});
 
     const deletedDisplayName = getDisplayName(user);
     const deletedRole = user.role;
@@ -71,32 +73,30 @@ export async function deleteCurrentUser(userId: string) {
 
         await tx.chatConversationParticipant.deleteMany({
             where: { userId },
-        })
+        });
 
         await tx.moderator.deleteMany({
-            where: { id: userId }
-        })
+            where: { id: userId },
+        });
     });
 
     const { error } = await supabase.auth.admin.deleteUser(userId);
 
     if (error) {
-        throw new Error(`Failed to delete auth user: ${error.message}`)
+        throw new Error(`Failed to delete auth user: ${error.message}`);
     }
 }
 
-export async function saveAvatar(userId:string, file:Express.Multer.File){
+export async function saveAvatar(userId: string, file: Express.Multer.File) {
     const fileName = `${userId}.jpeg`;
 
-    const { data, error } = await supabase.storage
-    .from("avatars")
-    .upload(fileName, file.buffer, {
-      contentType: file.mimetype,
-      upsert: true,
+    const { data, error } = await supabase.storage.from("avatars").upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: true,
     });
 
     if (error) {
         throw new Error(`Failed to upload file: ${error.message}`);
     }
-    return data.fullPath
+    return data.fullPath;
 }

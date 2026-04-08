@@ -24,26 +24,26 @@ const OpportunitiesMap = dynamic(() => import("./OpportunitiesMap"), {
 });
 
 const WORK_TYPE_LABELS: Record<WorkTypeFilter, string> = {
-    ALL:       "All",
-    REMOTE:    "Remote",
+    ALL: "All",
+    REMOTE: "Remote",
     IN_PERSON: "On-site",
-    HYBRID:    "Hybrid",
+    HYBRID: "Hybrid",
 };
 
 const COMMITMENT_LABELS: Record<CommitmentFilter, string> = {
-    ALL:       "Any",
-    FLEXIBLE:  "Flexible",
+    ALL: "Any",
+    FLEXIBLE: "Flexible",
     PART_TIME: "Part-Time",
     FULL_TIME: "Full-Time",
 };
 
 const SORT_LABELS: Record<SortOption, string> = {
-    RELEVANT:   "Relevant",
+    RELEVANT: "Relevant",
     MATCH_HIGH: "Best Match",
-    MATCH_LOW:  "Lowest Match",
-    HOURS_LOW:  "Fewest Hours",
+    MATCH_LOW: "Lowest Match",
+    HOURS_LOW: "Fewest Hours",
     HOURS_HIGH: "Most Hours",
-    NEWEST:     "Newest",
+    NEWEST: "Newest",
 };
 
 const MAP_MIN_WIDTH = 200;
@@ -76,9 +76,7 @@ function FiltersContent({
     return (
         <>
             <div className="mb-6">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Roles
-                </p>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Roles</p>
                 <div className="space-y-2">
                     {OPPORTUNITY_CATEGORIES.map((cat) => (
                         <label key={cat} className="flex cursor-pointer items-center gap-2">
@@ -95,9 +93,7 @@ function FiltersContent({
             </div>
 
             <div className="mb-6">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Engagement
-                </p>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Engagement</p>
                 <div className="flex flex-wrap gap-2">
                     {(["REMOTE", "IN_PERSON", "HYBRID"] as const).map((wt) => (
                         <button
@@ -107,7 +103,7 @@ function FiltersContent({
                                 "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                                 workType === wt
                                     ? "bg-primary text-foreground"
-                                    : "bg-muted text-muted-foreground hover:bg-secondary"
+                                    : "bg-muted text-muted-foreground hover:bg-secondary",
                             )}
                         >
                             {WORK_TYPE_LABELS[wt]}
@@ -117,9 +113,7 @@ function FiltersContent({
             </div>
 
             <div className="mb-6">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Commitment
-                </p>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Commitment</p>
                 <div className="flex flex-wrap gap-2">
                     {(["FLEXIBLE", "PART_TIME", "FULL_TIME"] as const).map((cl) => (
                         <button
@@ -129,7 +123,7 @@ function FiltersContent({
                                 "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                                 commitmentLevel === cl
                                     ? "bg-primary text-foreground"
-                                    : "bg-muted text-muted-foreground hover:bg-secondary"
+                                    : "bg-muted text-muted-foreground hover:bg-secondary",
                             )}
                         >
                             {COMMITMENT_LABELS[cl]}
@@ -140,9 +134,7 @@ function FiltersContent({
 
             <div className="mb-6">
                 <div className="mb-2 flex items-center justify-between">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                        Max Hours
-                    </p>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Max Hours</p>
                     <span className="text-xs font-semibold text-primary">{maxHours}h/wk</span>
                 </div>
                 <input
@@ -154,12 +146,16 @@ function FiltersContent({
                     className="w-full accent-yellow-400"
                 />
                 <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>1h</span><span>40h</span>
+                    <span>1h</span>
+                    <span>40h</span>
                 </div>
             </div>
 
             <button
-                onClick={() => { applyFilters(); onClose?.(); }}
+                onClick={() => {
+                    applyFilters();
+                    onClose?.();
+                }}
                 className="w-full rounded-xl bg-primary py-2 text-sm font-semibold text-foreground hover:opacity-90"
             >
                 Apply Filters
@@ -255,9 +251,7 @@ export default function OpportunitiesPage() {
 
     return (
         <div className="flex h-screen flex-col overflow-hidden bg-background">
-
             <div className="flex flex-1 overflow-hidden">
-
                 <aside className="hidden w-56 flex-shrink-0 overflow-y-auto border-r bg-card p-5 lg:block">
                     <p className="mb-5 text-sm font-semibold text-foreground">= Filters</p>
                     <FiltersContent {...filterProps} />
@@ -265,7 +259,6 @@ export default function OpportunitiesPage() {
 
                 <div className="flex flex-1 overflow-hidden">
                     <div className="flex flex-1 flex-col overflow-hidden">
-
                         <div className="flex-shrink-0 border-b bg-card px-5 py-4">
                             <div className="flex items-center justify-between gap-3">
                                 <h1 className="font-bold text-foreground">

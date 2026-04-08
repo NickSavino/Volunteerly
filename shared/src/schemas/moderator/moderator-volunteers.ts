@@ -2,21 +2,10 @@ import z from "zod";
 import { ModeratorUrgencyRatingSchema } from "./moderator-tickets.js";
 import { UserRoleSchema } from "../user.js";
 
-
-export const VolunteerModerationStateSchema = z.enum([
-    "CLEAR",
-    "FLAGGED",
-    "RESOLVED",
-    "CLOSED",
-]);
+export const VolunteerModerationStateSchema = z.enum(["CLEAR", "FLAGGED", "RESOLVED", "CLOSED"]);
 export type VolunteerModerationState = z.infer<typeof VolunteerModerationStateSchema>;
 
-export const VolunteerModerationTabSchema = z.enum([
-    "ALL",
-    "FLAGGED",
-    "RESOLVED",
-    "CLOSED",
-]);
+export const VolunteerModerationTabSchema = z.enum(["ALL", "FLAGGED", "RESOLVED", "CLOSED"]);
 export type VolunteerModerationTab = z.infer<typeof VolunteerModerationTabSchema>;
 
 export const ModeratorVolunteerListItemSchema = z.object({
@@ -37,11 +26,7 @@ export type ModeratorVolunteerListItem = z.infer<typeof ModeratorVolunteerListIt
 export const ModeratorVolunteerListSchema = z.array(ModeratorVolunteerListItemSchema);
 export type ModeratorVolunteerList = z.infer<typeof ModeratorVolunteerListSchema>;
 
-export const VolunteerReportActionSchema = z.enum([
-    "WARNING",
-    "SUSPEND",
-    "ESCALATE",
-]);
+export const VolunteerReportActionSchema = z.enum(["WARNING", "SUSPEND", "ESCALATE"]);
 export type VolunteerReportAction = z.infer<typeof VolunteerReportActionSchema>;
 
 export const ModeratorVolunteerReportSchema = z.object({

@@ -5,12 +5,11 @@ import { notFound } from "./middleware/not-found.js";
 import { errorHandler } from "./middleware/error-handler.js";
 import { apiRouter } from "./routes/index.js";
 
-
 export function createApp() {
     const app = express();
 
     // Setup Cors policy to allow client access
-    app.use(cors({origin: env.CORS_ORIGIN}))
+    app.use(cors({ origin: env.CORS_ORIGIN }));
 
     // Parse incoming json
     app.use(express.json());

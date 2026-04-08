@@ -1,5 +1,12 @@
 import { Prisma } from "@prisma/client";
-import { ModeratorVolunteerDetail, ModeratorVolunteerEscalateInput, ModeratorVolunteerFlagInput, ModeratorVolunteerList, ModeratorVolunteerSuspendInput, ModeratorVolunteerWarnInput } from "@volunteerly/shared";
+import {
+    ModeratorVolunteerDetail,
+    ModeratorVolunteerEscalateInput,
+    ModeratorVolunteerFlagInput,
+    ModeratorVolunteerList,
+    ModeratorVolunteerSuspendInput,
+    ModeratorVolunteerWarnInput,
+} from "@volunteerly/shared";
 import { prisma } from "../../lib/prisma.js";
 
 type DisplayUser = {
@@ -27,10 +34,7 @@ function toStringArray(value: unknown): string[] {
     return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 }
 
-async function getVolunteerStatusSnapshot(
-    tx: Prisma.TransactionClient,
-    volunteerId: string,
-) {
+async function getVolunteerStatusSnapshot(tx: Prisma.TransactionClient, volunteerId: string) {
     return tx.volunteer.findUnique({
         where: { id: volunteerId },
         select: {
@@ -52,7 +56,7 @@ export async function getModeratorVolunteerList(): Promise<ModeratorVolunteerLis
     const volunteers = await prisma.volunteer.findMany({
         orderBy: { createdAt: "desc" },
         include: {
-            opportunities: { select: { status: true }},
+            opportunities: { select: { status: true } },
             user: {
                 include: {
                     reportsReceived: {
@@ -71,7 +75,7 @@ export async function getModeratorVolunteerList(): Promise<ModeratorVolunteerLis
             },
         },
     });
-    
+
     return volunteers.map((volunteer) => {
         const reports = volunteer.user.reportsReceived;
         const latestOpenReport = reports.find((report) => report.isOpen);
@@ -82,15 +86,16 @@ export async function getModeratorVolunteerList(): Promise<ModeratorVolunteerLis
             firstName: volunteer.firstName,
             lastName: volunteer.lastName,
             location: volunteer.location,
-            flaggedByDisplayName: latestReport 
-                ? buildDisplayName(latestReport.reportingUser as DisplayUser) : undefined,
+            flaggedByDisplayName: latestReport
+                ? buildDisplayName(latestReport.reportingUser as DisplayUser)
+                : undefined,
             latestFlagReason: latestReport?.reason || undefined,
             pastFlagsCount: reports.length,
             completedOpportunities: volunteer.organizationsAssisted,
             averageRating: volunteer.averageRating,
-            state: volunteer.status
-        }
-    })
+            state: volunteer.status,
+        };
+    });
 }
 
 export async function getModeratorVolunteerDetail(volunteerId: string): Promise<ModeratorVolunteerDetail | null> {
@@ -199,11 +204,7 @@ export async function flagVolunteerByModerator(
     });
 }
 
-export async function warnVolunteer(
-    volunteerId: string,
-    moderatorId: string,
-    input: ModeratorVolunteerWarnInput,
-) {
+export async function warnVolunteer(volunteerId: string, moderatorId: string, input: ModeratorVolunteerWarnInput) {
     return prisma.$transaction(async (tx) => {
         const report = await tx.volunteerReport.findFirst({
             where: {

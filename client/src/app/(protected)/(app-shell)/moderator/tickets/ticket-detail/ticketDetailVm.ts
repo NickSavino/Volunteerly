@@ -17,7 +17,7 @@ export function UseTicketDetailViewModel({
     open,
     currentUserId,
     onTicketUpdated,
-} : UseTicketDetailViewModelArgs) {
+}: UseTicketDetailViewModelArgs) {
     const [ticket, setTicket] = useState<ModeratorTicketDetail | null>(null);
     const [replyDraft, setReplyDraft] = useState("");
     const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export function UseTicketDetailViewModel({
 
     async function loadTicketDetail(id: string) {
         setLoading(true);
-        setError(null)
+        setError(null);
 
         try {
             const detail = await ModeratorService.getModeratorTicketDetail(id);
@@ -55,7 +55,7 @@ export function UseTicketDetailViewModel({
         }
 
         void loadTicketDetail(ticketId);
-    }, [open, ticketId])
+    }, [open, ticketId]);
 
     async function sendReply() {
         if (!ticket?.conversation?.id || !canReply || !replyDraft.trim()) return;
@@ -71,7 +71,7 @@ export function UseTicketDetailViewModel({
                 }),
             });
 
-            setReplyDraft("")
+            setReplyDraft("");
             await loadTicketDetail(ticket.id);
         } catch (err) {
             console.error(err);
@@ -81,7 +81,7 @@ export function UseTicketDetailViewModel({
         }
     }
 
-     async function claimTicket() {
+    async function claimTicket() {
         if (!ticket) return;
 
         setUpdatingTicket(true);
@@ -118,19 +118,19 @@ export function UseTicketDetailViewModel({
     }
 
     return {
-            ticket,
-            chatParticipant,
-            replyDraft,
-            setReplyDraft,
-            loading,
-            sending,
-            error,
-            sendReply,
-            updatingTicket,
-            canClaim,
-            canClose,
-            canReply,
-            claimTicket,
-            closeTicket,
-        }
+        ticket,
+        chatParticipant,
+        replyDraft,
+        setReplyDraft,
+        loading,
+        sending,
+        error,
+        sendReply,
+        updatingTicket,
+        canClaim,
+        canClose,
+        canReply,
+        claimTicket,
+        closeTicket,
+    };
 }

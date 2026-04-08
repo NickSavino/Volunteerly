@@ -1,17 +1,13 @@
-import { Request, Response, NextFunction } from "express"
+import { Request, Response, NextFunction } from "express";
 import { supabase } from "../lib/supabase.js";
 
-export async function auth(
-    req: Request,
-    res: Response,
-    next: NextFunction
-) {
+export async function auth(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader?.startsWith("Bearer ")) {
         return res.status(401).json({
             error: "Unauthorized",
-            message: "Missing or invalid bearer token."
+            message: "Missing or invalid bearer token.",
         });
     }
 
@@ -22,13 +18,13 @@ export async function auth(
     if (error || !data.user) {
         return res.status(401).json({
             error: "Unauthorized",
-            message: "Invalid or expired token."
-        })
+            message: "Invalid or expired token.",
+        });
     }
 
     req.auth = {
         userId: data.user.id ?? "",
-        email: data.user.email ?? ""
+        email: data.user.email ?? "",
     };
 
     next();

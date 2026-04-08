@@ -8,8 +8,8 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
     const { loading } = useAuth();
 
     if (loading) {
-        return <LoadingScreen label="Loading..." />
+        return <LoadingScreen label="Loading..." />;
     }
 
-    return <>{children}</>
+    return <>{children}</>;
 }

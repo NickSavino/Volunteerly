@@ -8,13 +8,44 @@ import { useVolOppDetailViewModel } from "./volOppDetailVm";
 import { AppModal } from "@/components/common/app-modal";
 
 const ALL_SKILLS = [
-    "Python", "JavaScript", "TypeScript", "Java", "C++", "C#", "SQL", "React",
-    "Node.js", "Excel", "Data Analysis", "Machine Learning", "Cloud (AWS/GCP/Azure)",
-    "Cybersecurity", "UI/UX Design", "Mobile Development", "DevOps", "Databases",
-    "Leadership", "Communication", "Teamwork", "Problem Solving", "Project Management",
-    "Public Speaking", "Writing", "Research", "Event Planning", "Fundraising",
-    "Marketing", "Social Media", "Mentoring", "Conflict Resolution", "Time Management",
-    "Adaptability", "Critical Thinking", "Customer Service", "Teaching", "Networking",
+    "Python",
+    "JavaScript",
+    "TypeScript",
+    "Java",
+    "C++",
+    "C#",
+    "SQL",
+    "React",
+    "Node.js",
+    "Excel",
+    "Data Analysis",
+    "Machine Learning",
+    "Cloud (AWS/GCP/Azure)",
+    "Cybersecurity",
+    "UI/UX Design",
+    "Mobile Development",
+    "DevOps",
+    "Databases",
+    "Leadership",
+    "Communication",
+    "Teamwork",
+    "Problem Solving",
+    "Project Management",
+    "Public Speaking",
+    "Writing",
+    "Research",
+    "Event Planning",
+    "Fundraising",
+    "Marketing",
+    "Social Media",
+    "Mentoring",
+    "Conflict Resolution",
+    "Time Management",
+    "Adaptability",
+    "Critical Thinking",
+    "Customer Service",
+    "Teaching",
+    "Networking",
 ];
 
 export default function VolOppDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -26,17 +57,20 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
     }
 
     if (!vm.opp) {
-        return <div className="flex min-h-screen items-center justify-center text-sm text-red-500">{vm.error ?? "Opportunity not found."}</div>;
+        return (
+            <div className="flex min-h-screen items-center justify-center text-sm text-red-500">
+                {vm.error ?? "Opportunity not found."}
+            </div>
+        );
     }
 
     const isCompleted = vm.opp.status === "CLOSED";
     const sortedUpdates = [...(vm.opp.progressUpdates ?? [])].sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
 
     return (
         <div className="min-h-screen bg-gray-50">
-
             <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
                 <button
                     onClick={() => vm.router.push("/volunteer")}
@@ -47,7 +81,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 </button>
 
                 {vm.error && (
-                    <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">{vm.error}</p>
+                    <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                        {vm.error}
+                    </p>
                 )}
 
                 <div className="mb-1 flex items-center gap-2">
@@ -63,8 +99,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     <span className="text-sm text-gray-400">
                         {isCompleted
                             ? `Completed ${new Date(vm.opp.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
-                            : `Started on ${new Date(vm.opp.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
-                        }
+                            : `Started on ${new Date(vm.opp.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`}
                     </span>
                 </div>
 
@@ -85,8 +120,12 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                 <DollarSign className="h-5 w-5 text-yellow-600" />
                             </div>
                             <p className="text-xs text-gray-500">Economic Value</p>
-                            <p className="mt-1 text-3xl font-bold text-gray-900">${vm.economicValue.toLocaleString()}</p>
-                            <p className="mt-1 text-xs text-gray-400">Calculated at ${vm.currentVolunteer?.hourlyValue ?? 0}.00/hr</p>
+                            <p className="mt-1 text-3xl font-bold text-gray-900">
+                                ${vm.economicValue.toLocaleString()}
+                            </p>
+                            <p className="mt-1 text-xs text-gray-400">
+                                Calculated at ${vm.currentVolunteer?.hourlyValue ?? 0}.00/hr
+                            </p>
                         </div>
                     </div>
                 )}
@@ -95,15 +134,23 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <button
-                                onClick={() => vm.opp?.organization?.id && vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)}
+                                onClick={() =>
+                                    vm.opp?.organization?.id &&
+                                    vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)
+                                }
                                 className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600 hover:opacity-75 transition-opacity"
                             >
                                 {vm.opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
                             </button>
                             <div>
-                                <p className="text-xs font-medium uppercase tracking-wide text-gray-400">Parent Organization</p>
+                                <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                                    Parent Organization
+                                </p>
                                 <button
-                                    onClick={() => vm.opp?.organization?.id && vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)}
+                                    onClick={() =>
+                                        vm.opp?.organization?.id &&
+                                        vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)
+                                    }
                                     className="text-lg font-bold text-gray-900 text-left hover:underline"
                                 >
                                     {vm.opp.organization?.orgName ?? "—"}
@@ -134,11 +181,17 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                 const isFirst = idx === 0;
                                 return (
                                     <li key={update.id} className="relative">
-                                        <span className={`absolute -left-[1.45rem] top-1 h-3 w-3 rounded-full border-2 border-white ${isFirst ? "bg-yellow-400" : "bg-gray-300"}`} />
+                                        <span
+                                            className={`absolute -left-[1.45rem] top-1 h-3 w-3 rounded-full border-2 border-white ${isFirst ? "bg-yellow-400" : "bg-gray-300"}`}
+                                        />
                                         <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                                            {new Date(update.createdAt).toLocaleDateString("en-US", {
-                                                month: "short", day: "numeric", year: "numeric",
-                                            }).toUpperCase()}
+                                            {new Date(update.createdAt)
+                                                .toLocaleDateString("en-US", {
+                                                    month: "short",
+                                                    day: "numeric",
+                                                    year: "numeric",
+                                                })
+                                                .toUpperCase()}
                                             {isFirst && " · TODAY"}
                                         </p>
                                         <p className="mt-0.5 font-semibold text-gray-900">{update.title}</p>
@@ -258,9 +311,7 @@ function SkillPickerModal({
     const [selected, setSelected] = useState<string[]>([]);
 
     function toggle(skill: string) {
-        setSelected((prev) =>
-            prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
-        );
+        setSelected((prev) => (prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]));
     }
 
     function handleClose() {
@@ -296,7 +347,10 @@ function SkillPickerModal({
             <p className="mb-4 text-sm text-gray-500">Select all the skills you used during this opportunity.</p>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 max-h-96 overflow-y-auto pr-1">
                 {ALL_SKILLS.map((skill) => (
-                    <label key={skill} className="flex cursor-pointer items-center gap-2 rounded-lg border p-2.5 hover:bg-gray-50">
+                    <label
+                        key={skill}
+                        className="flex cursor-pointer items-center gap-2 rounded-lg border p-2.5 hover:bg-gray-50"
+                    >
                         <input
                             type="checkbox"
                             checked={selected.includes(skill)}
@@ -335,12 +389,18 @@ function ProgressUpdateModal({
         setTouched(true);
         if (titleEmpty || descEmpty || hoursInvalid || submitting) return;
         await onSubmit({ title, description, hoursContributed: Number(hours) });
-        setTitle(""); setDescription(""); setHours(""); setTouched(false);
+        setTitle("");
+        setDescription("");
+        setHours("");
+        setTouched(false);
     }
 
     function handleClose() {
         if (submitting) return;
-        setTitle(""); setDescription(""); setHours(""); setTouched(false);
+        setTitle("");
+        setDescription("");
+        setHours("");
+        setTouched(false);
         onClose();
     }
 
@@ -404,7 +464,9 @@ function ProgressUpdateModal({
                         disabled={submitting}
                         className={`w-full rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && hoursInvalid ? "border-destructive" : "border-border"}`}
                     />
-                    {touched && hoursInvalid && <p className="mt-1 text-xs text-destructive">Enter a valid number of hours.</p>}
+                    {touched && hoursInvalid && (
+                        <p className="mt-1 text-xs text-destructive">Enter a valid number of hours.</p>
+                    )}
                 </div>
             </div>
         </AppModal>
@@ -437,12 +499,18 @@ function ReviewModal({
         setTouched(true);
         if (ratingMissing || flagReasonEmpty || submitting) return;
         await onSubmit({ rating, flagged, flagReason: flagged ? flagReason : undefined });
-        setRating(0); setFlagged(false); setFlagReason(""); setTouched(false);
+        setRating(0);
+        setFlagged(false);
+        setFlagReason("");
+        setTouched(false);
     }
 
     function handleClose() {
         if (submitting) return;
-        setRating(0); setFlagged(false); setFlagReason(""); setTouched(false);
+        setRating(0);
+        setFlagged(false);
+        setFlagReason("");
+        setTouched(false);
         onClose();
     }
 
@@ -489,11 +557,15 @@ function ReviewModal({
                                 onMouseLeave={() => setHovered(0)}
                                 className="text-2xl leading-none disabled:opacity-50"
                             >
-                                <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"}>★</span>
+                                <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"}>
+                                    ★
+                                </span>
                             </button>
                         ))}
                     </div>
-                    {touched && ratingMissing && <p className="mt-1 text-xs text-destructive">Please select a rating.</p>}
+                    {touched && ratingMissing && (
+                        <p className="mt-1 text-xs text-destructive">Please select a rating.</p>
+                    )}
                 </div>
 
                 <label className="flex items-center gap-2 cursor-pointer select-none">
@@ -518,7 +590,9 @@ function ReviewModal({
                             disabled={submitting}
                             className={`w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
                         />
-                        {touched && flagReasonEmpty && <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>}
+                        {touched && flagReasonEmpty && (
+                            <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>
+                        )}
                     </div>
                 )}
             </div>

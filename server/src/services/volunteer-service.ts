@@ -44,7 +44,7 @@ export async function updateCurrentVolunteer(
 
 export async function getYourOpportunities(volunteerId: string) {
     return prisma.opportunity.findMany({
-        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] }},
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
         include: {
             organization: {
                 select: { id: true, orgName: true },
@@ -134,7 +134,7 @@ export async function postReview(
         where: { revieweeId },
         select: { rating: true },
     });
-     
+
     const newAverage = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
     await prisma.volunteer.update({
         where: { id: revieweeId },
@@ -142,11 +142,7 @@ export async function postReview(
     });
 }
 
-export async function postFlag(
-    issuerId: string,
-    flaggedUserId: string,
-    reason: string,
-) {
+export async function postFlag(issuerId: string, flaggedUserId: string, reason: string) {
     return prisma.$transaction(async (tx) => {
         const flag = await tx.flag.create({
             data: {
@@ -187,7 +183,7 @@ export async function postFlag(
 
 export async function getVolunteerOrganizations(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
-        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] }},
+        where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
         select: {
             orgId: true,
             hours: true,
@@ -239,13 +235,13 @@ export async function browseOpportunities(filters: OpportunityFilters) {
             status: "OPEN",
             ...(filters.search
                 ? {
-                    OR: [
-                        { name: { contains: filters.search, mode: "insensitive" } },
-                        { description: { contains: filters.search, mode: "insensitive" } },
-                        { category: { contains: filters.search, mode: "insensitive" } },
-                        { organization: { orgName: { contains: filters.search, mode: "insensitive" } } },
-                    ],
-                }
+                      OR: [
+                          { name: { contains: filters.search, mode: "insensitive" } },
+                          { description: { contains: filters.search, mode: "insensitive" } },
+                          { category: { contains: filters.search, mode: "insensitive" } },
+                          { organization: { orgName: { contains: filters.search, mode: "insensitive" } } },
+                      ],
+                  }
                 : {}),
             ...(filters.category ? { category: { equals: filters.category, mode: "insensitive" } } : {}),
             ...(filters.workType ? { workType: filters.workType } : {}),
@@ -315,7 +311,7 @@ export async function getVolunteerSkillCounts(volId: string): Promise<Record<str
         where: { volId },
         select: { skillName: true },
     });
- 
+
     const counts: Record<string, number> = {};
     for (const { skillName } of skills) {
         counts[skillName] = (counts[skillName] ?? 0) + 1;

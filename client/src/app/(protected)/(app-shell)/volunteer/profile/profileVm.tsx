@@ -98,9 +98,7 @@ export function useProfileViewModel() {
     }
 
     function toggleDay(day: string) {
-        setAvailability((prev) =>
-            prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-        );
+        setAvailability((prev) => (prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]));
     }
 
     function validate(): boolean {
@@ -158,10 +156,14 @@ export function useProfileViewModel() {
         editing,
         saving,
         errors,
-        firstName, setFirstName,
-        lastName, setLastName,
-        location, setLocation,
-        bio, setBio,
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
+        location,
+        setLocation,
+        bio,
+        setBio,
         availability,
         toggleDay,
         memberSince,

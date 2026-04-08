@@ -49,10 +49,16 @@ export function useVolOppDetailViewModel(oppId: string) {
                     VolunteerService.getOpportunityById(oppId),
                 ]);
 
-                if (!volResult.success) { setError("Failed to load volunteer."); return; }
+                if (!volResult.success) {
+                    setError("Failed to load volunteer.");
+                    return;
+                }
                 setCurrentVolunteer(volResult.data);
 
-                if (!oppResult.success) { setError("Failed to load opportunity."); return; }
+                if (!oppResult.success) {
+                    setError("Failed to load opportunity.");
+                    return;
+                }
                 setOpp(oppResult.data);
 
                 const existingSkills = await VolunteerService.getOppSkills(oppId);

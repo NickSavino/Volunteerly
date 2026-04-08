@@ -21,13 +21,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-export type VolunteerModalMode =
-    | "profile"
-    | "investigation"
-    | "flag"
-    | "warning"
-    | "suspend"
-    | "escalate";
+export type VolunteerModalMode = "profile" | "investigation" | "flag" | "warning" | "suspend" | "escalate";
 
 type VolunteerDetailModalProps = {
     volunteerId: string | null;
@@ -60,13 +54,7 @@ function actionLabel(action?: string | null) {
     }
 }
 
-export function VolunteerDetailModal({
-    volunteerId,
-    open,
-    mode,
-    onClose,
-    onUpdated,
-}: VolunteerDetailModalProps) {
+export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdated }: VolunteerDetailModalProps) {
     const [currentMode, setCurrentMode] = useState<VolunteerModalMode>(mode);
     const [detail, setDetail] = useState<ModeratorVolunteerDetail | null>(null);
     const [loading, setLoading] = useState(false);
@@ -107,15 +95,9 @@ export function VolunteerDetailModal({
         void loadDetail(volunteerId);
     }, [open, volunteerId]);
 
-    const openReport = useMemo(
-        () => detail?.reports.find((report) => report.isOpen),
-        [detail]
-    );
+    const openReport = useMemo(() => detail?.reports.find((report) => report.isOpen), [detail]);
 
-    const reportForView = useMemo(
-        () => openReport ?? detail?.reports[0],
-        [detail, openReport]
-    )
+    const reportForView = useMemo(() => openReport ?? detail?.reports[0], [detail, openReport]);
 
     const hasOpenReport = !!openReport;
     const hasReportHistory = !!detail?.reports.length;
@@ -277,20 +259,25 @@ export function VolunteerDetailModal({
         currentMode === "profile"
             ? "Moderator View: Volunteer Profile"
             : currentMode === "investigation"
-            ? `Investigation: ${detail?.firstName ?? ""} ${detail?.lastName ?? ""}`.trim()
-            : currentMode === "flag"
-            ? "Flag Account"
-            : currentMode === "warning"
-            ? "Issue Warning"
-            : currentMode === "suspend"
-            ? "Suspend Account"
-            : "Escalate Investigation";
+              ? `Investigation: ${detail?.firstName ?? ""} ${detail?.lastName ?? ""}`.trim()
+              : currentMode === "flag"
+                ? "Flag Account"
+                : currentMode === "warning"
+                  ? "Issue Warning"
+                  : currentMode === "suspend"
+                    ? "Suspend Account"
+                    : "Escalate Investigation";
 
     const icon =
-        currentMode === "profile" ? <UserRound className="size-6 text-muted-foreground" />
-        : currentMode === "flag" ? <Flag className="size-6 text-muted-foreground" />
-        : currentMode === "suspend" ? <ShieldAlert className="size-6 text-destructive" />
-        : <AlertTriangle className="size-6 text-muted-foreground" />;
+        currentMode === "profile" ? (
+            <UserRound className="size-6 text-muted-foreground" />
+        ) : currentMode === "flag" ? (
+            <Flag className="size-6 text-muted-foreground" />
+        ) : currentMode === "suspend" ? (
+            <ShieldAlert className="size-6 text-destructive" />
+        ) : (
+            <AlertTriangle className="size-6 text-muted-foreground" />
+        );
 
     const history = detail?.reports.length ? (
         <div className="space-y-3">
@@ -303,23 +290,17 @@ export function VolunteerDetailModal({
                         </p>
                     </div>
 
-                    <p className="mt-1 text-sm text-muted-foreground">
-                        Reported by {report.reporterDisplayName}
-                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">Reported by {report.reporterDisplayName}</p>
 
-                    {report.details ? (
-                        <p className="mt-2 text-sm text-muted-foreground">{report.details}</p>
-                    ) : null}
+                    {report.details ? <p className="mt-2 text-sm text-muted-foreground">{report.details}</p> : null}
 
                     <p className="mt-2 text-sm">
-                        <span className="font-medium text-foreground">Outcome:</span>{" "}
-                        {actionLabel(report.actionTaken)}
+                        <span className="font-medium text-foreground">Outcome:</span> {actionLabel(report.actionTaken)}
                     </p>
 
                     {report.moderatorNote ? (
                         <p className="mt-1 text-sm text-muted-foreground">
-                            <span className="font-medium text-foreground">Moderator note:</span>{" "}
-                            {report.moderatorNote}
+                            <span className="font-medium text-foreground">Moderator note:</span> {report.moderatorNote}
                         </p>
                     ) : null}
 
@@ -347,15 +328,12 @@ export function VolunteerDetailModal({
             footer={
                 currentMode === "profile" ? (
                     <>
-                        <Button 
-                            variant="outline" 
-                            onClick={handleClose}
-                        >
+                        <Button variant="outline" onClick={handleClose}>
                             Close
                         </Button>
                         <div className="flex items-center gap-2">
-                            <Button 
-                                variant="outline" 
+                            <Button
+                                variant="outline"
                                 onClick={() => setCurrentMode("investigation")}
                                 disabled={!hasReportHistory}
                             >
@@ -368,38 +346,76 @@ export function VolunteerDetailModal({
                     </>
                 ) : currentMode === "investigation" ? (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("profile")}>Back</Button>
+                        <Button variant="outline" onClick={() => setCurrentMode("profile")}>
+                            Back
+                        </Button>
                         <div className="flex items-center gap-2">
-                            <Button variant="outline" onClick={() => setCurrentMode("escalate")} disabled={!hasOpenReport || isSuspended}>Escalate</Button>
-                            <Button variant="outline" onClick={() => setCurrentMode("warning")} disabled={!hasOpenReport || isSuspended}>Issue Warning</Button>
-                            <Button variant="destructive" onClick={() => setCurrentMode("suspend")} disabled={!hasOpenReport || isSuspended}>Suspend</Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => setCurrentMode("escalate")}
+                                disabled={!hasOpenReport || isSuspended}
+                            >
+                                Escalate
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => setCurrentMode("warning")}
+                                disabled={!hasOpenReport || isSuspended}
+                            >
+                                Issue Warning
+                            </Button>
+                            <Button
+                                variant="destructive"
+                                onClick={() => setCurrentMode("suspend")}
+                                disabled={!hasOpenReport || isSuspended}
+                            >
+                                Suspend
+                            </Button>
                         </div>
                     </>
                 ) : currentMode === "flag" ? (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("profile")} disabled={submitting}>Cancel</Button>
+                        <Button variant="outline" onClick={() => setCurrentMode("profile")} disabled={submitting}>
+                            Cancel
+                        </Button>
                         <Button onClick={submitFlag} disabled={submitting || !flagForm.reason.trim() || isSuspended}>
                             {submitting ? "Saving..." : "Flag Account"}
                         </Button>
                     </>
                 ) : currentMode === "warning" ? (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>Cancel</Button>
-                        <Button onClick={submitWarning} disabled={submitting || !warnForm.reason.trim() || !openReport?.id || isSuspended}>
+                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={submitWarning}
+                            disabled={submitting || !warnForm.reason.trim() || !openReport?.id || isSuspended}
+                        >
                             {submitting ? "Saving..." : "Issue Warning"}
                         </Button>
                     </>
                 ) : currentMode === "suspend" ? (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>Cancel</Button>
-                        <Button variant="destructive" onClick={submitSuspension} disabled={submitting || !suspendForm.reason.trim() || !openReport?.id || isSuspended}>
+                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={submitSuspension}
+                            disabled={submitting || !suspendForm.reason.trim() || !openReport?.id || isSuspended}
+                        >
                             {submitting ? "Saving..." : "Suspend Account"}
                         </Button>
                     </>
                 ) : (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>Cancel</Button>
-                        <Button onClick={submitEscalation} disabled={submitting || !escalateForm.reason.trim() || !openReport?.id || isSuspended}>
+                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={submitEscalation}
+                            disabled={submitting || !escalateForm.reason.trim() || !openReport?.id || isSuspended}
+                        >
                             {submitting ? "Saving..." : "Confirm Escalation"}
                         </Button>
                     </>
@@ -419,11 +435,16 @@ export function VolunteerDetailModal({
                     <div className="flex items-start gap-4 rounded-2xl border p-5">
                         <Avatar className="h-20 w-20">
                             <AvatarImage src={UserService.getAvatarURL(detail.id)} />
-                            <AvatarFallback>{detail.firstName[0]}{detail.lastName[0]}</AvatarFallback>
+                            <AvatarFallback>
+                                {detail.firstName[0]}
+                                {detail.lastName[0]}
+                            </AvatarFallback>
                         </Avatar>
 
                         <div className="min-w-0 flex-1">
-                            <p className="text-2xl font-bold text-foreground">{detail.firstName} {detail.lastName}</p>
+                            <p className="text-2xl font-bold text-foreground">
+                                {detail.firstName} {detail.lastName}
+                            </p>
                             <p className="text-sm text-muted-foreground">{detail.location || "No location provided"}</p>
                             <p className="mt-3 rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide w-fit">
                                 {stateLabel(detail.state)}
@@ -432,10 +453,22 @@ export function VolunteerDetailModal({
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-4">
-                        <div className="rounded-xl border p-4"><p className="text-xs text-muted-foreground">Past Flags</p><p className="mt-1 text-2xl font-bold">{detail.pastFlagsCount}</p></div>
-                        <div className="rounded-xl border p-4"><p className="text-xs text-muted-foreground">Completed</p><p className="mt-1 text-2xl font-bold">{detail.completedOpportunities}</p></div>
-                        <div className="rounded-xl border p-4"><p className="text-xs text-muted-foreground">Rating</p><p className="mt-1 text-2xl font-bold">{detail.averageRating.toFixed(1)}</p></div>
-                        <div className="rounded-xl border p-4"><p className="text-xs text-muted-foreground">Hourly Value</p><p className="mt-1 text-2xl font-bold">${detail.hourlyValue}</p></div>
+                        <div className="rounded-xl border p-4">
+                            <p className="text-xs text-muted-foreground">Past Flags</p>
+                            <p className="mt-1 text-2xl font-bold">{detail.pastFlagsCount}</p>
+                        </div>
+                        <div className="rounded-xl border p-4">
+                            <p className="text-xs text-muted-foreground">Completed</p>
+                            <p className="mt-1 text-2xl font-bold">{detail.completedOpportunities}</p>
+                        </div>
+                        <div className="rounded-xl border p-4">
+                            <p className="text-xs text-muted-foreground">Rating</p>
+                            <p className="mt-1 text-2xl font-bold">{detail.averageRating.toFixed(1)}</p>
+                        </div>
+                        <div className="rounded-xl border p-4">
+                            <p className="text-xs text-muted-foreground">Hourly Value</p>
+                            <p className="mt-1 text-2xl font-bold">${detail.hourlyValue}</p>
+                        </div>
                     </div>
 
                     <div className="rounded-xl border p-4">
@@ -452,7 +485,10 @@ export function VolunteerDetailModal({
                         <div className="mt-3 flex flex-wrap gap-2">
                             {[...detail.technicalSkills, ...detail.nonTechnicalSkills].length ? (
                                 [...detail.technicalSkills, ...detail.nonTechnicalSkills].map((skill) => (
-                                    <span key={skill} className="rounded-full bg-secondary px-3 py-1 text-xs font-medium">
+                                    <span
+                                        key={skill}
+                                        className="rounded-full bg-secondary px-3 py-1 text-xs font-medium"
+                                    >
                                         {skill}
                                     </span>
                                 ))
@@ -477,9 +513,7 @@ export function VolunteerDetailModal({
                                 {new Date(reportForView.createdAt).toLocaleDateString("en-US")}
                             </p>
                             {reportForView.severity ? (
-                                <p className="mt-2 text-sm text-muted-foreground">
-                                    Severity: {reportForView.severity}
-                                </p>
+                                <p className="mt-2 text-sm text-muted-foreground">Severity: {reportForView.severity}</p>
                             ) : null}
                             {reportForView.details ? (
                                 <p className="mt-4 text-sm text-muted-foreground">{reportForView.details}</p>
@@ -487,13 +521,15 @@ export function VolunteerDetailModal({
 
                             {!hasOpenReport ? (
                                 <p className="mt-4 rounded-md border border-border bg-secondary/30 px-4 py-3 text-sm text-muted-foreground">
-                                    This investigation is already closed. You can review the history, but no further action can be taken.
+                                    This investigation is already closed. You can review the history, but no further
+                                    action can be taken.
                                 </p>
                             ) : null}
 
                             {isSuspended ? (
                                 <p className="mt-4 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-                                    This volunteer is already suspended. Additional suspension or escalation actions are disabled.
+                                    This volunteer is already suspended. Additional suspension or escalation actions are
+                                    disabled.
                                 </p>
                             ) : null}
                         </div>
@@ -504,7 +540,8 @@ export function VolunteerDetailModal({
                     <div className="rounded-xl border p-4">
                         <p className="text-sm font-semibold text-foreground">Volunteer Snapshot</p>
                         <p className="mt-2 text-sm text-muted-foreground">
-                            {detail.firstName} {detail.lastName} - {detail.location || "No location"} - {stateLabel(detail.state)}
+                            {detail.firstName} {detail.lastName} - {detail.location || "No location"} -{" "}
+                            {stateLabel(detail.state)}
                         </p>
                     </div>
 
@@ -528,14 +565,18 @@ export function VolunteerDetailModal({
                         <Label>Severity</Label>
                         <Select
                             value={flagForm.severity}
-                            onValueChange={(value) => setFlagForm((prev) => ({ ...prev, severity: value as ModeratorUrgencyRating }))}
+                            onValueChange={(value) =>
+                                setFlagForm((prev) => ({ ...prev, severity: value as ModeratorUrgencyRating }))
+                            }
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select severity" />
                             </SelectTrigger>
                             <SelectContent>
                                 {severityOptions.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                                    <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -567,14 +608,18 @@ export function VolunteerDetailModal({
                         <Label>Severity</Label>
                         <Select
                             value={warnForm.severity}
-                            onValueChange={(value) => setWarnForm((prev) => ({ ...prev, severity: value as ModeratorUrgencyRating }))}
+                            onValueChange={(value) =>
+                                setWarnForm((prev) => ({ ...prev, severity: value as ModeratorUrgencyRating }))
+                            }
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select severity" />
                             </SelectTrigger>
                             <SelectContent>
                                 {severityOptions.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                                    <SelectItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -586,7 +631,9 @@ export function VolunteerDetailModal({
                         <Label>Suspension Duration (days)</Label>
                         <Select
                             value={String(suspendForm.durationDays)}
-                            onValueChange={(value) => setSuspendForm((prev) => ({ ...prev, durationDays: Number(value) }))}
+                            onValueChange={(value) =>
+                                setSuspendForm((prev) => ({ ...prev, durationDays: Number(value) }))
+                            }
                         >
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select duration" />

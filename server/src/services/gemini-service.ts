@@ -21,7 +21,7 @@ export async function embedText(text: string): Promise<number[]> {
         throw new Error(`Gemini embedding error: ${response.status} ${errorText}`);
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
         embedding: { values: number[] };
     };
 

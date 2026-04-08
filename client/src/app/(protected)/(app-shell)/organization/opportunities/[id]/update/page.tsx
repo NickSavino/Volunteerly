@@ -5,13 +5,9 @@ import { useCreateOpportunityViewModel } from "../../create/orgCreateOpportunity
 import OpportunityForm from "../../opportunityForm";
 import { use } from "react";
 
-export default function OppUpdatePage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default function OppUpdatePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const {        
+    const {
         loading,
         error,
         submitting,
@@ -21,30 +17,29 @@ export default function OppUpdatePage({
         setOpportunity,
         signOut,
         handleSubmit,
-        deadlineDate, 
+        deadlineDate,
         handleDayToggle,
-        setDeadlineDate
-    } = useCreateOpportunityViewModel(id)
+        setDeadlineDate,
+    } = useCreateOpportunityViewModel(id);
 
     if (loading || submitting) {
-        return <LoadingScreen />
+        return <LoadingScreen />;
     }
 
     return (
         <div className="min-h-screen">
             <title>Organization Application - Volunteerly</title>
-            <main className="w-full items-center h-full flex flex-col p-8 ">       
-            <OpportunityForm
-                opportunity={opportunity}
-                handleDayToggle={handleDayToggle}
-                setDeadlineDate={setDeadlineDate}
-                setOpportunity={setOpportunity}
-                editing={true}
-                handleSubmit={handleSubmit}
-                deadlineDate={deadlineDate}
-            />     
+            <main className="w-full items-center h-full flex flex-col p-8 ">
+                <OpportunityForm
+                    opportunity={opportunity}
+                    handleDayToggle={handleDayToggle}
+                    setDeadlineDate={setDeadlineDate}
+                    setOpportunity={setOpportunity}
+                    editing={true}
+                    handleSubmit={handleSubmit}
+                    deadlineDate={deadlineDate}
+                />
             </main>
         </div>
-        
     );
 }

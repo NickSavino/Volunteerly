@@ -30,6 +30,7 @@ Volunteerly is a web platform that connects volunteers with organizations.
 ## Monorepo Structure
 
 The project consists of 3 packages:
+
 - `client/` - Next.js frontend
 - `server/` - Express Backend
 - `shared/` - shared Zod schemas and types used by both client and server
@@ -40,11 +41,13 @@ Type `npm run` to view available commands
 You can manage each package individually by adding: `-w (package)` to the end of a `npm run` command
 
 Examples:
+
 ```bash
 npm run build -w shared
 npm run typecheck -w client
 npm run db:setup -w server
 ```
+
 ## Development Setup
 
 The dev environment is ran using docker for a consistent cross-platform environment.
@@ -54,9 +57,11 @@ The dev environment is ran using docker for a consistent cross-platform environm
 #### 1. Install necessary tools
 
 Docker Desktop (reccomended), Docker engine (required):
+
 - <https://docs.docker.com/desktop/>
 
 Make:
+
 - Windows: <https://medium.com/@AliMasaoodi/installing-make-on-windows-10-using-chocolatey-a-step-by-step-guide-5e178c449394>
 - Mac: <https://www.google.com/search?client=firefox-b-d&q=install+make+on+mac>
 - Linux/WSL: <https://www.geeksforgeeks.org/installation-guide/how-to-install-make-on-ubuntu/>
@@ -77,13 +82,15 @@ npm --version
 #### 3. Set environment variables
 
 In repo root:
+
 - `touch .env`
 
-Place environment variables only in this file 
+Place environment variables only in this file
 
 **(DO NOT COMMIT SECRETS TO REPOSITORY)**
 
 #### 4. Install packages
+
 From repository root:
 `npm install`
 
@@ -104,34 +111,39 @@ This will:
 2. Start supabase containers
 3. Bootstrap authenication to SQL
 
+\*\*\* Note: it is possible to run the client and backend without docker, but not reccomended due to potential issues across development environments.
 
-*** Note: it is possible to run the client and backend without docker, but not reccomended due to potential issues across development environments.
-
-*** Note: Always remember to run `npm run db:reset -w server` after resetting the database, or auth will not properly bootstrap
+\*\*\* Note: Always remember to run `npm run db:reset -w server` after resetting the database, or auth will not properly bootstrap
 
 ## Services
+
 After startup the following services are available:
 
 Client: <http://localhost:3000>
 Server: <http://localhost:4000>
 
 ## Migrations
+
 The project uses [Prisma Migrations](https://www.prisma.io/docs/orm/prisma-migrate).
 
 Generate the prisma client:
+
 - `npm run prisma:generate -w server`
 
 Run Migrations
+
 - `npm run prisma:migrate -w server`
 
-*** Note: Never manually deleted a migration file unless it is an untracked change in your current working branch. If you need to make a change or revert after a commit, simply edit the schema file and rerun migrations.
+\*\*\* Note: Never manually deleted a migration file unless it is an untracked change in your current working branch. If you need to make a change or revert after a commit, simply edit the schema file and rerun migrations.
 
 #### Migration Conventions:
+
 Use standard snake_case for column names through the use of the `@map()` attribute
 
 For tables use `@@map()` and follow snake_case as well.
 
 The following fields should be in every table that represents a tracked entity within the database schema:
+
 ```bash
 createdAt DateTime @default(now()) @map("created_at")
 updatedAt DateTime @updatedAt @default(now()) @map("updated_at")
@@ -142,6 +154,7 @@ Enforce id primary keys on every table with `@id @default(uuid())`
 Define both sides of relationship in schema when referencing tables through primary keys
 
 ## Supabase Auth Integration
+
 Volunteerly uses [Supabase Auth](https://supabase.com/docs/guides/auth) for authentication.
 
 When a user signs up:
@@ -150,7 +163,9 @@ When a user signs up:
 2. A database triggers automatically inserts a related record into `public.users`, mapping them by keys while protecting the authentication data.
 
 ## Supabase Local Development
+
 a [local supabase instance](https://supabase.com/docs/guides/local-development) is used in development. From the repository root:
+
 - `supabase start`
 
 You can access the supabase dashboard locally at:
@@ -162,10 +177,13 @@ To view your connection settings, run:
 `npx supabase status`
 
 Reset the local database by running:
+
 - `npm run db:reset -w server`
 
 ## Client Authentication Flow
+
 There the following pages manage authentication:
+
 - `/`
 - `/login`
 - `/signup`
@@ -177,22 +195,27 @@ There the following pages manage authentication:
 After login or signup, the app routes to `/bootstrap`, fetches the current user from the backend, and redirects to the correct dashboard based on the user`s role.
 
 ## API Contract
+
 API schemas are defined in the `shared/` package using [Zod](https://zod.dev/). This provides runtime validation and shared types between frontend and backend
 
 After adding your schema to `shared/src` run:
+
 - `npm run build -w shared`
 
 Alternatively, you can run:
+
 - `npm run dev -w shared`
 
 For automatic reloading.
 
 ### CSS
+
 Use components from [shacdn/ui](https://ui.shadcn.com/docs/components). Styling for web application is set in `/client/src/app/globals.css`.
 
 Imported components can be styled by accessing the relevant `.tsx` file for that component inside `/client/src/components/ui`
 
 ### Docker
+
 Docker Compose is used for local development. The project uses three compose files to separate shared, development and production container settings:
 
 - `docker-compose.yml` - Base configuration
@@ -200,17 +223,20 @@ Docker Compose is used for local development. The project uses three compose fil
 - `docker-compose.prod.yml` - Production overrides
 
 For normal development, run:
+
 ```bash
 docker compose up --build
 ```
 
 To test the application in a production-like setup, run:
+
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build
 ```
+
 This disables development only behaviour (hot reload, bind mounts)
 
-***Note: `docker-compose.prod.yml` is intended for validation only. The actual hosted deployment uses:
+\*\*\*Note: `docker-compose.prod.yml` is intended for validation only. The actual hosted deployment uses:
 
 - [Vercel](https://vercel.com/) for the frontend
 - [Render](https://render.com/) for the backend
@@ -226,44 +252,38 @@ docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod
 ### schema-milestone : Seeding Script Instructions
 
 1. Prerequisites
- 
+
     Ensure you have Node.js installed
 
     `node --version`
 
-
 2. Clone Repository
- 
+
     `git clone https://csgit.ucalgary.ca/saad.abdullah1/seng513-202601-pg-40.git`
 
-
 3. In repo root, run npm commands
- 
+
     `npm install supabase`
 
     `npm install prisma`
 
     Need to install Supabase CLI to run Supabase locally and Prisma for migrations
 
-
 4. Set your environment variables
- 
-    In repo root:
 
+    In repo root:
     - `touch .env`
 
-    - Place environment variables only in this file, use from sample or submission 
-
+    - Place environment variables only in this file, use from sample or submission
 
 5. Run Supabase Locally
- 
+
     `npx supabase start`
 
     Copy the authentication key -> Secret into the .env file
 
     Copy the authentication key -> Publishable into the .env file
 
-
 6. Run the seeding script
- 
+
     `npm run db:reset -w server`

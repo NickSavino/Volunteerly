@@ -25,26 +25,28 @@ export const OPPORTUNITY_CATEGORIES = [
     "Poverty",
     "Accounting",
     "IT",
-    "Management"
+    "Management",
 ] as const;
 
 const DEFAULT_MATCH_PCT = 1;
 
-function sortOpportunities(
-    opps: Opportunity[],
-    sort: SortOption,
-    scoreMap: Record<string, number>
-): Opportunity[] {
+function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Record<string, number>): Opportunity[] {
     const arr = [...opps];
     const getScore = (opp: Opportunity) => scoreMap[opp.id] ?? DEFAULT_MATCH_PCT;
     switch (sort) {
-        case "MATCH_HIGH": return arr.sort((a, b) => getScore(b) - getScore(a));
-        case "MATCH_LOW":  return arr.sort((a, b) => getScore(a) - getScore(b));
-        case "HOURS_LOW":  return arr.sort((a, b) => a.hours - b.hours);
-        case "HOURS_HIGH": return arr.sort((a, b) => b.hours - a.hours);
-        case "NEWEST":     return arr.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
+        case "MATCH_HIGH":
+            return arr.sort((a, b) => getScore(b) - getScore(a));
+        case "MATCH_LOW":
+            return arr.sort((a, b) => getScore(a) - getScore(b));
+        case "HOURS_LOW":
+            return arr.sort((a, b) => a.hours - b.hours);
+        case "HOURS_HIGH":
+            return arr.sort((a, b) => b.hours - a.hours);
+        case "NEWEST":
+            return arr.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
         case "RELEVANT":
-        default:           return arr.sort((a, b) => getScore(b) - getScore(a));
+        default:
+            return arr.sort((a, b) => getScore(b) - getScore(a));
     }
 }
 
@@ -71,50 +73,53 @@ export function useOpportunitiesViewModel() {
         if (!loading && !session) router.replace("/login");
     }, [loading, session, router]);
 
-    const fetchOpportunities = useCallback(async (
-        cats: string[],
-        wt: WorkTypeFilter,
-        cl: CommitmentFilter,
-        mh: number,
-        sq: string,
-        sort: SortOption,
-        scores: Record<string, number>,
-        volunteer?: CurrentVolunteer
-    ) => {
-        try {
-            const result = await VolunteerService.browseOpportunities({
-                search: sq || undefined,
-                workType: wt !== "ALL" ? wt : undefined,
-                commitmentLevel: cl !== "ALL" ? cl : undefined,
-                maxHours: mh < 40 ? mh : undefined,
-            });
+    const fetchOpportunities = useCallback(
+        async (
+            cats: string[],
+            wt: WorkTypeFilter,
+            cl: CommitmentFilter,
+            mh: number,
+            sq: string,
+            sort: SortOption,
+            scores: Record<string, number>,
+            volunteer?: CurrentVolunteer,
+        ) => {
+            try {
+                const result = await VolunteerService.browseOpportunities({
+                    search: sq || undefined,
+                    workType: wt !== "ALL" ? wt : undefined,
+                    commitmentLevel: cl !== "ALL" ? cl : undefined,
+                    maxHours: mh < 40 ? mh : undefined,
+                });
 
-            if (!result.success) {
+                if (!result.success) {
+                    setError("Failed to load opportunities.");
+                    return;
+                }
+
+                let filtered = result.data;
+
+                if (cats.length > 0) {
+                    filtered = filtered.filter((opp) =>
+                        cats.some((cat) => opp.category.toLowerCase().includes(cat.toLowerCase())),
+                    );
+                }
+
+                const userAvailability = volunteer?.availability ?? currentVolunteer?.availability ?? [];
+                if (userAvailability.length > 0) {
+                    filtered = filtered.filter((opp) =>
+                        opp.availability?.some((day) => userAvailability.includes(day)),
+                    );
+                }
+
+                setOpportunities(sortOpportunities(filtered, sort, scores));
+            } catch (err) {
+                console.error(err);
                 setError("Failed to load opportunities.");
-                return;
             }
-
-            let filtered = result.data;
-
-            if (cats.length > 0) {
-                filtered = filtered.filter((opp) =>
-                    cats.some((cat) => opp.category.toLowerCase().includes(cat.toLowerCase()))
-                );
-            }
-
-            const userAvailability = volunteer?.availability ?? currentVolunteer?.availability ?? [];
-            if (userAvailability.length > 0) {
-                filtered = filtered.filter((opp) =>
-                    opp.availability?.some((day) => userAvailability.includes(day))
-                );
-            }
-
-            setOpportunities(sortOpportunities(filtered, sort, scores));
-        } catch (err) {
-            console.error(err);
-            setError("Failed to load opportunities.");
-        }
-    }, []);
+        },
+        [],
+    );
 
     useEffect(() => {
         async function load() {
@@ -140,7 +145,7 @@ export function useOpportunitiesViewModel() {
                 setMatchScores(scores);
 
                 await fetchOpportunities([], "ALL", "ALL", 40, "", "RELEVANT", scores, volunteer);
-            
+
                 //backfill opps
                 VolunteerService.backfillOpportunityVectors();
             } catch (err) {
@@ -158,15 +163,19 @@ export function useOpportunitiesViewModel() {
     }, [sortBy, matchScores]);
 
     function toggleCategory(cat: string) {
-        setSelectedCategories((prev) =>
-            prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
-        );
+        setSelectedCategories((prev) => (prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]));
     }
 
     function applyFilters() {
         fetchOpportunities(
-            selectedCategories, workType, commitmentLevel,
-            maxHours, searchQuery, sortBy, matchScores, currentVolunteer
+            selectedCategories,
+            workType,
+            commitmentLevel,
+            maxHours,
+            searchQuery,
+            sortBy,
+            matchScores,
+            currentVolunteer,
         );
     }
 

@@ -32,11 +32,7 @@ export default function ModeratorProfilePage() {
         setDeleteAccountOpen,
         deletingAccount,
     } = securityState;
-    const {
-        values: securityValues,
-        errors: securityErrors,
-        setters: securitySetters,
-    } = securityForm;
+    const { values: securityValues, errors: securityErrors, setters: securitySetters } = securityForm;
 
     if (loading || !session) {
         return <LoadingScreen />;
@@ -140,9 +136,7 @@ export default function ModeratorProfilePage() {
                                         </div>
                                     </div>
 
-                                    {errors.general && (
-                                        <p className="text-sm text-destructive">{errors.general}</p>
-                                    )}
+                                    {errors.general && <p className="text-sm text-destructive">{errors.general}</p>}
                                 </div>
                             </div>
 
@@ -207,8 +201,8 @@ export default function ModeratorProfilePage() {
                                     <div className="rounded-xl bg-red-50 p-5">
                                         <h2 className="text-2xl font-semibold text-red-600">Danger Zone</h2>
                                         <p className="mt-3 max-w-md text-sm text-red-400">
-                                            Deleting your account will permanently remove all of your moderator
-                                            data and access.
+                                            Deleting your account will permanently remove all of your moderator data and
+                                            access.
                                         </p>
 
                                         <Button
@@ -231,9 +225,7 @@ export default function ModeratorProfilePage() {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Change Password</DialogTitle>
-                        <DialogDescription>
-                            Enter your new password below.
-                        </DialogDescription>
+                        <DialogDescription>Enter your new password below.</DialogDescription>
                     </DialogHeader>
 
                     <div className="space-y-4">
@@ -246,9 +238,7 @@ export default function ModeratorProfilePage() {
                                 onChange={(e) => securitySetters.setNewPassword(e.target.value)}
                             />
                             {securityErrors.password.newPassword && (
-                                <p className="text-xs text-destructive">
-                                    {securityErrors.password.newPassword}
-                                </p>
+                                <p className="text-xs text-destructive">{securityErrors.password.newPassword}</p>
                             )}
                         </div>
 
@@ -261,16 +251,12 @@ export default function ModeratorProfilePage() {
                                 onChange={(e) => securitySetters.setConfirmPassword(e.target.value)}
                             />
                             {securityErrors.password.confirmPassword && (
-                                <p className="text-xs text-destructive">
-                                    {securityErrors.password.confirmPassword}
-                                </p>
+                                <p className="text-xs text-destructive">{securityErrors.password.confirmPassword}</p>
                             )}
                         </div>
 
                         {securityErrors.password.general && (
-                            <p className="text-sm text-destructive">
-                                {securityErrors.password.general}
-                            </p>
+                            <p className="text-sm text-destructive">{securityErrors.password.general}</p>
                         )}
                     </div>
 
@@ -314,16 +300,12 @@ export default function ModeratorProfilePage() {
                                 placeholder='Type "DELETE"'
                             />
                             {securityErrors.delete.confirmation && (
-                                <p className="text-xs text-destructive">
-                                    {securityErrors.delete.confirmation}
-                                </p>
+                                <p className="text-xs text-destructive">{securityErrors.delete.confirmation}</p>
                             )}
                         </div>
 
                         {securityErrors.delete.general && (
-                            <p className="text-sm text-destructive">
-                                {securityErrors.delete.general}
-                            </p>
+                            <p className="text-sm text-destructive">{securityErrors.delete.general}</p>
                         )}
                     </div>
 

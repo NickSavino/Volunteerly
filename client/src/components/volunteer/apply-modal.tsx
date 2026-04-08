@@ -63,9 +63,7 @@ export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps
             }
         >
             <div className="space-y-3">
-                <label className="block text-sm font-medium text-foreground">
-                    Message to Organization:
-                </label>
+                <label className="block text-sm font-medium text-foreground">Message to Organization:</label>
                 <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -77,9 +75,7 @@ export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps
                     }`}
                 />
                 {touched && isEmpty && (
-                    <p className="text-xs text-destructive">
-                        Please write a message before applying.
-                    </p>
+                    <p className="text-xs text-destructive">Please write a message before applying.</p>
                 )}
             </div>
         </AppModal>
