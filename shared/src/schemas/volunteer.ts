@@ -9,7 +9,8 @@ export const VolunteerSchema = z.object({
   availability: z.array(z.any()).optional(),
   hourlyValue: z.number().int(),
   createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime()
+  updatedAt: z.iso.datetime(),
+  skill_vector: z.array(z.number()).optional(),
 });
 export type Volunteer = z.infer<typeof VolunteerSchema>;
 
@@ -25,7 +26,7 @@ export const CurrentVolunteerSchema = z.object({
   reviewCount: z.number().int().default(0),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
-  skill_vector: z.array(z.number()).optional(),
+  skill_vector: z.array(z.number()).optional()
 });
 export type CurrentVolunteer = z.infer<typeof CurrentVolunteerSchema>;
 
