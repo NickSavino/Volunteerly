@@ -8,6 +8,7 @@ workflow:
 
 stages:
   - typecheck
+  - test
   - build
   - deploy
 
@@ -29,11 +30,17 @@ typecheck:
   script:
     - npm run typecheck
 
+test:
+  stage: test
+  script:
+    - npm run test
+  needs: ["typecheck"]
+
 build:
   stage: build
   script:
     - npm run build
-  needs: ["typecheck"]
+  needs: ["test"]
 
 deploy:
   stage: deploy

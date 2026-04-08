@@ -7,7 +7,8 @@
     "build": "npm run build -w shared && npm run build -w server && npm run build -w client",
     "typecheck": "npm run typecheck -w shared && npm run typecheck -w server && npm run typecheck -w client",
     "dev": "concurrently -n shared,server,client -c auto \"npm run dev -w shared\" \"npm run dev -w server\" \"npm run dev -w client\"",
-    "db:reset": "npx supabase db reset && npm run db:reset -w server"
+    "db:reset": "npx supabase db reset && npm run db:reset -w server",
+    "test": "npm run test -w shared && npm run test -w server && npm run test -w client"
   },
   "keywords": [],
   "author": "",
