@@ -132,6 +132,33 @@ export function useTicketListViewModel() {
     setCurrentPage(1);
   }
 
+  async function refreshTickets() {
+    const ticketResults = await ModeratorService.getModeratorTickets();
+    setTickets(ticketResults);
+  }
+
+  async function claimTicket(ticketId: string) {
+    try {
+      setError(null);
+      await ModeratorService.claimModeratorTicket(ticketId);
+      await refreshTickets();
+    } catch (err) {
+      console.error(err);
+      setError("Failed to claim ticket.");
+    }
+  }
+
+  async function closeTicket(ticketId: string) {
+    try {
+      setError(null);
+      await ModeratorService.closeModeratorTicket(ticketId);
+      await refreshTickets();
+    } catch (err) {
+      console.error(err);
+      setError("Failed to close ticket.");
+    }
+  }
+
   return {
     auth: {
       loading: loading || loadingData,
@@ -150,6 +177,9 @@ export function useTicketListViewModel() {
       isTicketDetailOpen,
       openTicketDetail,
       closeTicketDetail,
+      claimTicket,
+      closeTicket,
+      refreshTickets,
     },
     filters: {
       pendingSearch,
@@ -165,6 +195,7 @@ export function useTicketListViewModel() {
     data: {
       rows: paginatedTickets,
       isEmpty: paginatedTickets.length === 0,
+
     },
     pagination: {
       currentPage,

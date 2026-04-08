@@ -172,11 +172,17 @@ export default function ModeratorTicketsPage() {
                       View Ticket
                     </button>
 
-                    {ticket.status === "OPEN" && (
+                     {ticket.status === "OPEN" && (
                       <button
+                        type="button"
                         className="rounded-xl border border-border bg-card px-6 py-3 text-base font-semibold text-foreground hover:bg-secondary"
+                        onClick={() =>
+                          ticket.targetId === auth.currentModerator?.id
+                            ? void page.closeTicket(ticket.id)
+                            : void page.claimTicket(ticket.id)
+                        }
                       >
-                        Close Ticket
+                        {ticket.targetId === auth.currentModerator?.id ? "Close Ticket" : "Claim Ticket"}
                       </button>
                     )}
                   </div>
@@ -205,6 +211,7 @@ export default function ModeratorTicketsPage() {
         open={page.isTicketDetailOpen}
         onClose={page.closeTicketDetail}
         currentUserId={auth.currentModerator?.id ?? ""}
+        onTicketUpdated={page.refreshTickets}
         />
     </div>
   );

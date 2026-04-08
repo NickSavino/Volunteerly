@@ -54,6 +54,43 @@ export class ModeratorService {
         return parsed.data;
     }
 
+        static async getModeratorTicketDetail(ticketId: string): Promise<ModeratorTicketDetail> {
+        const json = await api<unknown>(`/moderator/tickets/${ticketId}`);
+        const parsed = ModeratorTicketDetailSchema.safeParse(json);
+
+        if (!parsed.success) {
+            throw new Error("Error fetching ticket detail.");
+        }
+
+        return parsed.data;
+    }
+
+    static async claimModeratorTicket(ticketId: string): Promise<ModeratorTicketDetail> {
+        const json = await api<unknown>(`/moderator/tickets/${ticketId}/claim`, {
+            method: "PATCH",
+        });
+        const parsed = ModeratorTicketDetailSchema.safeParse(json);
+
+        if (!parsed.success) {
+            throw new Error("Error claiming ticket.");
+        }
+
+        return parsed.data;
+    }
+
+    static async closeModeratorTicket(ticketId: string): Promise<ModeratorTicketDetail> {
+        const json = await api<unknown>(`/moderator/tickets/${ticketId}/close`, {
+            method: "PATCH",
+        });
+        const parsed = ModeratorTicketDetailSchema.safeParse(json);
+
+        if (!parsed.success) {
+            throw new Error("Error closing ticket.");
+        }
+
+        return parsed.data;
+    }
+
     static async getModeratorVolunteerDetail(volunteerId: string): Promise<ModeratorVolunteerDetail> {
         const json = await api<unknown>(`/moderator/volunteers/${volunteerId}`);
         const parsed = ModeratorVolunteerDetailSchema.safeParse(json);
