@@ -10,6 +10,7 @@ jest.mock("@/lib/supabase", () => ({
 
 import { AuthService } from "@/services/AuthService";
 import { supabase } from "@/lib/supabase";
+import { AuthTokenResponsePassword } from "@supabase/supabase-js";
 
 const signInWithPassword = supabase.auth
   .signInWithPassword as jest.MockedFunction<typeof supabase.auth.signInWithPassword>;
@@ -24,7 +25,7 @@ describe("AuthService", () => {
   });
 
   it("forwards credentials to signInWithPassword", async () => {
-    signInWithPassword.mockResolvedValueOnce({ data: { session: null }, error: null });
+    signInWithPassword.mockResolvedValueOnce({ data: { user: null, session: null }, error: null } as unknown as AuthTokenResponsePassword);
 
     await AuthService.loginUserWithEmailPass("person@example.com", "secret");
 
@@ -46,7 +47,7 @@ describe("AuthService", () => {
   });
 
   it("throws when changePassword receives an auth error", async () => {
-    const error = new Error("bad password");
+    const error = new Error("bad password") as any;
     updateUser.mockResolvedValueOnce({ error });
 
     await expect(AuthService.changePassword("pw")).rejects.toThrow("bad password");
