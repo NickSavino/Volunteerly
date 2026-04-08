@@ -18,7 +18,7 @@ export default function VolunteerMessagesPage() {
   }
 
   return (
-    <div className="h-[calc(100vh-73px)] overflow-hidden border-t border-border bg-background">
+    <div className="fixed inset-x-0 bottom-0 top-18.25 overflow-hidden border-t border-border bg-background">
       <div className="grid h-full min-h-0 grid-cols-[320px_1fr]">
         <ChatConversationList
           conversations={vm.conversations}
@@ -27,7 +27,7 @@ export default function VolunteerMessagesPage() {
           sectionTitle="Inbox"
         />
 
-        <div className="grid h-full min-h-0 grid-rows-[auto_1fr_auto]">
+        <div className="flex h-full min-h-0 flex-col">
           {vm.selectedConversation ? (
             <>
               <ChatThreadHeader
@@ -37,7 +37,7 @@ export default function VolunteerMessagesPage() {
                 avatarFallback={vm.threadTitle.slice(0, 2).toUpperCase()}
               />
 
-              <div className="min-h-0">
+              <div className="min-h-0 flex-1 overflow-hidden">
                 <ChatMessageList
                   messages={vm.selectedConversation.messages}
                   currentUserId={vm.currentUserId}
@@ -46,7 +46,7 @@ export default function VolunteerMessagesPage() {
               </div>
 
               {vm.isClosedTicketConversation ? (
-                <div className="border-t border-border px-4 py-4 text-sm text-muted-foreground">
+                <div className="shrink-0 border-t border-border px-4 py-4 text-sm text-muted-foreground">
                   This ticket is closed. Replies are disabled.
                 </div>
               ) : (
