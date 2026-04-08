@@ -24,18 +24,27 @@ export default function LoginPage() {
         <div className="min-h-screen">
             <title>Log In - Volunteerly</title>
             <Navbar></Navbar>
-            <main className="flex flex-col md:flex-row h-screen md:h-[calc(100vh-64px)]">
-                <div className="hidden md:flex w-full md:w-1/2 relative h-screen md:h-full overflow-hidden flex-col">
-                    <img src={tms.src} alt="Preview" className="w-full h-auto md:h-full" />
+            <main className="
+                flex h-screen flex-col
+                md:h-[calc(100vh-64px)] md:flex-row
+            ">
+                <div className="
+                    relative hidden h-screen w-full flex-col overflow-hidden
+                    md:flex md:h-full md:w-1/2
+                ">
+                    <img src={tms.src} alt="Preview" className="
+                        h-auto w-full
+                        md:h-full
+                    " />
                     <div className="absolute inset-0 w-full bg-black/50"></div>
                     <div className="absolute bottom-20 left-12 text-left">
-                        <h1 className="text-4x1 text-muted font-bold tracking-tight pb-2">
+                        <h1 className="text-4x1 pb-2 font-bold tracking-tight text-muted">
                             Turn Skills Into Real Impact
                         </h1>
-                        <h3 className="text-2x1 text-muted font-bold tracking-tight pb-5">
+                        <h3 className="text-2x1 pb-5 font-bold tracking-tight text-muted">
                             AI-Powered Matching for Skilled Volunteering
                         </h3>
-                        <p className="text-muted text-lg">
+                        <p className="text-lg text-muted">
                             &quot;Through Volunteerly, we were able to find volunteers for our most complex tasks,
                             allowing us to devote more funds to helping our cause.&quot;
                         </p>
@@ -45,13 +54,16 @@ export default function LoginPage() {
                                 <AvatarFallback>TMS</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col justify-center">
-                                <p className="text-secondary text-sm">World Impact</p>
-                                <p className="text-secondary text-sm">Verified Organization</p>
+                                <p className="text-sm text-secondary">World Impact</p>
+                                <p className="text-sm text-secondary">Verified Organization</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="w-full md:w-1/2 flex-1 flex items-center justify-center md:justify-around px-8">
+                <div className="
+                    flex w-full flex-1 items-center justify-center px-8
+                    md:w-1/2 md:justify-around
+                ">
                     <Card className="w-full max-w-md">
                         <CardHeader>Log In</CardHeader>
                         <CardContent>
@@ -84,7 +96,7 @@ export default function LoginPage() {
                                 <Button type="submit" className="w-full cursor-pointer" disabled={submitting}>
                                     {submitting ? "Logging in..." : "Log In"}
                                 </Button>
-                                <p className="text-sm text-muted-foreground text-center">
+                                <p className="text-center text-sm text-muted-foreground">
                                     Need an account?{" "}
                                     <Link href="/signup" className="underline">
                                         Sign up

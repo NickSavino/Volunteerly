@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
-import { api } from "@/lib/api";
-import { CurrentUserSchema, ExtractedSkills } from "@volunteerly/shared";
+import { ExtractedSkills } from "@volunteerly/shared";
 import { VolunteerService } from "@/services/VolunteerService";
 import { Education, WorkExperience } from "../experience-input/experienceInputVm";
 import { useAppSession } from "@/providers/app-session-provider";

@@ -1,7 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     FolderKanban,
     PersonStanding,
@@ -14,13 +13,10 @@ import {
     CalendarCheck,
     Briefcase,
 } from "lucide-react";
-import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
 import { useOrgDashboardViewModel } from "./orgDashboardVm";
-import { ModStatCard } from "@/components/custom/mod_stat_card";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import avtImg from "@/assets/avatarImg.png";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
 import { OrgStatCard } from "@/components/custom/org_stat_card";
 import { UserService } from "@/services/UserService";
@@ -55,9 +51,18 @@ export default function HomePage() {
     return (
         <div className="min-h-screen">
             <title>Organization Dashboard - Volunteerly</title>
-            <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 ">
-                <div className="w-full mb-5 md:mb-0 md:w-2/3 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
-                    <div className="md:flex items-center justify-between">
+            <main className="
+                flex flex-col p-6
+                md:h-[calc(100vh-64px)] md:flex-row
+            ">
+                <div className="
+                    max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                    md:mb-0 md:w-2/3
+                ">
+                    <div className="
+                        items-center justify-between
+                        md:flex
+                    ">
                         <div>
                             <h1 className="text-2x1 font-bold">Welcome, {currentUser?.orgName}</h1>
                             <p>Here&apos;s what&apos;s happening with your projects today.</p>
@@ -66,7 +71,7 @@ export default function HomePage() {
                         <div>
                             <Button
                                 type="submit"
-                                className="w-full text-accent-foreground cursor-pointer"
+                                className="w-full cursor-pointer text-accent-foreground"
                                 onClick={async () => {
                                     router.push("/organization/opportunities/create");
                                 }}
@@ -76,7 +81,7 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    <div className="md:flex md:justify-around md:grid md:gap-3 md:grid-cols-3">
+                    <div className="md:flex md:grid md:grid-cols-3 md:justify-around md:gap-3">
                         <OrgStatCard icon={PersonStanding} label="Active Volunteers" count={activeVlt} money={false} />
                         <OrgStatCard icon={FolderKanban} label="All-Time Projects" count={totalOpps} money={false} />
                         <OrgStatCard icon={Hourglass} label="All-Time Hours" count={totalHours} money={false} />
@@ -100,8 +105,10 @@ export default function HomePage() {
                             </CardHeader>
 
                             {opportunities.length === 0 ? (
-                                <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                    <div className="flex justify-center mb-4">
+                                <CardContent className="
+                                    flex h-full flex-col justify-center text-center
+                                ">
+                                    <div className="mb-4 flex justify-center">
                                         <Avatar size="lg">
                                             <AvatarImage src={volunteerly_logo.src} />
                                             <AvatarFallback></AvatarFallback>
@@ -122,7 +129,9 @@ export default function HomePage() {
                                                     {opp.name} <Badge>{opp.status}</Badge>{" "}
                                                 </ItemTitle>
                                                 {opp.status == "OPEN" ? (
-                                                    <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                    <ItemDescription className="
+                                                        flex flex-wrap items-center gap-2
+                                                    ">
                                                         <span className="flex items-center gap-1">
                                                             <Users /> {opp._count?.applications} Applicant(s)
                                                         </span>
@@ -136,7 +145,9 @@ export default function HomePage() {
                                                         </span>
                                                     </ItemDescription>
                                                 ) : (
-                                                    <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                    <ItemDescription className="
+                                                        flex flex-wrap items-center gap-2
+                                                    ">
                                                         <span className="flex items-center gap-1">
                                                             <PersonStanding /> {opp.volunteer?.firstName}{" "}
                                                             {opp.volunteer?.lastName}
@@ -171,10 +182,13 @@ export default function HomePage() {
                         </Card>
                     </div>
                 </div>
-                <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 min-h-full flex flex-col justify-center">
+                <div className="
+                    mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center space-y-6
+                    md:w-1/3
+                ">
                     <Card className="mx-5">
                         <CardContent className="text-center">
-                            <div className="flex justify-center mb-4">
+                            <div className="mb-4 flex justify-center">
                                 <Avatar className="h-auto w-20">
                                     <AvatarImage src={UserService.getAvatarURL(currentUser?.id || "")} />
                                     <AvatarFallback> {getAvatarFallback(currentUser?.orgName)}</AvatarFallback>
@@ -187,12 +201,12 @@ export default function HomePage() {
                         <CardContent>
                             <Button
                                 variant="ghost"
-                                className="text-lg py-6 cursor-pointer flex gap-3 cursor-pointer"
+                                className="flex cursor-pointer gap-3 py-6 text-lg"
                                 onClick={async () => {
                                     router.push("/organization/profile");
                                 }}
                             >
-                                <UserRoundPen className="!w-5 !h-5 shrink-0" />
+                                <UserRoundPen className="size-5! shrink-0" />
                                 View Profile
                             </Button>
                         </CardContent>
@@ -203,9 +217,9 @@ export default function HomePage() {
                                     await signOut();
                                     router.push("/");
                                 }}
-                                className="text-lg py-6 cursor-pointer flex gap-3 cursor-pointer"
+                                className="flex cursor-pointer gap-3 py-6 text-lg"
                             >
-                                <LogOut className="!w-5 !h-5 shrink-0" />
+                                <LogOut className="size-5! shrink-0" />
                                 Log Out
                             </Button>
                         </CardContent>
@@ -219,10 +233,12 @@ export default function HomePage() {
                         <CardContent>
                             <Button
                                 variant="ghost"
-                                className="w-full text-md py-6 cursor-pointer flex items-center gap-3 cursor-pointer"
+                                className="
+                                    text-md flex w-full cursor-pointer items-center gap-3 py-6
+                                "
                                 onClick={() => setIsTicketModalOpen(true)}
                             >
-                                <MessageCircleQuestionMark className="!w-7 !h-7 shrink-0" />
+                                <MessageCircleQuestionMark className="size-7! shrink-0" />
                                 Contact Support
                             </Button>
                         </CardContent>

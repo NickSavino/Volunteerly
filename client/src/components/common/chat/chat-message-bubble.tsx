@@ -47,7 +47,7 @@ export function ChatMessageBubble({
 
                 <div
                     className={cn(
-                        "rounded-[1.5rem] px-4 py-3 text-base leading-relaxed shadow-sm",
+                        "rounded-[1.5rem] px-4 py-3 text-base/relaxed shadow-sm",
                         isOwnMessage
                             ? "bg-primary text-primary-foreground"
                             : variant === "ticket"

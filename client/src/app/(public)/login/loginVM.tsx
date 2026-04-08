@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
-import { resolveDefaultAppRoute } from "@/lib/utils";
 import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { OrganizationService } from "@/services/OrganizationService";

@@ -60,11 +60,18 @@ export default function ModeratorTicketsPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <main className="
+                mx-auto max-w-7xl px-4 py-8
+                sm:px-6
+                lg:px-8
+            ">
                 <ModeratorPageHeader title={page.title} subtitle={page.subtitle} />
 
                 {page.error && (
-                    <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                    <p className="
+                        mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                        text-red-600
+                    ">
                         {page.error}
                     </p>
                 )}
@@ -100,24 +107,37 @@ export default function ModeratorTicketsPage() {
                         {data.rows.map((ticket) => (
                             <div
                                 key={ticket.id}
-                                className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+                                className="
+                                    overflow-hidden rounded-2xl border border-border bg-card
+                                    shadow-sm
+                                "
                             >
-                                <div className="flex flex-col gap-4 border-b px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
+                                <div className="
+                                    flex flex-col gap-4 border-b px-6 py-4
+                                    lg:flex-row lg:items-center lg:justify-between
+                                ">
                                     <div className="flex flex-wrap items-center gap-3">
                                         <h3 className="text-2xl font-bold text-foreground">
                                             Ticket #{ticket.id.slice(-8).toUpperCase()}
                                         </h3>
 
-                                        <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-blue-700">
+                                        <span className="
+                                            rounded-full bg-blue-100 px-3 py-1 text-xs font-bold
+                                            tracking-wide text-blue-700 uppercase
+                                        ">
                                             {formatCategory(ticket.category)}
                                         </span>
                                     </div>
 
                                     <div className="flex flex-wrap items-center gap-3">
                                         <span
-                                            className={`rounded-full px-5 py-1.5 text-xs font-bold uppercase tracking-wide ${getUrgencyClasses(
+                                            className={`
+                                                rounded-full px-5 py-1.5 text-xs font-bold
+                                                tracking-wide uppercase
+                                                ${getUrgencyClasses(
                                                 ticket.urgencyRating,
-                                            )}`}
+                                            )}
+                                            `}
                                         >
                                             {ticket.urgencyRating}
                                         </span>
@@ -128,10 +148,16 @@ export default function ModeratorTicketsPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-6 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
+                                <div className="
+                                    flex flex-col gap-6 px-6 py-5
+                                    lg:flex-row lg:items-center lg:justify-between
+                                ">
                                     <div className="flex items-start gap-4">
-                                        <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-secondary">
-                                            <MessageSquareText className="h-10 w-10 text-muted-foreground" />
+                                        <div className="
+                                            flex size-20 items-center justify-center rounded-2xl
+                                            bg-secondary
+                                        ">
+                                            <MessageSquareText className="size-10 text-muted-foreground" />
                                         </div>
 
                                         <div>
@@ -142,7 +168,9 @@ export default function ModeratorTicketsPage() {
                                                 {getTimeOpen(ticket.createdAt)}
                                             </p>
 
-                                            <p className="mt-2 max-w-3xl text-base text-muted-foreground">
+                                            <p className="
+                                                mt-2 max-w-3xl text-base text-muted-foreground
+                                            ">
                                                 {ticket.description}
                                             </p>
                                         </div>
@@ -151,7 +179,11 @@ export default function ModeratorTicketsPage() {
                                     <div className="flex flex-wrap items-center gap-3">
                                         <button
                                             type="button"
-                                            className="rounded-xl bg-primary px-6 py-3 text-base font-semibold text-foreground hover:opacity-90"
+                                            className="
+                                                rounded-xl bg-primary px-6 py-3 text-base
+                                                font-semibold text-foreground
+                                                hover:opacity-90
+                                            "
                                             onClick={() => {
                                                 page.openTicketDetail(ticket.id);
                                             }}
@@ -162,7 +194,11 @@ export default function ModeratorTicketsPage() {
                                         {ticket.status === "OPEN" && (
                                             <button
                                                 type="button"
-                                                className="rounded-xl border border-border bg-card px-6 py-3 text-base font-semibold text-foreground hover:bg-secondary"
+                                                className="
+                                                    rounded-xl border border-border bg-card px-6
+                                                    py-3 text-base font-semibold text-foreground
+                                                    hover:bg-secondary
+                                                "
                                                 onClick={() =>
                                                     ticket.targetId === auth.currentModerator?.id
                                                         ? void page.closeTicket(ticket.id)

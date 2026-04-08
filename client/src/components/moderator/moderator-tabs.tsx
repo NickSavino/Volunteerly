@@ -30,17 +30,10 @@ export function ModeratorTabs<T extends string>({
                         key={key}
                         value={key}
                         className="
-                        rounded-none 
-                        border-b-2 
-                        border-transparent 
-                        px-5 
-                        py-3 
-                        text-sm 
-                        font-medium
-                        text-muted-foreground
-                        shadow-none
-                        data-[state=active]:border-primary
-                        data-[state=active]:text-foreground"
+                            rounded-none border-b-2 border-transparent px-5 py-3 text-sm font-medium
+                            text-muted-foreground shadow-none
+                            data-[state=active]:border-primary data-[state=active]:text-foreground
+                        "
                     >
                         {label} ({counts[key]})
                     </TabsTrigger>

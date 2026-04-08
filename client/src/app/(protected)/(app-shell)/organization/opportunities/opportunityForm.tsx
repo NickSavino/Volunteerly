@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -37,7 +37,10 @@ export default function OpportunityForm({
                 </CardHeader>
 
                 <CardContent className="space-y-3">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="
+                        grid grid-cols-1 gap-4
+                        md:grid-cols-2
+                    ">
                         <Field>
                             <Label htmlFor="name">
                                 Name<span className="text-destructive">*</span>
@@ -101,7 +104,10 @@ export default function OpportunityForm({
                         <FieldDescription>Provide technical and non-technical requirements</FieldDescription>
                     </Field>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="
+                        grid grid-cols-1 gap-4
+                        md:grid-cols-2
+                    ">
                         <Field>
                             <Label htmlFor="wrkType">
                                 Work Type<span className="text-destructive">*</span>
@@ -153,7 +159,10 @@ export default function OpportunityForm({
                         </Field>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="
+                        grid grid-cols-1 gap-4
+                        md:grid-cols-2
+                    ">
                         <Field>
                             <Label htmlFor="length">
                                 Opportunity Length<span className="text-destructive">*</span>
@@ -192,7 +201,10 @@ export default function OpportunityForm({
                         <Label htmlFor="availability">
                             Availability<span className="text-destructive">*</span>
                         </Label>
-                        <div className="w-full md:grid md:grid-cols-7 gap-2">
+                        <div className="
+                            w-full gap-2
+                            md:grid md:grid-cols-7
+                        ">
                             {daysOfWeek.map((day) => (
                                 <Toggle
                                     key={day}

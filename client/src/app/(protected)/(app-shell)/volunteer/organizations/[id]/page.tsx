@@ -2,7 +2,6 @@
 
 import { use } from "react";
 import { Globe, MapPin, Users, Briefcase } from "lucide-react";
-import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
 import { useOrgPublicProfileViewModel } from "./orgPublicProfileVm";
 
 function formatStatValue(value: number): string {
@@ -21,38 +20,61 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+            <main className="
+                mx-auto max-w-5xl px-4 py-8
+                sm:px-6
+                lg:px-8
+            ">
                 <button
-                    className="mb-6 flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800"
+                    className="
+                        mb-6 flex items-center gap-1 text-sm text-gray-500
+                        hover:text-gray-800
+                    "
                     onClick={() => router.back()}
                 >
                     ← Back to Dashboard
                 </button>
 
                 {error && (
-                    <p className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                    <p className="
+                        mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                        text-red-600
+                    ">
                         {error}
                     </p>
                 )}
 
                 {org && (
                     <>
-                        <div className="relative mb-6 h-40 w-full overflow-hidden rounded-xl bg-gray-800">
-                            <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900" />
+                        <div className="
+                            relative mb-6 h-40 w-full overflow-hidden rounded-xl bg-gray-800
+                        ">
+                            <div className="
+                                absolute inset-0 bg-linear-to-br from-gray-700 to-gray-900
+                            " />
                             <div className="absolute bottom-4 left-6 flex items-end gap-4">
-                                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-white text-lg font-bold text-gray-800 shadow">
+                                <div className="
+                                    flex size-16 items-center justify-center rounded-xl bg-white
+                                    text-lg font-bold text-gray-800 shadow-sm
+                                ">
                                     {org.orgName.slice(0, 2).toUpperCase()}
                                 </div>
                                 <div>
                                     <h1 className="text-xl font-bold text-white">{org.orgName}</h1>
                                     {org.causeCategory && (
-                                        <span className="inline-flex items-center gap-1 rounded-full bg-yellow-400 px-2.5 py-0.5 text-xs font-medium text-black">
+                                        <span className="
+                                            inline-flex items-center gap-1 rounded-full
+                                            bg-yellow-400 px-2.5 py-0.5 text-xs font-medium
+                                            text-black
+                                        ">
                                             {org.causeCategory}
                                         </span>
                                     )}
                                 </div>
                             </div>
-                            <div className="absolute bottom-2 right-6 flex flex-col items-end gap-0.5">
+                            <div className="
+                                absolute right-6 bottom-2 flex flex-col items-end gap-0.5
+                            ">
                                 {org.averageRating !== null ? (
                                     <>
                                         <div className="flex items-center gap-0.5">
@@ -66,7 +88,10 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                                     <span key={star} className="relative text-2xl leading-none">
                                                         <span className="text-gray-500">★</span>
                                                         <span
-                                                            className="absolute inset-0 overflow-hidden text-yellow-400"
+                                                            className="
+                                                                absolute inset-0 overflow-hidden
+                                                                text-yellow-400
+                                                            "
                                                             style={{ width: `${pct}%` }}
                                                         >
                                                             ★
@@ -86,11 +111,14 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                             </div>
                         </div>
 
-                        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                        <div className="
+                            mb-6 grid grid-cols-2 gap-4
+                            sm:grid-cols-4
+                        ">
                             <div className="rounded-xl border bg-white p-5 shadow-sm">
                                 <div className="mb-3">
-                                    <div className="rounded-md bg-gray-100 p-2 w-fit">
-                                        <Users className="h-5 w-5 text-gray-700" />
+                                    <div className="w-fit rounded-md bg-gray-100 p-2">
+                                        <Users className="size-5 text-gray-700" />
                                     </div>
                                 </div>
                                 <p className="text-xs text-gray-500">Total Volunteers</p>
@@ -102,8 +130,8 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
 
                             <div className="rounded-xl border bg-white p-5 shadow-sm">
                                 <div className="mb-3">
-                                    <div className="rounded-md bg-gray-100 p-2 w-fit">
-                                        <Briefcase className="h-5 w-5 text-gray-700" />
+                                    <div className="w-fit rounded-md bg-gray-100 p-2">
+                                        <Briefcase className="size-5 text-gray-700" />
                                     </div>
                                 </div>
                                 <p className="text-xs text-gray-500">Active Postings</p>
@@ -114,7 +142,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                             {org.impactHighlights.slice(0, 2).map((highlight, i) => (
                                 <div key={i} className="rounded-xl border bg-white p-5 shadow-sm">
                                     <div className="mb-3">
-                                        <div className="rounded-md bg-gray-100 p-2 w-fit">
+                                        <div className="w-fit rounded-md bg-gray-100 p-2">
                                             <span className="text-base leading-none">✦</span>
                                         </div>
                                     </div>
@@ -132,7 +160,10 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
 
                             {org.missionStatement && (
                                 <div className="mb-5">
-                                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-400">
+                                    <p className="
+                                        mb-1 text-xs font-medium tracking-wide text-gray-400
+                                        uppercase
+                                    ">
                                         Mission Statement
                                     </p>
                                     <p className="text-sm text-gray-700">{org.missionStatement}</p>
@@ -142,7 +173,10 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                             <div className="grid grid-cols-2 gap-4">
                                 {org.causeCategory && (
                                     <div className="rounded-lg border p-4">
-                                        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+                                        <p className="
+                                            mb-2 text-xs font-medium tracking-wide text-gray-400
+                                            uppercase
+                                        ">
                                             Cause Category
                                         </p>
                                         <p className="text-sm font-medium text-gray-800">{org.causeCategory}</p>
@@ -150,11 +184,14 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                 )}
                                 {org.website && (
                                     <div className="rounded-lg border p-4">
-                                        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+                                        <p className="
+                                            mb-2 text-xs font-medium tracking-wide text-gray-400
+                                            uppercase
+                                        ">
                                             Website
                                         </p>
                                         <div className="flex items-center gap-1.5">
-                                            <Globe className="h-4 w-4 text-gray-400" />
+                                            <Globe className="size-4 text-gray-400" />
                                             <a
                                                 href={
                                                     org.website.startsWith("http")
@@ -163,7 +200,10 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                                 }
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-sm text-blue-600 hover:underline"
+                                                className="
+                                                    text-sm text-blue-600
+                                                    hover:underline
+                                                "
                                             >
                                                 {org.website}
                                             </a>
@@ -174,12 +214,15 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
 
                             {org.hqAdr && (
                                 <div className="mt-4 rounded-lg border p-4">
-                                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-400">
+                                    <p className="
+                                        mb-2 text-xs font-medium tracking-wide text-gray-400
+                                        uppercase
+                                    ">
                                         Address
                                     </p>
                                     <div className="flex items-start gap-1.5">
-                                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-400" />
-                                        <p className="text-sm text-gray-700 whitespace-pre-line">{org.hqAdr}</p>
+                                        <MapPin className="mt-0.5 size-4 shrink-0 text-gray-400" />
+                                        <p className="text-sm whitespace-pre-line text-gray-700">{org.hqAdr}</p>
                                     </div>
                                 </div>
                             )}

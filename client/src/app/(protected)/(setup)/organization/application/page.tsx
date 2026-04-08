@@ -38,19 +38,22 @@ export default function OrgApplicationPage() {
         <div className="min-h-screen">
             <title>Organization Application - Volunteerly</title>
             <Navbar name={currentOrg?.orgName || "Organization"} role={"Unverified"} onLogout={signOut}></Navbar>
-            <main className="w-full items-center h-full flex flex-col p-8 ">
-                <div className="w-full flex justify-start">
+            <main className="flex size-full flex-col items-center p-8">
+                <div className="flex w-full justify-start">
                     {isReadOnly && (
                         <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
-                            <ArrowLeft className="w-4 h-4" />
+                            <ArrowLeft className="size-4" />
                             Back
                         </Button>
                     )}
                 </div>
-                <div className="text-center pb-5">
-                    <div className="text-foreground bg-warning mb-5 p-1 radius-2 rounded-sm">
+                <div className="pb-5 text-center">
+                    <div className="radius-2 mb-5 rounded-sm bg-warning p-1 text-foreground">
                         <h2>{isReadOnly ? "Application Submitted" : "Limited Functionality"}</h2>
-                        <p className="text-sm text-center text-foreground bg-warning my-2 p-1 radius-2 rounded-sm">
+                        <p className="
+                            radius-2 my-2 rounded-sm bg-warning p-1 text-center text-sm
+                            text-foreground
+                        ">
                             {isReadOnly
                                 ? "Your Application has been successfully submitted."
                                 : "Complete Application Below to gain full access as organization."}
@@ -70,7 +73,10 @@ export default function OrgApplicationPage() {
                             <CardDescription> Basic information about your non-profit </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="
+                                grid grid-cols-1 gap-4
+                                md:grid-cols-2
+                            ">
                                 <Field>
                                     <Label htmlFor="orgName">
                                         Organization Name <span className="text-destructive">*</span>
@@ -147,7 +153,10 @@ export default function OrgApplicationPage() {
                                     required
                                 />
                             </Field>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="
+                                grid grid-cols-1 gap-4
+                                md:grid-cols-3
+                            ">
                                 <Field>
                                     <Label htmlFor="city">
                                         City<span className="text-destructive">*</span>
@@ -242,7 +251,10 @@ export default function OrgApplicationPage() {
                         </CardHeader>
 
                         <CardContent>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="
+                                grid grid-cols-1 gap-4
+                                md:grid-cols-2
+                            ">
                                 <Field>
                                     <Label htmlFor="charityNumber">
                                         Charity Number<span className="text-destructive">*</span>
@@ -287,7 +299,10 @@ export default function OrgApplicationPage() {
                         </CardHeader>
 
                         <CardContent className="space-y-3">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="
+                                grid grid-cols-1 gap-4
+                                md:grid-cols-2
+                            ">
                                 <Field>
                                     <Label htmlFor="contactName">
                                         Contact Name<span className="text-destructive">*</span>
@@ -346,14 +361,14 @@ export default function OrgApplicationPage() {
                         </CardContent>
 
                         <div className="px-6 pb-6">
-                            <Button type="submit" disabled={isReadOnly || submitting} className="w-full pointer-cursor">
+                            <Button type="submit" disabled={isReadOnly || submitting} className="pointer-cursor w-full">
                                 {submitting ? "Submitting..." : "Submit"}
                             </Button>
                         </div>
                     </form>
                     {isReadOnly && (
                         <div className="px-6 pb-6">
-                            <Button type="button" onClick={viewSubmittedDoc} className="w-full pointer-cursor">
+                            <Button type="button" onClick={viewSubmittedDoc} className="pointer-cursor w-full">
                                 View Submitted Document
                             </Button>
                         </div>

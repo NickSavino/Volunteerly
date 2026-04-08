@@ -425,7 +425,10 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
             {loading ? (
                 <p className="py-10 text-center text-sm text-muted-foreground">Loading volunteer detail...</p>
             ) : error ? (
-                <p className="rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                <p className="
+                    rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm
+                    text-destructive
+                ">
                     {error}
                 </p>
             ) : !detail ? (
@@ -433,7 +436,7 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
             ) : currentMode === "profile" ? (
                 <div className="space-y-6">
                     <div className="flex items-start gap-4 rounded-2xl border p-5">
-                        <Avatar className="h-20 w-20">
+                        <Avatar className="size-20">
                             <AvatarImage src={UserService.getAvatarURL(detail.id)} />
                             <AvatarFallback>
                                 {detail.firstName[0]}
@@ -446,13 +449,19 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                                 {detail.firstName} {detail.lastName}
                             </p>
                             <p className="text-sm text-muted-foreground">{detail.location || "No location provided"}</p>
-                            <p className="mt-3 rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide w-fit">
+                            <p className="
+                                mt-3 w-fit rounded-full bg-secondary px-3 py-1 text-xs font-semibold
+                                tracking-wide uppercase
+                            ">
                                 {stateLabel(detail.state)}
                             </p>
                         </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-4">
+                    <div className="
+                        grid gap-4
+                        md:grid-cols-4
+                    ">
                         <div className="rounded-xl border p-4">
                             <p className="text-xs text-muted-foreground">Past Flags</p>
                             <p className="mt-1 text-2xl font-bold">{detail.pastFlagsCount}</p>
@@ -487,7 +496,9 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                                 [...detail.technicalSkills, ...detail.nonTechnicalSkills].map((skill) => (
                                     <span
                                         key={skill}
-                                        className="rounded-full bg-secondary px-3 py-1 text-xs font-medium"
+                                        className="
+                                            rounded-full bg-secondary px-3 py-1 text-xs font-medium
+                                        "
                                     >
                                         {skill}
                                     </span>
@@ -520,14 +531,20 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                             ) : null}
 
                             {!hasOpenReport ? (
-                                <p className="mt-4 rounded-md border border-border bg-secondary/30 px-4 py-3 text-sm text-muted-foreground">
+                                <p className="
+                                    mt-4 rounded-md border border-border bg-secondary/30 px-4 py-3
+                                    text-sm text-muted-foreground
+                                ">
                                     This investigation is already closed. You can review the history, but no further
                                     action can be taken.
                                 </p>
                             ) : null}
 
                             {isSuspended ? (
-                                <p className="mt-4 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                                <p className="
+                                    mt-4 rounded-md border border-destructive/20 bg-destructive/5
+                                    px-4 py-3 text-sm text-destructive
+                                ">
                                     This volunteer is already suspended. Additional suspension or escalation actions are
                                     disabled.
                                 </p>

@@ -12,18 +12,25 @@ export function ModeratorPagination({ currentPage, totalPages, onPageChange }: M
             <button
                 disabled={currentPage === 1}
                 onClick={() => onPageChange((p: number) => p - 1)}
-                className="rounded-md border p-1.5 disabled:opacity-40 hover:bg-gray-100"
+                className="
+                    rounded-md border p-1.5
+                    hover:bg-gray-100
+                    disabled:opacity-40
+                "
             >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="size-4" />
             </button>
 
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                     key={page}
                     onClick={() => onPageChange(page)}
-                    className={`h-8 w-8 rounded-md text-sm font-medium  ${
-                        page === currentPage ? "bg-yellow-400 text-black" : "border hover:bg-gray-100 text-gray-600"
-                    }`}
+                    className={`
+                        size-8 rounded-md text-sm font-medium
+                        ${
+                        page === currentPage ? "bg-yellow-400 text-black" : "border text-gray-600 hover:bg-gray-100"
+                    }
+                    `}
                 >
                     {page}
                 </button>
@@ -32,9 +39,13 @@ export function ModeratorPagination({ currentPage, totalPages, onPageChange }: M
             <button
                 disabled={currentPage === totalPages}
                 onClick={() => onPageChange((p: number) => p + 1)}
-                className="rounded-md border p-1.5 disabled:opacity-40 hover:bg-gray-100"
+                className="
+                    rounded-md border p-1.5
+                    hover:bg-gray-100
+                    disabled:opacity-40
+                "
             >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="size-4" />
             </button>
         </div>
     );

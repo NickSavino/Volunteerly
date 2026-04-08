@@ -7,7 +7,6 @@ import { UserService } from "@/services/UserService";
 import { VolunteerService } from "@/services/VolunteerService";
 import { appToast } from "@/components/common/app-toast";
 import type { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
-import { match } from "assert";
 
 export type WorkTypeFilter = "ALL" | "REMOTE" | "IN_PERSON" | "HYBRID";
 export type CommitmentFilter = "ALL" | "FLEXIBLE" | "PART_TIME" | "FULL_TIME";

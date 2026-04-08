@@ -6,7 +6,6 @@ import {
     OpportunitySchema,
     type OpportunityFilters,
     type UpdateCurrentVolunteer,
-    type ProgressUpdate,
     ExtractedSkills,
     ExtractedSkillsSchema,
     volunteerAwardsSchema,

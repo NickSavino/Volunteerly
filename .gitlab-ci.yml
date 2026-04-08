@@ -44,7 +44,7 @@ test:
     stage: test
     script:
         - npm run test
-    needs: 
+    needs:
         - formatcheck
         - typecheck
         - lintcheck

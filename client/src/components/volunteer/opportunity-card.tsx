@@ -41,7 +41,7 @@ function MatchBadge({ pct }: { pct: number }) {
               : "bg-muted text-muted-foreground";
 
     return (
-        <span className={cn("flex-shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold", cls)}>{pct}% Match</span>
+        <span className={cn("shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold", cls)}>{pct}% Match</span>
     );
 }
 
@@ -61,7 +61,10 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
         <div
             onClick={onClick}
             className={cn(
-                "cursor-pointer rounded-xl border bg-card p-4 shadow-sm transition-shadow hover:shadow-md",
+                `
+                    cursor-pointer rounded-xl border bg-card p-4 shadow-sm transition-shadow
+                    hover:shadow-md
+                `,
                 isSelected && "ring-2 ring-primary",
             )}
         >
@@ -70,7 +73,11 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                     <button
                         onClick={handleOrgClick}
                         className={cn(
-                            "flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold transition-opacity hover:opacity-75",
+                            `
+                                flex size-10 shrink-0 items-center justify-center rounded-full
+                                text-sm font-bold transition-opacity
+                                hover:opacity-75
+                            `,
                             avatarColor,
                             !orgId && "pointer-events-none",
                         )}
@@ -78,11 +85,14 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                         {initials}
                     </button>
                     <div>
-                        <p className="font-semibold text-foreground leading-tight">{opp.name}</p>
+                        <p className="leading-tight font-semibold text-foreground">{opp.name}</p>
                         <button
                             onClick={handleOrgClick}
                             className={cn(
-                                "text-xs text-muted-foreground text-left hover:underline",
+                                `
+                                    text-left text-xs text-muted-foreground
+                                    hover:underline
+                                `,
                                 !orgId && "pointer-events-none",
                             )}
                         >
@@ -93,7 +103,10 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                 <div className="flex flex-col items-end gap-1.5">
                     <MatchBadge pct={matchPct} />
                     {hasApplied && (
-                        <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">
+                        <span className="
+                            rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold
+                            text-green-700
+                        ">
                             ✓ Applied
                         </span>
                     )}
@@ -109,11 +122,11 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5" />
+                        <Clock className="size-3.5" />
                         {opp.hours}h/week
                     </span>
                     <span className="flex items-center gap-1">
-                        <MapPin className="h-3.5 w-3.5" />
+                        <MapPin className="size-3.5" />
                         {WORK_TYPE_LABELS[opp.workType] ?? opp.workType}
                     </span>
                 </div>
@@ -122,7 +135,11 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                         e.stopPropagation();
                         onClick();
                     }}
-                    className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-foreground hover:opacity-90 transition-opacity"
+                    className="
+                        rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-foreground
+                        transition-opacity
+                        hover:opacity-90
+                    "
                 >
                     View Details
                 </button>

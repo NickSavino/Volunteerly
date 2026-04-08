@@ -43,11 +43,18 @@ export default function ModeratorVolunteersPage() {
 
     return (
         <div className="min-h-screen bg-background">
-            <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <main className="
+                mx-auto max-w-7xl px-4 py-8
+                sm:px-6
+                lg:px-8
+            ">
                 <ModeratorPageHeader title={page.title} subtitle={page.subtitle} />
 
                 {page.error && (
-                    <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                    <p className="
+                        mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                        text-red-600
+                    ">
                         {page.error}
                     </p>
                 )}
@@ -91,9 +98,15 @@ export default function ModeratorVolunteersPage() {
                                     key={volunteer.id}
                                     className="overflow-hidden rounded-2xl border bg-card shadow-sm"
                                 >
-                                    <div className="flex flex-col gap-6 px-6 py-6 lg:flex-row lg:items-center lg:justify-between">
+                                    <div className="
+                                        flex flex-col gap-6 p-6
+                                        lg:flex-row lg:items-center lg:justify-between
+                                    ">
                                         <div className="flex items-start gap-4">
-                                            <div className="relative h-20 w-20 overflow-hidden rounded-full bg-gray-100">
+                                            <div className="
+                                                relative size-20 overflow-hidden rounded-full
+                                                bg-gray-100
+                                            ">
                                                 {volunteer.avatarUrl ? (
                                                     <Image
                                                         src={volunteer.avatarUrl}
@@ -102,7 +115,10 @@ export default function ModeratorVolunteersPage() {
                                                         className="object-cover"
                                                     />
                                                 ) : (
-                                                    <div className="flex h-full w-full items-center justify-center text-xl font-semibold text-gray-500">
+                                                    <div className="
+                                                        flex size-full items-center justify-center
+                                                        text-xl font-semibold text-gray-500
+                                                    ">
                                                         {volunteer.firstName[0]} {volunteer.lastName[0]}
                                                     </div>
                                                 )}
@@ -136,24 +152,38 @@ export default function ModeratorVolunteersPage() {
                                             <div className="flex flex-col items-end gap-3">
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <span
-                                                        className={`rounded-full px-5 py-1.5 text-xs font-bold uppercase tracking-wide text-white ${
+                                                        className={`
+                                                            rounded-full px-5 py-1.5 text-xs
+                                                            font-bold tracking-wide text-white
+                                                            uppercase
+                                                            ${
                                                             severity === "HIGH" ? "bg-destructive" : "bg-warning"
-                                                        }`}
+                                                        }
+                                                        `}
                                                     >
                                                         {severity}
                                                     </span>
 
                                                     <button
-                                                        className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-4 text-xl font-bold text-foreground hover:opacity-90"
+                                                        className="
+                                                            inline-flex items-center gap-2
+                                                            rounded-xl bg-primary px-6 py-4 text-xl
+                                                            font-bold text-foreground
+                                                            hover:opacity-90
+                                                        "
                                                         onClick={() => openVolunteerModal(volunteer.id, "profile")}
                                                     >
                                                         View Profile
-                                                        <ExternalLink className="h-5 w-5" />
+                                                        <ExternalLink className="size-5" />
                                                     </button>
                                                 </div>
                                                 <div className="flex flex-wrap items-center gap-2">
                                                     <button
-                                                        className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-foreground hover:opacity-90"
+                                                        className="
+                                                            rounded-xl bg-primary px-5 py-2.5
+                                                            text-sm font-semibold text-foreground
+                                                            hover:opacity-90
+                                                        "
                                                         onClick={() =>
                                                             openVolunteerModal(volunteer.id, "investigation")
                                                         }
@@ -163,14 +193,22 @@ export default function ModeratorVolunteersPage() {
 
                                                     <button
                                                         onClick={() => openVolunteerModal(volunteer.id, "warning")}
-                                                        className="rounded-xl border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary"
+                                                        className="
+                                                            rounded-xl border bg-card px-5 py-2.5
+                                                            text-sm font-semibold text-foreground
+                                                            hover:bg-secondary
+                                                        "
                                                     >
                                                         Issue Warning
                                                     </button>
 
                                                     <button
                                                         onClick={() => openVolunteerModal(volunteer.id, "suspend")}
-                                                        className="rounded-xl border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary"
+                                                        className="
+                                                            rounded-xl border bg-card px-5 py-2.5
+                                                            text-sm font-semibold text-foreground
+                                                            hover:bg-secondary
+                                                        "
                                                     >
                                                         Suspend
                                                     </button>
@@ -179,21 +217,29 @@ export default function ModeratorVolunteersPage() {
                                         ) : (
                                             <button
                                                 onClick={() => openVolunteerModal(volunteer.id, "profile")}
-                                                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-4 text-xl font-bold text-foreground hover:opacity-90"
+                                                className="
+                                                    inline-flex items-center gap-2 rounded-xl
+                                                    bg-primary px-6 py-4 text-xl font-bold
+                                                    text-foreground
+                                                    hover:opacity-90
+                                                "
                                             >
                                                 View Profile
-                                                <ExternalLink className="h-5 w-5" />
+                                                <ExternalLink className="size-5" />
                                             </button>
                                         )}
                                     </div>
 
-                                    <div className="flex flex-wrap items-center gap-3 border-t px-6 py-3 text-sm text-gray-600">
+                                    <div className="
+                                        flex flex-wrap items-center gap-3 border-t px-6 py-3 text-sm
+                                        text-gray-600
+                                    ">
                                         <span>Past Flags: {volunteer.pastFlagsCount}</span>
                                         <span>&middot;</span>
                                         <span>Completed Opportunities: {volunteer.completedOpportunities}</span>
                                         <span>&middot;</span>
                                         <span>Average Rating: {volunteer.averageRating}</span>
-                                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                                        <Star className="size-4 fill-yellow-400 text-yellow-400" />
                                     </div>
                                 </div>
                             );

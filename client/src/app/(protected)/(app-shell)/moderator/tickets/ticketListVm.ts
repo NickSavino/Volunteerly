@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
-import { UserService } from "@/services/UserService";
 import { ModeratorService } from "@/services/ModeratorService";
 import type { CurrentModerator, ModeratorTicketList, ModeratorTicketStatus } from "@volunteerly/shared";
 

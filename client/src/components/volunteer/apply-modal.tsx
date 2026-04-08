@@ -48,14 +48,24 @@ export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps
                     <button
                         onClick={handleClose}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm
+                            font-semibold text-foreground
+                            hover:bg-secondary
+                            disabled:opacity-50
+                        "
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90 disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold
+                            text-foreground
+                            hover:opacity-90
+                            disabled:opacity-50
+                        "
                     >
                         {submitting ? "Applying..." : "Apply"}
                     </button>
@@ -70,9 +80,16 @@ export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps
                     placeholder="Explain why you should be selected ..."
                     rows={5}
                     disabled={submitting}
-                    className={`w-full rounded-xl border bg-muted px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 resize-none ${
+                    className={`
+                        w-full resize-none rounded-xl border bg-muted px-4 py-3 text-sm
+                        text-foreground
+                        placeholder:text-muted-foreground
+                        focus:ring-2 focus:ring-ring focus:outline-none
+                        disabled:opacity-50
+                        ${
                         touched && isEmpty ? "border-destructive" : "border-border"
-                    }`}
+                    }
+                    `}
                 />
                 {touched && isEmpty && (
                     <p className="text-xs text-destructive">Please write a message before applying.</p>

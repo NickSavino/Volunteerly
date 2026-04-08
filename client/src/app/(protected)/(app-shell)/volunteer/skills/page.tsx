@@ -4,9 +4,6 @@ import React from "react";
 import {
     ALL_NODE_LABELS,
     ICON_PATHS,
-    computeNodes,
-    TECH_NODES,
-    NT_NODES,
     useSkillTreeViewModel,
     type SkillNode,
 } from "./skillTreeVm";
@@ -453,7 +450,9 @@ export default function SkillTreePage() {
 
                     <div className="st-tabs">
                         <button
-                            className={`st-tab${tab === "technical" ? " active" : ""}`}
+                            className={`
+                                st-tab${tab === "technical" ? "active" : ""}
+                            `}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setTab("technical");
@@ -463,7 +462,9 @@ export default function SkillTreePage() {
                             Technical
                         </button>
                         <button
-                            className={`st-tab${tab === "nontechnical" ? " active" : ""}`}
+                            className={`
+                                st-tab${tab === "nontechnical" ? "active" : ""}
+                            `}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setTab("nontechnical");

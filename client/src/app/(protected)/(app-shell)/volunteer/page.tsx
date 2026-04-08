@@ -1,17 +1,10 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
-import { Clock, Star, DollarSign, Building2, Search } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Clock, Star, DollarSign, Building2 } from "lucide-react";
 import { useState } from "react";
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import logo from "@/assets/logo.png";
-import avtImg from "@/assets/avatarImg.png";
+
+
 import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
 import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
@@ -68,42 +61,52 @@ export default function VolunteerDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="mx-auto max-w-7xl px=4 py-8 sm:px-6 lg:px-8">
+            <main className="
+                px=4 mx-auto max-w-7xl py-8
+                sm:px-6
+                lg:px-8
+            ">
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">Welcome back, {firstName}!</h1>
                 </div>
 
                 {error && (
-                    <p className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                    <p className="
+                        mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                        text-red-600
+                    ">
                         {error}
                     </p>
                 )}
 
                 {/* KPI Cards */}
-                <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <div className="
+                    mb-8 grid grid-cols-2 gap-4
+                    lg:grid-cols-4
+                ">
                     <StatCard
-                        icon={<Clock className="h-5 w-5 text-gray-700" />}
+                        icon={<Clock className="size-5 text-gray-700" />}
                         label="Total Hours"
                         value={totalHours.toFixed(1)}
                         sub="Sum of your Hours"
                         trend={null}
                     />
                     <StatCard
-                        icon={<Star className="h-5 w-5 text-gray-700" />}
+                        icon={<Star className="size-5 text-gray-700" />}
                         label="Impact Score"
                         value={impactScore.toLocaleString()}
                         sub={`Across ${orgsAssisted} Org${orgsAssisted !== 1 ? "s" : ""}`}
                         trend={null}
                     />
                     <StatCard
-                        icon={<DollarSign className="h-5 w-5 text-gray-700" />}
+                        icon={<DollarSign className="size-5 text-gray-700" />}
                         label="Economic Value"
                         value={`$${economicValue.toLocaleString()}`}
                         sub={`Calculated at $${currentVolunteer?.hourlyValue}/hr`}
                         trend={null}
                     />
                     <StatCard
-                        icon={<Building2 className="h-5 w-5 text-gray-700" />}
+                        icon={<Building2 className="size-5 text-gray-700" />}
                         label="Orgs Assisted"
                         value={String(orgsAssisted)}
                         sub="Distinct Organizations"
@@ -112,9 +115,15 @@ export default function VolunteerDashboardPage() {
                 </div>
 
                 {/* Chart + Partner Orgs */}
-                <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <div className="
+                    mb-6 grid grid-cols-1 gap-6
+                    lg:grid-cols-3
+                ">
                     {/* Contribution Trends */}
-                    <div className="rounded-xl border bg-white p-6 shadow-sm lg:col-span-2">
+                    <div className="
+                        rounded-xl border bg-white p-6 shadow-sm
+                        lg:col-span-2
+                    ">
                         <div className="mb-4 flex items-start justify-between">
                             <div>
                                 <h2 className="font-semibold text-gray-800">Contribution Trends</h2>
@@ -123,7 +132,10 @@ export default function VolunteerDashboardPage() {
                             <select
                                 value={chartRange}
                                 onChange={(e) => setChartRange(e.target.value as ChartRange)}
-                                className="rounded-md border px-3 py-1 text-sm text-gray-500 bg-white cursor-pointer"
+                                className="
+                                    cursor-pointer rounded-md border bg-white px-3 py-1 text-sm
+                                    text-gray-500
+                                "
                             >
                                 {(Object.keys(RANGE_LABELS) as ChartRange[]).map((r) => (
                                     <option key={r} value={r}>
@@ -142,14 +154,20 @@ export default function VolunteerDashboardPage() {
                                         className="flex flex-1 flex-col items-center gap-1"
                                         style={{ height: "100%" }}
                                     >
-                                        <div className="flex flex-1 flex-col items-center justify-end w-full">
+                                        <div className="
+                                            flex w-full flex-1 flex-col items-center justify-end
+                                        ">
                                             {h > 0 && (
-                                                <span className="text-xs font-medium text-gray-500 mb-1">
+                                                <span className="
+                                                    mb-1 text-xs font-medium text-gray-500
+                                                ">
                                                     {h % 1 === 0 ? h : h.toFixed(1)}
                                                 </span>
                                             )}
                                             <div
-                                                className={`w-full rounded-t-md ${h > 0 ? (isLatest ? "bg-yellow-400" : "bg-yellow-200") : "bg-gray-100"}`}
+                                                className={`
+                                                    w-full rounded-t-md
+                                                    ${h > 0 ? (isLatest ? "bg-yellow-400" : "bg-yellow-200") : "bg-gray-100"}`}
                                                 style={{ height: `${heightPct}%`, minHeight: h > 0 ? "4px" : "2px" }}
                                             />
                                         </div>
@@ -170,16 +188,25 @@ export default function VolunteerDashboardPage() {
                                 {partnerOrgs.map((org) => (
                                     <button
                                         key={org.id}
-                                        className="flex w-full items-center gap-3 rounded-lg p-1 text-left hover:bg-gray-50"
+                                        className="
+                                            flex w-full items-center gap-3 rounded-lg p-1 text-left
+                                            hover:bg-gray-50
+                                        "
                                         onClick={() => router.push(`/volunteer/organizations/${org.id}`)}
                                     >
-                                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-xs font-semibold text-yellow-700">
+                                        <div className="
+                                            flex size-10 shrink-0 items-center justify-center
+                                            rounded-full bg-yellow-100 text-xs font-semibold
+                                            text-yellow-700
+                                        ">
                                             {org.orgName.slice(0, 2).toUpperCase()}
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <p className="truncate text-sm font-medium text-gray-800">{org.orgName}</p>
+                                            <p className="
+                                                truncate text-sm font-medium text-gray-800
+                                            ">{org.orgName}</p>
                                         </div>
-                                        <div className="flex-shrink-0 text-right">
+                                        <div className="shrink-0 text-right">
                                             <p className="text-sm font-semibold text-gray-800">{org.totalHours}h</p>
                                             <p className="text-xs text-gray-400">TOTAL</p>
                                         </div>
@@ -187,7 +214,7 @@ export default function VolunteerDashboardPage() {
                                 ))}
                             </div>
                         )}
-                        <button className="mt-5 w-full border py-2 rounded-lg" onClick={() => setShowAllPartners(true)}>
+                        <button className="mt-5 w-full rounded-lg border py-2" onClick={() => setShowAllPartners(true)}>
                             Expand All
                         </button>
                     </div>
@@ -198,23 +225,29 @@ export default function VolunteerDashboardPage() {
                         className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
                         onClick={() => setShowAllPartners(false)}
                     >
-                        <div className="w-full max-w-2xl bg-white rounded-xl p-6" onClick={(e) => e.stopPropagation()}>
-                            <div className="flex justify-between mb-4">
+                        <div className="w-full max-w-2xl rounded-xl bg-white p-6" onClick={(e) => e.stopPropagation()}>
+                            <div className="mb-4 flex justify-between">
                                 <h2 className="text-lg font-semibold">All Partner Organizations</h2>
                                 <button onClick={() => setShowAllPartners(false)}>✕</button>
                             </div>
 
-                            <div className="max-h-[400px] overflow-y-auto space-y-2">
+                            <div className="max-h-[400px] space-y-2 overflow-y-auto">
                                 {partnerOrgs.map((org) => (
                                     <button
                                         key={org.id}
-                                        className="flex w-full items-center gap-3 hover:bg-gray-50 p-2 rounded"
+                                        className="
+                                            flex w-full items-center gap-3 rounded-sm p-2
+                                            hover:bg-gray-50
+                                        "
                                         onClick={() => {
                                             setShowAllPartners(false);
                                             router.push(`/volunteer/organizations/${org.id}`);
                                         }}
                                     >
-                                        <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                                        <div className="
+                                            flex size-10 items-center justify-center rounded-full
+                                            bg-yellow-100
+                                        ">
                                             {org.orgName.slice(0, 2).toUpperCase()}
                                         </div>
                                         <p className="flex-1 text-left">{org.orgName}</p>
@@ -234,13 +267,16 @@ export default function VolunteerDashboardPage() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b text-left text-xs font-medium uppercase tracking-wide text-gray-400">
-                                    <th className="pb-3 pr-4">Charity</th>
-                                    <th className="pb-3 pr-4">Category</th>
-                                    <th className="pb-3 pr-4">Commitment</th>
-                                    <th className="pb-3 pr-4">Hours</th>
-                                    <th className="pb-3 pr-4">Status</th>
-                                    <th className="pb-3 pr-4">Last Updated</th>
+                                <tr className="
+                                    border-b text-left text-xs font-medium tracking-wide
+                                    text-gray-400 uppercase
+                                ">
+                                    <th className="pr-4 pb-3">Charity</th>
+                                    <th className="pr-4 pb-3">Category</th>
+                                    <th className="pr-4 pb-3">Commitment</th>
+                                    <th className="pr-4 pb-3">Hours</th>
+                                    <th className="pr-4 pb-3">Status</th>
+                                    <th className="pr-4 pb-3">Last Updated</th>
                                     <th className="pb-3"></th>
                                 </tr>
                             </thead>
@@ -262,7 +298,10 @@ export default function VolunteerDashboardPage() {
                                                                 `/volunteer/organizations/${opp.organization!.id}`,
                                                             )
                                                         }
-                                                        className="text-left hover:underline"
+                                                        className="
+                                                            text-left
+                                                            hover:underline
+                                                        "
                                                     >
                                                         {opp.organization.orgName}
                                                     </button>
@@ -275,7 +314,10 @@ export default function VolunteerDashboardPage() {
                                             <td className="py-3 pr-4 text-gray-800">{opp.hours}h</td>
                                             <td className="py-3 pr-4">
                                                 <span
-                                                    className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_STYLES[opp.status]}`}
+                                                    className={`
+                                                        rounded-full px-2.5 py-1 text-xs font-medium
+                                                        ${STATUS_STYLES[opp.status]}
+                                                    `}
                                                 >
                                                     {opp.status}
                                                 </span>
@@ -289,7 +331,11 @@ export default function VolunteerDashboardPage() {
                                             </td>
                                             <td className="py-3">
                                                 <button
-                                                    className="rounded-md bg-yellow-400 px-3 py-1 text-xs font-medium text-black hover:bg-yellow-500"
+                                                    className="
+                                                        rounded-md bg-yellow-400 px-3 py-1 text-xs
+                                                        font-medium text-black
+                                                        hover:bg-yellow-500
+                                                    "
                                                     onClick={() => router.push(`/volunteer/opportunities/${opp.id}`)}
                                                 >
                                                     View More

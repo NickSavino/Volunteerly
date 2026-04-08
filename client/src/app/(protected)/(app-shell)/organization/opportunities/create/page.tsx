@@ -27,7 +27,7 @@ export default function OppCreatePage() {
     return (
         <div className="min-h-screen">
             <title>Organization Application - Volunteerly</title>
-            <main className="w-full items-center h-full flex flex-col p-8 ">
+            <main className="flex size-full flex-col items-center p-8">
                 <OpportunityForm
                     opportunity={opportunity}
                     handleDayToggle={handleDayToggle}

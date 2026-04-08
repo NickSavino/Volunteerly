@@ -1,10 +1,9 @@
 "use client";
 
-import { ArrowLeft, Briefcase, GraduationCap, MapPin, School, User } from "lucide-react";
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Briefcase, GraduationCap, MapPin, User } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import avtImg from "@/assets/avatarImg.png";
 import { use } from "react";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
 import { useOppApplicationViewModel } from "./oppApplicationVm";
@@ -37,11 +36,17 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
         <div className="min-h-screen">
             <title>Organization View Opportunity - Volunteerly</title>
 
-            <main className="flex flex-col md:flex-row p-6 md:mx-10">
-                <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3xl flex flex-col gap-6 mb-10">
+            <main className="
+                flex flex-col p-6
+                md:mx-10 md:flex-row
+            ">
+                <div className="
+                    mx-auto mb-5 mb-10 flex w-full max-w-3xl flex-col gap-6
+                    md:mb-0 md:w-3/4
+                ">
                     <div>
                         <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
-                            <ArrowLeft className="w-4 h-4" />
+                            <ArrowLeft className="size-4" />
                             Back
                         </Button>
 
@@ -50,8 +55,14 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
 
                     <Card>
                         <CardContent>
-                            <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
-                                <div className="flex md:w-full justify-center md:col-span-2">
+                            <div className="
+                                gap-6 text-center
+                                md:grid md:grid-cols-8 md:text-left
+                            ">
+                                <div className="
+                                    flex justify-center
+                                    md:col-span-2 md:w-full
+                                ">
                                     <Avatar className="h-auto w-20">
                                         <AvatarImage src={UserService.getAvatarURL(application?.volId || "")} />
                                         <AvatarFallback>
@@ -61,8 +72,14 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                     </Avatar>
                                 </div>
 
-                                <div className="md:col-span-4 flex flex-col gap-1">
-                                    <div className="md:flex gap-3">
+                                <div className="
+                                    flex flex-col gap-1
+                                    md:col-span-4
+                                ">
+                                    <div className="
+                                        gap-3
+                                        md:flex
+                                    ">
                                         <h3>
                                             {application?.volunteer?.firstName} {application?.volunteer?.lastName}
                                         </h3>
@@ -85,8 +102,14 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                     <p className="text-sm">{application?.volunteer?.bio}</p>
                                 </div>
 
-                                <div className="pt-3 md:pt-0 md:col-span-2 flex flex-col items-center gap-3">
-                                    <span className="flex flex-1 items-center gap-3 justify-center md:justify-start">
+                                <div className="
+                                    flex flex-col items-center gap-3 pt-3
+                                    md:col-span-2 md:pt-0
+                                ">
+                                    <span className="
+                                        flex flex-1 items-center justify-center gap-3
+                                        md:justify-start
+                                    ">
                                         <MapPin className="text-primary" />
                                         <div className="flex flex-col">
                                             <span className="text-sm text-muted-foreground">
@@ -107,10 +130,15 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                                     );
                                                     const pct = Math.round(fill * 100);
                                                     return (
-                                                        <span key={star} className="relative text-2xl leading-none">
+                                                        <span key={star} className="
+                                                            relative text-2xl leading-none
+                                                        ">
                                                             <span className="text-gray-500">★</span>
                                                             <span
-                                                                className="absolute inset-0 overflow-hidden text-primary"
+                                                                className="
+                                                                    absolute inset-0 overflow-hidden
+                                                                    text-primary
+                                                                "
                                                                 style={{ width: `${pct}%` }}
                                                             >
                                                                 ★
@@ -135,8 +163,10 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                         </CardHeader>
                         {application?.volunteer?.workExperiences?.length === 0 &&
                             application?.volunteer?.educations?.length === 0 && (
-                                <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                    <div className="flex justify-center mb-4">
+                                <CardContent className="
+                                    flex h-full flex-col justify-center text-center
+                                ">
+                                    <div className="mb-4 flex justify-center">
                                         <Avatar size="lg">
                                             <AvatarImage src={volunteerly_logo.src} />
                                             <AvatarFallback></AvatarFallback>
@@ -147,7 +177,7 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                             )}
                         {(application?.volunteer?.workExperiences?.length || 0) > 0 && (
                             <CardContent>
-                                <CardTitle className="text-muted-foreground text-sm">Employment Experience</CardTitle>
+                                <CardTitle className="text-sm text-muted-foreground">Employment Experience</CardTitle>
                                 {application?.volunteer?.workExperiences?.map((exp) => (
                                     <Item key={exp.id}>
                                         <ItemMedia>
@@ -171,7 +201,7 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                         )}
                         {(application?.volunteer?.educations?.length || 0) > 0 && (
                             <CardContent>
-                                <CardTitle className="text-muted-foreground text-sm">Education</CardTitle>
+                                <CardTitle className="text-sm text-muted-foreground">Education</CardTitle>
                                 {application?.volunteer?.educations?.map((edu) => (
                                     <Item key={edu.id}>
                                         <ItemMedia>

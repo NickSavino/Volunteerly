@@ -14,7 +14,11 @@ export default function ModeratorDashboardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <main className="
+                mx-auto max-w-7xl px-4 py-8
+                sm:px-6
+                lg:px-8
+            ">
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">
                         Hello, {currentModerator?.firstName ?? "Moderator"}!
@@ -23,25 +27,41 @@ export default function ModeratorDashboardPage() {
                 </div>
 
                 {error && (
-                    <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                    <p className="
+                        mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                        text-red-600
+                    ">
                         {error}
                     </p>
                 )}
 
-                <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="
+                    mb-8 grid grid-cols-1 gap-4
+                    sm:grid-cols-3
+                ">
                     <ModStatCard icon={Building2} label="Pending Organizations" count={pendingOrgsCount} />
                     <ModStatCard icon={Flag} label="Flagged Accounts" count={0} />
                     <ModStatCard icon={Ticket} label="Open Tickets" count={0} />
                 </div>
 
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    <div className="rounded-xl border bg-white p-6 shadow-sm lg:col-span-2">
+                <div className="
+                    grid grid-cols-1 gap-6
+                    lg:grid-cols-3
+                ">
+                    <div className="
+                        rounded-xl border bg-white p-6 shadow-sm
+                        lg:col-span-2
+                    ">
                         <div className="mb-4 flex items-start justify-between">
                             <div>
                                 <h2 className="font-semibold text-gray-800">Pending Organizations</h2>
                             </div>
                             <button
-                                className="rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium text-black hover:bg-yellow-500"
+                                className="
+                                    rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium
+                                    text-black
+                                    hover:bg-yellow-500
+                                "
                                 onClick={() => router.push("/moderator/organizations")}
                             >
                                 View All
@@ -55,8 +75,11 @@ export default function ModeratorDashboardPage() {
                                 {recentPendingOrgs.map((org) => (
                                     <li key={org.id} className="flex items-center justify-between py-3">
                                         <div className="flex items-center gap-3">
-                                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-                                                <Building2 className="h-4 w-4 text-gray-500" />
+                                            <div className="
+                                                flex size-8 items-center justify-center rounded-full
+                                                bg-gray-100
+                                            ">
+                                                <Building2 className="size-4 text-gray-500" />
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium text-gray-700">{org.orgName}</p>
@@ -71,7 +94,11 @@ export default function ModeratorDashboardPage() {
                                             </div>
                                         </div>
                                         <button
-                                            className="rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium text-black hover:bg-yellow-500"
+                                            className="
+                                                rounded-md bg-yellow-400 px-3 py-1 text-sm
+                                                font-medium text-black
+                                                hover:bg-yellow-500
+                                            "
                                             onClick={() => router.push("/moderator/organizations")}
                                         >
                                             View Application
@@ -86,7 +113,11 @@ export default function ModeratorDashboardPage() {
                         <div className="mb-4 flex items-start justify-between">
                             <h2 className="font-semibold text-gray-800">Flagged Accounts</h2>
                             <button
-                                className="rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium text-black hover:bg-yellow-500"
+                                className="
+                                    rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium
+                                    text-black
+                                    hover:bg-yellow-500
+                                "
                                 onClick={() => router.push("/moderator/volunteers")}
                             >
                                 View All
@@ -100,7 +131,10 @@ export default function ModeratorDashboardPage() {
                     <div className="mb-4 flex items-start justify-between">
                         <h2 className="font-semibold text-gray-800">Tickets</h2>
                         <button
-                            className="rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium text-black hover:bg-yellow-500"
+                            className="
+                                rounded-md bg-yellow-400 px-3 py-1 text-sm font-medium text-black
+                                hover:bg-yellow-500
+                            "
                             onClick={() => router.push("/moderator/tickets")}
                         >
                             View All

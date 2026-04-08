@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useAppliedOrgDashboardViewModel } from "./appliedDashboardVm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import avtImg from "@/assets/avatarImg.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, MessageCircleQuestionMark, FileText, User } from "lucide-react";
 import { Navbar } from "../application/navbar";
@@ -28,11 +27,17 @@ export default function HomePage() {
                 onLogout={signOut}
             ></Navbar>
 
-            <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 ">
-                <div className="w-full mb-5 md:mb-0 md:w-2/3 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
-                    <div className="flex flex-col justify-center h-full text-center">
+            <main className="
+                flex flex-col p-6
+                md:h-[calc(100vh-64px)] md:flex-row
+            ">
+                <div className="
+                    max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                    md:mb-0 md:w-2/3
+                ">
+                    <div className="flex h-full flex-col justify-center text-center">
                         <h1 className="text-2x1 font-bold">Welcome, {currentOrganization?.orgName}</h1>
-                        <div className="bg-warning p-5 m-5 radius-2 rounded-sm">
+                        <div className="radius-2 m-5 rounded-sm bg-warning p-5">
                             {currentOrganization?.status === "REJECTED" ? (
                                 <>
                                     <h1>Application Rejected</h1>
@@ -48,10 +53,13 @@ export default function HomePage() {
                         </div>
                     </div>
                 </div>
-                <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 min-h-full">
+                <div className="
+                    mx-auto min-h-full w-full max-w-3xl space-y-6
+                    md:w-1/3
+                ">
                     <Card className="mx-5">
                         <CardContent className="text-center">
-                            <div className="flex justify-center mb-4">
+                            <div className="mb-4 flex justify-center">
                                 <Avatar size="lg">
                                     <AvatarImage>
                                         <User />{" "}
@@ -66,12 +74,12 @@ export default function HomePage() {
                         <CardContent>
                             <Button
                                 variant="ghost"
-                                className="text-lg py-6 flex gap-3 cursor-pointer"
+                                className="flex cursor-pointer gap-3 py-6 text-lg"
                                 onClick={async () => {
                                     router.push("/organization/application");
                                 }}
                             >
-                                <FileText className="w-5! h-5! shrink-0" />
+                                <FileText className="size-5! shrink-0" />
                                 View Application
                             </Button>
                         </CardContent>
@@ -82,9 +90,9 @@ export default function HomePage() {
                                     await signOut();
                                     router.push("/");
                                 }}
-                                className="text-lg py-6 cursor-pointer flex gap-3"
+                                className="flex cursor-pointer gap-3 py-6 text-lg"
                             >
-                                <LogOut className="w-5! h-5! shrink-0" />
+                                <LogOut className="size-5! shrink-0" />
                                 Log Out
                             </Button>
                         </CardContent>
@@ -98,10 +106,12 @@ export default function HomePage() {
                         <CardContent>
                             <Button
                                 variant="ghost"
-                                className="w-full text-md py-6 cursor-pointer flex items-center gap-3"
+                                className="
+                                    text-md flex w-full cursor-pointer items-center gap-3 py-6
+                                "
                                 onClick={() => setIsTicketModalOpen(true)}
                             >
-                                <MessageCircleQuestionMark className="w-7! h-7! shrink-0" />
+                                <MessageCircleQuestionMark className="size-7! shrink-0" />
                                 Contact Support
                             </Button>
                         </CardContent>

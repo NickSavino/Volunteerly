@@ -22,7 +22,7 @@ export function LoadingIndicator({ size = 72, strokeWidth = 10, className, label
                 width={size}
                 height={size}
                 viewBox={`0 0 ${size} ${size}`}
-                className="animate-spin [animation-duration:1.15s]"
+                className="animate-spin animation-duration-[1.15s]"
             >
                 <circle
                     cx={size / 2}

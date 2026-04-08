@@ -1,20 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppModal } from "@/components/common/app-modal";
 import {
     Calendar,
-    PersonStanding,
-    Hourglass,
-    Users,
-    CalendarCheck,
-    Briefcase,
     CalendarX,
     AlarmClockCheck,
     Handshake,
     ArrowLeft,
-    MessageSquareCheck,
     MessageCircleMore,
     UserStar,
     CircleDollarSign,
@@ -22,19 +15,14 @@ import {
     User,
 } from "lucide-react";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/providers/auth-provider";
 import { Button } from "@/components/ui/button";
-import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
-import { api } from "@/lib/api";
 import { OrgStatCard } from "@/components/custom/org_stat_card";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
-import { useOrgOpportunitiesViewModel } from "../orgOpportunitiesVm";
 import { use } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
 import {
     Dialog,
@@ -85,14 +73,20 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
             <div className="min-h-screen">
                 <title>Organization View Opportunity - Volunteerly</title>
 
-                <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 md:mx-10">
-                    <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6 mb-10">
+                <main className="
+                    flex flex-col p-6
+                    md:mx-10 md:h-[calc(100vh-64px)] md:flex-row
+                ">
+                    <div className="
+                        max-w-3x1 mx-auto mb-5 mb-10 flex min-h-full w-full flex-col gap-6
+                        md:mb-0 md:w-3/4
+                    ">
                         <div>
                             <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
-                                <ArrowLeft className="w-4 h-4" />
+                                <ArrowLeft className="size-4" />
                                 Back
                             </Button>
-                            <div className="flex items-center gap-2 flex-wrap">
+                            <div className="flex flex-wrap items-center gap-2">
                                 <Badge>{opportunity?.status}</Badge>
                                 {opportunity?.status == "OPEN" ? (
                                     <p>Posted on {opportunity?.postedDate.toLocaleDateString()}</p>
@@ -108,7 +102,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             {opportunity?.name} - {opportunity?.workType} - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
-                            <div className="md:flex md:justify-around md:grid md:gap-3 md:grid-cols-2">
+                            <div className="
+                                md:flex md:grid md:grid-cols-2 md:justify-around md:gap-3
+                            ">
                                 <OrgStatCard icon={Clock4} label="Hours Spent" count={totalHours} money={false} />
                                 <OrgStatCard
                                     icon={CircleDollarSign}
@@ -141,16 +137,19 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                     </CardHeader>
                                     <CardContent>{opportunity?.candidateDesc}</CardContent>
 
-                                    <CardContent className="md:flex justify-around">
+                                    <CardContent className="
+                                        justify-around
+                                        md:flex
+                                    ">
                                         <span className="flex flex-1 items-center gap-3">
-                                            <Calendar className="w-9 h-9" />
+                                            <Calendar className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Length</span>
                                                 <span className="text-sm">{opportunity?.length}</span>
                                             </div>
                                         </span>
                                         <span className="flex flex-1 items-center gap-3">
-                                            <CalendarX className="w-9 h-9" />
+                                            <CalendarX className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Deadline</span>
                                                 <span className="text-sm">
@@ -159,9 +158,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             </div>
                                         </span>
                                     </CardContent>
-                                    <CardContent className="md:flex justify-around">
+                                    <CardContent className="
+                                        justify-around
+                                        md:flex
+                                    ">
                                         <span className="flex flex-1 items-center gap-3">
-                                            <AlarmClockCheck className="w-9 h-9" />
+                                            <AlarmClockCheck className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Availability</span>
                                                 <span className="text-sm">{opportunity?.availability.join(", ")}</span>
@@ -169,7 +171,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         </span>
 
                                         <span className="flex flex-1 items-center gap-3">
-                                            <Handshake className="w-9 h-9" />
+                                            <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
                                                 <span className="text-sm">{opportunity?.commitmentLevel}</span>
@@ -177,15 +179,17 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         </span>
                                     </CardContent>
                                 </Card>
-                                <Card className="mt-5 mb-5">
+                                <Card className="my-5">
                                     <CardHeader>
                                         <CardTitle>Applications</CardTitle>
                                     </CardHeader>
 
                                     <CardContent>
                                         {applications.length === 0 ? (
-                                            <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                                <div className="flex justify-center mb-4">
+                                            <CardContent className="
+                                                flex h-full flex-col justify-center text-center
+                                            ">
+                                                <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
                                                         <AvatarFallback></AvatarFallback>
@@ -214,7 +218,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                         <ItemTitle className="text-md">
                                                             {app.volunteer?.firstName} {app.volunteer?.lastName}
                                                         </ItemTitle>
-                                                        <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                        <ItemDescription className="
+                                                            flex flex-wrap items-center gap-2
+                                                        ">
                                                             {app.message}
                                                         </ItemDescription>
                                                     </ItemContent>
@@ -256,9 +262,15 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         <CardTitle>Opportunity Overview</CardTitle>
                                         <CardDescription>{opportunity?.description}</CardDescription>
                                         {opportunity?.status == "FILLED" && (
-                                            <CardAction className="w-full md:w-auto mt-2 md:mt-0">
+                                            <CardAction className="
+                                                mt-2 w-full
+                                                md:mt-0 md:w-auto
+                                            ">
                                                 <Button
-                                                    className="cursor-pointer w-full md:w-auto"
+                                                    className="
+                                                        w-full cursor-pointer
+                                                        md:w-auto
+                                                    "
                                                     onClick={completeOpportunity}
                                                 >
                                                     Complete
@@ -266,16 +278,19 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             </CardAction>
                                         )}
                                     </CardHeader>
-                                    <CardContent className="md:flex justify-around">
+                                    <CardContent className="
+                                        justify-around
+                                        md:flex
+                                    ">
                                         <span className="flex flex-1 items-center gap-3">
-                                            <Calendar className="w-9 h-9" />
+                                            <Calendar className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Length</span>
                                                 <span className="text-sm">{opportunity?.length}</span>
                                             </div>
                                         </span>
                                         <span className="flex flex-1 items-center gap-3">
-                                            <AlarmClockCheck className="w-9 h-9" />
+                                            <AlarmClockCheck className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Availability</span>
                                                 <span>{opportunity?.availability.join(", ")}</span>
@@ -283,7 +298,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         </span>
 
                                         <span className="flex flex-1 items-center gap-3">
-                                            <Handshake className="w-9 h-9" />
+                                            <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
                                                 <span>{opportunity?.commitmentLevel}</span>
@@ -294,12 +309,21 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
 
                                 <Card className="mb-5">
                                     <CardContent>
-                                        <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
-                                            <div className="flex md:w-full justify-center md:col-span-2">
+                                        <div className="
+                                            gap-6 text-center
+                                            md:grid md:grid-cols-8 md:text-left
+                                        ">
+                                            <div className="
+                                                flex justify-center
+                                                md:col-span-2 md:w-full
+                                            ">
                                                 <img src={avtImg.src} className="w-22 rounded-lg object-cover" />
                                             </div>
 
-                                            <div className="md:col-span-4 flex flex-col gap-3">
+                                            <div className="
+                                                flex flex-col gap-3
+                                                md:col-span-4
+                                            ">
                                                 <p>Assigned Volunteer</p>
                                                 <h3>
                                                     {opportunity?.volunteer?.firstName}{" "}
@@ -307,7 +331,10 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                 </h3>
                                             </div>
 
-                                            <div className="md:col-span-2 flex flex-col gap-3">
+                                            <div className="
+                                                flex flex-col gap-3
+                                                md:col-span-2
+                                            ">
                                                 <Button
                                                     variant="outline"
                                                     data-icon="inline-end"
@@ -416,8 +443,10 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         )}
                                     </CardHeader>
                                     {opportunity?.progressUpdates?.length === 0 ? (
-                                        <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                            <div className="flex justify-center mb-4">
+                                        <CardContent className="
+                                            flex h-full flex-col justify-center text-center
+                                        ">
+                                            <div className="mb-4 flex justify-center">
                                                 <Avatar size="lg">
                                                     <AvatarImage src={volunteerly_logo.src} />
                                                     <AvatarFallback></AvatarFallback>
@@ -428,10 +457,15 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         </CardContent>
                                     ) : (
                                         <CardContent className="space-y-4">
-                                            <div className="border-l-2 pl-4 space-y-4 max-h-40 overflow-y-auto">
+                                            <div className="
+                                                max-h-40 space-y-4 overflow-y-auto border-l-2 pl-4
+                                            ">
                                                 {opportunity?.progressUpdates?.map((update) => (
                                                     <div key={update.id}>
-                                                        <span className="absolute -left-3 top-1 w-3 h-3 rounded-full bg-primary" />
+                                                        <span className="
+                                                            absolute top-1 -left-3 size-3
+                                                            rounded-full bg-primary
+                                                        " />
                                                         <p className="text-xs">
                                                             {update.createdAt.toLocaleDateString()}
                                                         </p>
@@ -515,14 +549,24 @@ function ReviewModal({
                     <button
                         onClick={handleClose}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm
+                            font-semibold text-foreground
+                            hover:bg-secondary
+                            disabled:opacity-50
+                        "
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90 disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold
+                            text-foreground
+                            hover:opacity-90
+                            disabled:opacity-50
+                        "
                     >
                         {submitting ? "Posting..." : "Post"}
                     </button>
@@ -545,7 +589,10 @@ function ReviewModal({
                                 onClick={() => setRating(star)}
                                 onMouseEnter={() => setHovered(star)}
                                 onMouseLeave={() => setHovered(0)}
-                                className="text-2xl leading-none disabled:opacity-50"
+                                className="
+                                    text-2xl leading-none
+                                    disabled:opacity-50
+                                "
                             >
                                 <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"}>
                                     ★
@@ -558,13 +605,13 @@ function ReviewModal({
                     )}
                 </div>
 
-                <label className="flex items-center gap-2 cursor-pointer select-none">
+                <label className="flex cursor-pointer items-center gap-2 select-none">
                     <input
                         type="checkbox"
                         checked={flagged}
                         onChange={(e) => setFlagged(e.target.checked)}
                         disabled={submitting}
-                        className="h-4 w-4 rounded border-gray-300 accent-yellow-400"
+                        className="size-4 rounded-sm border-gray-300 accent-yellow-400"
                     />
                     <span className="text-sm text-foreground">Flag this volunteer</span>
                 </label>
@@ -578,7 +625,13 @@ function ReviewModal({
                             placeholder="Describe why you are flagging this volunteer..."
                             rows={4}
                             disabled={submitting}
-                            className={`w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
+                            className={`
+                                w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm
+                                text-foreground
+                                placeholder:text-muted-foreground
+                                focus:ring-2 focus:ring-ring focus:outline-none
+                                disabled:opacity-50
+                                ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
                         />
                         {touched && flagReasonEmpty && (
                             <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>

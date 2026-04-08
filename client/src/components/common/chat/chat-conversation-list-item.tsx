@@ -37,7 +37,7 @@ export function ChatConversationListItem({ conversation, active, onClick }: Chat
             type="button"
             onClick={onClick}
             className={cn(
-                "flex w-full items-start gap-3 border-l-4 px-4 py-4 text-left transition-colors",
+                "flex w-full items-start gap-3 border-l-4 p-4 text-left transition-colors",
                 active ? "border-l-primary bg-secondary" : "border-l-transparent hover:bg-secondary/60",
             )}
         >

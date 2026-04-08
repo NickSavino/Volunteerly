@@ -18,7 +18,9 @@ export default function VolunteerMessagesPage() {
     }
 
     return (
-        <div className="fixed inset-x-0 bottom-0 top-18.25 overflow-hidden border-t border-border bg-background">
+        <div className="
+            fixed inset-x-0 top-18.25 bottom-0 overflow-hidden border-t border-border bg-background
+        ">
             <div className="grid h-full min-h-0 grid-cols-[320px_1fr]">
                 <ChatConversationList
                     conversations={vm.conversations}
@@ -46,7 +48,10 @@ export default function VolunteerMessagesPage() {
                             </div>
 
                             {vm.isClosedTicketConversation ? (
-                                <div className="shrink-0 border-t border-border px-4 py-4 text-sm text-muted-foreground">
+                                <div className="
+                                    shrink-0 border-t border-border p-4 text-sm
+                                    text-muted-foreground
+                                ">
                                     This ticket is closed. Replies are disabled.
                                 </div>
                             ) : (

@@ -21,9 +21,7 @@
         "source.sortImports": "explicit"
     },
     "editor.formatOnSave": true,
-    "eslint.codeActionsOnSave.rules": [
-        "@typescript-eslint/*"
-    ],
+    "eslint.codeActionsOnSave.rules": ["@typescript-eslint/*"],
     "eslint.useFlatConfig": true,
     "js/ts.preferences.importModuleSpecifier": "non-relative",
     "tailwindCSS.lint.suggestCanonicalClasses": "ignore"

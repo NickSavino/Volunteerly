@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { AppNavbar } from "@/components/navigation/app-navbar";
-import { AppNavConfig, AppNavItem, NAV_CONFIG } from "@/components/navigation/nav-config";
+import { AppNavConfig, NAV_CONFIG } from "@/components/navigation/nav-config";
 import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { useRouter } from "next/navigation";

@@ -25,10 +25,16 @@ function ToastContent({ id, kind, title, message }: ToastContentProps) {
 
     return (
         <div
-            className={`relative flex w-[320px] items-start gap-3 rounded-xl border bg-card px-4 py-4 shadow-xl ${accent}`}
+            className={`
+                relative flex w-[320px] items-start gap-3 rounded-xl border bg-card p-4 shadow-xl
+                ${accent}
+            `}
         >
-            <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${iconBg}`}>
-                <Icon className="h-4 w-4 text-white" />
+            <div className={`
+                mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full
+                ${iconBg}
+            `}>
+                <Icon className="size-4 text-white" />
             </div>
 
             <div className="min-w-0 flex-1">
@@ -40,9 +46,12 @@ function ToastContent({ id, kind, title, message }: ToastContentProps) {
                 type="button"
                 aria-label="Dismiss"
                 onClick={() => toast.dismiss(id)}
-                className="rounded-md p-1 text-muted-foreground hover:text-foreground"
+                className="
+                    rounded-md p-1 text-muted-foreground
+                    hover:text-foreground
+                "
             >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
             </button>
         </div>
     );

@@ -128,5 +128,5 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
         };
     }, []);
 
-    return <div ref={mapRef} className="h-full w-full" />;
+    return <div ref={mapRef} className="size-full" />;
 }

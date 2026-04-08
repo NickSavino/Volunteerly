@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
-import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
 import {
     Application,
     CurrentOrganization,
-    CurrentUser,
-    CurrentUserSchema,
     Opportunity,
     ProgressUpdate,
 } from "@volunteerly/shared";
-import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
 import { toast } from "sonner";
 

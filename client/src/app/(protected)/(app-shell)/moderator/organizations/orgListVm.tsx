@@ -1,14 +1,12 @@
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
-import { UserService } from "@/services/UserService";
 import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
 import type {
     CurrentModerator,
     ModeratorOrganizationList,
     ModeratorOrganizationListItem,
-    Organization,
 } from "@volunteerly/shared";
 import { appToast } from "@/components/common/app-toast";
 
