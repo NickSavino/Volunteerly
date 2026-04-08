@@ -18,6 +18,11 @@ import {
     getOpportunitySkills,
     getVolunteerSkillCounts
 } from "../services/volunteer-service.js";
+import { prisma } from "../lib/prisma.js";
+import { extractSkillsFromOpportunity } from "../services/groq-service.js";
+import { embedText } from "../services/gemini-service.js";
+
+
 
 export const currentVolunteerRouter = Router();
 
@@ -131,6 +136,96 @@ currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
         next(error);
     }
 });
+
+// If the volunteer or an opportunity has no vector yet, those opps default to 1%.
+currentVolunteerRouter.get("/opportunities/match-scores", async (req, res, next) => {
+    console.log("MATCH SCORES ROUTE HIT")
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+ 
+        const volunteer = await prisma.$queryRaw<{ has_vector: boolean }[]>`
+            SELECT (skill_vector IS NOT NULL) AS has_vector
+            FROM volunteers
+            WHERE id = ${userId}
+            LIMIT 1
+        `;
+        
+        //check if vol has a skill vector
+        const hasVector = volunteer?.[0]?.has_vector ?? false;
+        if (!hasVector) {
+            return res.status(200).json({});
+        }
+
+        // Cosine similarity via pgvector: 1 - (a <=> b) where <=> is cosine distance
+        // Multiply by 100 and round to integer percentage
+        const scores = await prisma.$queryRaw<{ id: string; match_pct: number }[]>`
+            SELECT
+                o.id,
+                GREATEST(1, ROUND(CAST((1 - (o.skill_vector <=> v.skill_vector)) * 100 AS NUMERIC), 0)::int) AS match_pct
+            FROM opportunities o, volunteers v
+            WHERE v.id = ${userId}
+              AND v.skill_vector IS NOT NULL
+              AND o.skill_vector IS NOT NULL
+        `;
+ 
+        const scoreMap: Record<string, number> = {};
+        for (const row of scores) {
+            scoreMap[row.id] = Math.min(100, Math.max(1, Number(row.match_pct)));
+        }
+        
+        console.log("SCORE MAP HERE: ", scoreMap)
+
+        res.status(200).json(scoreMap);
+    } catch (error) {
+        next(error);
+    }
+});
+
+currentVolunteerRouter.post("/opportunities/backfill-vectors", async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        const oppsWithoutVector = await prisma.$queryRaw<{ id: string; name: string; category: string; description: string; candidate_desc: string }[]>`
+            SELECT id, name, category, description, candidate_desc
+            FROM opportunities
+            WHERE skill_vector IS NULL
+            AND status = 'OPEN'
+        `;
+
+        if (oppsWithoutVector.length === 0) {
+            return res.status(200).json({ skipped: true });
+        }
+
+        (async () => {
+            for (const opp of oppsWithoutVector) {
+                try {
+                    const skills = await extractSkillsFromOpportunity(
+                        opp.name,
+                        opp.category,
+                        opp.description,
+                        opp.candidate_desc
+                    );
+                    const allSkills = [...skills.technical, ...skills.nonTechnical].join(", ");
+                    const vector = await embedText(allSkills);
+                    await prisma.$executeRaw`
+                        UPDATE opportunities
+                        SET skill_vector = ${JSON.stringify(vector)}::vector
+                        WHERE id = ${opp.id}
+                    `;
+                } catch (err) {
+                    console.warn(`Failed to backfill vector for opportunity ${opp.id}:`, err);
+                }
+            }
+        })();
+
+        res.status(200).json({ success: true, count: oppsWithoutVector.length });
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 currentVolunteerRouter.get("/opportunities/:oppId", async (req, res, next) => {
     try {
@@ -276,6 +371,7 @@ currentVolunteerRouter.post("/opportunities/:oppId/skills", async (req, res, nex
         next(error);
     }
 });
+
 
 currentVolunteerRouter.get("/opportunities/:oppId/skills", async (req, res, next) => {
     try {

@@ -164,3 +164,29 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
         next(error);
     }
 });
+
+
+skillExtractionRouter.post("/backfill", async (req, res, next) => {
+    try {
+        const userId = req.auth!.userId;
+
+        const profile = await prisma.volunteerSkillProfile.findUnique({
+            where: { volId: userId },
+        });
+
+        if (!profile) return res.status(200).json({ skipped: true });
+
+        const allSkills = [...(profile.technical as string[]), ...(profile.nonTechnical as string[])].join(", ");
+        const vector = await embedText(allSkills);
+
+        await prisma.$executeRaw`
+            UPDATE volunteers
+            SET skill_vector = ${JSON.stringify(vector)}::vector
+            WHERE id = ${userId}
+        `;
+
+        res.status(200).json({ success: true });
+    } catch (error) {
+        next(error);
+    }
+});

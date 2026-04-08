@@ -168,4 +168,29 @@ export class VolunteerService {
         });
         return response;
     }
+
+    static async backfillSkillVector() {
+        return api<{ success: boolean; skipped?: boolean }>(
+            "/current-volunteer/extract-skills/backfill",
+            { method: "POST" }
+        );
+    }
+
+    static async backfillOpportunityVectors() {
+    return api<{ success: boolean; skipped?: boolean; count?: number }>(
+        "/current-volunteer/opportunities/backfill-vectors",
+        { method: "POST" }
+    ).catch(() => {});
+    }
+
+    static async getOpportunityMatchScores(): Promise<Record<string, number>> {
+        try {
+            const response = await api<Record<string, number>>(
+                "/current-volunteer/opportunities/match-scores"
+            );
+            return response ?? {};
+        } catch {
+            return {};
+        }
+    }
 }

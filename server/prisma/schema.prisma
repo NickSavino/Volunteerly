@@ -122,6 +122,7 @@ model Opportunity {
   postedDate      DateTime         @default(now()) @map("posted_date")
   createdAt       DateTime         @default(now()) @map("created_at")
   updatedAt       DateTime         @default(now()) @updatedAt @map("updated_at")
+  skillVector     Unsupported("vector(3072)")? @map("skill_vector")
 
   organization    Organization     @relation(fields: [orgId], references: [id])
   volunteer       Volunteer?       @relation(fields: [volId], references: [id])

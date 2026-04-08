@@ -2,6 +2,8 @@ import { Prisma, OrganizationState, CommitmentLevel, WorkType } from "@prisma/cl
 import { prisma } from "../lib/prisma.js";
 import { supabase } from "../lib/supabase.js";
 import { callDocumentAnalysis } from "./azure-service.js";
+import { extractSkillsFromOpportunity } from "./groq-service.js";
+import { embedText } from "./gemini-service.js";
 
 
 export async function getCurrentOrganization(orgId: string) {
@@ -479,6 +481,22 @@ export async function createOpportunity(orgId:string, name:string, category:stri
     if (!org) {
         throw new Error("Error creating the Opportunity.");
     }
+
+    //create the embedding
+    (async () => {
+        try {
+            const skills = await extractSkillsFromOpportunity(name, category, description, candidateDesc);
+            const allSkills = [...skills.technical, ...skills.nonTechnical].join(", ");
+            const vector = await embedText(allSkills);
+            await prisma.$executeRaw`
+                UPDATE opportunities
+                SET skill_vector = ${JSON.stringify(vector)}::vector
+                WHERE id = ${org.id}
+            `;
+        } catch (err) {
+            console.warn("Failed to embed opportunity skill vector:", err);
+        }
+    })();
 
     return org;
 }

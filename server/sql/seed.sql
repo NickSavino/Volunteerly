@@ -88,6 +88,9 @@ DECLARE
     education1_id UUID := 'a0000000-0000-4000-8000-000000001005';
     education2_id UUID := 'a0000000-0000-4000-8000-000000001006';
     education3_id UUID := 'a0000000-0000-4000-8000-000000001007';
+
+    vol_skill1_id UUID := 'a0000000-0000-4000-8000-000000001008';
+    vol_skill2_id UUID := 'a0000000-0000-4000-8000-000000001009';
     
 BEGIN
 
@@ -144,11 +147,18 @@ VALUES
     (org2_id::text, 'World United',  'VERIFIED', 654321432, 'organization-documents/org_' || org2_id::text || '.pdf', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada, T1Y 6S1',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"countries operated in": 12}, {"students helped": 3800}]'),
     (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012513,  'organization-documents/org_' || org3_id::text || '.pdf',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org',         '[{"meals served": 5200}, {"families housed": 300}]');
 
---Insert Volunteers (no skills seeded — volunteers complete experience input on first login)
+--Insert Volunteers 
 INSERT INTO public.volunteers (id, first_name, last_name, location, bio, hourly_value, organizations_assisted, availability)
 VALUES
     (vol1_id::text, 'Estelle', 'Bright', 'Calgary, AB', 'Passionate volunteer with a love for data.', 25, 2, '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]'),
     (vol2_id::text, 'Joshua',  'Bright', 'Calgary, AB', 'Software developer who loves giving back.',  30, 1, '["Monday", "Saturday", "Sunday"]');
+
+--Insert Volunteer Skill Profiles
+INSERT INTO public.volunteer_skill_profiles (vol_id, technical, non_technical, created_at)
+VALUES
+    (vol1_id::text, '["Python", "SQL", "Java", "JavaScript", "API Integration", "Data Pipelines", "REST API", "Salesforce", "React.js", "Data Quality Assurance"]', '["Collaboration", "Communication", "Adaptability", "Leadership", "Problem-Solving", "Time Management", "Data-Driven Decision Making", "Teamwork", "Strategic Thinking"]', '2026-04-08'),
+    (vol2_id::text, '["Python", "SQL", "Excel VBA", "Java", "JavaScript", "HTML", "CSS", "Power BI", "Bloomberg", "FactSet"]', '["Financial Management", "Leadership", "Collaboration", "Communication", "Data Analysis", "Problem Solving", "Time Management", "Strategic Thinking", "Team Management", "Adaptability"]', '2026-04-07');
+
 
 --Insert Opps
 INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)

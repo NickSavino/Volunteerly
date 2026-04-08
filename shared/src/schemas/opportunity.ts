@@ -55,7 +55,8 @@ export const OpportunitySchema = z.object({
             hoursContributed: z.number(),
             createdAt: z.coerce.date(),
         })
-    ).nullish()
+    ).nullish(),
+    skill_vector: z.array(z.number()).optional()
 });
 
 export const UpdateOpportunitySchema = z.object({
