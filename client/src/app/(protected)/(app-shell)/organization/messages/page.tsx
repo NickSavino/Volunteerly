@@ -45,15 +45,21 @@ export default function OrganizationMessagesPage() {
                     />
                 </div>
 
-              <ChatComposer
-                value={vm.messageDraft}
-                onChange={vm.setMessageDraft}
-                onSend={vm.sendMessage}
-                sending={vm.sending}
-                placeholder={
-                  vm.isTicketConversation ? "Reply to support ticket..." : "Type a message..."
-                }
-              />
+              {vm.isClosedTicketConversation ? (
+                <div className="border-t border-border px-4 py-4 text-sm text-muted-foreground">
+                  This ticket is closed. Replies are disabled.
+                </div>
+              ) : (
+                <ChatComposer
+                  value={vm.messageDraft}
+                  onChange={vm.setMessageDraft}
+                  onSend={vm.sendMessage}
+                  sending={vm.sending}
+                  placeholder={
+                    vm.isTicketConversation ? "Reply to support ticket..." : "Type a message..."
+                  }
+                />
+              )}
             </>
           ) : (
             <div className="flex items-center justify-center text-muted-foreground">

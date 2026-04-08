@@ -1,11 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Clock, Star, DollarSign, Building2, Search } from "lucide-react";
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     NavigationMenu, NavigationMenuContent, NavigationMenuItem,
     NavigationMenuList, NavigationMenuTrigger,
@@ -13,6 +10,7 @@ import {
 import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
 import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 
 const STATUS_STYLES: Record<string, string> = {
     OPEN:      "bg-green-50 text-green-700",
@@ -48,6 +46,8 @@ export default function VolunteerDashboardPage() {
     //}
 
     const maxHours = Math.max(...chartData, 1);
+
+    const [isTicketModalOpen, setIsTicketModalOpen] = useState(false)
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -285,6 +285,12 @@ export default function VolunteerDashboardPage() {
                 </div>
 
             </main>
+
+            <SubmitTicketModal
+                open={isTicketModalOpen}
+                onClose={() => setIsTicketModalOpen(false)}
+                onSubmitted={(ticket) => router.push(`/volunteer/messages?conversationId=${ticket.conversationId}`)}
+            />
         </div>
     );
 }

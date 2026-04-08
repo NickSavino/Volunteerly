@@ -191,6 +191,7 @@ export default function HomePage() {
         <SubmitTicketModal
             open={isTicketModalOpen}
             onClose={() => setIsTicketModalOpen(false)}
+            onSubmitted={(ticket) => router.push(`/organization/messages?conversationId=${ticket.conversationId}`)}
         />
     </div>
     );

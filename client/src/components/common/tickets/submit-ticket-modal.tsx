@@ -63,27 +63,29 @@ export function SubmitTicketModal({ open, onClose, onSubmitted }: SubmitTicketMo
     setSubmitting(true);
 
     try {
-      const ticket = await TicketService.submitTicket({
-        category,
-        urgencyRating,
-        title: title.trim(),
-        description: description.trim(),
-      });
+        const ticket = await TicketService.submitTicket({
+            category,
+            urgencyRating,
+            title: title.trim(),
+            description: description.trim(),
+        });
 
-      appToast.success("Ticket submitted", {
-        message: "You can follow replies in Messages.",
-      });
+        const shortId = ticket.id.slice(-8).toUpperCase();
 
-      resetForm();
-      onSubmitted?.(ticket);
-      onClose();
+        appToast.success(`Ticket #${shortId} submitted`, {
+            message: "We opened a support thread in Messages. You can continue it there.",
+        });
+
+        resetForm();
+        onSubmitted?.(ticket);
+        onClose();
     } catch (error) {
-      console.error(error);
-      appToast.error("Failed to submit ticket", {
-        message: "Please try again.",
-      });
+        console.error(error);
+        appToast.error("Failed to submit ticket", {
+            message: "Please try again.",
+        });
     } finally {
-      setSubmitting(false);
+        setSubmitting(false);
     }
   }
 
@@ -107,7 +109,8 @@ export function SubmitTicketModal({ open, onClose, onSubmitted }: SubmitTicketMo
     >
       <div className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          Your description becomes the opening message in the support thread.
+            Your description becomes the opening message in the support thread. After you
+            submit, you can track moderator replies in Messages.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2">

@@ -24,33 +24,42 @@ export default function VolunteerMessagesPage() {
           conversations={vm.conversations}
           selectedConversationId={vm.selectedConversationId}
           onSelect={vm.selectConversation}
-          sectionTitle="Current Charities"
+          sectionTitle="Inbox"
         />
 
         <div className="grid h-full min-h-0 grid-rows-[auto_1fr_auto]">
           {vm.selectedConversation ? (
             <>
               <ChatThreadHeader
-                title={vm.headerName ?? "Conversation"}
-                subtitle="Verified Organization"
-                meta="Working on Solar Impact Tracker"
-                avatarFallback={(vm.headerName ?? "CV").slice(0, 2).toUpperCase()}
+                title={vm.threadTitle}
+                subtitle={vm.threadSubtitle}
+                meta={vm.threadMeta}
+                avatarFallback={vm.threadTitle.slice(0, 2).toUpperCase()}
               />
 
-            <div className="min-h-0">
+              <div className="min-h-0">
                 <ChatMessageList
-                    messages={vm.selectedConversation.messages}
-                    currentUserId={vm.currentUserId}
-                    variant="default"
+                  messages={vm.selectedConversation.messages}
+                  currentUserId={vm.currentUserId}
+                  variant={vm.isTicketConversation ? "ticket" : "default"}
                 />
-            </div>
-             
-              <ChatComposer
-                value={vm.messageDraft}
-                onChange={vm.setMessageDraft}
-                onSend={vm.sendMessage}
-                sending={vm.sending}
-              />
+              </div>
+
+              {vm.isClosedTicketConversation ? (
+                <div className="border-t border-border px-4 py-4 text-sm text-muted-foreground">
+                  This ticket is closed. Replies are disabled.
+                </div>
+              ) : (
+                <ChatComposer
+                  value={vm.messageDraft}
+                  onChange={vm.setMessageDraft}
+                  onSend={vm.sendMessage}
+                  sending={vm.sending}
+                  placeholder={
+                    vm.isTicketConversation ? "Reply to support ticket..." : "Type a message..."
+                  }
+                />
+              )}
             </>
           ) : (
             <div className="flex items-center justify-center text-muted-foreground">

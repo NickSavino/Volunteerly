@@ -40,6 +40,7 @@ export async function getChatConversationList(userId: string): Promise<ChatConve
                 id: conversation.id,
                 kind: conversation.kind,
                 ticketId: conversation.ticketId ?? undefined,
+                ticketStatus: conversation.ticket?.status ?? undefined,
                 title: conversation.ticket?.title ?? undefined,
                 otherParticipant: otherParticipant
                     ? {
@@ -75,6 +76,7 @@ export async function getChatConversationDetail(userId: string, conversationId: 
     id: conversation.id,
     kind: conversation.kind,
     ticketId: conversation.ticketId ?? undefined,
+    ticketStatus: conversation.ticket?.status ?? undefined,
     title: conversation.ticket?.title ?? undefined,
     participants: conversation.participants.map((participant) => ({
       userId: participant.user.id,
