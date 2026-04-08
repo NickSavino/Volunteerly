@@ -47,8 +47,8 @@ describe("AuthService", () => {
   });
 
   it("throws when changePassword receives an auth error", async () => {
-    const error = new Error("bad password") as any;
-    updateUser.mockResolvedValueOnce({ error });
+    const error = new Error("bad password");
+    updateUser.mockResolvedValueOnce({ data: { user: null }, error } as unknown as AuthTokenResponsePassword);
 
     await expect(AuthService.changePassword("pw")).rejects.toThrow("bad password");
   });
