@@ -2,6 +2,7 @@ import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 import prettier from "eslint-config-prettier";
 import betterTailwindcss from "eslint-plugin-better-tailwindcss";
+import unusedImports from "eslint-plugin-unused-imports";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
@@ -15,7 +16,23 @@ export default defineConfig([
                 entryPoint: "src/app/globals.css",
             },
         },
+        plugins: {
+            ...betterTailwindcss.configs.recommended.plugins,
+            "unused-imports": unusedImports,
+        },
         rules: {
+            ...betterTailwindcss.configs.recommended.rules,
+            "@typescript-eslint/no-unused-vars": "off",
+            "unused-imports/no-unused-imports": "error",
+            "unused-imports/no-unused-vars": [
+                "warn",
+                {
+                    vars: "all",
+                    varsIgnorePattern: "^_",
+                    args: "after-used",
+                    argsIgnorePattern: "^_",
+                },
+            ],
             "better-tailwindcss/enforce-consistent-line-wrapping": [
                 "warn",
                 {

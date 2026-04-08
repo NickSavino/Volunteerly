@@ -17,8 +17,6 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit",
         "source.organizeImports": "explicit",
-        "source.removeUnused.ts": "explicit",
-        "source.removeUnusedImports": "explicit",
         "source.sort.json": "explicit",
         "source.sortImports": "explicit"
     },
