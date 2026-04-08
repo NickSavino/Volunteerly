@@ -1,6 +1,8 @@
 import { api } from "@/lib/api";
 import {
     CurrentModeratorSchema,
+    ModeratorTicketDetail,
+    ModeratorTicketDetailSchema,
     ModeratorTicketList,
     ModeratorTicketListSchema,
     ModeratorVolunteerDetail,
