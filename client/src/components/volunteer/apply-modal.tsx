@@ -1,3 +1,7 @@
+/**
+ * apply-modal.tsx
+ * Modal dialog for submitting a volunteer application message to an organization
+ */
 "use client";
 
 import { AppModal } from "@/components/common/app-modal";
@@ -10,9 +14,14 @@ type ApplyModalProps = {
     onSubmit: (message: string) => Promise<void>;
 };
 
+/**
+ * Renders a modal with a textarea for the volunteer to write their application message
+ * Validates that the message isn't empty before allowing submission
+ */
 export function ApplyModal({ open, onClose, onSubmit }: ApplyModalProps) {
     const [message, setMessage] = useState("");
     const [submitting, setSubmitting] = useState(false);
+    // Only show the validation error after the user has tried to submit at least once
     const [touched, setTouched] = useState(false);
 
     const isEmpty = message.trim().length === 0;
@@ -23,6 +32,7 @@ export function ApplyModal({ open, onClose, onSubmit }: ApplyModalProps) {
         setSubmitting(true);
         try {
             await onSubmit(message);
+            // Clear the form after a successful submission
             setMessage("");
             setTouched(false);
         } finally {
@@ -31,6 +41,7 @@ export function ApplyModal({ open, onClose, onSubmit }: ApplyModalProps) {
     }
 
     function handleClose() {
+        // Prevent closing while a request is in flight
         if (submitting) return;
         setMessage("");
         setTouched(false);
@@ -91,6 +102,7 @@ export function ApplyModal({ open, onClose, onSubmit }: ApplyModalProps) {
                         ${touched && isEmpty ? "border-destructive" : "border-border"}
                     `}
                 />
+                {/* Validation error - only visible after the first submit attempt */}
                 {touched && isEmpty && (
                     <p className="text-xs text-destructive">
                         Please write a message before applying.
