@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
-import { prisma } from "../lib/prisma.js";
 import type { OpportunityFilters } from "@volunteerly/shared";
+import { prisma } from "../lib/prisma.js";
 
 export async function getCurrentVolunteer(volunteerId: string) {
     const volunteer = await prisma.volunteer.findUnique({
@@ -80,6 +80,13 @@ export async function addProgressUpdate(
     oppId: string,
     input: { title: string; description: string; hoursContributed: number },
 ) {
+    await prisma.opportunity.update({
+        where: { id: oppId },
+        data: {
+            hours: {increment:input.hoursContributed},
+        },
+    });
+
     return prisma.progressUpdate.create({
         data: {
             opportunityId: oppId,

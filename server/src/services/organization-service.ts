@@ -1,9 +1,9 @@
-import { Prisma, OrganizationState, CommitmentLevel, WorkType } from "@prisma/client";
+import { CommitmentLevel, OrganizationState, Prisma, WorkType } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { supabase } from "../lib/supabase.js";
 import { callDocumentAnalysis } from "./azure-service.js";
-import { extractSkillsFromOpportunity } from "./groq-service.js";
 import { embedText } from "./gemini-service.js";
+import { extractSkillsFromOpportunity } from "./groq-service.js";
 
 export async function getCurrentOrganization(orgId: string) {
     const org = await prisma.organization.findUnique({
@@ -481,6 +481,13 @@ export async function createOrgProgressUpdate(
     description: string,
     hoursContributed: number,
 ) {
+    await prisma.opportunity.update({
+        where: { id: oppId },
+        data: {
+            hours: {increment:hoursContributed},
+        },
+    });
+
     const org = await prisma.progressUpdate.create({
         data: {
             opportunityId: oppId,
