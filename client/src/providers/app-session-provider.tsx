@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import {
     CurrentModerator,
     CurrentModeratorSchema,
@@ -20,7 +21,6 @@ import {
     useRef,
     useState,
 } from "react";
-import { api } from "@/lib/api";
 import { useAuth } from "./auth-provider";
 
 type AppSessionContextValue = {
@@ -145,7 +145,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
                 setInitialized(true);
             }
         }
-    }, [authLoading, session?.access_token, clear]);
+    }, [authLoading, session, clear]);
 
     useEffect(() => {
         void refresh();

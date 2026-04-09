@@ -121,8 +121,8 @@ function DropdownMenuCheckboxItem({
         >
             <span
                 className="
-                pointer-events-none absolute left-2 flex size-3.5 items-center justify-center
-            "
+                    pointer-events-none absolute left-2 flex size-3.5 items-center justify-center
+                "
             >
                 <DropdownMenuPrimitive.ItemIndicator>
                     <CheckIcon className="size-4" />
@@ -162,8 +162,8 @@ function DropdownMenuRadioItem({
         >
             <span
                 className="
-                pointer-events-none absolute left-2 flex size-3.5 items-center justify-center
-            "
+                    pointer-events-none absolute left-2 flex size-3.5 items-center justify-center
+                "
             >
                 <DropdownMenuPrimitive.ItemIndicator>
                     <CircleIcon className="size-2 fill-current" />
@@ -187,9 +187,9 @@ function DropdownMenuLabel({
             data-inset={inset}
             className={cn(
                 `
-                px-2 py-1.5 text-sm font-medium
-                data-inset:pl-8
-            `,
+                    px-2 py-1.5 text-sm font-medium
+                    data-inset:pl-8
+                `,
                 className,
             )}
             {...props}

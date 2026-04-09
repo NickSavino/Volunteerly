@@ -45,19 +45,19 @@ export default function ModeratorVolunteersPage() {
         <div className="min-h-screen bg-background">
             <main
                 className="
-                mx-auto max-w-7xl px-4 py-8
-                sm:px-6
-                lg:px-8
-            "
+                    mx-auto max-w-7xl px-4 py-8
+                    sm:px-6
+                    lg:px-8
+                "
             >
                 <ModeratorPageHeader title={page.title} subtitle={page.subtitle} />
 
                 {page.error && (
                     <p
                         className="
-                        mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
-                        text-red-600
-                    "
+                            mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                            text-red-600
+                        "
                     >
                         {page.error}
                     </p>
@@ -109,16 +109,16 @@ export default function ModeratorVolunteersPage() {
                                 >
                                     <div
                                         className="
-                                        flex flex-col gap-6 p-6
-                                        lg:flex-row lg:items-center lg:justify-between
-                                    "
+                                            flex flex-col gap-6 p-6
+                                            lg:flex-row lg:items-center lg:justify-between
+                                        "
                                     >
                                         <div className="flex items-start gap-4">
                                             <div
                                                 className="
-                                                relative size-20 overflow-hidden rounded-full
-                                                bg-gray-100
-                                            "
+                                                    relative size-20 overflow-hidden rounded-full
+                                                    bg-gray-100
+                                                "
                                             >
                                                 {volunteer.avatarUrl ? (
                                                     <Image
@@ -130,9 +130,10 @@ export default function ModeratorVolunteersPage() {
                                                 ) : (
                                                     <div
                                                         className="
-                                                        flex size-full items-center justify-center
-                                                        text-xl font-semibold text-gray-500
-                                                    "
+                                                            flex size-full items-center
+                                                            justify-center text-xl font-semibold
+                                                            text-gray-500
+                                                        "
                                                     >
                                                         {volunteer.firstName[0]}{" "}
                                                         {volunteer.lastName[0]}
@@ -270,9 +271,9 @@ export default function ModeratorVolunteersPage() {
 
                                     <div
                                         className="
-                                        flex flex-wrap items-center gap-3 border-t px-6 py-3 text-sm
-                                        text-gray-600
-                                    "
+                                            flex flex-wrap items-center gap-3 border-t px-6 py-3
+                                            text-sm text-gray-600
+                                        "
                                     >
                                         <span>Past Flags: {volunteer.pastFlagsCount}</span>
                                         <span>&middot;</span>

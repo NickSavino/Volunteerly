@@ -34,23 +34,23 @@ export default function LoginPage() {
             <Navbar></Navbar>
             <main
                 className="
-                flex h-screen flex-col
-                md:h-[calc(100vh-64px)] md:flex-row
-            "
+                    flex h-screen flex-col
+                    md:h-[calc(100vh-64px)] md:flex-row
+                "
             >
                 <div
                     className="
-                    relative hidden h-screen w-full flex-col overflow-hidden
-                    md:flex md:h-full md:w-1/2
-                "
+                        relative hidden h-screen w-full flex-col overflow-hidden
+                        md:flex md:h-full md:w-1/2
+                    "
                 >
                     <img
                         src={tms.src}
                         alt="Preview"
                         className="
-                        h-auto w-full
-                        md:h-full
-                    "
+                            h-auto w-full
+                            md:h-full
+                        "
                     />
                     <div className="absolute inset-0 w-full bg-black/50"></div>
                     <div className="absolute bottom-20 left-12 text-left">
@@ -79,9 +79,9 @@ export default function LoginPage() {
                 </div>
                 <div
                     className="
-                    flex w-full flex-1 items-center justify-center px-8
-                    md:w-1/2 md:justify-around
-                "
+                        flex w-full flex-1 items-center justify-center px-8
+                        md:w-1/2 md:justify-around
+                    "
                 >
                     <Card className="w-full max-w-md">
                         <CardHeader>Log In</CardHeader>

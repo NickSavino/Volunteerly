@@ -21,7 +21,6 @@ export default defineConfig([
             "unused-imports": unusedImports,
         },
         rules: {
-            ...betterTailwindcss.configs.recommended.rules,
             "@typescript-eslint/no-unused-vars": "off",
             "unused-imports/no-unused-imports": "error",
             "unused-imports/no-unused-vars": [
@@ -40,7 +39,7 @@ export default defineConfig([
                     preferSingleLine: false,
                     printWidth: 100,
                     indent: 4,
-                    lineBreakStyle: "windows",
+                    lineBreakStyle: "unix",
                     strictness: "loose",
                 },
             ],

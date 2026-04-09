@@ -83,9 +83,9 @@ export function OpportunityDetailModal({
                     {hasApplied ? (
                         <span
                             className="
-                            flex h-11 min-w-36 items-center justify-center rounded-xl bg-green-100
-                            px-5 text-sm font-semibold text-green-700
-                        "
+                                flex h-11 min-w-36 items-center justify-center rounded-xl
+                                bg-green-100 px-5 text-sm font-semibold text-green-700
+                            "
                         >
                             ✓ Applied
                         </span>
@@ -145,9 +145,9 @@ export function OpportunityDetailModal({
                         {hasApplied && (
                             <span
                                 className="
-                                rounded-full bg-green-100 px-3 py-1 text-sm font-semibold
-                                text-green-700
-                            "
+                                    rounded-full bg-green-100 px-3 py-1 text-sm font-semibold
+                                    text-green-700
+                                "
                             >
                                 ✓ Applied
                             </span>

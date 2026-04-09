@@ -107,9 +107,9 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                     {hasApplied && (
                         <span
                             className="
-                            rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold
-                            text-green-700
-                        "
+                                rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold
+                                text-green-700
+                            "
                         >
                             ✓ Applied
                         </span>

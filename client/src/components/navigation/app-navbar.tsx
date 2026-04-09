@@ -61,9 +61,9 @@ export function AppNavbar({
 
                     <NavigationMenu
                         className="
-                        hidden
-                        md:flex
-                    "
+                            hidden
+                            md:flex
+                        "
                     >
                         <NavigationMenuList className="flex gap-6">
                             {items.map(({ label, href }) => {
@@ -78,7 +78,10 @@ export function AppNavbar({
                                                 hover:text-yellow-500
                                                 ${
                                                     isActive
-                                                        ? "border-b-2 border-yellow-400 text-yellow-500"
+                                                        ? `
+                                                            border-b-2 border-yellow-400
+                                                            text-yellow-500
+                                                        `
                                                         : "text-gray-600"
                                                 }
                                             `}
@@ -123,9 +126,9 @@ export function AppNavbar({
                     <DropdownMenuContent align="end" className="w-56 p-2">
                         <div
                             className="
-                            px-2 py-1.5
-                            md:hidden
-                        "
+                                px-2 py-1.5
+                                md:hidden
+                            "
                         >
                             <p className="truncate text-sm font-medium text-gray-900">
                                 {displayName}

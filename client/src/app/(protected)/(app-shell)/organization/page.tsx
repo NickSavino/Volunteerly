@@ -60,21 +60,21 @@ export default function HomePage() {
             <title>Organization Dashboard - Volunteerly</title>
             <main
                 className="
-                flex flex-col p-6
-                md:h-[calc(100vh-64px)] md:flex-row
-            "
+                    flex flex-col p-6
+                    md:h-[calc(100vh-64px)] md:flex-row
+                "
             >
                 <div
                     className="
-                    max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
-                    md:mb-0 md:w-2/3
-                "
+                        max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                        md:mb-0 md:w-2/3
+                    "
                 >
                     <div
                         className="
-                        items-center justify-between
-                        md:flex
-                    "
+                            items-center justify-between
+                            md:flex
+                        "
                     >
                         <div>
                             <h1 className="text-2x1 font-bold">Welcome, {currentUser?.orgName}</h1>
@@ -134,9 +134,7 @@ export default function HomePage() {
 
                             {opportunities.length === 0 ? (
                                 <CardContent
-                                    className="
-                                    flex h-full flex-col justify-center text-center
-                                "
+                                    className="flex h-full flex-col justify-center text-center"
                                 >
                                     <div className="mb-4 flex justify-center">
                                         <Avatar size="lg">
@@ -161,8 +159,8 @@ export default function HomePage() {
                                                 {opp.status == "OPEN" ? (
                                                     <ItemDescription
                                                         className="
-                                                        flex flex-wrap items-center gap-2
-                                                    "
+                                                            flex flex-wrap items-center gap-2
+                                                        "
                                                     >
                                                         <span className="flex items-center gap-1">
                                                             <Users /> {opp._count?.applications}{" "}
@@ -182,8 +180,8 @@ export default function HomePage() {
                                                 ) : (
                                                     <ItemDescription
                                                         className="
-                                                        flex flex-wrap items-center gap-2
-                                                    "
+                                                            flex flex-wrap items-center gap-2
+                                                        "
                                                     >
                                                         <span className="flex items-center gap-1">
                                                             <PersonStanding />{" "}
@@ -224,9 +222,9 @@ export default function HomePage() {
                 </div>
                 <div
                     className="
-                    mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center space-y-6
-                    md:w-1/3
-                "
+                        mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center space-y-6
+                        md:w-1/3
+                    "
                 >
                     <Card className="mx-5">
                         <CardContent className="text-center">

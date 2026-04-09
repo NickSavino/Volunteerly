@@ -33,9 +33,9 @@ function ToastContent({ id, kind, title, message }: ToastContentProps) {
         >
             <div
                 className={`
-                mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full
-                ${iconBg}
-            `}
+                    mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full
+                    ${iconBg}
+                `}
             >
                 <Icon className="size-4 text-white" />
             </div>

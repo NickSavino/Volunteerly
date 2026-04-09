@@ -87,9 +87,9 @@ export default function OrgProfilePage() {
             <title>Organization Profile - Volunteerly</title>
             <main
                 className="
-                py-5
-                md:h-[calc(100vh-64px)] md:px-10
-            "
+                    py-5
+                    md:h-[calc(100vh-64px)] md:px-10
+                "
             >
                 <Button
                     variant="ghost"
@@ -102,16 +102,16 @@ export default function OrgProfilePage() {
 
                 <div
                     className="
-                    relative mb-6 min-h-48 w-full overflow-hidden rounded-xl bg-gray-800
-                    md:h-40
-                "
+                        relative mb-6 min-h-48 w-full overflow-hidden rounded-xl bg-gray-800
+                        md:h-40
+                    "
                 >
                     <div className="absolute inset-0 bg-linear-to-br from-gray-700 to-gray-900" />
                     <div
                         className="
-                        absolute top-4 left-6 flex items-end gap-4
-                        md:bottom-4
-                    "
+                            absolute top-4 left-6 flex items-end gap-4
+                            md:bottom-4
+                        "
                     >
                         <div className="relative">
                             <Avatar className="size-20">
@@ -147,9 +147,9 @@ export default function OrgProfilePage() {
                             {currentOrg?.causeCategory && (
                                 <span
                                     className="
-                                    inline-flex items-center gap-1 rounded-full bg-yellow-400 px-2.5
-                                    py-0.5 text-xs font-medium text-black
-                                "
+                                        inline-flex items-center gap-1 rounded-full bg-yellow-400
+                                        px-2.5 py-0.5 text-xs font-medium text-black
+                                    "
                                 >
                                     {currentOrg?.causeCategory}
                                 </span>
@@ -222,15 +222,15 @@ export default function OrgProfilePage() {
 
                 <div
                     className="
-                    flex flex-col px-3 pb-6
-                    md:flex-row
-                "
+                        flex flex-col px-3 pb-6
+                        md:flex-row
+                    "
                 >
                     <div
                         className="
-                        max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
-                        md:mb-0 md:w-2/3
-                    "
+                            max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                            md:mb-0 md:w-2/3
+                        "
                     >
                         <Card>
                             <CardHeader>
@@ -288,9 +288,9 @@ export default function OrgProfilePage() {
                                     </Field>
                                     <div
                                         className="
-                                        grid grid-cols-1 gap-4
-                                        md:grid-cols-2
-                                    "
+                                            grid grid-cols-1 gap-4
+                                            md:grid-cols-2
+                                        "
                                     >
                                         <Field>
                                             <Label className="text-lg text-muted-foreground">
@@ -512,9 +512,9 @@ export default function OrgProfilePage() {
                                     <CardTitle className="text-xl">Impact Highlights</CardTitle>
                                     <div
                                         className="
-                                        grid grid-cols-1 gap-4
-                                        md:grid-cols-2
-                                    "
+                                            grid grid-cols-1 gap-4
+                                            md:grid-cols-2
+                                        "
                                     >
                                         {(!currentOrg?.impactHighlights ||
                                             currentOrg?.impactHighlights.length == 0) &&
@@ -528,8 +528,9 @@ export default function OrgProfilePage() {
                                                             <Field key={index}>
                                                                 <Label
                                                                     className="
-                                                                text-lg text-muted-foreground
-                                                            "
+                                                                        text-lg
+                                                                        text-muted-foreground
+                                                                    "
                                                                 >
                                                                     {key}
                                                                 </Label>
@@ -644,9 +645,9 @@ export default function OrgProfilePage() {
                     </div>
                     <div
                         className="
-                        mx-auto size-full max-w-3xl space-y-6
-                        md:w-1/3
-                    "
+                            mx-auto size-full max-w-3xl space-y-6
+                            md:w-1/3
+                        "
                     >
                         <Card className="md:ml-5">
                             <CardHeader>

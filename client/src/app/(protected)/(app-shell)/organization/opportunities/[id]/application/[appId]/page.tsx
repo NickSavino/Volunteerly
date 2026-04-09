@@ -25,19 +25,8 @@ export default function ViewApplicationPage({
     params: Promise<{ id: string; appId: string }>;
 }) {
     const { id, appId } = use(params);
-    const {
-        loading,
-        fetching,
-        session,
-        signOut,
-        router,
-        user,
-        error,
-        matchedSchedule,
-        currentUser,
-        application,
-        selectVolunteer,
-    } = useOppApplicationViewModel(id, appId);
+    const { loading, fetching, session, router, matchedSchedule, application, selectVolunteer } =
+        useOppApplicationViewModel(id, appId);
 
     if (loading || !session || fetching) {
         return <LoadingScreen />;
@@ -49,9 +38,9 @@ export default function ViewApplicationPage({
 
             <main
                 className="
-                flex flex-col p-6
-                md:mx-10 md:flex-row
-            "
+                    flex flex-col p-6
+                    md:mx-10 md:flex-row
+                "
             >
                 <div
                     className="
@@ -76,15 +65,15 @@ export default function ViewApplicationPage({
                         <CardContent>
                             <div
                                 className="
-                                gap-6 text-center
-                                md:grid md:grid-cols-8 md:text-left
-                            "
+                                    gap-6 text-center
+                                    md:grid md:grid-cols-8 md:text-left
+                                "
                             >
                                 <div
                                     className="
-                                    flex justify-center
-                                    md:col-span-2 md:w-full
-                                "
+                                        flex justify-center
+                                        md:col-span-2 md:w-full
+                                    "
                                 >
                                     <Avatar className="h-auto w-20">
                                         <AvatarImage
@@ -99,15 +88,15 @@ export default function ViewApplicationPage({
 
                                 <div
                                     className="
-                                    flex flex-col gap-1
-                                    md:col-span-4
-                                "
+                                        flex flex-col gap-1
+                                        md:col-span-4
+                                    "
                                 >
                                     <div
                                         className="
-                                        gap-3
-                                        md:flex
-                                    "
+                                            gap-3
+                                            md:flex
+                                        "
                                     >
                                         <h3>
                                             {application?.volunteer?.firstName}{" "}
@@ -138,15 +127,15 @@ export default function ViewApplicationPage({
 
                                 <div
                                     className="
-                                    flex flex-col items-center gap-3 pt-3
-                                    md:col-span-2 md:pt-0
-                                "
+                                        flex flex-col items-center gap-3 pt-3
+                                        md:col-span-2 md:pt-0
+                                    "
                                 >
                                     <span
                                         className="
-                                        flex flex-1 items-center justify-center gap-3
-                                        md:justify-start
-                                    "
+                                            flex flex-1 items-center justify-center gap-3
+                                            md:justify-start
+                                        "
                                     >
                                         <MapPin className="text-primary" />
                                         <div className="flex flex-col">
@@ -173,8 +162,8 @@ export default function ViewApplicationPage({
                                                         <span
                                                             key={star}
                                                             className="
-                                                            relative text-2xl leading-none
-                                                        "
+                                                                relative text-2xl leading-none
+                                                            "
                                                         >
                                                             <span className="text-gray-500">★</span>
                                                             <span
@@ -209,11 +198,7 @@ export default function ViewApplicationPage({
                         </CardHeader>
                         {application?.volunteer?.workExperiences?.length === 0 &&
                             application?.volunteer?.educations?.length === 0 && (
-                                <CardContent
-                                    className="
-                                    flex h-full flex-col justify-center text-center
-                                "
-                                >
+                                <CardContent className="flex h-full flex-col justify-center text-center">
                                     <div className="mb-4 flex justify-center">
                                         <Avatar size="lg">
                                             <AvatarImage src={volunteerly_logo.src} />

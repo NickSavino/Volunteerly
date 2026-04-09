@@ -1,8 +1,5 @@
 "use client";
 
-import { X } from "lucide-react";
-import { ReactNode } from "react";
-import { cn } from "@/lib/utils";
 import {
     Dialog,
     DialogClose,
@@ -10,6 +7,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
+import { ReactNode } from "react";
 
 type AppModalProps = {
     open: boolean;
@@ -50,7 +50,7 @@ export function AppModal({
                 )}
             >
                 <DialogHeader className="flex-row items-center justify-between border-b px-6 py-5 text-left">
-                    <div className="item-center flex gap-3">
+                    <div className="flex items-center gap-3">
                         {icon ? <div className="rounded-2xl bg-secondary p-3">{icon}</div> : null}
                         <DialogTitle className="text-[1.75rem] font-extrabold tracking-tight text-foreground">
                             {title}

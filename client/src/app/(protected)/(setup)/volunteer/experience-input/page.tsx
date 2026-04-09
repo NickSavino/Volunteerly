@@ -45,9 +45,9 @@ export default function ExperienceInputPage() {
                 {/* Resume Upload */}
                 <Card
                     className={`
-                    w-full
-                    ${errors.resume ? "border-destructive" : ""}
-                `}
+                        w-full
+                        ${errors.resume ? "border-destructive" : ""}
+                    `}
                 >
                     <CardHeader>
                         <CardTitle className="text-base">Resume Upload – Required</CardTitle>
@@ -93,9 +93,9 @@ export default function ExperienceInputPage() {
                 {/* Work Experience */}
                 <Card
                     className={`
-                    w-full
-                    ${errors.workExperience ? "border-destructive" : ""}
-                `}
+                        w-full
+                        ${errors.workExperience ? "border-destructive" : ""}
+                    `}
                 >
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
@@ -126,9 +126,9 @@ export default function ExperienceInputPage() {
                                 {i > 0 && <hr className="border-muted" />}
                                 <div
                                     className="
-                                    grid grid-cols-1 gap-3
-                                    md:grid-cols-2
-                                "
+                                        grid grid-cols-1 gap-3
+                                        md:grid-cols-2
+                                    "
                                 >
                                     <div className="flex flex-col gap-1">
                                         <Label>Job Title</Label>
@@ -218,9 +218,9 @@ export default function ExperienceInputPage() {
                 {/* Education */}
                 <Card
                     className={`
-                    w-full
-                    ${errors.education ? "border-destructive" : ""}
-                `}
+                        w-full
+                        ${errors.education ? "border-destructive" : ""}
+                    `}
                 >
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>

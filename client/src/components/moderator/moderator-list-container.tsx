@@ -14,9 +14,9 @@ export function ModeratorListContainer({
     return (
         <div
             className={`
-            rounded-b-xl border border-t-0 bg-white shadow-sm
-            ${className ?? ""}
-        `}
+                rounded-b-xl border border-t-0 bg-white shadow-sm
+                ${className ?? ""}
+            `}
         >
             {isEmpty ? (
                 <p className="py-16 text-center text-sm text-gray-400">{emptyMessage}</p>

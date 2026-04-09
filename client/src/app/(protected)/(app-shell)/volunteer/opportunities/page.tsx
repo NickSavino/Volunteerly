@@ -77,8 +77,8 @@ function FiltersContent({
             <div className="mb-6">
                 <p
                     className="
-                    mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                "
+                        mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
+                    "
                 >
                     Roles
                 </p>
@@ -100,8 +100,8 @@ function FiltersContent({
             <div className="mb-6">
                 <p
                     className="
-                    mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                "
+                        mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
+                    "
                 >
                     Engagement
                 </p>
@@ -129,8 +129,8 @@ function FiltersContent({
             <div className="mb-6">
                 <p
                     className="
-                    mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                "
+                        mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase
+                    "
                 >
                     Commitment
                 </p>
@@ -159,8 +159,8 @@ function FiltersContent({
                 <div className="mb-2 flex items-center justify-between">
                     <p
                         className="
-                        text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                    "
+                            text-xs font-semibold tracking-wide text-muted-foreground uppercase
+                        "
                     >
                         Max Hours
                     </p>
@@ -286,9 +286,9 @@ export default function OpportunitiesPage() {
             <div className="flex flex-1 overflow-hidden">
                 <aside
                     className="
-                    hidden w-56 shrink-0 overflow-y-auto border-r bg-card p-5
-                    lg:block
-                "
+                        hidden w-56 shrink-0 overflow-y-auto border-r bg-card p-5
+                        lg:block
+                    "
                 >
                     <p className="mb-5 text-sm font-semibold text-foreground">= Filters</p>
                     <FiltersContent {...filterProps} />
@@ -342,15 +342,15 @@ export default function OpportunitiesPage() {
 
                                     <div
                                         className="
-                                        flex items-center gap-1.5 text-sm text-muted-foreground
-                                    "
+                                            flex items-center gap-1.5 text-sm text-muted-foreground
+                                        "
                                     >
                                         <ArrowUpDown className="size-3.5 shrink-0" />
                                         <span
                                             className="
-                                            hidden
-                                            sm:inline
-                                        "
+                                                hidden
+                                                sm:inline
+                                            "
                                         >
                                             Sort:
                                         </span>
@@ -381,9 +381,9 @@ export default function OpportunitiesPage() {
                         {error && (
                             <div
                                 className="
-                                mx-5 mt-4 rounded-xl border border-destructive/20 bg-destructive/10
-                                px-4 py-2 text-sm text-destructive
-                            "
+                                    mx-5 mt-4 rounded-xl border border-destructive/20
+                                    bg-destructive/10 px-4 py-2 text-sm text-destructive
+                                "
                             >
                                 {error}
                             </div>
@@ -393,9 +393,9 @@ export default function OpportunitiesPage() {
                             {opportunities.length === 0 ? (
                                 <div
                                     className="
-                                    flex h-40 items-center justify-center text-sm
-                                    text-muted-foreground
-                                "
+                                        flex h-40 items-center justify-center text-sm
+                                        text-muted-foreground
+                                    "
                                 >
                                     No opportunities found. Try adjusting your filters.
                                 </div>
@@ -428,9 +428,9 @@ export default function OpportunitiesPage() {
                     >
                         <div
                             className="
-                            h-8 w-0.5 rounded-full bg-muted-foreground/30 transition-colors
-                            group-hover:bg-primary/60
-                        "
+                                h-8 w-0.5 rounded-full bg-muted-foreground/30 transition-colors
+                                group-hover:bg-primary/60
+                            "
                         />
                     </div>
 
@@ -450,9 +450,9 @@ export default function OpportunitiesPage() {
             <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
                 <DialogContent
                     className="
-                    max-h-[85vh] overflow-y-auto
-                    sm:max-w-sm
-                "
+                        max-h-[85vh] overflow-y-auto
+                        sm:max-w-sm
+                    "
                 >
                     <DialogHeader>
                         <DialogTitle>Filters</DialogTitle>
@@ -464,9 +464,9 @@ export default function OpportunitiesPage() {
             <Dialog open={mapOpen} onOpenChange={setMapOpen}>
                 <DialogContent
                     className="
-                    flex h-[80vh] max-w-full flex-col p-0
-                    sm:max-w-2xl
-                "
+                        flex h-[80vh] max-w-full flex-col p-0
+                        sm:max-w-2xl
+                    "
                 >
                     <DialogHeader className="shrink-0 px-4 pt-4 pb-2">
                         <DialogTitle>Map</DialogTitle>

@@ -64,10 +64,10 @@ export default function VolunteerDashboardPage() {
         <div className="min-h-screen bg-gray-50">
             <main
                 className="
-                px=4 mx-auto max-w-7xl py-8
-                sm:px-6
-                lg:px-8
-            "
+                    px=4 mx-auto max-w-7xl py-8
+                    sm:px-6
+                    lg:px-8
+                "
             >
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">Welcome back, {firstName}!</h1>
@@ -76,9 +76,9 @@ export default function VolunteerDashboardPage() {
                 {error && (
                     <p
                         className="
-                        mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
-                        text-red-600
-                    "
+                            mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                            text-red-600
+                        "
                     >
                         {error}
                     </p>
@@ -87,9 +87,9 @@ export default function VolunteerDashboardPage() {
                 {/* KPI Cards */}
                 <div
                     className="
-                    mb-8 grid grid-cols-2 gap-4
-                    lg:grid-cols-4
-                "
+                        mb-8 grid grid-cols-2 gap-4
+                        lg:grid-cols-4
+                    "
                 >
                     <StatCard
                         icon={<Clock className="size-5 text-gray-700" />}
@@ -124,16 +124,16 @@ export default function VolunteerDashboardPage() {
                 {/* Chart + Partner Orgs */}
                 <div
                     className="
-                    mb-6 grid grid-cols-1 gap-6
-                    lg:grid-cols-3
-                "
+                        mb-6 grid grid-cols-1 gap-6
+                        lg:grid-cols-3
+                    "
                 >
                     {/* Contribution Trends */}
                     <div
                         className="
-                        rounded-xl border bg-white p-6 shadow-sm
-                        lg:col-span-2
-                    "
+                            rounded-xl border bg-white p-6 shadow-sm
+                            lg:col-span-2
+                        "
                     >
                         <div className="mb-4 flex items-start justify-between">
                             <div>
@@ -175,14 +175,14 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div
                                             className="
-                                            flex w-full flex-1 flex-col items-center justify-end
-                                        "
+                                                flex w-full flex-1 flex-col items-center justify-end
+                                            "
                                         >
                                             {h > 0 && (
                                                 <span
                                                     className="
-                                                    mb-1 text-xs font-medium text-gray-500
-                                                "
+                                                        mb-1 text-xs font-medium text-gray-500
+                                                    "
                                                 >
                                                     {h % 1 === 0 ? h : h.toFixed(1)}
                                                 </span>
@@ -228,18 +228,18 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div
                                             className="
-                                            flex size-10 shrink-0 items-center justify-center
-                                            rounded-full bg-yellow-100 text-xs font-semibold
-                                            text-yellow-700
-                                        "
+                                                flex size-10 shrink-0 items-center justify-center
+                                                rounded-full bg-yellow-100 text-xs font-semibold
+                                                text-yellow-700
+                                            "
                                         >
                                             {org.orgName.slice(0, 2).toUpperCase()}
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <p
                                                 className="
-                                                truncate text-sm font-medium text-gray-800
-                                            "
+                                                    truncate text-sm font-medium text-gray-800
+                                                "
                                             >
                                                 {org.orgName}
                                             </p>
@@ -292,9 +292,9 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div
                                             className="
-                                            flex size-10 items-center justify-center rounded-full
-                                            bg-yellow-100
-                                        "
+                                                flex size-10 items-center justify-center
+                                                rounded-full bg-yellow-100
+                                            "
                                         >
                                             {org.orgName.slice(0, 2).toUpperCase()}
                                         </div>
@@ -317,9 +317,9 @@ export default function VolunteerDashboardPage() {
                             <thead>
                                 <tr
                                     className="
-                                    border-b text-left text-xs font-medium tracking-wide
-                                    text-gray-400 uppercase
-                                "
+                                        border-b text-left text-xs font-medium tracking-wide
+                                        text-gray-400 uppercase
+                                    "
                                 >
                                     <th className="pr-4 pb-3">Charity</th>
                                     <th className="pr-4 pb-3">Category</th>

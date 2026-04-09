@@ -50,9 +50,9 @@ export default function OpportunityForm({
                 <CardContent className="space-y-3">
                     <div
                         className="
-                        grid grid-cols-1 gap-4
-                        md:grid-cols-2
-                    "
+                            grid grid-cols-1 gap-4
+                            md:grid-cols-2
+                        "
                     >
                         <Field>
                             <Label htmlFor="name">
@@ -131,9 +131,9 @@ export default function OpportunityForm({
 
                     <div
                         className="
-                        grid grid-cols-1 gap-4
-                        md:grid-cols-2
-                    "
+                            grid grid-cols-1 gap-4
+                            md:grid-cols-2
+                        "
                     >
                         <Field>
                             <Label htmlFor="wrkType">
@@ -205,9 +205,9 @@ export default function OpportunityForm({
 
                     <div
                         className="
-                        grid grid-cols-1 gap-4
-                        md:grid-cols-2
-                    "
+                            grid grid-cols-1 gap-4
+                            md:grid-cols-2
+                        "
                     >
                         <Field>
                             <Label htmlFor="length">
@@ -251,9 +251,9 @@ export default function OpportunityForm({
                         </Label>
                         <div
                             className="
-                            w-full gap-2
-                            md:grid md:grid-cols-7
-                        "
+                                w-full gap-2
+                                md:grid md:grid-cols-7
+                            "
                         >
                             {daysOfWeek.map((day) => (
                                 <Toggle

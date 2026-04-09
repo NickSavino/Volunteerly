@@ -75,9 +75,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
         <div className="min-h-screen bg-gray-50">
             <main
                 className="
-                mx-auto max-w-3xl px-4 py-8
-                sm:px-6
-            "
+                    mx-auto max-w-3xl px-4 py-8
+                    sm:px-6
+                "
             >
                 <button
                     onClick={() => vm.router.push("/volunteer")}
@@ -93,9 +93,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 {vm.error && (
                     <p
                         className="
-                        mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm
-                        text-red-600
-                    "
+                            mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm
+                            text-red-600
+                        "
                     >
                         {vm.error}
                     </p>
@@ -105,18 +105,18 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     {isCompleted ? (
                         <span
                             className="
-                            flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs
-                            font-semibold text-green-700
-                        "
+                                flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5
+                                text-xs font-semibold text-green-700
+                            "
                         >
                             <CheckCircle className="size-3.5" /> COMPLETE
                         </span>
                     ) : (
                         <span
                             className="
-                            flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs
-                            font-semibold text-yellow-700
-                        "
+                                flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5
+                                text-xs font-semibold text-yellow-700
+                            "
                         >
                             <TrendingUp className="size-3.5" /> IN PROGRESS
                         </span>
@@ -176,8 +176,8 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                             <div>
                                 <p
                                     className="
-                                    text-xs font-medium tracking-wide text-gray-400 uppercase
-                                "
+                                        text-xs font-medium tracking-wide text-gray-400 uppercase
+                                    "
                                 >
                                     Parent Organization
                                 </p>
@@ -238,9 +238,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                         />
                                         <p
                                             className="
-                                            text-xs font-semibold tracking-wide text-gray-400
-                                            uppercase
-                                        "
+                                                text-xs font-semibold tracking-wide text-gray-400
+                                                uppercase
+                                            "
                                         >
                                             {new Date(update.createdAt)
                                                 .toLocaleDateString("en-US", {
@@ -372,9 +372,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     <div className="flex justify-center">
                         <div
                             className="
-                            flex size-14 items-center justify-center rounded-full border-4
-                            border-yellow-400
-                        "
+                                flex size-14 items-center justify-center rounded-full border-4
+                                border-yellow-400
+                            "
                         >
                             <CheckCircle className="size-7 text-yellow-500" />
                         </div>
@@ -456,9 +456,9 @@ function SkillPickerModal({
             </p>
             <div
                 className="
-                grid max-h-96 grid-cols-2 gap-2 overflow-y-auto pr-1
-                sm:grid-cols-3
-            "
+                    grid max-h-96 grid-cols-2 gap-2 overflow-y-auto pr-1
+                    sm:grid-cols-3
+                "
             >
                 {ALL_SKILLS.map((skill) => (
                     <label

@@ -505,11 +505,8 @@ export function VolunteerDetailModal({
             ) : error ? (
                 <p
                     className="
-
                         rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm
-
                         text-destructive
-
                     "
                 >
                     {error}
@@ -538,10 +535,8 @@ export function VolunteerDetailModal({
                             </p>
                             <p
                                 className="
-
                                     mt-3 w-fit rounded-full bg-secondary px-3 py-1 text-xs
                                     font-semibold tracking-wide uppercase
-
                                 "
                             >
                                 {stateLabel(detail.state)}
@@ -551,11 +546,8 @@ export function VolunteerDetailModal({
 
                     <div
                         className="
-
                             grid gap-4
-
                             md:grid-cols-4
-
                         "
                     >
                         <div className="rounded-xl border p-4">
@@ -601,10 +593,9 @@ export function VolunteerDetailModal({
                                         <span
                                             key={skill}
                                             className="
-
-                                            rounded-full bg-secondary px-3 py-1 text-xs font-medium
-
-                                        "
+                                                rounded-full bg-secondary px-3 py-1 text-xs
+                                                font-medium
+                                            "
                                         >
                                             {skill}
                                         </span>
@@ -648,11 +639,8 @@ export function VolunteerDetailModal({
                             {!hasOpenReport ? (
                                 <p
                                     className="
-
                                         mt-4 rounded-md border border-border bg-secondary/30 px-4
-
                                         py-3 text-sm text-muted-foreground
-
                                     "
                                 >
                                     This investigation is already closed. You can review the
@@ -663,11 +651,8 @@ export function VolunteerDetailModal({
                             {isSuspended ? (
                                 <p
                                     className="
-
                                         mt-4 rounded-md border border-destructive/20
-
                                         bg-destructive/5 px-4 py-3 text-sm text-destructive
-
                                     "
                                 >
                                     This volunteer is already suspended. Additional suspension or

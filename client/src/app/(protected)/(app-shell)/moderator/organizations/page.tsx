@@ -28,19 +28,19 @@ export default function ModeratorOrganizationsPage() {
         <div className="min-h-screen bg-gray-50">
             <main
                 className="
-                mx-auto max-w-7xl px-4 py-8
-                sm:px-6
-                lg:px-8
-            "
+                    mx-auto max-w-7xl px-4 py-8
+                    sm:px-6
+                    lg:px-8
+                "
             >
                 <ModeratorPageHeader title={page.title} subtitle={page.subtitle} />
 
                 {page.error && (
                     <p
                         className="
-                        mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
-                        text-red-600
-                    "
+                            mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                            text-red-600
+                        "
                     >
                         {page.error}
                     </p>
@@ -91,9 +91,9 @@ export default function ModeratorOrganizationsPage() {
                                     <div className="flex items-center gap-4">
                                         <div
                                             className="
-                                            flex size-10 items-center justify-center rounded-full
-                                            bg-secondary
-                                        "
+                                                flex size-10 items-center justify-center
+                                                rounded-full bg-secondary
+                                            "
                                         >
                                             <Building2 className="size-5 text-muted-foreground" />
                                         </div>
@@ -104,9 +104,9 @@ export default function ModeratorOrganizationsPage() {
                                             </p>
                                             <div
                                                 className="
-                                                flex items-center gap-3 text-xs
-                                                text-muted-foreground
-                                            "
+                                                    flex items-center gap-3 text-xs
+                                                    text-muted-foreground
+                                                "
                                             >
                                                 <span>
                                                     Submitted{" "}
@@ -151,9 +151,9 @@ export default function ModeratorOrganizationsPage() {
                                         {org.status === "VERIFIED" && (
                                             <span
                                                 className="
-                                                rounded-full bg-green-100 px-3 py-1 text-xs
-                                                font-medium text-green-700
-                                            "
+                                                    rounded-full bg-green-100 px-3 py-1 text-xs
+                                                    font-medium text-green-700
+                                                "
                                             >
                                                 Approved
                                             </span>
@@ -162,9 +162,9 @@ export default function ModeratorOrganizationsPage() {
                                         {org.status === "REJECTED" && (
                                             <span
                                                 className="
-                                                rounded-full bg-red-100 px-3 py-1 text-xs
-                                                font-medium text-red-700
-                                            "
+                                                    rounded-full bg-red-100 px-3 py-1 text-xs
+                                                    font-medium text-red-700
+                                                "
                                             >
                                                 Rejected
                                             </span>
@@ -173,9 +173,9 @@ export default function ModeratorOrganizationsPage() {
                                         {org.status === "CREATED" && (
                                             <span
                                                 className="
-                                                rounded-full bg-secondary px-3 py-1 text-xs
-                                                font-medium text-muted-foreground
-                                            "
+                                                    rounded-full bg-secondary px-3 py-1 text-xs
+                                                    font-medium text-muted-foreground
+                                                "
                                             >
                                                 Not Applied
                                             </span>
@@ -229,9 +229,9 @@ export default function ModeratorOrganizationsPage() {
                                 ${
                                     review.allChecked
                                         ? `
-                                        bg-primary
-                                        hover:opacity-90
-                                    `
+                                            bg-primary
+                                            hover:opacity-90
+                                        `
                                         : "cursor-not-allowed bg-secondary text-muted-foreground"
                                 }
                             `}
@@ -378,8 +378,8 @@ export default function ModeratorOrganizationsPage() {
                                 <div className="flex gap-4">
                                     <div
                                         className="
-                                        flex flex-col items-center gap-2 rounded-xl border p-4
-                                    "
+                                            flex flex-col items-center gap-2 rounded-xl border p-4
+                                        "
                                     >
                                         <Building2 className="size-8 text-primary" />
                                         <p className="text-xs text-muted-foreground">Document</p>
@@ -434,9 +434,9 @@ export default function ModeratorOrganizationsPage() {
                                 ${
                                     review.rejectionReason.trim()
                                         ? `
-                                        bg-primary
-                                        hover:opacity-90
-                                    `
+                                            bg-primary
+                                            hover:opacity-90
+                                        `
                                         : "cursor-not-allowed bg-secondary text-muted-foreground"
                                 }
                             `}
@@ -452,8 +452,9 @@ export default function ModeratorOrganizationsPage() {
                         <div className="mb-4">
                             <p
                                 className="
-                                text-xs font-semibold tracking-wide text-muted-foreground uppercase
-                            "
+                                    text-xs font-semibold tracking-wide text-muted-foreground
+                                    uppercase
+                                "
                             >
                                 Target Organization
                             </p>

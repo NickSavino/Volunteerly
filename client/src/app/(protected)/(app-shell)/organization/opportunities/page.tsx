@@ -35,16 +35,16 @@ export default function OrgOpportunitiesPage() {
             <title>Organization Opportunities - Volunteerly</title>
             <main
                 className="
-                flex flex-col py-6
-                md:h-[calc(100vh-64px)] md:flex-row md:p-6
-            "
+                    flex flex-col py-6
+                    md:h-[calc(100vh-64px)] md:flex-row md:p-6
+                "
             >
                 <div className="max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6 md:mb-0">
                     <div
                         className="
-                        mx-3 items-center justify-between
-                        md:mx-0 md:flex
-                    "
+                            mx-3 items-center justify-between
+                            md:mx-0 md:flex
+                        "
                     >
                         <div>
                             <h1 className="text-2x1 font-bold">Opportunities</h1>
@@ -76,9 +76,9 @@ export default function OrgOpportunitiesPage() {
                                     <div className="mb-5 w-full border-b border-gray-300">
                                         <TabsList
                                             className="
-                                            flex
-                                            md:w-1/2
-                                        "
+                                                flex
+                                                md:w-1/2
+                                            "
                                             variant="line"
                                         >
                                             <TabsTrigger value="OPEN" className="cursor-pointer">
@@ -96,8 +96,8 @@ export default function OrgOpportunitiesPage() {
                                         {filteredOpportunities.length === 0 ? (
                                             <CardContent
                                                 className="
-                                                flex h-full flex-col justify-center text-center
-                                            "
+                                                    flex h-full flex-col justify-center text-center
+                                                "
                                             >
                                                 <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
@@ -125,8 +125,8 @@ export default function OrgOpportunitiesPage() {
                                                         </ItemTitle>
                                                         <ItemDescription
                                                             className="
-                                                            flex flex-wrap items-center gap-2
-                                                        "
+                                                                flex flex-wrap items-center gap-2
+                                                            "
                                                         >
                                                             <span className="flex items-center gap-1">
                                                                 <Users /> {opp._count?.applications}{" "}
@@ -167,8 +167,8 @@ export default function OrgOpportunitiesPage() {
                                         {filteredOpportunities.length === 0 ? (
                                             <CardContent
                                                 className="
-                                                flex h-full flex-col justify-center text-center
-                                            "
+                                                    flex h-full flex-col justify-center text-center
+                                                "
                                             >
                                                 <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
@@ -195,8 +195,8 @@ export default function OrgOpportunitiesPage() {
                                                         </ItemTitle>
                                                         <ItemDescription
                                                             className="
-                                                            flex flex-wrap items-center gap-2
-                                                        "
+                                                                flex flex-wrap items-center gap-2
+                                                            "
                                                         >
                                                             <span className="flex items-center gap-1">
                                                                 <PersonStanding />{" "}
@@ -236,8 +236,8 @@ export default function OrgOpportunitiesPage() {
                                         {filteredOpportunities.length === 0 ? (
                                             <CardContent
                                                 className="
-                                                flex h-full flex-col justify-center text-center
-                                            "
+                                                    flex h-full flex-col justify-center text-center
+                                                "
                                             >
                                                 <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
@@ -264,8 +264,8 @@ export default function OrgOpportunitiesPage() {
                                                         </ItemTitle>
                                                         <ItemDescription
                                                             className="
-                                                            flex flex-wrap items-center gap-2
-                                                        "
+                                                                flex flex-wrap items-center gap-2
+                                                            "
                                                         >
                                                             <span className="flex items-center gap-1">
                                                                 <PersonStanding />{" "}

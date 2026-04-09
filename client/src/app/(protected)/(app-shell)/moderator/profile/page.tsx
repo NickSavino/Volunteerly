@@ -56,10 +56,10 @@ export default function ModeratorProfilePage() {
 
                 <main
                     className="
-                    mx-auto max-w-6xl px-4 py-10
-                    sm:px-6
-                    lg:px-8
-                "
+                        mx-auto max-w-6xl px-4 py-10
+                        sm:px-6
+                        lg:px-8
+                    "
                 >
                     <div className="mb-8">
                         <h1 className="text-4xl font-bold text-gray-900">Profile</h1>
@@ -68,17 +68,17 @@ export default function ModeratorProfilePage() {
 
                     <div
                         className="
-                        grid grid-cols-1 gap-8
-                        lg:grid-cols-[1fr_0.95fr]
-                    "
+                            grid grid-cols-1 gap-8
+                            lg:grid-cols-[1fr_0.95fr]
+                        "
                     >
                         <div className="space-y-8">
                             <div className="rounded-2xl border bg-white p-8 shadow-sm">
                                 <div
                                     className="
-                                    flex flex-col gap-6
-                                    md:flex-row md:items-center
-                                "
+                                        flex flex-col gap-6
+                                        md:flex-row md:items-center
+                                    "
                                 >
                                     <div className="relative">
                                         <Avatar className="size-32">
@@ -122,8 +122,8 @@ export default function ModeratorProfilePage() {
                                         </h2>
                                         <div
                                             className="
-                                            mt-3 flex items-center gap-2 text-lg text-gray-500
-                                        "
+                                                mt-3 flex items-center gap-2 text-lg text-gray-500
+                                            "
                                         >
                                             <CalendarDays className="size-5" />
                                             <span>Moderator since {memberSince}</span>
@@ -142,9 +142,9 @@ export default function ModeratorProfilePage() {
                                 <div className="space-y-5 p-6">
                                     <div
                                         className="
-                                        grid grid-cols-1 gap-5
-                                        md:grid-cols-2
-                                    "
+                                            grid grid-cols-1 gap-5
+                                            md:grid-cols-2
+                                        "
                                     >
                                         <div className="flex flex-col gap-2">
                                             <Label htmlFor="firstName">First Name</Label>

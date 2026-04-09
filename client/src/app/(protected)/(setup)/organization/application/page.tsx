@@ -71,9 +71,9 @@ export default function OrgApplicationPage() {
                         <h2>{isReadOnly ? "Application Submitted" : "Limited Functionality"}</h2>
                         <p
                             className="
-                            radius-2 my-2 rounded-sm bg-warning p-1 text-center text-sm
-                            text-foreground
-                        "
+                                radius-2 my-2 rounded-sm bg-warning p-1 text-center text-sm
+                                text-foreground
+                            "
                         >
                             {isReadOnly
                                 ? "Your Application has been successfully submitted."
@@ -99,9 +99,9 @@ export default function OrgApplicationPage() {
                         <CardContent className="space-y-3">
                             <div
                                 className="
-                                grid grid-cols-1 gap-4
-                                md:grid-cols-2
-                            "
+                                    grid grid-cols-1 gap-4
+                                    md:grid-cols-2
+                                "
                             >
                                 <Field>
                                     <Label htmlFor="orgName">
@@ -186,9 +186,9 @@ export default function OrgApplicationPage() {
                             </Field>
                             <div
                                 className="
-                                grid grid-cols-1 gap-4
-                                md:grid-cols-3
-                            "
+                                    grid grid-cols-1 gap-4
+                                    md:grid-cols-3
+                                "
                             >
                                 <Field>
                                     <Label htmlFor="city">
@@ -301,9 +301,9 @@ export default function OrgApplicationPage() {
                         <CardContent>
                             <div
                                 className="
-                                grid grid-cols-1 gap-4
-                                md:grid-cols-2
-                            "
+                                    grid grid-cols-1 gap-4
+                                    md:grid-cols-2
+                                "
                             >
                                 <Field>
                                     <Label htmlFor="charityNumber">
@@ -362,9 +362,9 @@ export default function OrgApplicationPage() {
                         <CardContent className="space-y-3">
                             <div
                                 className="
-                                grid grid-cols-1 gap-4
-                                md:grid-cols-2
-                            "
+                                    grid grid-cols-1 gap-4
+                                    md:grid-cols-2
+                                "
                             >
                                 <Field>
                                     <Label htmlFor="contactName">

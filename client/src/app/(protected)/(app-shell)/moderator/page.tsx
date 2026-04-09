@@ -23,10 +23,10 @@ export default function ModeratorDashboardPage() {
         <div className="min-h-screen bg-gray-50">
             <main
                 className="
-                mx-auto max-w-7xl px-4 py-8
-                sm:px-6
-                lg:px-8
-            "
+                    mx-auto max-w-7xl px-4 py-8
+                    sm:px-6
+                    lg:px-8
+                "
             >
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold text-gray-900">
@@ -38,9 +38,9 @@ export default function ModeratorDashboardPage() {
                 {error && (
                     <p
                         className="
-                        mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
-                        text-red-600
-                    "
+                            mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                            text-red-600
+                        "
                     >
                         {error}
                     </p>
@@ -48,9 +48,9 @@ export default function ModeratorDashboardPage() {
 
                 <div
                     className="
-                    mb-8 grid grid-cols-1 gap-4
-                    sm:grid-cols-3
-                "
+                        mb-8 grid grid-cols-1 gap-4
+                        sm:grid-cols-3
+                    "
                 >
                     <ModStatCard
                         icon={Building2}
@@ -63,15 +63,15 @@ export default function ModeratorDashboardPage() {
 
                 <div
                     className="
-                    grid grid-cols-1 gap-6
-                    lg:grid-cols-3
-                "
+                        grid grid-cols-1 gap-6
+                        lg:grid-cols-3
+                    "
                 >
                     <div
                         className="
-                        rounded-xl border bg-white p-6 shadow-sm
-                        lg:col-span-2
-                    "
+                            rounded-xl border bg-white p-6 shadow-sm
+                            lg:col-span-2
+                        "
                     >
                         <div className="mb-4 flex items-start justify-between">
                             <div>
@@ -105,9 +105,9 @@ export default function ModeratorDashboardPage() {
                                         <div className="flex items-center gap-3">
                                             <div
                                                 className="
-                                                flex size-8 items-center justify-center rounded-full
-                                                bg-gray-100
-                                            "
+                                                    flex size-8 items-center justify-center
+                                                    rounded-full bg-gray-100
+                                                "
                                             >
                                                 <Building2 className="size-4 text-gray-500" />
                                             </div>

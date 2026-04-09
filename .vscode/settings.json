@@ -15,13 +15,12 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit",
-        "source.organizeImports": "explicit",
-        "source.sort.json": "explicit",
-        "source.sortImports": "explicit"
+        "source.fixAll.eslint": "always",
+        "source.organizeImports": "explicit"
     },
     "editor.formatOnSave": true,
     "eslint.useFlatConfig": true,
+    "eslint.codeActionsOnSave.rules": ["@typescript-eslint/*"],
     "js/ts.preferences.importModuleSpecifier": "non-relative",
     "tailwindCSS.lint.suggestCanonicalClasses": "ignore"
 }

@@ -20,23 +20,23 @@ export default function LandingPage() {
             <Navbar></Navbar>
             <main
                 className="
-                flex flex-col
-                md:h-[calc(100vh-64px)] md:flex-row
-            "
+                    flex flex-col
+                    md:h-[calc(100vh-64px)] md:flex-row
+                "
             >
                 <div
                     className="
-                    relative flex h-screen w-full flex-col overflow-hidden
-                    md:h-full md:w-1/2
-                "
+                        relative flex h-screen w-full flex-col overflow-hidden
+                        md:h-full md:w-1/2
+                    "
                 >
                     <img
                         src={tms.src}
                         alt="Preview"
                         className="
-                        h-auto w-full
-                        md:h-full
-                    "
+                            h-auto w-full
+                            md:h-full
+                        "
                     />
                     <div className="absolute inset-0 w-full bg-black/50"></div>
                     <div className="absolute bottom-20 left-12 text-left">
@@ -65,9 +65,9 @@ export default function LandingPage() {
                 </div>
                 <div
                     className="
-                    flex size-full flex-col items-center px-8
-                    md:w-1/2
-                "
+                        flex size-full flex-col items-center px-8
+                        md:w-1/2
+                    "
                 >
                     <h1 className="text-4x1 pt-5 text-left font-bold tracking-tight">
                         How It Works?
@@ -76,9 +76,9 @@ export default function LandingPage() {
                         <div className="space-y-0 text-left">
                             <h2
                                 className="
-                                mb-2 flex items-center gap-2 text-xl font-semibold
-                                text-muted-foreground
-                            "
+                                    mb-2 flex items-center gap-2 text-xl font-semibold
+                                    text-muted-foreground
+                                "
                             >
                                 <User className="inline-block" />
                                 For Volunteers
@@ -122,9 +122,9 @@ export default function LandingPage() {
                         <div className="space-y-0 text-left">
                             <h2
                                 className="
-                                mb-2 flex items-center gap-2 text-xl font-semibold
-                                text-muted-foreground
-                            "
+                                    mb-2 flex items-center gap-2 text-xl font-semibold
+                                    text-muted-foreground
+                                "
                             >
                                 <HouseHeart className="inline-block" />
                                 For Organizations

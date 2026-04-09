@@ -86,9 +86,9 @@ export function TicketDetailModal({
         >
             <div
                 className="
-                grid max-h-[78vh] grid-cols-1 overflow-hidden
-                lg:grid-cols-[1.45fr_0.8fr]
-            "
+                    grid max-h-[78vh] grid-cols-1 overflow-hidden
+                    lg:grid-cols-[1.45fr_0.8fr]
+                "
             >
                 <div className="grid min-h-[70vh] grid-rows-[1fr_auto] border-r border-border">
                     {vm.loading && !ticket ? (
@@ -97,9 +97,9 @@ export function TicketDetailModal({
                         <div className="p-6">
                             <p
                                 className="
-                                rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3
-                                text-sm text-destructive
-                            "
+                                    rounded-md border border-destructive/20 bg-destructive/5 px-4
+                                    py-3 text-sm text-destructive
+                                "
                             >
                                 {vm.error}
                             </p>
@@ -116,8 +116,8 @@ export function TicketDetailModal({
                             {isClosed ? (
                                 <div
                                     className="
-                                    border-t border-border p-4 text-sm text-muted-foreground
-                                "
+                                        border-t border-border p-4 text-sm text-muted-foreground
+                                    "
                                 >
                                     This ticket is closed. Replies are disabled.
                                 </div>
@@ -132,8 +132,8 @@ export function TicketDetailModal({
                             ) : (
                                 <div
                                     className="
-                                    border-t border-border p-4 text-sm text-muted-foreground
-                                "
+                                        border-t border-border p-4 text-sm text-muted-foreground
+                                    "
                                 >
                                     Claim this ticket to reply.
                                 </div>
@@ -189,8 +189,9 @@ export function TicketDetailModal({
                                 <div className="grid grid-cols-[auto_1fr]">
                                     <p
                                         className="
-                                        border-r border-b p-4 text-lg font-semibold text-foreground
-                                    "
+                                            border-r border-b p-4 text-lg font-semibold
+                                            text-foreground
+                                        "
                                     >
                                         Category:
                                     </p>
@@ -200,8 +201,9 @@ export function TicketDetailModal({
 
                                     <p
                                         className="
-                                        border-r border-b p-4 text-lg font-semibold text-foreground
-                                    "
+                                            border-r border-b p-4 text-lg font-semibold
+                                            text-foreground
+                                        "
                                     >
                                         Priority:
                                     </p>
@@ -219,8 +221,9 @@ export function TicketDetailModal({
 
                                     <p
                                         className="
-                                        border-r border-b p-4 text-lg font-semibold text-foreground
-                                    "
+                                            border-r border-b p-4 text-lg font-semibold
+                                            text-foreground
+                                        "
                                     >
                                         Time Open:
                                     </p>
@@ -230,8 +233,8 @@ export function TicketDetailModal({
 
                                     <p
                                         className="
-                                        border-r p-4 text-lg font-semibold text-foreground
-                                    "
+                                            border-r p-4 text-lg font-semibold text-foreground
+                                        "
                                     >
                                         Status:
                                     </p>

@@ -45,7 +45,10 @@ export function ChatConversationListItem({
                 "flex w-full items-start gap-3 border-l-4 p-4 text-left transition-colors",
                 active
                     ? "border-l-primary bg-secondary"
-                    : "border-l-transparent hover:bg-secondary/60",
+                    : `
+                        border-l-transparent
+                        hover:bg-secondary/60
+                    `,
             )}
         >
             <Avatar className="size-12 border border-border">

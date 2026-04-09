@@ -43,9 +43,9 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
 
                 <NavigationMenu
                     className="
-                    hidden
-                    md:flex
-                "
+                        hidden
+                        md:flex
+                    "
                 >
                     <NavigationMenuList className="flex gap-6">
                         {NAV_LINKS.map(({ label, href }) => (
@@ -76,9 +76,9 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                                 <div className="flex items-center gap-2">
                                     <div
                                         className="
-                                        hidden text-right
-                                        sm:block
-                                    "
+                                            hidden text-right
+                                            sm:block
+                                        "
                                     >
                                         <p className="text-sm/tight font-semibold text-foreground">
                                             {fullName}

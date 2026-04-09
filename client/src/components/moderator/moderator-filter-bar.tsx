@@ -52,24 +52,25 @@ export function ModeratorFilterBar({
         <div className="mb-4 rounded-xl border bg-card p-4 shadow-sm">
             <div
                 className="
-                flex flex-col gap-4
-                lg:flex-row lg:items-end
-            "
+                    flex flex-col gap-4
+                    lg:flex-row lg:items-end
+                "
             >
                 <div className="min-w-0 flex-1">
                     <label
                         className="
-                        mb-1 block text-xs font-semibold tracking-wide text-muted-foreground
-                        uppercase
-                    "
+                            mb-1 block text-xs font-semibold tracking-wide text-muted-foreground
+                            uppercase
+                        "
                     >
                         {searchLabel}
                     </label>
                     <div className="relative">
                         <Search
                             className="
-                            absolute top-1/2 left-3 h-4 w-max -translate-y-1/2 text-muted-foreground
-                        "
+                                absolute top-1/2 left-3 h-4 w-max -translate-y-1/2
+                                text-muted-foreground
+                            "
                         />
                         <input
                             type="text"
@@ -87,15 +88,15 @@ export function ModeratorFilterBar({
 
                 <div
                     className="
-                    w-full
-                    lg:w-40
-                "
+                        w-full
+                        lg:w-40
+                    "
                 >
                     <label
                         className="
-                        mb-1 block text-xs font-semibold tracking-wide text-muted-foreground
-                        uppercase
-                    "
+                            mb-1 block text-xs font-semibold tracking-wide text-muted-foreground
+                            uppercase
+                        "
                     >
                         {sortLabel}
                     </label>
@@ -117,14 +118,14 @@ export function ModeratorFilterBar({
 
                 <div
                     className="
-                    w-full
-                    lg:w-24
-                "
+                        w-full
+                        lg:w-24
+                    "
                 >
                     <label
                         className="
-                        mb-1 block text-xs font-semibold tracking-wide text-gray-400 uppercase
-                    "
+                            mb-1 block text-xs font-semibold tracking-wide text-gray-400 uppercase
+                        "
                     >
                         {pageSizeLabel}
                     </label>
