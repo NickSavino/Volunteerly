@@ -355,24 +355,25 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             </div>
                                         </span>
                                         <span className="flex flex-1 items-center gap-3">
-                                            <AlarmClockCheck className="size-9" />
-                                            <div className="flex flex-col">
-                                                <span className="text-xs">Availability</span>
-                                                <span>{opportunity?.availability.join(", ")}</span>
-                                            </div>
-                                        </span>
-
-                                        <span className="flex flex-1 items-center gap-3">
                                             <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
-                                                <span>
+                                                <span className="text-sm">
                                                     {opportunity?.commitmentLevel
                                                         .replaceAll("_", " ")
                                                         .toLowerCase()
                                                         .replace(/\b\w/g, (char) =>
                                                             char.toUpperCase(),
                                                         )}
+                                                </span>
+                                            </div>
+                                        </span>
+                                        <span className="flex flex-1 items-center gap-3">
+                                            <AlarmClockCheck className="size-9" />
+                                            <div className="flex flex-col">
+                                                <span className="text-xs">Availability</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.availability.join(", ")}
                                                 </span>
                                             </div>
                                         </span>
@@ -478,6 +479,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                 <Input
                                                                     id="pu-title"
                                                                     name="title"
+                                                                    placeholder="Provide Title Summary"
                                                                     onChange={(e) =>
                                                                         setProgressUpdate((prev) =>
                                                                             prev
@@ -497,6 +499,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                 </Label>
                                                                 <Textarea
                                                                     id="progU-desc"
+                                                                    placeholder="Describe progress in detail"
                                                                     name="description"
                                                                     onChange={(e) =>
                                                                         setProgressUpdate((prev) =>
@@ -519,6 +522,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                     id="progU-hours"
                                                                     type="number"
                                                                     name="hours"
+                                                                    placeholder="Enter # of Hours spent by Volunteer"
                                                                     onChange={(e) =>
                                                                         setProgressUpdate((prev) =>
                                                                             prev

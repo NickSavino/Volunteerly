@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
-import { prisma } from "../lib/prisma.js";
 import type { OpportunityFilters } from "@volunteerly/shared";
+import { prisma } from "../lib/prisma.js";
 
 export async function getCurrentVolunteer(volunteerId: string) {
     const volunteer = await prisma.volunteer.findUnique({
