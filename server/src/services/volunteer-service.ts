@@ -262,14 +262,14 @@ export async function browseOpportunities(filters: OpportunityFilters) {
     });
 }
 
-export async function applyToOpportunity(volId: string, oppId: string, message: string) {
+export async function applyToOpportunity(volId: string, oppId: string, message: string, matchPercentage: number) {
     const existing = await prisma.application.findUnique({
         where: { oppId_volId: { oppId, volId } },
     });
     if (existing) throw new Error("ALREADY_APPLIED");
 
     return prisma.application.create({
-        data: { oppId, volId, message, matchPercentage: 0 },
+        data: { oppId, volId, message, matchPercentage },
     });
 }
 
@@ -317,4 +317,34 @@ export async function getVolunteerSkillCounts(volId: string): Promise<Record<str
         counts[skillName] = (counts[skillName] ?? 0) + 1;
     }
     return counts;
+}
+
+
+export async function getOpportunityMatchScores(userId: string): Promise<Record<string, number>> {
+    const volunteer = await prisma.$queryRaw<{ has_vector: boolean }[]>`
+        SELECT (skill_vector IS NOT NULL) AS has_vector
+        FROM volunteers
+        WHERE id = ${userId}
+        LIMIT 1
+    `;
+
+    const hasVector = volunteer?.[0]?.has_vector ?? false;
+    if (!hasVector) return {};
+
+    const scores = await prisma.$queryRaw<{ id: string; match_pct: number }[]>`
+        SELECT
+            o.id,
+            GREATEST(1, ROUND(CAST((1 - (o.skill_vector <=> v.skill_vector)) * 100 AS NUMERIC), 0)::int) AS match_pct
+        FROM opportunities o, volunteers v
+        WHERE v.id = ${userId}
+          AND v.skill_vector IS NOT NULL
+          AND o.skill_vector IS NOT NULL
+    `;
+
+    const scoreMap: Record<string, number> = {};
+    for (const row of scores) {
+        scoreMap[row.id] = Math.min(100, Math.max(1, Number(row.match_pct)));
+    }
+
+    return scoreMap;
 }
