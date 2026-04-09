@@ -105,7 +105,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                         </div>
 
                         <h2 className="text-2x1 font-bold">
-                            {opportunity?.name} - {opportunity?.workType} - {opportunity?.category}
+                            {opportunity?.name} - {opportunity?.workType.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())} - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
                             <div className="md:flex md:justify-around md:grid md:gap-3 md:grid-cols-2">
@@ -172,7 +172,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <Handshake className="w-9 h-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
-                                                <span className="text-sm">{opportunity?.commitmentLevel}</span>
+                                                <span className="text-sm">{opportunity?.commitmentLevel.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</span>
                                             </div>
                                         </span>
                                     </CardContent>
@@ -286,7 +286,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <Handshake className="w-9 h-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
-                                                <span>{opportunity?.commitmentLevel}</span>
+                                                <span>{opportunity?.commitmentLevel.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</span>
                                             </div>
                                         </span>
                                     </CardContent>

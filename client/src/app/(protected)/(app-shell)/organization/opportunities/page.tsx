@@ -165,7 +165,7 @@ export default function OrgOpportunitiesPage() {
                                                             </span>
 
                                                             <span className="flex items-center gap-1">
-                                                                <Briefcase /> {opp.workType}
+                                                                <Briefcase /> {opp.workType.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}
                                                             </span>
                                                         </ItemDescription>
                                                     </ItemContent>
@@ -216,7 +216,7 @@ export default function OrgOpportunitiesPage() {
                                                             </span>
 
                                                             <span className="flex items-center gap-1">
-                                                                <Briefcase /> {opp.workType}
+                                                                <Briefcase /> {opp.workType.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}
                                                             </span>
                                                         </ItemDescription>
                                                     </ItemContent>
