@@ -145,7 +145,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
                 setInitialized(true);
             }
         }
-    }, [authLoading, session, clear]);
+    }, [authLoading, session?.access_token, clear]);
 
     useEffect(() => {
         void refresh();
