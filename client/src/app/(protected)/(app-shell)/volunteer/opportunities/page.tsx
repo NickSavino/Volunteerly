@@ -32,17 +32,14 @@ const WORK_TYPE_LABELS: Record<WorkTypeFilter, string> = {
 
 const COMMITMENT_LABELS: Record<CommitmentFilter, string> = {
     ALL: "Any",
-    FLEXIBLE: "Flexible",
-    PART_TIME: "Part-Time",
-    FULL_TIME: "Full-Time",
+    FLEXIBLE: "Flexible (2–5 hrs)",
+    PART_TIME: "Part-Time (5–20 hrs)",
+    FULL_TIME: "Full-Time (20+ hrs)",
 };
 
 const SORT_LABELS: Record<SortOption, string> = {
-    RELEVANT: "Relevant",
     MATCH_HIGH: "Best Match",
     MATCH_LOW: "Lowest Match",
-    HOURS_LOW: "Fewest Hours",
-    HOURS_HIGH: "Most Hours",
     NEWEST: "Newest",
 };
 
@@ -57,9 +54,6 @@ function FiltersContent({
     setWorkType,
     commitmentLevel,
     setCommitmentLevel,
-    maxHours,
-    setMaxHours,
-    applyFilters,
     onClose,
 }: {
     selectedCategories: string[];
@@ -68,9 +62,6 @@ function FiltersContent({
     setWorkType: (v: WorkTypeFilter) => void;
     commitmentLevel: CommitmentFilter;
     setCommitmentLevel: (v: CommitmentFilter) => void;
-    maxHours: number;
-    setMaxHours: (v: number) => void;
-    applyFilters: () => void;
     onClose?: () => void;
 }) {
     return (
@@ -132,34 +123,6 @@ function FiltersContent({
                 </div>
             </div>
 
-            <div className="mb-6">
-                <div className="mb-2 flex items-center justify-between">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Max Hours</p>
-                    <span className="text-xs font-semibold text-primary">{maxHours}h/wk</span>
-                </div>
-                <input
-                    type="range"
-                    min={1}
-                    max={40}
-                    value={maxHours}
-                    onChange={(e) => setMaxHours(Number(e.target.value))}
-                    className="w-full accent-yellow-400"
-                />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>1h</span>
-                    <span>40h</span>
-                </div>
-            </div>
-
-            <button
-                onClick={() => {
-                    applyFilters();
-                    onClose?.();
-                }}
-                className="w-full rounded-xl bg-primary py-2 text-sm font-semibold text-foreground hover:opacity-90"
-            >
-                Apply Filters
-            </button>
         </>
     );
 }
@@ -180,14 +143,11 @@ export default function OpportunitiesPage() {
         setWorkType,
         commitmentLevel,
         setCommitmentLevel,
-        maxHours,
-        setMaxHours,
         searchQuery,
         setSearchQuery,
         sortBy,
         setSortBy,
         toggleCategory,
-        applyFilters,
         getMatchPct,
         handleApply,
         applyModalOpen,
@@ -236,9 +196,6 @@ export default function OpportunitiesPage() {
         setWorkType,
         commitmentLevel,
         setCommitmentLevel,
-        maxHours,
-        setMaxHours,
-        applyFilters,
     };
 
     if (loading || !session) {
@@ -269,7 +226,6 @@ export default function OpportunitiesPage() {
                                     placeholder="Search opportunities..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    onKeyDown={(e) => e.key === "Enter" && applyFilters()}
                                     className="hidden rounded-lg border bg-muted px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:block sm:w-56"
                                 />
                                 <div className="flex items-center gap-2">

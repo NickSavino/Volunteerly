@@ -13,9 +13,9 @@ const WORK_TYPE_LABELS: Record<string, string> = {
 };
 
 const COMMITMENT_LABELS: Record<string, string> = {
-    FLEXIBLE: "Flexible",
-    PART_TIME: "Part-Time",
-    FULL_TIME: "Full-Time",
+    FLEXIBLE: "Flexible (2–5 hrs)",
+    PART_TIME: "Part-Time (5–20 hrs)",
+    FULL_TIME: "Full-Time (20+ hrs)",
 };
 
 type OppDetailModalProps = {
@@ -133,7 +133,6 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                    <DetailRow label="Hours / Week" value={`${opp.hours}h`} />
                     <DetailRow label="Length" value={opp.length || "Flexible"} />
                     <DetailRow
                         label="Deadline"
@@ -187,12 +186,6 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                     </div>
                 )}
 
-                {opp.organization?.hqAdr && (
-                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
-                        <span>{opp.organization.hqAdr}</span>
-                    </div>
-                )}
             </div>
         </AppModal>
     );

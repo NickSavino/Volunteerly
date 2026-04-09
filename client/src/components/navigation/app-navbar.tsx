@@ -55,35 +55,33 @@ export function AppNavbar({
 
     return (
         <header className="w-full border-b bg-white px-6 py-3">
-            <div className="flex w-full items-center justify-between gap-6">
-                <div className="flex min-w-0 items-center gap-12">
-                    <Link href={homeHref} className="shrink-0">
-                        <Image src={logo} alt="Volunteerly" width={170} height={40} priority />
-                    </Link>
+            <div className="relative flex w-full items-center justify-between gap-6">
+                <Link href={homeHref} className="shrink-0">
+                    <Image src={logo} alt="Volunteerly" width={170} height={40} priority />
+                </Link>
 
-                    <NavigationMenu className="hidden md:flex">
-                        <NavigationMenuList className="flex gap-6">
-                            {items.map(({ label, href }) => {
-                                const isActive = isNavItemActive(pathname, href);
+                <NavigationMenu className="absolute left-1/2 hidden -translate-x-1/2 md:flex">
+                    <NavigationMenuList className="flex gap-6">
+                        {items.map(({ label, href }) => {
+                            const isActive = isNavItemActive(pathname, href);
 
-                                return (
-                                    <NavigationMenuItem key={href}>
-                                        <Link
-                                            href={href}
-                                            className={`text-sm font-medium transition-colors hover:text-yellow-500 ${
-                                                isActive
-                                                    ? "border-b-2 border-yellow-400 text-yellow-500"
-                                                    : "text-gray-600"
-                                            }`}
-                                        >
-                                            {label}
-                                        </Link>
-                                    </NavigationMenuItem>
-                                );
-                            })}
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                </div>
+                            return (
+                                <NavigationMenuItem key={href}>
+                                    <Link
+                                        href={href}
+                                        className={`text-sm font-medium transition-colors hover:text-yellow-500 ${
+                                            isActive
+                                                ? "border-b-2 border-yellow-400 text-yellow-500"
+                                                : "text-gray-600"
+                                        }`}
+                                    >
+                                        {label}
+                                    </Link>
+                                </NavigationMenuItem>
+                            );
+                        })}
+                    </NavigationMenuList>
+                </NavigationMenu>
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
