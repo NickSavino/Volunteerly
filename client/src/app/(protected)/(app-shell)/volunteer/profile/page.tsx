@@ -371,12 +371,14 @@ export default function ProfilePage() {
 
                                 <div className="flex flex-col gap-2">
                                     <Label>Preferred Availability</Label>
-                                    <div className="
+                                    <div
+                                        className="
                                         grid grid-cols-1
                                         sm:grid-cols-3
                                         md:grid-cols-7
                                         gap-1
-                                    ">
+                                    "
+                                    >
                                         {DAYS.map((day) => (
                                             <Toggle
                                                 key={day}

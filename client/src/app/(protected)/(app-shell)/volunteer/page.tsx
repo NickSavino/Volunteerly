@@ -58,10 +58,12 @@ export default function VolunteerDashboardPage() {
                 "
             >
                 <div className="mb-8">
-                    <h1 className="
+                    <h1
+                        className="
                         text-2xl font-bold text-gray-900 pl-2
                         md:pl-0
-                    ">
+                    "
+                    >
                         Welcome back, {firstName}!
                     </h1>
                 </div>
@@ -219,11 +221,13 @@ export default function VolunteerDashboardPage() {
                                             router.push(`/volunteer/organizations/${org.id}`)
                                         }
                                     >
-                                        <div className="
+                                        <div
+                                            className="
                                             cursor-pointer flex size-10 shrink-0 items-center
                                             justify-center rounded-full bg-yellow-100 text-xs
                                             font-semibold text-yellow-700
-                                        ">
+                                        "
+                                        >
                                             <Avatar className="size-12">
                                                 <AvatarImage
                                                     src={UserService.getAvatarURL(org?.id || "")}
@@ -234,9 +238,11 @@ export default function VolunteerDashboardPage() {
                                             </Avatar>
                                         </div>
                                         <div className="cursor-pointer min-w-0 flex-1">
-                                            <p className="
+                                            <p
+                                                className="
                                                 truncate text-sm font-medium text-gray-800
-                                            ">
+                                            "
+                                            >
                                                 {org.orgName}
                                             </p>
                                         </div>
@@ -288,10 +294,12 @@ export default function VolunteerDashboardPage() {
                                             router.push(`/volunteer/organizations/${org.id}`);
                                         }}
                                     >
-                                        <div className="
+                                        <div
+                                            className="
                                             size-10 rounded-full bg-yellow-100 flex items-center
                                             justify-center
-                                        ">
+                                        "
+                                        >
                                             <Avatar className="size-10">
                                                 <AvatarImage
                                                     src={UserService.getAvatarURL(org?.id || "")}

@@ -381,17 +381,21 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
 
                                 <Card className="mb-5">
                                     <CardContent>
-                                        <div className="
+                                        <div
+                                            className="
                                             text-center
                                             md:text-left md:grid md:grid-cols-8
                                             gap-6
-                                        ">
-                                            <div className="
+                                        "
+                                        >
+                                            <div
+                                                className="
                                                 flex
                                                 md:w-full
                                                 justify-center
                                                 md:col-span-2
-                                            ">
+                                            "
+                                            >
                                                 <Avatar className="h-auto w-20">
                                                     <AvatarImage
                                                         src={UserService.getAvatarURL(
