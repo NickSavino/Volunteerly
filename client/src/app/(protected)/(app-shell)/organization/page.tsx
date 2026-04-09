@@ -133,9 +133,7 @@ export default function HomePage() {
                             </CardHeader>
 
                             {opportunities.length === 0 ? (
-                                <CardContent
-                                    className="flex h-full flex-col justify-center text-center"
-                                >
+                                <CardContent className="flex h-full flex-col justify-center text-center">
                                     <div className="mb-4 flex justify-center">
                                         <Avatar size="lg">
                                             <AvatarImage src={volunteerly_logo.src} />

@@ -11,6 +11,7 @@ export default defineConfig([
     {
         ...betterTailwindcss.configs.recommended,
         files: ["src/**/*.{js,jsx,ts,tsx}"],
+        ignores: ["src/components/ui/**"],
         settings: {
             "better-tailwindcss": {
                 entryPoint: "src/app/globals.css",

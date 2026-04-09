@@ -22,5 +22,6 @@
     "eslint.useFlatConfig": true,
     "eslint.codeActionsOnSave.rules": ["@typescript-eslint/*"],
     "js/ts.preferences.importModuleSpecifier": "non-relative",
-    "tailwindCSS.lint.suggestCanonicalClasses": "ignore"
+    "tailwindCSS.lint.suggestCanonicalClasses": "ignore",
+    "files.eol": "\n"
 }

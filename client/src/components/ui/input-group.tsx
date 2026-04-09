@@ -68,8 +68,7 @@ const inputGroupAddonVariants = cva(
     {
         variants: {
             align: {
-                "inline-start":
-                    `
+                "inline-start": `
                         order-first pl-3
                         has-[>button]:ml-[-0.45rem]
                         has-[>kbd]:ml-[-0.35rem]

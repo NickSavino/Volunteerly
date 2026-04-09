@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { AppModal } from "@/components/common/app-modal";
+import { useState } from "react";
 
 type ApplyModalProps = {
     open: boolean;
@@ -10,7 +10,7 @@ type ApplyModalProps = {
     onSubmit: (message: string) => Promise<void>;
 };
 
-export function ApplyModal({ open, oppName, onClose, onSubmit }: ApplyModalProps) {
+export function ApplyModal({ open, onClose, onSubmit }: ApplyModalProps) {
     const [message, setMessage] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [touched, setTouched] = useState(false);
