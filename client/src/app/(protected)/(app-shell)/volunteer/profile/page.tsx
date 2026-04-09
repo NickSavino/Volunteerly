@@ -177,7 +177,7 @@ export default function ProfilePage() {
                                 <p className="font-semibold text-gray-800">Technical Issues?</p>
                             </div>
                             <Button
-                                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
+                                className="cursor-pointer w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
                                 onClick={() => setIsTicketModalOpen(true)}
                             >
                                 Submit a Ticket

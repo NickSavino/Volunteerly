@@ -346,14 +346,14 @@ export default function OrgApplicationPage() {
                         </CardContent>
 
                         <div className="px-6 pb-6">
-                            <Button type="submit" disabled={isReadOnly || submitting} className="w-full pointer-cursor">
+                            <Button type="submit" disabled={isReadOnly || submitting} className="cursor-pointer w-full">
                                 {submitting ? "Submitting..." : "Submit"}
                             </Button>
                         </div>
                     </form>
                     {isReadOnly && (
                         <div className="px-6 pb-6">
-                            <Button type="button" onClick={viewSubmittedDoc} className="w-full pointer-cursor">
+                            <Button type="button" onClick={viewSubmittedDoc} className="w-full cursor-pointer">
                                 View Submitted Document
                             </Button>
                         </div>
