@@ -98,10 +98,10 @@ export function SubmitTicketModal({ open, onClose, onSubmitted }: SubmitTicketMo
             maxWidthClassName="sm:max-w-xl"
             footer={
                 <>
-                    <Button type="button" variant="outline" onClick={handleClose} disabled={submitting}>
+                    <Button className="cursor-pointer" type="button" variant="outline" onClick={handleClose} disabled={submitting}>
                         Cancel
                     </Button>
-                    <Button type="button" onClick={handleSubmit} disabled={submitting}>
+                    <Button className="cursor-pointer" type="button" onClick={handleSubmit} disabled={submitting}>
                         {submitting ? "Submitting..." : "Submit Ticket"}
                     </Button>
                 </>
