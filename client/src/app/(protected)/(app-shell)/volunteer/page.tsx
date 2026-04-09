@@ -60,9 +60,9 @@ export default function VolunteerDashboardPage() {
                 <div className="mb-8">
                     <h1
                         className="
-                        text-2xl font-bold text-gray-900 pl-2
-                        md:pl-0
-                    "
+                            text-2xl font-bold text-gray-900 pl-2
+                            md:pl-0
+                        "
                     >
                         Welcome back, {firstName}!
                     </h1>
@@ -223,10 +223,10 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div
                                             className="
-                                            cursor-pointer flex size-10 shrink-0 items-center
-                                            justify-center rounded-full bg-yellow-100 text-xs
-                                            font-semibold text-yellow-700
-                                        "
+                                                cursor-pointer flex size-10 shrink-0 items-center
+                                                justify-center rounded-full bg-yellow-100 text-xs
+                                                font-semibold text-yellow-700
+                                            "
                                         >
                                             <Avatar className="size-12">
                                                 <AvatarImage
@@ -240,8 +240,8 @@ export default function VolunteerDashboardPage() {
                                         <div className="cursor-pointer min-w-0 flex-1">
                                             <p
                                                 className="
-                                                truncate text-sm font-medium text-gray-800
-                                            "
+                                                    truncate text-sm font-medium text-gray-800
+                                                "
                                             >
                                                 {org.orgName}
                                             </p>
@@ -296,9 +296,9 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div
                                             className="
-                                            size-10 rounded-full bg-yellow-100 flex items-center
-                                            justify-center
-                                        "
+                                                size-10 rounded-full bg-yellow-100 flex items-center
+                                                justify-center
+                                            "
                                         >
                                             <Avatar className="size-10">
                                                 <AvatarImage

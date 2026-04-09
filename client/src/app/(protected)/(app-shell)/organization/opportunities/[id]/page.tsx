@@ -383,18 +383,18 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                     <CardContent>
                                         <div
                                             className="
-                                            text-center
-                                            md:text-left md:grid md:grid-cols-8
-                                            gap-6
-                                        "
+                                                text-center
+                                                md:text-left md:grid md:grid-cols-8
+                                                gap-6
+                                            "
                                         >
                                             <div
                                                 className="
-                                                flex
-                                                md:w-full
-                                                justify-center
-                                                md:col-span-2
-                                            "
+                                                    flex
+                                                    md:w-full
+                                                    justify-center
+                                                    md:col-span-2
+                                                "
                                             >
                                                 <Avatar className="h-auto w-20">
                                                     <AvatarImage

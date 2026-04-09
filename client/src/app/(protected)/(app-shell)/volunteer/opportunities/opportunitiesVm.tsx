@@ -130,8 +130,7 @@ export function useOpportunitiesViewModel() {
                 }
 
                 // Filter by the volunteer's availability - only show opps on days they can work
-                const userAvailability =
-                    volunteer?.availability ?? currentVolunteer?.availability ?? [];
+                const userAvailability = volunteer?.availability ?? [];
                 if (userAvailability.length > 0) {
                     filtered = filtered.filter((opp) =>
                         opp.availability?.some((day) => userAvailability.includes(day)),
