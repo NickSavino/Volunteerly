@@ -118,7 +118,7 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                         e.stopPropagation();
                         onClick();
                     }}
-                    className="rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-foreground hover:opacity-90 transition-opacity"
+                    className="cursor-pointer rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-foreground hover:opacity-90 transition-opacity"
                 >
                     View Details
                 </button>
