@@ -80,15 +80,28 @@ export async function addProgressUpdate(
     oppId: string,
     input: { title: string; description: string; hoursContributed: number },
 ) {
-    return prisma.progressUpdate.create({
-        data: {
-            opportunityId: oppId,
-            senderId: userId,
-            senderRole: "VOLUNTEER",
-            title: input.title,
-            description: input.description,
-            hoursContributed: input.hoursContributed,
-        },
+    return prisma.$transaction(async (tx) => {
+        const update = await tx.progressUpdate.create({
+            data: {
+                opportunityId: oppId,
+                senderId: userId,
+                senderRole: "VOLUNTEER",
+                title: input.title,
+                description: input.description,
+                hoursContributed: input.hoursContributed,
+            },
+        });
+
+        await tx.opportunity.update({
+            where: { id: oppId },
+            data: {
+                hours: {
+                    increment: input.hoursContributed,
+                },
+            },
+        });
+
+        return update;
     });
 }
 
