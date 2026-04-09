@@ -66,7 +66,7 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                 <>
                     <button
                         onClick={onClose}
-                        className="h-11 min-w-28 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary"
+                        className="cursor-pointer h-11 min-w-28 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary"
                     >
                         Close
                     </button>
@@ -77,7 +77,7 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                     ) : (
                         <button
                             onClick={onApply}
-                            className="h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90"
+                            className="cursor-pointer h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90"
                         >
                             Apply Now
                         </button>
