@@ -1,19 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import avtImg from "@/assets/avatarImg.png";
+import volunteerly_logo from "@/assets/volunteerly_logo.png";
 import { AppModal } from "@/components/common/app-modal";
-import {
-    Calendar,
-    CalendarX,
-    AlarmClockCheck,
-    Handshake,
-    ArrowLeft,
-    MessageCircleMore,
-    UserStar,
-    CircleDollarSign,
-    Clock4,
-    User,
-} from "lucide-react";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { OrgStatCard } from "@/components/custom/org_stat_card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardAction,
@@ -22,22 +16,6 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { OrgStatCard } from "@/components/custom/org_stat_card";
-import {
-    Item,
-    ItemActions,
-    ItemContent,
-    ItemDescription,
-    ItemMedia,
-    ItemTitle,
-} from "@/components/ui/item";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import avtImg from "@/assets/avatarImg.png";
-import volunteerly_logo from "@/assets/volunteerly_logo.png";
-import { use } from "react";
-import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
 import {
     Dialog,
     DialogClose,
@@ -48,11 +26,33 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import {
+    Item,
+    ItemActions,
+    ItemContent,
+    ItemDescription,
+    ItemMedia,
+    ItemTitle,
+} from "@/components/ui/item";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { LoadingScreen } from "@/components/common/loading-screen";
 import { UserService } from "@/services/UserService";
+import {
+    AlarmClockCheck,
+    ArrowLeft,
+    Calendar,
+    CalendarX,
+    CircleDollarSign,
+    Clock4,
+    Handshake,
+    MessageCircleMore,
+    User,
+    UserStar,
+} from "lucide-react";
+import Image from "next/image";
+import { use, useState } from "react";
+import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
 
 export default function ViewOpportunityPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -60,11 +60,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
         loading,
         fetching,
         session,
-        signOut,
         router,
-        user,
-        error,
-        currentUser,
         opportunity,
         applications,
         completeOpportunity,
@@ -95,7 +91,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                 >
                     <div
                         className="
-                            max-w-3x1 mx-auto mb-5 mb-10 flex min-h-full w-full flex-col gap-6
+                            mx-auto mb-10 flex min-h-full w-full flex-col gap-6
                             md:mb-0 md:w-3/4
                         "
                     >
@@ -122,15 +118,11 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             </div>
                         </div>
 
-                        <h2 className="text-2x1 font-bold">
+                        <h2 className="font-bold">
                             {opportunity?.name} - {opportunity?.workType} - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
-                            <div
-                                className="
-                                    md:flex md:grid md:grid-cols-2 md:justify-around md:gap-3
-                                "
-                            >
+                            <div className="md:grid md:grid-cols-2 md:justify-around md:gap-3">
                                 <OrgStatCard
                                     icon={Clock4}
                                     label="Hours Spent"
@@ -269,7 +261,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                         </Avatar>
                                                     </ItemMedia>
                                                     <ItemContent>
-                                                        <ItemTitle className="text-md">
+                                                        <ItemTitle>
                                                             {app.volunteer?.firstName}{" "}
                                                             {app.volunteer?.lastName}
                                                         </ItemTitle>
@@ -386,9 +378,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                     md:col-span-2 md:w-full
                                                 "
                                             >
-                                                <img
+                                                <Image
                                                     src={avtImg.src}
                                                     className="w-22 rounded-lg object-cover"
+                                                    height={10}
+                                                    width={10}
+                                                    alt=""
                                                 />
                                             </div>
 

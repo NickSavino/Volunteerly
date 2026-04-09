@@ -1,21 +1,17 @@
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { use } from "react";
 import { useCreateOpportunityViewModel } from "../../create/orgCreateOpportunityVm";
 import OpportunityForm from "../../opportunityForm";
-import { use } from "react";
 
 export default function OppUpdatePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const {
         loading,
-        error,
         submitting,
-        currentOrg,
-        router,
         opportunity,
         setOpportunity,
-        signOut,
         handleSubmit,
         deadlineDate,
         handleDayToggle,
