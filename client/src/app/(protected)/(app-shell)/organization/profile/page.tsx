@@ -1,10 +1,15 @@
 "use client";
 
-import { LoadingScreen } from "@/components/common/loading-screen";
-import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
-import { getAvatarFallback } from "@/components/navigation/nav-utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import {
+    MessageCircleQuestionMark,
+    ArrowLeft,
+    Pencil,
+    Trophy,
+    Rocket,
+    ShieldCheck,
+    LucideIcon,
+    Award,
+} from "lucide-react";
 import {
     Card,
     CardAction,
@@ -14,8 +19,11 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useOrgProfileViewModel } from "./orgProfileVm";
 import { Field } from "@/components/ui/field";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
     InputGroup,
@@ -23,7 +31,7 @@ import {
     InputGroupInput,
     InputGroupText,
 } from "@/components/ui/input-group";
-import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
     Select,
     SelectContent,
@@ -31,20 +39,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { UserService } from "@/services/UserService";
-import {
-    ArrowLeft,
-    Award,
-    LucideIcon,
-    MessageCircleQuestionMark,
-    Pencil,
-    Rocket,
-    ShieldCheck,
-    Trophy,
-} from "lucide-react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 import { useState } from "react";
-import { useOrgProfileViewModel } from "./orgProfileVm";
 
 const awardIcons: Record<string, LucideIcon> = {
     "First Step": Rocket,
@@ -57,6 +57,7 @@ export default function OrgProfilePage() {
         loading,
         session,
         fetching,
+        signOut,
         router,
         currentOrg,
         setCurrentOrg,
@@ -227,7 +228,7 @@ export default function OrgProfilePage() {
                 >
                     <div
                         className="
-                            max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                            max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
                             md:mb-0 md:w-2/3
                         "
                     >
@@ -263,7 +264,9 @@ export default function OrgProfilePage() {
                                             Mission Statement
                                         </Label>
                                         {!editing ? (
-                                            <Label>{currentOrg?.missionStatement}</Label>
+                                            <Label className="text-md">
+                                                {currentOrg?.missionStatement}
+                                            </Label>
                                         ) : (
                                             <Textarea
                                                 id="mission_statement"
@@ -294,7 +297,9 @@ export default function OrgProfilePage() {
                                                 Cause Category
                                             </Label>
                                             {!editing ? (
-                                                <Label>{currentOrg?.causeCategory}</Label>
+                                                <Label className="text-md">
+                                                    {currentOrg?.causeCategory}
+                                                </Label>
                                             ) : (
                                                 <Input
                                                     id="causeCategory"
@@ -320,7 +325,7 @@ export default function OrgProfilePage() {
                                                 Website
                                             </Label>
                                             {!editing ? (
-                                                <Label>
+                                                <Label className="text-md">
                                                     <a
                                                         href={currentOrg?.website}
                                                         className="
@@ -362,7 +367,7 @@ export default function OrgProfilePage() {
                                             Address
                                         </Label>
                                         {!editing ? (
-                                            <Label>{currentOrg?.hqAdr}</Label>
+                                            <Label className="text-md">{currentOrg?.hqAdr}</Label>
                                         ) : (
                                             <div className="space-y-3">
                                                 <Field>
@@ -529,7 +534,9 @@ export default function OrgProfilePage() {
                                                                 >
                                                                     {key}
                                                                 </Label>
-                                                                <Label>{value as string}</Label>
+                                                                <Label className="text-md">
+                                                                    {value as string}
+                                                                </Label>
                                                             </Field>
                                                         );
                                                     },
@@ -679,7 +686,9 @@ export default function OrgProfilePage() {
                                 <Button
                                     onClick={() => setIsTicketModalOpen(true)}
                                     variant="ghost"
-                                    className="flex w-full cursor-pointer items-center gap-3 py-6"
+                                    className="
+                                        text-md flex w-full cursor-pointer items-center gap-3 py-6
+                                    "
                                 >
                                     <MessageCircleQuestionMark className="size-7! shrink-0" />
                                     Contact Support
