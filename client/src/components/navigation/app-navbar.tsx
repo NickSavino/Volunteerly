@@ -5,8 +5,10 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
     NavigationMenu,
+    NavigationMenuContent,
     NavigationMenuItem,
     NavigationMenuList,
+    NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
@@ -53,86 +55,59 @@ export function AppNavbar({
 
     return (
         <header className="w-full border-b bg-white px-6 py-3">
-            <div className="flex w-full items-center justify-between gap-6">
-                <div className="flex min-w-0 items-center gap-12">
-                    <Link href={homeHref} className="shrink-0">
-                        <Image src={logo} alt="Volunteerly" width={170} height={40} priority />
-                    </Link>
+            <div className="relative flex w-full items-center justify-between gap-6">
+                <Link href={homeHref} className="shrink-0">
+                    <Image src={logo} alt="Volunteerly" width={170} height={40} priority />
+                </Link>
 
-                    <NavigationMenu
-                        className="
-                            hidden
-                            md:flex
-                        "
-                    >
-                        <NavigationMenuList className="flex gap-6">
-                            {items.map(({ label, href }) => {
-                                const isActive = isNavItemActive(pathname, href);
+                <NavigationMenu className="absolute left-1/2 hidden -translate-x-1/2 md:flex">
+                    <NavigationMenuList className="flex gap-6">
+                        {items.map(({ label, href }) => {
+                            const isActive = isNavItemActive(pathname, href);
 
-                                return (
-                                    <NavigationMenuItem key={href}>
-                                        <Link
-                                            href={href}
-                                            className={`
-                                                text-sm font-medium transition-colors
-                                                hover:text-yellow-500
-                                                ${
-                                                    isActive
-                                                        ? `
-                                                            border-b-2 border-yellow-400
-                                                            text-yellow-500
-                                                        `
-                                                        : "text-gray-600"
-                                                }
-                                            `}
-                                        >
-                                            {label}
-                                        </Link>
-                                    </NavigationMenuItem>
-                                );
-                            })}
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                </div>
+                            return (
+                                <NavigationMenuItem key={href}>
+                                    <Link
+                                        href={href}
+                                        className={`text-sm font-medium transition-colors hover:text-yellow-500 ${
+                                            isActive
+                                                ? "border-b-2 border-yellow-400 text-yellow-500"
+                                                : "text-gray-600"
+                                        }`}
+                                    >
+                                        {label}
+                                    </Link>
+                                </NavigationMenuItem>
+                            );
+                        })}
+                    </NavigationMenuList>
+                </NavigationMenu>
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <button
                             type="button"
-                            className="
-                                flex min-w-55 items-center justify-between gap-3 rounded-full
-                                bg-yellow-50 px-4 py-2 text-left transition-colors
-                                hover:bg-yellow-100
-                            "
+                            className="flex min-w-55 items-center justify-between gap-3 rounded-full bg-yellow-50 px-4 py-2 text-left transition-colors hover:bg-yellow-100"
                         >
                             <div className="flex min-w-0 items-center gap-3">
                                 <div className="min-w-0">
-                                    <p className="truncate text-sm font-medium text-yellow-600">
-                                        {displayName}
-                                    </p>
+                                    <p className="truncate text-sm font-medium text-yellow-600">{displayName}</p>
                                     <p className="truncate text-sm text-gray-400">{subtitle}</p>
                                 </div>
 
-                                <Avatar className="size-9">
+                                <Avatar className="h-9 w-9">
                                     <AvatarImage src={avatarUrl ?? undefined} />
                                     <AvatarFallback>{avatarFallback}</AvatarFallback>
                                 </Avatar>
                             </div>
 
-                            <ChevronDown className="size-4 text-gray-500" />
+                            <ChevronDown className="h-4 w-4 text-gray-500" />
                         </button>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end" className="w-56 p-2">
-                        <div
-                            className="
-                                px-2 py-1.5
-                                md:hidden
-                            "
-                        >
-                            <p className="truncate text-sm font-medium text-gray-900">
-                                {displayName}
-                            </p>
+                        <div className="px-2 py-1.5 md:hidden">
+                            <p className="truncate text-sm font-medium text-gray-900">{displayName}</p>
                             <p className="truncate text-xs text-gray-500">{subtitle}</p>
                         </div>
 
@@ -143,12 +118,7 @@ export function AppNavbar({
 
                                 return (
                                     <DropdownMenuItem key={href} asChild>
-                                        <Link
-                                            href={href}
-                                            className={
-                                                isActive ? "font-medium text-yellow-600" : ""
-                                            }
-                                        >
+                                        <Link href={href} className={isActive ? "text-yellow-600 font-medium" : ""}>
                                             {label}
                                         </Link>
                                     </DropdownMenuItem>
