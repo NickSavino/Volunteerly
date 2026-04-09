@@ -1,10 +1,13 @@
 "use client";
 
-import { MapPin, Clock, Building2 } from "lucide-react";
+import { MapPin, Clock, Building2, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AppModal } from "@/components/common/app-modal";
 import { cn } from "@/lib/utils";
 import type { Opportunity } from "@volunteerly/shared";
+import { UserService } from "@/services/UserService";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { getAvatarFallback } from "../navigation/nav-utils";
 
 const WORK_TYPE_LABELS: Record<string, string> = {
     IN_PERSON: "On-site",
@@ -94,7 +97,12 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                             !orgId && "pointer-events-none",
                         )}
                     >
-                        {opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
+                        <Avatar className="h-12 w-12">
+                                    <AvatarImage src={UserService.getAvatarURL(opp.organization?.id || "")} />
+                                    <AvatarFallback>
+                                            {getAvatarFallback(opp.organization?.orgName)}
+                                    </AvatarFallback>
+                                </Avatar>
                     </button>
                     <div>
                         <button
