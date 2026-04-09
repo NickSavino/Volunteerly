@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { appToast } from "@/components/common/app-toast";
 import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { VolunteerService } from "@/services/VolunteerService";
-import { appToast } from "@/components/common/app-toast";
 import type { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
-import { match } from "assert";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type WorkTypeFilter = "ALL" | "REMOTE" | "IN_PERSON" | "HYBRID";
 export type CommitmentFilter = "ALL" | "FLEXIBLE" | "PART_TIME" | "FULL_TIME";
@@ -30,7 +29,11 @@ export const OPPORTUNITY_CATEGORIES = [
 
 const DEFAULT_MATCH_PCT = 1;
 
-function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Record<string, number>): Opportunity[] {
+function sortOpportunities(
+    opps: Opportunity[],
+    sort: SortOption,
+    scoreMap: Record<string, number>,
+): Opportunity[] {
     const arr = [...opps];
     const getScore = (opp: Opportunity) => scoreMap[opp.id] ?? DEFAULT_MATCH_PCT;
     switch (sort) {
@@ -39,7 +42,9 @@ function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Reco
         case "MATCH_LOW":
             return arr.sort((a, b) => getScore(a) - getScore(b));
         case "NEWEST":
-            return arr.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
+            return arr.sort(
+                (a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime(),
+            );
         default:
             return arr.sort((a, b) => getScore(b) - getScore(a));
     }
@@ -48,7 +53,9 @@ function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Reco
 export function useOpportunitiesViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
-    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
+    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(
+        undefined,
+    );
     const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
     const [matchScores, setMatchScores] = useState<Record<string, number>>({});
     const [error, setError] = useState<string | null>(null);
@@ -98,7 +105,8 @@ export function useOpportunitiesViewModel() {
                     );
                 }
 
-                const userAvailability = volunteer?.availability ?? currentVolunteer?.availability ?? [];
+                const userAvailability =
+                    volunteer?.availability ?? currentVolunteer?.availability ?? [];
                 if (userAvailability.length > 0) {
                     filtered = filtered.filter((opp) =>
                         opp.availability?.some((day) => userAvailability.includes(day)),
@@ -111,7 +119,7 @@ export function useOpportunitiesViewModel() {
                 setError("Failed to load opportunities.");
             }
         },
-        [],
+        [currentVolunteer?.availability],
     );
 
     useEffect(() => {
@@ -160,24 +168,56 @@ export function useOpportunitiesViewModel() {
             ? selectedCategories.filter((c) => c !== cat)
             : [...selectedCategories, cat];
         setSelectedCategories(next);
-        fetchOpportunities(next, workType, commitmentLevel, searchQuery, sortBy, matchScores, currentVolunteer);
+        fetchOpportunities(
+            next,
+            workType,
+            commitmentLevel,
+            searchQuery,
+            sortBy,
+            matchScores,
+            currentVolunteer,
+        );
     }
 
     function handleSetWorkType(wt: WorkTypeFilter) {
         setWorkType(wt);
-        fetchOpportunities(selectedCategories, wt, commitmentLevel, searchQuery, sortBy, matchScores, currentVolunteer);
+        fetchOpportunities(
+            selectedCategories,
+            wt,
+            commitmentLevel,
+            searchQuery,
+            sortBy,
+            matchScores,
+            currentVolunteer,
+        );
     }
 
     function handleSetCommitmentLevel(cl: CommitmentFilter) {
         setCommitmentLevel(cl);
-        fetchOpportunities(selectedCategories, workType, cl, searchQuery, sortBy, matchScores, currentVolunteer);
+        fetchOpportunities(
+            selectedCategories,
+            workType,
+            cl,
+            searchQuery,
+            sortBy,
+            matchScores,
+            currentVolunteer,
+        );
     }
 
     function handleSetSearchQuery(sq: string) {
         setSearchQuery(sq);
         if (searchDebounce.current) clearTimeout(searchDebounce.current);
         searchDebounce.current = setTimeout(() => {
-            fetchOpportunities(selectedCategories, workType, commitmentLevel, sq, sortBy, matchScores, currentVolunteer);
+            fetchOpportunities(
+                selectedCategories,
+                workType,
+                commitmentLevel,
+                sq,
+                sortBy,
+                matchScores,
+                currentVolunteer,
+            );
         }, 300);
     }
 

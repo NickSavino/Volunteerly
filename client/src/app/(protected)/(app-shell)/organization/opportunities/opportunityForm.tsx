@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Toggle } from "@/components/ui/toggle";
 import { UpdateOpportunitySchema } from "@volunteerly/shared";
 
@@ -32,12 +38,22 @@ export default function OpportunityForm({
         <Card className="w-full max-w-4xl">
             <form className="space-y-6" onSubmit={handleSubmit}>
                 <CardHeader>
-                    <CardTitle>{editing ? "Update Opportunity" : "Create New Opportunity"}</CardTitle>
-                    <CardDescription> This information will be used to match Volunteers </CardDescription>
+                    <CardTitle>
+                        {editing ? "Update Opportunity" : "Create New Opportunity"}
+                    </CardTitle>
+                    <CardDescription>
+                        {" "}
+                        This information will be used to match Volunteers{" "}
+                    </CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-3">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div
+                        className="
+                            grid grid-cols-1 gap-4
+                            md:grid-cols-2
+                        "
+                    >
                         <Field>
                             <Label htmlFor="name">
                                 Name<span className="text-destructive">*</span>
@@ -48,7 +64,9 @@ export default function OpportunityForm({
                                 placeholder="Analytical Dashboard Development"
                                 value={opportunity?.name}
                                 onChange={(e) =>
-                                    setOpportunity((prev) => (prev ? { ...prev, name: e.target.value } : prev))
+                                    setOpportunity((prev) =>
+                                        prev ? { ...prev, name: e.target.value } : prev,
+                                    )
                                 }
                                 required
                             />
@@ -64,7 +82,9 @@ export default function OpportunityForm({
                                 placeholder="Data Science"
                                 value={opportunity?.category}
                                 onChange={(e) =>
-                                    setOpportunity((prev) => (prev ? { ...prev, category: e.target.value } : prev))
+                                    setOpportunity((prev) =>
+                                        prev ? { ...prev, category: e.target.value } : prev,
+                                    )
                                 }
                                 required
                             />
@@ -79,11 +99,15 @@ export default function OpportunityForm({
                             placeholder="Describe Opportunity"
                             value={opportunity?.description}
                             onChange={(e) =>
-                                setOpportunity((prev) => (prev ? { ...prev, description: e.target.value } : prev))
+                                setOpportunity((prev) =>
+                                    prev ? { ...prev, description: e.target.value } : prev,
+                                )
                             }
                             required
                         />
-                        <FieldDescription>Provide detailed description of opportunity</FieldDescription>
+                        <FieldDescription>
+                            Provide detailed description of opportunity
+                        </FieldDescription>
                     </Field>
                     <Field>
                         <Label htmlFor="candidate">
@@ -94,14 +118,23 @@ export default function OpportunityForm({
                             placeholder="Describe Candidate"
                             value={opportunity?.candidateDesc}
                             onChange={(e) =>
-                                setOpportunity((prev) => (prev ? { ...prev, candidateDesc: e.target.value } : prev))
+                                setOpportunity((prev) =>
+                                    prev ? { ...prev, candidateDesc: e.target.value } : prev,
+                                )
                             }
                             required
                         />
-                        <FieldDescription>Provide technical and non-technical requirements</FieldDescription>
+                        <FieldDescription>
+                            Provide technical and non-technical requirements
+                        </FieldDescription>
                     </Field>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div
+                        className="
+                            grid grid-cols-1 gap-4
+                            md:grid-cols-2
+                        "
+                    >
                         <Field>
                             <Label htmlFor="wrkType">
                                 Work Type<span className="text-destructive">*</span>
@@ -110,7 +143,12 @@ export default function OpportunityForm({
                                 value={opportunity?.workType}
                                 onValueChange={(e) =>
                                     setOpportunity((prev) =>
-                                        prev ? { ...prev, workType: e as "IN_PERSON" | "REMOTE" | "HYBRID" } : prev,
+                                        prev
+                                            ? {
+                                                  ...prev,
+                                                  workType: e as "IN_PERSON" | "REMOTE" | "HYBRID",
+                                              }
+                                            : prev,
                                     )
                                 }
                                 required
@@ -135,7 +173,13 @@ export default function OpportunityForm({
                                 onValueChange={(e) =>
                                     setOpportunity((prev) =>
                                         prev
-                                            ? { ...prev, commitmentLevel: e as "FLEXIBLE" | "PART_TIME" | "FULL_TIME" }
+                                            ? {
+                                                  ...prev,
+                                                  commitmentLevel: e as
+                                                      | "FLEXIBLE"
+                                                      | "PART_TIME"
+                                                      | "FULL_TIME",
+                                              }
                                             : prev,
                                     )
                                 }
@@ -145,22 +189,35 @@ export default function OpportunityForm({
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="FLEXIBLE">Flexible (2-5 hrs/week)</SelectItem>
-                                    <SelectItem value="PART_TIME">Part-Time (5-20 hrs/week)</SelectItem>
-                                    <SelectItem value="FULL_TIME">Full-Time (20+ hrs/week)</SelectItem>
+                                    <SelectItem value="FLEXIBLE">
+                                        Flexible (2-5 hrs/week)
+                                    </SelectItem>
+                                    <SelectItem value="PART_TIME">
+                                        Part-Time (5-20 hrs/week)
+                                    </SelectItem>
+                                    <SelectItem value="FULL_TIME">
+                                        Full-Time (20+ hrs/week)
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                         </Field>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div
+                        className="
+                            grid grid-cols-1 gap-4
+                            md:grid-cols-2
+                        "
+                    >
                         <Field>
                             <Label htmlFor="length">
                                 Opportunity Length<span className="text-destructive">*</span>
                             </Label>
                             <Select
                                 value={opportunity?.length}
-                                onValueChange={(e) => setOpportunity((prev) => (prev ? { ...prev, length: e } : prev))}
+                                onValueChange={(e) =>
+                                    setOpportunity((prev) => (prev ? { ...prev, length: e } : prev))
+                                }
                                 required
                             >
                                 <SelectTrigger id="length">
@@ -192,7 +249,12 @@ export default function OpportunityForm({
                         <Label htmlFor="availability">
                             Availability<span className="text-destructive">*</span>
                         </Label>
-                        <div className="w-full md:grid md:grid-cols-7 gap-2">
+                        <div
+                            className="
+                                w-full gap-2
+                                md:grid md:grid-cols-7
+                            "
+                        >
                             {daysOfWeek.map((day) => (
                                 <Toggle
                                     key={day}

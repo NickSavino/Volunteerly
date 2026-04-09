@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/api";
 import {
     CurrentModerator,
     CurrentModeratorSchema,
@@ -10,8 +11,16 @@ import {
     CurrentVolunteer,
     CurrentVolunteerSchema,
 } from "@volunteerly/shared";
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "@/lib/api";
+import {
+    createContext,
+    ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { useAuth } from "./auth-provider";
 
 type AppSessionContextValue = {
@@ -36,7 +45,9 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
 
     const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
     const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | null>(null);
-    const [currentOrganization, setCurrentOrganization] = useState<CurrentOrganization | null>(null);
+    const [currentOrganization, setCurrentOrganization] = useState<CurrentOrganization | null>(
+        null,
+    );
     const [currentModerator, setCurrentModerator] = useState<CurrentModerator | null>(null);
 
     const requestIdRef = useRef(0);
@@ -134,7 +145,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
                 setInitialized(true);
             }
         }
-    }, [authLoading, session?.access_token, clear]);
+    }, [authLoading, session, clear]);
 
     useEffect(() => {
         void refresh();

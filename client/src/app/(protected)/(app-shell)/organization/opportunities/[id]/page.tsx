@@ -1,41 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { AppModal } from "@/components/common/app-modal";
-import {
-    Calendar,
-    PersonStanding,
-    Hourglass,
-    Users,
-    CalendarCheck,
-    Briefcase,
-    CalendarX,
-    AlarmClockCheck,
-    Handshake,
-    ArrowLeft,
-    MessageSquareCheck,
-    MessageCircleMore,
-    UserStar,
-    CircleDollarSign,
-    Clock4,
-    User,
-} from "lucide-react";
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/providers/auth-provider";
-import { Button } from "@/components/ui/button";
-import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
-import { api } from "@/lib/api";
-import { OrgStatCard } from "@/components/custom/org_stat_card";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import avtImg from "@/assets/avatarImg.png";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
-import { useOrgOpportunitiesViewModel } from "../orgOpportunitiesVm";
-import { use } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
+import { AppModal } from "@/components/common/app-modal";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { OrgStatCard } from "@/components/custom/org_stat_card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardAction,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import {
     Dialog,
     DialogClose,
@@ -46,11 +26,33 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { FieldGroup } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import {
+    Item,
+    ItemActions,
+    ItemContent,
+    ItemDescription,
+    ItemMedia,
+    ItemTitle,
+} from "@/components/ui/item";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { LoadingScreen } from "@/components/common/loading-screen";
 import { UserService } from "@/services/UserService";
+import {
+    AlarmClockCheck,
+    ArrowLeft,
+    Calendar,
+    CalendarX,
+    CircleDollarSign,
+    Clock4,
+    Handshake,
+    MessageCircleMore,
+    User,
+    UserStar,
+} from "lucide-react";
+import Image from "next/image";
+import { use, useState } from "react";
+import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
 
 export default function ViewOpportunityPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -58,11 +60,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
         loading,
         fetching,
         session,
-        signOut,
         router,
-        user,
-        error,
-        currentUser,
         opportunity,
         applications,
         completeOpportunity,
@@ -85,21 +83,37 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
             <div className="min-h-screen">
                 <title>Organization View Opportunity - Volunteerly</title>
 
-                <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] p-6 md:mx-10">
-                    <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6 mb-10">
+                <main
+                    className="
+                        flex flex-col p-6
+                        md:mx-10 md:h-[calc(100vh-64px)] md:flex-row
+                    "
+                >
+                    <div
+                        className="
+                            mx-auto mb-10 flex min-h-full w-full flex-col gap-6
+                            md:mb-0 md:w-3/4
+                        "
+                    >
                         <div>
-                            <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
-                                <ArrowLeft className="w-4 h-4" />
+                            <Button
+                                variant="ghost"
+                                className="cursor-pointer"
+                                onClick={() => router.back()}
+                            >
+                                <ArrowLeft className="size-4" />
                                 Back
                             </Button>
-                            <div className="flex items-center gap-2 flex-wrap">
+                            <div className="flex flex-wrap items-center gap-2">
                                 <Badge>{opportunity?.status}</Badge>
                                 {opportunity?.status == "OPEN" ? (
                                     <p>Posted on {opportunity?.postedDate.toLocaleDateString()}</p>
                                 ) : opportunity?.status == "FILLED" ? (
                                     <p>Started on {opportunity?.updatedAt.toLocaleDateString()}</p>
                                 ) : (
-                                    <p>Completed on {opportunity?.updatedAt.toLocaleDateString()}</p>
+                                    <p>
+                                        Completed on {opportunity?.updatedAt.toLocaleDateString()}
+                                    </p>
                                 )}
                             </div>
                         </div>
@@ -108,8 +122,13 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             {opportunity?.name} - {opportunity?.workType.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())} - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
-                            <div className="md:flex md:justify-around md:grid md:gap-3 md:grid-cols-2">
-                                <OrgStatCard icon={Clock4} label="Hours Spent" count={totalHours} money={false} />
+                            <div className="md:grid md:grid-cols-2 md:justify-around md:gap-3">
+                                <OrgStatCard
+                                    icon={Clock4}
+                                    label="Hours Spent"
+                                    count={totalHours}
+                                    money={false}
+                                />
                                 <OrgStatCard
                                     icon={CircleDollarSign}
                                     label="Monetary Valuation"
@@ -128,7 +147,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                 variant={"outline"}
                                                 className="cursor-pointer"
                                                 onClick={() =>
-                                                    router.replace(`/organization/opportunities/${id}/update`)
+                                                    router.replace(
+                                                        `/organization/opportunities/${id}/update`,
+                                                    )
                                                 }
                                             >
                                                 Edit
@@ -141,16 +162,23 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                     </CardHeader>
                                     <CardContent>{opportunity?.candidateDesc}</CardContent>
 
-                                    <CardContent className="md:flex justify-around">
+                                    <CardContent
+                                        className="
+                                            justify-around
+                                            md:flex
+                                        "
+                                    >
                                         <span className="flex flex-1 items-center gap-3">
-                                            <Calendar className="w-9 h-9" />
+                                            <Calendar className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Length</span>
-                                                <span className="text-sm">{opportunity?.length}</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.length}
+                                                </span>
                                             </div>
                                         </span>
                                         <span className="flex flex-1 items-center gap-3">
-                                            <CalendarX className="w-9 h-9" />
+                                            <CalendarX className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Deadline</span>
                                                 <span className="text-sm">
@@ -159,17 +187,24 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             </div>
                                         </span>
                                     </CardContent>
-                                    <CardContent className="md:flex justify-around">
+                                    <CardContent
+                                        className="
+                                            justify-around
+                                            md:flex
+                                        "
+                                    >
                                         <span className="flex flex-1 items-center gap-3">
-                                            <AlarmClockCheck className="w-9 h-9" />
+                                            <AlarmClockCheck className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Availability</span>
-                                                <span className="text-sm">{opportunity?.availability.join(", ")}</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.availability.join(", ")}
+                                                </span>
                                             </div>
                                         </span>
 
                                         <span className="flex flex-1 items-center gap-3">
-                                            <Handshake className="w-9 h-9" />
+                                            <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
                                                 <span className="text-sm">{opportunity?.commitmentLevel.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</span>
@@ -177,31 +212,44 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         </span>
                                     </CardContent>
                                 </Card>
-                                <Card className="mt-5 mb-5">
+                                <Card className="my-5">
                                     <CardHeader>
                                         <CardTitle>Applications</CardTitle>
                                     </CardHeader>
 
                                     <CardContent>
                                         {applications.length === 0 ? (
-                                            <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                                <div className="flex justify-center mb-4">
+                                            <CardContent
+                                                className="
+                                                    flex h-full flex-col justify-center text-center
+                                                "
+                                            >
+                                                <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
                                                         <AvatarFallback></AvatarFallback>
                                                     </Avatar>
                                                 </div>
                                                 <h3 className="text-lg">No Applications</h3>
-                                                <p>Volunteer Applications for this posting show up here.</p>
+                                                <p>
+                                                    Volunteer Applications for this posting show up
+                                                    here.
+                                                </p>
                                             </CardContent>
                                         ) : (
                                             applications.map((app) => (
-                                                <Item key={app.id} variant="outline" className="mb-2">
+                                                <Item
+                                                    key={app.id}
+                                                    variant="outline"
+                                                    className="mb-2"
+                                                >
                                                     <ItemMedia>
                                                         <Avatar size="lg">
                                                             <Avatar className="h-auto w-10">
                                                                 <AvatarImage
-                                                                    src={UserService.getAvatarURL(app?.volId || "")}
+                                                                    src={UserService.getAvatarURL(
+                                                                        app?.volId || "",
+                                                                    )}
                                                                 />
                                                                 <AvatarFallback>
                                                                     {" "}
@@ -211,10 +259,15 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                         </Avatar>
                                                     </ItemMedia>
                                                     <ItemContent>
-                                                        <ItemTitle className="text-md">
-                                                            {app.volunteer?.firstName} {app.volunteer?.lastName}
+                                                        <ItemTitle>
+                                                            {app.volunteer?.firstName}{" "}
+                                                            {app.volunteer?.lastName}
                                                         </ItemTitle>
-                                                        <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                        <ItemDescription
+                                                            className="
+                                                                flex flex-wrap items-center gap-2
+                                                            "
+                                                        >
                                                             {app.message}
                                                         </ItemDescription>
                                                     </ItemContent>
@@ -254,11 +307,21 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                 <Card className="mb-5">
                                     <CardHeader>
                                         <CardTitle>Opportunity Overview</CardTitle>
-                                        <CardDescription>{opportunity?.description}</CardDescription>
+                                        <CardDescription>
+                                            {opportunity?.description}
+                                        </CardDescription>
                                         {opportunity?.status == "FILLED" && (
-                                            <CardAction className="w-full md:w-auto mt-2 md:mt-0">
+                                            <CardAction
+                                                className="
+                                                    mt-2 w-full
+                                                    md:mt-0 md:w-auto
+                                                "
+                                            >
                                                 <Button
-                                                    className="cursor-pointer w-full md:w-auto"
+                                                    className="
+                                                        w-full cursor-pointer
+                                                        md:w-auto
+                                                    "
                                                     onClick={completeOpportunity}
                                                 >
                                                     Complete
@@ -266,16 +329,23 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             </CardAction>
                                         )}
                                     </CardHeader>
-                                    <CardContent className="md:flex justify-around">
+                                    <CardContent
+                                        className="
+                                            justify-around
+                                            md:flex
+                                        "
+                                    >
                                         <span className="flex flex-1 items-center gap-3">
-                                            <Calendar className="w-9 h-9" />
+                                            <Calendar className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Length</span>
-                                                <span className="text-sm">{opportunity?.length}</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.length}
+                                                </span>
                                             </div>
                                         </span>
                                         <span className="flex flex-1 items-center gap-3">
-                                            <AlarmClockCheck className="w-9 h-9" />
+                                            <AlarmClockCheck className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Availability</span>
                                                 <span>{opportunity?.availability.join(", ")}</span>
@@ -283,7 +353,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         </span>
 
                                         <span className="flex flex-1 items-center gap-3">
-                                            <Handshake className="w-9 h-9" />
+                                            <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
                                                 <span>{opportunity?.commitmentLevel.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</span>
@@ -305,7 +375,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                 </Avatar>
                                             </div>
 
-                                            <div className="md:col-span-4 flex flex-col gap-3">
+                                            <div
+                                                className="
+                                                    flex flex-col gap-3
+                                                    md:col-span-4
+                                                "
+                                            >
                                                 <p>Assigned Volunteer</p>
                                                 <h3>
                                                     {opportunity?.volunteer?.firstName}{" "}
@@ -313,7 +388,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                 </h3>
                                             </div>
 
-                                            <div className="md:col-span-2 flex flex-col gap-3">
+                                            <div
+                                                className="
+                                                    flex flex-col gap-3
+                                                    md:col-span-2
+                                                "
+                                            >
                                                 <Button
                                                     variant="outline"
                                                     data-icon="inline-end"
@@ -343,30 +423,44 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <CardAction>
                                                 <Dialog>
                                                     <DialogTrigger asChild>
-                                                        <Button variant={"outline"} className="cursor-pointer">
+                                                        <Button
+                                                            variant={"outline"}
+                                                            className="cursor-pointer"
+                                                        >
                                                             Add Update
                                                         </Button>
                                                     </DialogTrigger>
                                                     <DialogContent className="sm:max-w-sm">
                                                         <form onSubmit={addUpdate}>
                                                             <DialogHeader className="mb-5">
-                                                                <DialogTitle>Add Progress Update</DialogTitle>
+                                                                <DialogTitle>
+                                                                    Add Progress Update
+                                                                </DialogTitle>
                                                             </DialogHeader>
                                                             <FieldGroup>
-                                                                <Label htmlFor="progU-title">Title</Label>
+                                                                <Label htmlFor="progU-title">
+                                                                    Title
+                                                                </Label>
                                                                 <Input
                                                                     id="pu-title"
                                                                     name="title"
                                                                     onChange={(e) =>
                                                                         setProgressUpdate((prev) =>
                                                                             prev
-                                                                                ? { ...prev, title: e.target.value }
+                                                                                ? {
+                                                                                      ...prev,
+                                                                                      title: e
+                                                                                          .target
+                                                                                          .value,
+                                                                                  }
                                                                                 : prev,
                                                                         )
                                                                     }
                                                                     required
                                                                 />
-                                                                <Label htmlFor="progU-desc">Description</Label>
+                                                                <Label htmlFor="progU-desc">
+                                                                    Description
+                                                                </Label>
                                                                 <Textarea
                                                                     id="progU-desc"
                                                                     name="description"
@@ -375,14 +469,18 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                             prev
                                                                                 ? {
                                                                                       ...prev,
-                                                                                      description: e.target.value,
+                                                                                      description:
+                                                                                          e.target
+                                                                                              .value,
                                                                                   }
                                                                                 : prev,
                                                                         )
                                                                     }
                                                                     required
                                                                 />
-                                                                <Label htmlFor="progU-hours">Hours Contribuited</Label>
+                                                                <Label htmlFor="progU-hours">
+                                                                    Hours Contribuited
+                                                                </Label>
                                                                 <Input
                                                                     id="progU-hours"
                                                                     type="number"
@@ -392,9 +490,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                             prev
                                                                                 ? {
                                                                                       ...prev,
-                                                                                      hoursContributed: Number(
-                                                                                          e.target.value,
-                                                                                      ),
+                                                                                      hoursContributed:
+                                                                                          Number(
+                                                                                              e
+                                                                                                  .target
+                                                                                                  .value,
+                                                                                          ),
                                                                                   }
                                                                                 : prev,
                                                                         )
@@ -411,7 +512,10 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                                         Cancel
                                                                     </Button>
                                                                 </DialogClose>
-                                                                <Button type="submit" className="cursor-pointer">
+                                                                <Button
+                                                                    type="submit"
+                                                                    className="cursor-pointer"
+                                                                >
                                                                     Add
                                                                 </Button>
                                                             </DialogFooter>
@@ -422,22 +526,39 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         )}
                                     </CardHeader>
                                     {opportunity?.progressUpdates?.length === 0 ? (
-                                        <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                            <div className="flex justify-center mb-4">
+                                        <CardContent
+                                            className="
+                                                flex h-full flex-col justify-center text-center
+                                            "
+                                        >
+                                            <div className="mb-4 flex justify-center">
                                                 <Avatar size="lg">
                                                     <AvatarImage src={volunteerly_logo.src} />
                                                     <AvatarFallback></AvatarFallback>
                                                 </Avatar>
                                             </div>
                                             <h3 className="text-lg">No Updates</h3>
-                                            <p>Progress Updates for this opportunity will show up here.</p>
+                                            <p>
+                                                Progress Updates for this opportunity will show up
+                                                here.
+                                            </p>
                                         </CardContent>
                                     ) : (
                                         <CardContent className="space-y-4">
-                                            <div className="border-l-2 pl-4 space-y-4 max-h-40 overflow-y-auto">
+                                            <div
+                                                className="
+                                                    max-h-40 space-y-4 overflow-y-auto border-l-2
+                                                    pl-4
+                                                "
+                                            >
                                                 {opportunity?.progressUpdates?.map((update) => (
                                                     <div key={update.id}>
-                                                        <span className="absolute -left-3 top-1 w-3 h-3 rounded-full bg-primary" />
+                                                        <span
+                                                            className="
+                                                                absolute top-1 -left-3 size-3
+                                                                rounded-full bg-primary
+                                                            "
+                                                        />
                                                         <p className="text-xs">
                                                             {update.createdAt.toLocaleDateString()}
                                                         </p>
@@ -445,7 +566,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                         <p className="text-sm text-muted-foreground">
                                                             {update.description}
                                                         </p>
-                                                        <p className="text-xs">{update.senderRole}</p>
+                                                        <p className="text-xs">
+                                                            {update.senderRole}
+                                                        </p>
                                                     </div>
                                                 ))}
                                             </div>
@@ -521,14 +644,24 @@ function ReviewModal({
                     <button
                         onClick={handleClose}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm
+                            font-semibold text-foreground
+                            hover:bg-secondary
+                            disabled:opacity-50
+                        "
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90 disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold
+                            text-foreground
+                            hover:opacity-90
+                            disabled:opacity-50
+                        "
                     >
                         {submitting ? "Posting..." : "Post"}
                     </button>
@@ -551,9 +684,18 @@ function ReviewModal({
                                 onClick={() => setRating(star)}
                                 onMouseEnter={() => setHovered(star)}
                                 onMouseLeave={() => setHovered(0)}
-                                className="text-2xl leading-none disabled:opacity-50"
+                                className="
+                                    text-2xl leading-none
+                                    disabled:opacity-50
+                                "
                             >
-                                <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"}>
+                                <span
+                                    className={
+                                        (hovered || rating) >= star
+                                            ? "text-yellow-400"
+                                            : "text-gray-300"
+                                    }
+                                >
                                     ★
                                 </span>
                             </button>
@@ -564,30 +706,40 @@ function ReviewModal({
                     )}
                 </div>
 
-                <label className="flex items-center gap-2 cursor-pointer select-none">
+                <label className="flex cursor-pointer items-center gap-2 select-none">
                     <input
                         type="checkbox"
                         checked={flagged}
                         onChange={(e) => setFlagged(e.target.checked)}
                         disabled={submitting}
-                        className="h-4 w-4 rounded border-gray-300 accent-yellow-400"
+                        className="size-4 rounded-sm border-gray-300 accent-yellow-400"
                     />
                     <span className="text-sm text-foreground">Flag this volunteer</span>
                 </label>
 
                 {flagged && (
                     <div>
-                        <label className="mb-1 block text-sm font-medium text-foreground">Reason for flagging:</label>
+                        <label className="mb-1 block text-sm font-medium text-foreground">
+                            Reason for flagging:
+                        </label>
                         <textarea
                             value={flagReason}
                             onChange={(e) => setFlagReason(e.target.value)}
                             placeholder="Describe why you are flagging this volunteer..."
                             rows={4}
                             disabled={submitting}
-                            className={`w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
+                            className={`
+                                w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm
+                                text-foreground
+                                placeholder:text-muted-foreground
+                                focus:ring-2 focus:ring-ring focus:outline-none
+                                disabled:opacity-50
+                                ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
                         />
                         {touched && flagReasonEmpty && (
-                            <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>
+                            <p className="mt-1 text-xs text-destructive">
+                                Please provide a reason for flagging.
+                            </p>
                         )}
                     </div>
                 )}

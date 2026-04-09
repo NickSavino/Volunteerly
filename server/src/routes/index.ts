@@ -18,16 +18,36 @@ export const apiRouter = Router();
 apiRouter.use("/health", auth, healthRouter);
 apiRouter.use("/current-user", auth, currentUserRouter);
 
-apiRouter.use("/current-volunteer/extract-skills", auth, requireRole("VOLUNTEER"), skillExtractionRouter);
+apiRouter.use(
+    "/current-volunteer/extract-skills",
+    auth,
+    requireRole("VOLUNTEER"),
+    skillExtractionRouter,
+);
 
 apiRouter.use("/current-volunteer", auth, requireRole("VOLUNTEER"), currentVolunteerRouter);
-apiRouter.use("/current-organization", auth, requireRole("ORGANIZATION"), currentOrganizationRouter);
+apiRouter.use(
+    "/current-organization",
+    auth,
+    requireRole("ORGANIZATION"),
+    currentOrganizationRouter,
+);
 apiRouter.use("/current-moderator", auth, requireRole("MODERATOR"), currentModeratorRouter);
 
 apiRouter.use("/moderator", auth, requireRole("MODERATOR"), moderatorRouter);
 apiRouter.use("/organization", auth, OrganizationRouter);
-apiRouter.use("/volunteer-organization", auth, requireRole("VOLUNTEER"), volunteerOrganizationRouter);
+apiRouter.use(
+    "/volunteer-organization",
+    auth,
+    requireRole("VOLUNTEER"),
+    volunteerOrganizationRouter,
+);
 
 apiRouter.use("/chat", auth, requireRole("MODERATOR", "VOLUNTEER", "ORGANIZATION"), chatRouter);
 
-apiRouter.use("/tickets", auth, requireRole("VOLUNTEER", "MODERATOR", "ORGANIZATION"), ticketsRouter);
+apiRouter.use(
+    "/tickets",
+    auth,
+    requireRole("VOLUNTEER", "MODERATOR", "ORGANIZATION"),
+    ticketsRouter,
+);

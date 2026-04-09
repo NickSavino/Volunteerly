@@ -291,12 +291,16 @@ currentOrganizationRouter.get("/opportunity", auth, async (req, res, next) => {
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
         if (!userId) {
-            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+            return res
+                .status(401)
+                .json({ error: "Unauthorized", message: "User context missing." });
         }
 
         const { opp_id } = req.query;
         if (!opp_id || typeof opp_id !== "string") {
-            return res.status(401).json({ error: "Unavailable", message: "Opportunity context missing or invalid." });
+            return res
+                .status(401)
+                .json({ error: "Unavailable", message: "Opportunity context missing or invalid." });
         }
         const opportunity = await getOrgOpportunity(userId, opp_id);
 
@@ -319,12 +323,16 @@ currentOrganizationRouter.get("/opportunity/applications", auth, async (req, res
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
         if (!userId) {
-            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+            return res
+                .status(401)
+                .json({ error: "Unauthorized", message: "User context missing." });
         }
 
         const { opp_id } = req.query;
         if (!opp_id || typeof opp_id !== "string") {
-            return res.status(401).json({ error: "Unavailable", message: "Opportunity context missing or invalid." });
+            return res
+                .status(401)
+                .json({ error: "Unavailable", message: "Opportunity context missing or invalid." });
         }
         const applications = await getApplications(userId, opp_id);
 
@@ -347,12 +355,16 @@ currentOrganizationRouter.get("/opportunity/application", auth, async (req, res,
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
         if (!userId) {
-            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+            return res
+                .status(401)
+                .json({ error: "Unauthorized", message: "User context missing." });
         }
 
         const { app_id } = req.query;
         if (!app_id || typeof app_id !== "string") {
-            return res.status(401).json({ error: "Unavailable", message: "Application context missing or invalid." });
+            return res
+                .status(401)
+                .json({ error: "Unavailable", message: "Application context missing or invalid." });
         }
         const application = await getOrgApplication(userId, app_id);
 
@@ -381,7 +393,8 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
         if (!application) {
             return res.status(500).json({
                 error: "Cannot fetch Application",
-                message: "Either Volunteer hasn't applied, or Opportunity doesn't exist, or not owned by Organization.",
+                message:
+                    "Either Volunteer hasn't applied, or Opportunity doesn't exist, or not owned by Organization.",
             });
         }
 
@@ -423,7 +436,12 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
                     </p>
 				</body>
 			</html>`;
-            const emailResult = await sendEmail(vltDetails.email, emailSubject, emailContentPlain, emailContentHTML);
+            const emailResult = await sendEmail(
+                vltDetails.email,
+                emailSubject,
+                emailContentPlain,
+                emailContentHTML,
+            );
             console.log(emailResult);
         }
 
@@ -479,7 +497,9 @@ currentOrganizationRouter.get("/opportunity/analytics", auth, async (req, res, n
 
         const { oppId } = req.query;
         if (!oppId || typeof oppId !== "string") {
-            return res.status(401).json({ error: "Unavailable", message: "Application context missing or invalid." });
+            return res
+                .status(401)
+                .json({ error: "Unavailable", message: "Application context missing or invalid." });
         }
 
         const analytics = await getOpportunityAnalytics(userId, oppId);

@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
-import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import { Application, CurrentOrganization, CurrentUser, CurrentUserSchema, Opportunity } from "@volunteerly/shared";
-import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { Application, CurrentOrganization } from "@volunteerly/shared";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function useOppApplicationViewModel(oppId: string, appId: string) {
@@ -64,7 +61,9 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
                     return;
                 }
                 setMatchedSchedule(
-                    opp.data.availability.filter((day) => app.data.volunteer?.availability?.includes(day)),
+                    opp.data.availability.filter((day) =>
+                        app.data.volunteer?.availability?.includes(day),
+                    ),
                 );
                 setApplication(app.data);
                 setFetching(false);
@@ -74,12 +73,15 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
             }
         }
         loadApplication();
-    }, [appId]);
+    }, [appId, oppId, router]);
 
     async function selectVolunteer() {
         if (application?.volunteer?.id) {
             setFetching(true);
-            const updated_opp = await OrganizationService.selectOppVolunteer(oppId, application.volunteer.id);
+            const updated_opp = await OrganizationService.selectOppVolunteer(
+                oppId,
+                application.volunteer.id,
+            );
             if (updated_opp.success) {
                 toast.success("Opportunity is now filled. Selected Volunteer has been notified.", {
                     position: "top-right",

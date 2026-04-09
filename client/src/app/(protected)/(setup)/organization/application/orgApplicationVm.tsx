@@ -58,7 +58,9 @@ export function useOrgApplicationViewModel() {
     }, [session, currentOrg]);
 
     const isReadOnly =
-        currentOrg?.status === "APPLIED" || currentOrg?.status === "VERIFIED" || currentOrg?.status === "REJECTED";
+        currentOrg?.status === "APPLIED" ||
+        currentOrg?.status === "VERIFIED" ||
+        currentOrg?.status === "REJECTED";
 
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -105,7 +107,9 @@ export function useOrgApplicationViewModel() {
                 router.replace("/organization");
                 return;
             }
-            toast.success("Application submitted, Awaiting moderator review", { position: "top-right" });
+            toast.success("Application submitted, Awaiting moderator review", {
+                position: "top-right",
+            });
             router.replace("/organization/appliedDashboard");
         } catch (err) {
             console.error(err);
@@ -118,7 +122,9 @@ export function useOrgApplicationViewModel() {
     async function viewSubmittedDoc() {
         if (currentOrg?.docId) {
             try {
-                const fileBlob = await OrganizationService.getOrganizationDocument(currentOrg.docId);
+                const fileBlob = await OrganizationService.getOrganizationDocument(
+                    currentOrg.docId,
+                );
 
                 const url = URL.createObjectURL(fileBlob);
                 const newWindow = window.open(url, "_blank");

@@ -1,5 +1,8 @@
 import { env } from "../lib/env.js";
-import DocumentIntelligence, { getLongRunningPoller, isUnexpected } from "@azure-rest/ai-document-intelligence";
+import DocumentIntelligence, {
+    getLongRunningPoller,
+    isUnexpected,
+} from "@azure-rest/ai-document-intelligence";
 import { EmailClient } from "@azure/communication-email";
 
 export async function callDocumentAnalysis(file: Express.Multer.File) {
@@ -10,10 +13,12 @@ export async function callDocumentAnalysis(file: Express.Multer.File) {
 
     const client = DocumentIntelligence(endpoint, { key: key });
 
-    const initialResponse = await client.path("/documentModels/{modelId}:analyze", "prebuilt-layout").post({
-        body: uint8Array,
-        contentType: "application/pdf",
-    });
+    const initialResponse = await client
+        .path("/documentModels/{modelId}:analyze", "prebuilt-layout")
+        .post({
+            body: uint8Array,
+            contentType: "application/pdf",
+        });
 
     if (isUnexpected(initialResponse)) throw initialResponse.body.error;
 

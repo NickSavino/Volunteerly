@@ -2,8 +2,6 @@
 
 import { use, useState } from "react";
 import { ArrowLeft, Clock, TrendingUp, DollarSign, CheckCircle } from "lucide-react";
-import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
-import { VolunteerService } from "@/services/VolunteerService";
 import { useVolOppDetailViewModel } from "./volOppDetailVm";
 import { AppModal } from "@/components/common/app-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -56,7 +54,11 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
     const vm = useVolOppDetailViewModel(id);
 
     if (vm.pageLoading) {
-        return <div className="flex min-h-screen items-center justify-center text-sm text-gray-500">Loading...</div>;
+        return (
+            <div className="flex min-h-screen items-center justify-center text-sm text-gray-500">
+                Loading...
+            </div>
+        );
     }
 
     if (!vm.opp) {
@@ -74,29 +76,52 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+            <main
+                className="
+                    mx-auto max-w-3xl px-4 py-8
+                    sm:px-6
+                "
+            >
                 <button
                     onClick={() => vm.router.push("/volunteer")}
-                    className="mb-6 flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800"
+                    className="
+                        mb-6 flex items-center gap-1.5 text-sm text-gray-500
+                        hover:text-gray-800
+                    "
                 >
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="size-4" />
                     Back to Dashboard
                 </button>
 
                 {vm.error && (
-                    <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                    <p
+                        className="
+                            mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm
+                            text-red-600
+                        "
+                    >
                         {vm.error}
                     </p>
                 )}
 
                 <div className="mb-1 flex items-center gap-2">
                     {isCompleted ? (
-                        <span className="flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700">
-                            <CheckCircle className="h-3.5 w-3.5" /> COMPLETE
+                        <span
+                            className="
+                                flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5
+                                text-xs font-semibold text-green-700
+                            "
+                        >
+                            <CheckCircle className="size-3.5" /> COMPLETE
                         </span>
                     ) : (
-                        <span className="flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-semibold text-yellow-700">
-                            <TrendingUp className="h-3.5 w-3.5" /> IN PROGRESS
+                        <span
+                            className="
+                                flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-0.5
+                                text-xs font-semibold text-yellow-700
+                            "
+                        >
+                            <TrendingUp className="size-3.5" /> IN PROGRESS
                         </span>
                     )}
                     <span className="text-sm text-gray-400">
@@ -112,15 +137,15 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 {isCompleted && (
                     <div className="mb-6 grid grid-cols-2 gap-4">
                         <div className="rounded-xl border bg-white p-5 shadow-sm">
-                            <div className="mb-3 rounded-md bg-yellow-50 p-2 w-fit">
-                                <Clock className="h-5 w-5 text-yellow-600" />
+                            <div className="mb-3 w-fit rounded-md bg-yellow-50 p-2">
+                                <Clock className="size-5 text-yellow-600" />
                             </div>
                             <p className="text-xs text-gray-500">Total Hours</p>
                             <p className="mt-1 text-3xl font-bold text-gray-900">{vm.totalHours}</p>
                         </div>
                         <div className="rounded-xl border bg-white p-5 shadow-sm">
-                            <div className="mb-3 rounded-md bg-yellow-50 p-2 w-fit">
-                                <DollarSign className="h-5 w-5 text-yellow-600" />
+                            <div className="mb-3 w-fit rounded-md bg-yellow-50 p-2">
+                                <DollarSign className="size-5 text-yellow-600" />
                             </div>
                             <p className="text-xs text-gray-500">Economic Value</p>
                             <p className="mt-1 text-3xl font-bold text-gray-900">
@@ -139,9 +164,15 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                             <button
                                 onClick={() =>
                                     vm.opp?.organization?.id &&
-                                    vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)
+                                    vm.router.push(
+                                        `/volunteer/organizations/${vm.opp.organization.id}`,
+                                    )
                                 }
-                                className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600 hover:opacity-75 transition-opacity"
+                                className="
+                                    flex size-14 shrink-0 items-center justify-center rounded-full
+                                    bg-gray-100 text-sm font-bold text-gray-600 transition-opacity
+                                    hover:opacity-75
+                                "
                             >
                                 <Avatar className="h-auto w-15">
                                     <AvatarImage src={UserService.getAvatarURL(vm.opp.organization?.id || "")} />
@@ -152,24 +183,39 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                 
                             </button>
                             <div>
-                                <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+                                <p
+                                    className="
+                                        text-xs font-medium tracking-wide text-gray-400 uppercase
+                                    "
+                                >
                                     Parent Organization
                                 </p>
                                 <button
                                     onClick={() =>
                                         vm.opp?.organization?.id &&
-                                        vm.router.push(`/volunteer/organizations/${vm.opp.organization.id}`)
+                                        vm.router.push(
+                                            `/volunteer/organizations/${vm.opp.organization.id}`,
+                                        )
                                     }
-                                    className="text-lg font-bold text-gray-900 text-left hover:underline"
+                                    className="
+                                        text-left text-lg font-bold text-gray-900
+                                        hover:underline
+                                    "
                                 >
                                     {vm.opp.organization?.orgName ?? "—"}
                                 </button>
-                                <p className="text-sm text-gray-500">{vm.opp.organization?.causeCategory ?? ""}</p>
+                                <p className="text-sm text-gray-500">
+                                    {vm.opp.organization?.causeCategory ?? ""}
+                                </p>
                             </div>
                         </div>
                         <button
                             onClick={() => vm.setReviewModalOpen(true)}
-                            className="flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-gray-700"
+                            className="
+                                flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 text-sm
+                                font-semibold text-white
+                                hover:bg-gray-700
+                            "
                         >
                             Post Review
                         </button>
@@ -183,17 +229,28 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     </h3>
 
                     {sortedUpdates.length === 0 ? (
-                        <p className="py-4 text-center text-sm text-gray-400">No progress updates yet.</p>
+                        <p className="py-4 text-center text-sm text-gray-400">
+                            No progress updates yet.
+                        </p>
                     ) : (
-                        <ol className="relative border-l border-gray-200 pl-6 space-y-6">
+                        <ol className="relative space-y-6 border-l border-gray-200 pl-6">
                             {sortedUpdates.map((update, idx) => {
                                 const isFirst = idx === 0;
                                 return (
                                     <li key={update.id} className="relative">
                                         <span
-                                            className={`absolute -left-[1.45rem] top-1 h-3 w-3 rounded-full border-2 border-white ${isFirst ? "bg-yellow-400" : "bg-gray-300"}`}
+                                            className={`
+                                                absolute top-1 -left-[1.45rem] size-3 rounded-full
+                                                border-2 border-white
+                                                ${isFirst ? "bg-yellow-400" : "bg-gray-300"}
+                                            `}
                                         />
-                                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+                                        <p
+                                            className="
+                                                text-xs font-semibold tracking-wide text-gray-400
+                                                uppercase
+                                            "
+                                        >
                                             {new Date(update.createdAt)
                                                 .toLocaleDateString("en-US", {
                                                     month: "short",
@@ -203,8 +260,12 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                                 .toUpperCase()}
                                             {isFirst && " · TODAY"}
                                         </p>
-                                        <p className="mt-0.5 font-semibold text-gray-900">{update.title}</p>
-                                        <p className="mt-1 text-sm text-gray-500">{update.description}</p>
+                                        <p className="mt-0.5 font-semibold text-gray-900">
+                                            {update.title}
+                                        </p>
+                                        <p className="mt-1 text-sm text-gray-500">
+                                            {update.description}
+                                        </p>
                                     </li>
                                 );
                             })}
@@ -215,15 +276,24 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                         <div className="mt-6 flex gap-3">
                             <button
                                 onClick={() => vm.setProgressModalOpen(true)}
-                                className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-50"
+                                className="
+                                    flex flex-1 items-center justify-center gap-2 rounded-xl border
+                                    border-gray-200 bg-white px-4 py-3 text-sm font-semibold
+                                    text-gray-800
+                                    hover:bg-gray-50
+                                "
                             >
                                 Add Progress Update
                             </button>
                             <button
                                 onClick={() => vm.setCompleteConfirmOpen(true)}
-                                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-yellow-400 px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-yellow-500"
+                                className="
+                                    flex flex-1 items-center justify-center gap-2 rounded-xl
+                                    bg-yellow-400 px-4 py-3 text-sm font-semibold text-gray-900
+                                    hover:bg-yellow-500
+                                "
                             >
-                                <CheckCircle className="h-4 w-4" />
+                                <CheckCircle className="size-4" />
                                 Request to Complete
                             </button>
                         </div>
@@ -234,9 +304,16 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                             <button
                                 onClick={() => vm.setSkillModalOpen(true)}
                                 disabled={vm.skillsAlreadySubmitted}
-                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="
+                                    flex w-full items-center justify-center gap-2 rounded-xl
+                                    bg-yellow-400 px-4 py-3 text-sm font-semibold text-gray-900
+                                    hover:bg-yellow-500
+                                    disabled:cursor-not-allowed disabled:opacity-50
+                                "
                             >
-                                {vm.skillsAlreadySubmitted ? "Skills Already Logged" : "Log Skills Used"}
+                                {vm.skillsAlreadySubmitted
+                                    ? "Skills Already Logged"
+                                    : "Log Skills Used"}
                             </button>
                         </div>
                     )}
@@ -275,30 +352,48 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                         <button
                             onClick={() => vm.setCompleteConfirmOpen(false)}
                             disabled={vm.submitting}
-                            className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                            className="
+                                h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm
+                                font-semibold text-foreground
+                                hover:bg-secondary
+                                disabled:opacity-50
+                            "
                         >
                             Cancel
                         </button>
                         <button
                             onClick={vm.requestCompletion}
                             disabled={vm.submitting}
-                            className="flex h-11 min-w-32 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90 disabled:opacity-50"
+                            className="
+                                flex h-11 min-w-32 items-center justify-center gap-2 rounded-xl
+                                bg-primary px-5 text-sm font-semibold text-foreground
+                                hover:opacity-90
+                                disabled:opacity-50
+                            "
                         >
-                            <CheckCircle className="h-4 w-4" />
+                            <CheckCircle className="size-4" />
                             {vm.submitting ? "Requesting..." : "Request"}
                         </button>
                     </>
                 }
             >
-                <div className="space-y-3 text-center py-2">
+                <div className="space-y-3 py-2 text-center">
                     <div className="flex justify-center">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-yellow-400">
-                            <CheckCircle className="h-7 w-7 text-yellow-500" />
+                        <div
+                            className="
+                                flex size-14 items-center justify-center rounded-full border-4
+                                border-yellow-400
+                            "
+                        >
+                            <CheckCircle className="size-7 text-yellow-500" />
                         </div>
                     </div>
-                    <p className="text-sm text-gray-600">Are you sure you want to request to complete?</p>
+                    <p className="text-sm text-gray-600">
+                        Are you sure you want to request to complete?
+                    </p>
                     <p className="text-sm text-gray-400">
-                        This will email the organization letting them know they must review and mark as completed.
+                        This will email the organization letting them know they must review and mark
+                        as completed.
                     </p>
                 </div>
             </AppModal>
@@ -320,7 +415,9 @@ function SkillPickerModal({
     const [selected, setSelected] = useState<string[]>([]);
 
     function toggle(skill: string) {
-        setSelected((prev) => (prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]));
+        setSelected((prev) =>
+            prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill],
+        );
     }
 
     function handleClose() {
@@ -339,32 +436,52 @@ function SkillPickerModal({
                     <button
                         onClick={handleClose}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm
+                            font-semibold text-foreground
+                            hover:bg-secondary
+                            disabled:opacity-50
+                        "
                     >
                         Cancel
                     </button>
                     <button
                         onClick={() => onSubmit(selected)}
                         disabled={submitting || selected.length === 0}
-                        className="h-11 min-w-32 rounded-xl bg-yellow-400 px-5 text-sm font-semibold text-gray-900 hover:bg-yellow-500 disabled:opacity-50"
+                        className="
+                            h-11 min-w-32 rounded-xl bg-yellow-400 px-5 text-sm font-semibold
+                            text-gray-900
+                            hover:bg-yellow-500
+                            disabled:opacity-50
+                        "
                     >
                         {submitting ? "Saving..." : `Submit (${selected.length})`}
                     </button>
                 </>
             }
         >
-            <p className="mb-4 text-sm text-gray-500">Select all the skills you used during this opportunity.</p>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 max-h-96 overflow-y-auto pr-1">
+            <p className="mb-4 text-sm text-gray-500">
+                Select all the skills you used during this opportunity.
+            </p>
+            <div
+                className="
+                    grid max-h-96 grid-cols-2 gap-2 overflow-y-auto pr-1
+                    sm:grid-cols-3
+                "
+            >
                 {ALL_SKILLS.map((skill) => (
                     <label
                         key={skill}
-                        className="flex cursor-pointer items-center gap-2 rounded-lg border p-2.5 hover:bg-gray-50"
+                        className="
+                            flex cursor-pointer items-center gap-2 rounded-lg border p-2.5
+                            hover:bg-gray-50
+                        "
                     >
                         <input
                             type="checkbox"
                             checked={selected.includes(skill)}
                             onChange={() => toggle(skill)}
-                            className="h-4 w-4 accent-yellow-400"
+                            className="size-4 accent-yellow-400"
                         />
                         <span className="text-sm text-gray-800">{skill}</span>
                     </label>
@@ -383,7 +500,11 @@ function ProgressUpdateModal({
     open: boolean;
     submitting: boolean;
     onClose: () => void;
-    onSubmit: (input: { title: string; description: string; hoursContributed: number }) => Promise<void>;
+    onSubmit: (input: {
+        title: string;
+        description: string;
+        hoursContributed: number;
+    }) => Promise<void>;
 }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -424,14 +545,24 @@ function ProgressUpdateModal({
                     <button
                         onClick={handleClose}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm
+                            font-semibold text-foreground
+                            hover:bg-secondary
+                            disabled:opacity-50
+                        "
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90 disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold
+                            text-foreground
+                            hover:opacity-90
+                            disabled:opacity-50
+                        "
                     >
                         {submitting ? "Posting..." : "Post"}
                     </button>
@@ -446,24 +577,45 @@ function ProgressUpdateModal({
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="Provide title summary for your reason..."
                         disabled={submitting}
-                        className={`w-full rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && titleEmpty ? "border-destructive" : "border-border"}`}
+                        className={`
+                            w-full rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground
+                            placeholder:text-muted-foreground
+                            focus:ring-2 focus:ring-ring focus:outline-none
+                            disabled:opacity-50
+                            ${touched && titleEmpty ? "border-destructive" : "border-border"}
+                        `}
                     />
-                    {touched && titleEmpty && <p className="mt-1 text-xs text-destructive">Title is required.</p>}
+                    {touched && titleEmpty && (
+                        <p className="mt-1 text-xs text-destructive">Title is required.</p>
+                    )}
                 </div>
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Description:</label>
+                    <label className="mb-1 block text-sm font-medium text-foreground">
+                        Description:
+                    </label>
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="Describe reasons for rating..."
                         rows={4}
                         disabled={submitting}
-                        className={`w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && descEmpty ? "border-destructive" : "border-border"}`}
+                        className={`
+                            w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm
+                            text-foreground
+                            placeholder:text-muted-foreground
+                            focus:ring-2 focus:ring-ring focus:outline-none
+                            disabled:opacity-50
+                            ${touched && descEmpty ? "border-destructive" : "border-border"}
+                        `}
                     />
-                    {touched && descEmpty && <p className="mt-1 text-xs text-destructive">Description is required.</p>}
+                    {touched && descEmpty && (
+                        <p className="mt-1 text-xs text-destructive">Description is required.</p>
+                    )}
                 </div>
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-foreground">Time Contributed:</label>
+                    <label className="mb-1 block text-sm font-medium text-foreground">
+                        Time Contributed:
+                    </label>
                     <input
                         value={hours}
                         onChange={(e) => setHours(e.target.value)}
@@ -471,10 +623,18 @@ function ProgressUpdateModal({
                         type="number"
                         min={0}
                         disabled={submitting}
-                        className={`w-full rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && hoursInvalid ? "border-destructive" : "border-border"}`}
+                        className={`
+                            w-full rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground
+                            placeholder:text-muted-foreground
+                            focus:ring-2 focus:ring-ring focus:outline-none
+                            disabled:opacity-50
+                            ${touched && hoursInvalid ? "border-destructive" : "border-border"}
+                        `}
                     />
                     {touched && hoursInvalid && (
-                        <p className="mt-1 text-xs text-destructive">Enter a valid number of hours.</p>
+                        <p className="mt-1 text-xs text-destructive">
+                            Enter a valid number of hours.
+                        </p>
                     )}
                 </div>
             </div>
@@ -534,14 +694,24 @@ function ReviewModal({
                     <button
                         onClick={handleClose}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl border border-border bg-card px-5 text-sm
+                            font-semibold text-foreground
+                            hover:bg-secondary
+                            disabled:opacity-50
+                        "
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={submitting}
-                        className="h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90 disabled:opacity-50"
+                        className="
+                            h-11 min-w-24 rounded-xl bg-primary px-5 text-sm font-semibold
+                            text-foreground
+                            hover:opacity-90
+                            disabled:opacity-50
+                        "
                     >
                         {submitting ? "Posting..." : "Post"}
                     </button>
@@ -564,9 +734,18 @@ function ReviewModal({
                                 onClick={() => setRating(star)}
                                 onMouseEnter={() => setHovered(star)}
                                 onMouseLeave={() => setHovered(0)}
-                                className="text-2xl leading-none disabled:opacity-50"
+                                className="
+                                    text-2xl leading-none
+                                    disabled:opacity-50
+                                "
                             >
-                                <span className={(hovered || rating) >= star ? "text-yellow-400" : "text-gray-300"}>
+                                <span
+                                    className={
+                                        (hovered || rating) >= star
+                                            ? "text-yellow-400"
+                                            : "text-gray-300"
+                                    }
+                                >
                                     ★
                                 </span>
                             </button>
@@ -577,30 +756,40 @@ function ReviewModal({
                     )}
                 </div>
 
-                <label className="flex items-center gap-2 cursor-pointer select-none">
+                <label className="flex cursor-pointer items-center gap-2 select-none">
                     <input
                         type="checkbox"
                         checked={flagged}
                         onChange={(e) => setFlagged(e.target.checked)}
                         disabled={submitting}
-                        className="h-4 w-4 rounded border-gray-300 accent-yellow-400"
+                        className="size-4 rounded-sm border-gray-300 accent-yellow-400"
                     />
                     <span className="text-sm text-foreground">Flag this organization</span>
                 </label>
 
                 {flagged && (
                     <div>
-                        <label className="mb-1 block text-sm font-medium text-foreground">Reason for flagging:</label>
+                        <label className="mb-1 block text-sm font-medium text-foreground">
+                            Reason for flagging:
+                        </label>
                         <textarea
                             value={flagReason}
                             onChange={(e) => setFlagReason(e.target.value)}
                             placeholder="Describe why you are flagging this organization..."
                             rows={4}
                             disabled={submitting}
-                            className={`w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50 ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
+                            className={`
+                                w-full resize-none rounded-xl border bg-muted px-4 py-2.5 text-sm
+                                text-foreground
+                                placeholder:text-muted-foreground
+                                focus:ring-2 focus:ring-ring focus:outline-none
+                                disabled:opacity-50
+                                ${touched && flagReasonEmpty ? "border-destructive" : "border-border"}`}
                         />
                         {touched && flagReasonEmpty && (
-                            <p className="mt-1 text-xs text-destructive">Please provide a reason for flagging.</p>
+                            <p className="mt-1 text-xs text-destructive">
+                                Please provide a reason for flagging.
+                            </p>
                         )}
                     </div>
                 )}

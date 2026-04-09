@@ -1,18 +1,23 @@
 import Link from "next/link";
 
-import { NavigationMenu, NavigationMenuList, NavigationMenuItem } from "@/components/ui/navigation-menu";
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuList,
+} from "@/components/ui/navigation-menu";
 
 import { usePathname } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export function Navbar() {
     return (
         <header className="w-full border-b px-6 py-4">
             <div className="mx-auto flex max-w-7xl items-center justify-between">
                 <Link href="/" className="text-lg font-bold">
-                    <img src={logo.src} alt="Logo" width="200" height="200" />
+                    <Image src={logo.src} alt="Logo" width={200} height={200} />
                 </Link>
 
                 <NavigationMenu>

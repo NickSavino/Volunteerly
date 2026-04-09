@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
-import { resolveDefaultAppRoute } from "@/lib/utils";
 import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { OrganizationService } from "@/services/OrganizationService";
@@ -63,7 +62,9 @@ export function useLoginViewModel() {
 
                 if (currentUser.role === "VOLUNTEER") {
                     const nextRoute =
-                        currentUser.status === "UNVERIFIED" ? "/volunteer/experience-input" : "/volunteer";
+                        currentUser.status === "UNVERIFIED"
+                            ? "/volunteer/experience-input"
+                            : "/volunteer";
 
                     setPendingRoute(nextRoute);
                     return;

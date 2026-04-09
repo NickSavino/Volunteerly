@@ -9,7 +9,9 @@ export function useOrgPublicProfileViewModel(orgId: string) {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
     const [org, setOrg] = useState<PublicOrgProfile | undefined>(undefined);
-    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
+    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(
+        undefined,
+    );
     const [error, setError] = useState<string | null>(null);
     const [dataLoading, setDataLoading] = useState(true);
 

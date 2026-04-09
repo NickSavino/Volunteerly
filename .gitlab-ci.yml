@@ -7,7 +7,7 @@ workflow:
         - if: $CI_COMMIT_BRANCH == "development"
 
 stages:
-    - typecheck
+    - checks
     - test
     - build
     - deploy
@@ -25,16 +25,29 @@ default:
     before_script:
         - npm ci --cache .npm --prefer-offline
 
+formatcheck:
+    stage: checks
+    script:
+        - npm run format:check
+
 typecheck:
-    stage: typecheck
+    stage: checks
     script:
         - npm run typecheck
+
+lintcheck:
+    stage: checks
+    script:
+        - npm run lint -- --max-warnings=0
 
 test:
     stage: test
     script:
         - npm run test
-    needs: ["typecheck"]
+    needs:
+        - formatcheck
+        - typecheck
+        - lintcheck
 
 build:
     stage: build

@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Lint Client",
+            "type": "shell",
+            "command": "npm run lint -w client",
+            "problemMatcher": ["$eslint-stylish"],
+            "group": "test"
+        },
+        {
+            "label": "Lint Client Fix",
+            "type": "shell",
+            "command": "npm run lint -w client -- --fix",
+            "problemMatcher": ["$eslint-stylish"],
+            "group": "test"
+        }
+    ]
+}

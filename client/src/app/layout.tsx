@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../providers/auth-provider";
 import { Toaster } from "sonner";
-import { AppSessionProvider } from "../providers/app-session-provider";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +31,13 @@ export default function RootLayout({
             <head>
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
             </head>
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+            <body
+                className={`
+                    ${geistSans.variable}
+                    ${geistMono.variable}
+                    antialiased
+                `}
+            >
                 <AuthProvider>{children}</AuthProvider>
                 <Toaster position="bottom-right" expand={false} richColors={true} />
             </body>

@@ -93,7 +93,9 @@ export class ModeratorService {
         return parsed.data;
     }
 
-    static async getModeratorVolunteerDetail(volunteerId: string): Promise<ModeratorVolunteerDetail> {
+    static async getModeratorVolunteerDetail(
+        volunteerId: string,
+    ): Promise<ModeratorVolunteerDetail> {
         const json = await api<unknown>(`/moderator/volunteers/${volunteerId}`);
         const parsed = ModeratorVolunteerDetailSchema.safeParse(json);
 

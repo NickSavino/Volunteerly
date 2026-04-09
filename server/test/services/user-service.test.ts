@@ -64,11 +64,13 @@ describe("user-service", () => {
             moderator: null,
         });
         remove.mockResolvedValueOnce(undefined);
-        mockPrisma.$transaction.mockImplementationOnce(async (callback: (context: typeof tx) => Promise<void>) =>
-            callback(tx),
+        mockPrisma.$transaction.mockImplementationOnce(
+            async (callback: (context: typeof tx) => Promise<void>) => callback(tx),
         );
         deleteUser.mockResolvedValueOnce({ error: { message: "delete failed" } });
 
-        await expect(deleteCurrentUser("u1")).rejects.toThrow("Failed to delete auth user: delete failed");
+        await expect(deleteCurrentUser("u1")).rejects.toThrow(
+            "Failed to delete auth user: delete failed",
+        );
     });
 });

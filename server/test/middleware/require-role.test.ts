@@ -19,7 +19,9 @@ import { prisma } from "../../src/lib/prisma.js";
 import { requireRole } from "../../src/middleware/require-role.js";
 import type { NextFunction, Request, Response } from "express";
 
-const mockedFindUnique = prisma.user.findUnique as jest.MockedFunction<typeof prisma.user.findUnique>;
+const mockedFindUnique = prisma.user.findUnique as jest.MockedFunction<
+    typeof prisma.user.findUnique
+>;
 type MockResponse = Pick<Response, "status" | "json">;
 type MockRequest = {
     auth?: {

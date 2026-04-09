@@ -1,16 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
 import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import {
-    CurrentOrganization,
-    CurrentOrganizationUpdate,
-    CurrentUser,
-    CurrentUserSchema,
-    Opportunity,
-} from "@volunteerly/shared";
-import { api } from "@/lib/api";
+import { CurrentOrganization, CurrentOrganizationUpdate } from "@volunteerly/shared";
 import { OrganizationService } from "@/services/OrganizationService";
 import { toast } from "sonner";
 import { useAppSession } from "@/providers/app-session-provider";
@@ -73,11 +65,15 @@ export function useOrgProfileViewModel() {
                     setImpactHighlights({
                         first: {
                             label: Object.keys(org.data.impactHighlights[0])[0],
-                            value: org.data.impactHighlights[0][Object.keys(org.data.impactHighlights[0])[0]],
+                            value: org.data.impactHighlights[0][
+                                Object.keys(org.data.impactHighlights[0])[0]
+                            ],
                         },
                         second: {
                             label: Object.keys(org.data.impactHighlights[1])[0],
-                            value: org.data.impactHighlights[1][Object.keys(org.data.impactHighlights[1])[0]],
+                            value: org.data.impactHighlights[1][
+                                Object.keys(org.data.impactHighlights[1])[0]
+                            ],
                         },
                     });
                 }
@@ -104,7 +100,9 @@ export function useOrgProfileViewModel() {
     async function viewSubmittedDoc() {
         if (currentOrg?.docId) {
             try {
-                const fileBlob = await OrganizationService.getOrganizationDocument(currentOrg.docId);
+                const fileBlob = await OrganizationService.getOrganizationDocument(
+                    currentOrg.docId,
+                );
 
                 const url = URL.createObjectURL(fileBlob);
                 const newWindow = window.open(url, "_blank");
@@ -171,11 +169,15 @@ export function useOrgProfileViewModel() {
                 setImpactHighlights({
                     first: {
                         label: Object.keys(originalOrg.impactHighlights[0])[0],
-                        value: originalOrg.impactHighlights[0][Object.keys(originalOrg.impactHighlights[0])[0]],
+                        value: originalOrg.impactHighlights[0][
+                            Object.keys(originalOrg.impactHighlights[0])[0]
+                        ],
                     },
                     second: {
                         label: Object.keys(originalOrg.impactHighlights[1])[0],
-                        value: originalOrg.impactHighlights[1][Object.keys(originalOrg.impactHighlights[1])[0]],
+                        value: originalOrg.impactHighlights[1][
+                            Object.keys(originalOrg.impactHighlights[1])[0]
+                        ],
                     },
                 });
             } else {

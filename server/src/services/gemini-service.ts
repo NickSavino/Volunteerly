@@ -1,6 +1,7 @@
 import { env } from "../lib/env.js";
 
-const GEMINI_EMBED_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent";
+const GEMINI_EMBED_URL =
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent";
 
 export async function embedText(text: string): Promise<number[]> {
     const response = await fetch(`${GEMINI_EMBED_URL}?key=${env.GEMINI_API_KEY}`, {

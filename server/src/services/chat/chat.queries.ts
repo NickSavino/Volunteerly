@@ -32,7 +32,9 @@ export const chatConversationListArgs = {
     },
 } satisfies Prisma.ChatConversationDefaultArgs;
 
-export type ChatConversationListRecord = Prisma.ChatConversationGetPayload<typeof chatConversationListArgs>;
+export type ChatConversationListRecord = Prisma.ChatConversationGetPayload<
+    typeof chatConversationListArgs
+>;
 
 export const chatConversationDetailArgs = {
     include: {
@@ -59,4 +61,6 @@ export const chatConversationDetailArgs = {
     },
 } satisfies Prisma.ChatConversationDefaultArgs;
 
-export type ChatConversationDetailRecord = Prisma.ChatConversationGetPayload<typeof chatConversationDetailArgs>;
+export type ChatConversationDetailRecord = Prisma.ChatConversationGetPayload<
+    typeof chatConversationDetailArgs
+>;

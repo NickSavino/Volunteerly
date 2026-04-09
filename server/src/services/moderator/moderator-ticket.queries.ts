@@ -25,4 +25,6 @@ export const moderatorTicketDetailInclude = {
     },
 } satisfies Prisma.TicketDefaultArgs;
 
-export type ModeratorTicketDetailRecord = Prisma.TicketGetPayload<typeof moderatorTicketDetailInclude>;
+export type ModeratorTicketDetailRecord = Prisma.TicketGetPayload<
+    typeof moderatorTicketDetailInclude
+>;

@@ -1,37 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase } from "lucide-react";
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/providers/auth-provider";
-import { Button } from "@/components/ui/button";
-import { CurrentUserSchema, type CurrentUser } from "@volunteerly/shared";
-import { api } from "@/lib/api";
-import { ModStatCard } from "@/components/custom/mod_stat_card";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import avtImg from "@/assets/avatarImg.png";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
-import { useOrgOpportunitiesViewModel } from "./orgOpportunitiesVm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Briefcase, Calendar, CalendarCheck, Hourglass, PersonStanding, Users } from "lucide-react";
+import { useOrgOpportunitiesViewModel } from "./orgOpportunitiesVm";
 
 export default function OrgOpportunitiesPage() {
-    const {
-        loading,
-        session,
-        fetching,
-        signOut,
-        router,
-        user,
-        error,
-        currentUser,
-        filteredOpportunities,
-        currentTab,
-        setCurrentTab,
-    } = useOrgOpportunitiesViewModel();
+    const { loading, session, fetching, router, filteredOpportunities, currentTab, setCurrentTab } =
+        useOrgOpportunitiesViewModel();
 
     if (loading || !session || fetching) {
         return <LoadingScreen />;
@@ -40,18 +22,33 @@ export default function OrgOpportunitiesPage() {
     return (
         <div className="min-h-screen">
             <title>Organization Opportunities - Volunteerly</title>
-            <main className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] md:p-6 py-6">
-                <div className="w-full mb-5 md:mb-0 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
-                    <div className="md:flex items-center justify-between mx-3 md:mx-0">
+            <main
+                className="
+                    flex flex-col py-6
+                    md:h-[calc(100vh-64px)] md:flex-row md:p-6
+                "
+            >
+                <div
+                    className="
+                        mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                        md:mb-0
+                    "
+                >
+                    <div
+                        className="
+                            mx-3 items-center justify-between
+                            md:mx-0 md:flex
+                        "
+                    >
                         <div>
-                            <h1 className="text-2x1 font-bold">Opportunities</h1>
+                            <h1 className="font-bold">Opportunities</h1>
                             <p>Manage and track your organization&apos;s volunteer projects.</p>
                         </div>
 
                         <div>
                             <Button
                                 type="submit"
-                                className="w-full text-accent-foreground cursor-pointer"
+                                className="w-full cursor-pointer text-accent-foreground"
                                 onClick={async () => {
                                     router.push("/organization/opportunities/create");
                                 }}
@@ -63,15 +60,21 @@ export default function OrgOpportunitiesPage() {
 
                     <div className="flex-1 overflow-y-auto">
                         <Card className="h-full overflow-y-auto">
-                            <CardContent className="h-full flex flex-col">
+                            <CardContent className="flex h-full flex-col">
                                 <Tabs
                                     defaultValue="OPEN"
                                     value={currentTab}
                                     onValueChange={setCurrentTab}
-                                    className="flex flex-col h-full"
+                                    className="flex h-full flex-col"
                                 >
-                                    <div className="w-full border-b border-gray-300 mb-5">
-                                        <TabsList className="flex md:w-1/2" variant="line">
+                                    <div className="mb-5 w-full border-b border-gray-300">
+                                        <TabsList
+                                            className="
+                                                flex
+                                                md:w-1/2
+                                            "
+                                            variant="line"
+                                        >
                                             <TabsTrigger value="OPEN" className="cursor-pointer">
                                                 Posted
                                             </TabsTrigger>
@@ -85,26 +88,43 @@ export default function OrgOpportunitiesPage() {
                                     </div>
                                     <TabsContent value={"OPEN"}>
                                         {filteredOpportunities.length === 0 ? (
-                                            <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                                <div className="flex justify-center mb-4">
+                                            <CardContent
+                                                className="
+                                                    flex h-full flex-col justify-center text-center
+                                                "
+                                            >
+                                                <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
                                                         <AvatarFallback></AvatarFallback>
                                                     </Avatar>
                                                 </div>
                                                 <h3 className="text-lg">No Posted Opportunities</h3>
-                                                <p>Posted Opportunities awaiting selection show up here.</p>
+                                                <p>
+                                                    Posted Opportunities awaiting selection show up
+                                                    here.
+                                                </p>
                                             </CardContent>
                                         ) : (
                                             filteredOpportunities.map((opp) => (
-                                                <Item key={opp.id} variant="outline" className="mb-2">
+                                                <Item
+                                                    key={opp.id}
+                                                    variant="outline"
+                                                    className="mb-2"
+                                                >
                                                     <ItemContent>
                                                         <ItemTitle>
-                                                            {opp.name} <Badge>{opp.status}</Badge>{" "}
+                                                            {opp.name}{" "}
+                                                            <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
-                                                        <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                        <ItemDescription
+                                                            className="
+                                                                flex flex-wrap items-center gap-2
+                                                            "
+                                                        >
                                                             <span className="flex items-center gap-1">
-                                                                <Users /> {opp._count?.applications} Applicant(s)
+                                                                <Users /> {opp._count?.applications}{" "}
+                                                                Applicant(s)
                                                             </span>
 
                                                             <span className="flex items-center gap-1">
@@ -124,7 +144,9 @@ export default function OrgOpportunitiesPage() {
                                                             className="cursor-pointer"
                                                             size="sm"
                                                             onClick={async () => {
-                                                                router.push(`/organization/opportunities/${opp.id}`);
+                                                                router.push(
+                                                                    `/organization/opportunities/${opp.id}`,
+                                                                );
                                                             }}
                                                         >
                                                             View Applications
@@ -137,26 +159,42 @@ export default function OrgOpportunitiesPage() {
 
                                     <TabsContent value={"FILLED"}>
                                         {filteredOpportunities.length === 0 ? (
-                                            <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                                <div className="flex justify-center mb-4">
+                                            <CardContent
+                                                className="
+                                                    flex h-full flex-col justify-center text-center
+                                                "
+                                            >
+                                                <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
                                                         <AvatarFallback></AvatarFallback>
                                                     </Avatar>
                                                 </div>
-                                                <h3 className="text-lg">No In-Progress Opportunities</h3>
+                                                <h3 className="text-lg">
+                                                    No In-Progress Opportunities
+                                                </h3>
                                                 <p> In-progress opportunities show up here.</p>
                                             </CardContent>
                                         ) : (
                                             filteredOpportunities.map((opp) => (
-                                                <Item key={opp.id} variant="outline" className="mb-2">
+                                                <Item
+                                                    key={opp.id}
+                                                    variant="outline"
+                                                    className="mb-2"
+                                                >
                                                     <ItemContent>
                                                         <ItemTitle>
-                                                            {opp.name} <Badge>{opp.status}</Badge>{" "}
+                                                            {opp.name}{" "}
+                                                            <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
-                                                        <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                        <ItemDescription
+                                                            className="
+                                                                flex flex-wrap items-center gap-2
+                                                            "
+                                                        >
                                                             <span className="flex items-center gap-1">
-                                                                <PersonStanding /> {opp.volunteer?.firstName}{" "}
+                                                                <PersonStanding />{" "}
+                                                                {opp.volunteer?.firstName}{" "}
                                                                 {opp.volunteer?.lastName}
                                                             </span>
 
@@ -175,7 +213,9 @@ export default function OrgOpportunitiesPage() {
                                                             className="cursor-pointer"
                                                             size="sm"
                                                             onClick={async () => {
-                                                                router.push(`/organization/opportunities/${opp.id}`);
+                                                                router.push(
+                                                                    `/organization/opportunities/${opp.id}`,
+                                                                );
                                                             }}
                                                         >
                                                             View Progress
@@ -188,26 +228,42 @@ export default function OrgOpportunitiesPage() {
 
                                     <TabsContent value={"CLOSED"}>
                                         {filteredOpportunities.length === 0 ? (
-                                            <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                                <div className="flex justify-center mb-4">
+                                            <CardContent
+                                                className="
+                                                    flex h-full flex-col justify-center text-center
+                                                "
+                                            >
+                                                <div className="mb-4 flex justify-center">
                                                     <Avatar size="lg">
                                                         <AvatarImage src={volunteerly_logo.src} />
                                                         <AvatarFallback></AvatarFallback>
                                                     </Avatar>
                                                 </div>
-                                                <h3 className="text-lg">No Completed Opportunities</h3>
+                                                <h3 className="text-lg">
+                                                    No Completed Opportunities
+                                                </h3>
                                                 <p>Completed Opportunities show up here.</p>
                                             </CardContent>
                                         ) : (
                                             filteredOpportunities.map((opp) => (
-                                                <Item key={opp.id} variant="outline" className="mb-2">
+                                                <Item
+                                                    key={opp.id}
+                                                    variant="outline"
+                                                    className="mb-2"
+                                                >
                                                     <ItemContent>
                                                         <ItemTitle>
-                                                            {opp.name} <Badge>{opp.status}</Badge>{" "}
+                                                            {opp.name}{" "}
+                                                            <Badge>{opp.status}</Badge>{" "}
                                                         </ItemTitle>
-                                                        <ItemDescription className="flex items-center gap-2 flex-wrap">
+                                                        <ItemDescription
+                                                            className="
+                                                                flex flex-wrap items-center gap-2
+                                                            "
+                                                        >
                                                             <span className="flex items-center gap-1">
-                                                                <PersonStanding /> {opp.volunteer?.firstName}{" "}
+                                                                <PersonStanding />{" "}
+                                                                {opp.volunteer?.firstName}{" "}
                                                                 {opp.volunteer?.lastName}
                                                             </span>
 
@@ -226,7 +282,9 @@ export default function OrgOpportunitiesPage() {
                                                             className="cursor-pointer"
                                                             size="sm"
                                                             onClick={async () => {
-                                                                router.push(`/organization/opportunities/${opp.id}`);
+                                                                router.push(
+                                                                    `/organization/opportunities/${opp.id}`,
+                                                                );
                                                             }}
                                                         >
                                                             View History

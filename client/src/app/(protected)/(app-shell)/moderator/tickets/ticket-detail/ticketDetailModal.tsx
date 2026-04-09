@@ -18,7 +18,13 @@ type TicketDetailModalProps = {
     onTicketUpdated?: () => Promise<void> | void;
 };
 
-export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTicketUpdated }: TicketDetailModalProps) {
+export function TicketDetailModal({
+    ticketId,
+    open,
+    onClose,
+    currentUserId,
+    onTicketUpdated,
+}: TicketDetailModalProps) {
     const vm = UseTicketDetailViewModel({
         ticketId,
         open,
@@ -78,13 +84,23 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
             maxWidthClassName="sm:max-w-6xl"
             bodyClassName="p-0"
         >
-            <div className="grid max-h-[78vh] grid-cols-1 overflow-hidden lg:grid-cols-[1.45fr_0.8fr]">
+            <div
+                className="
+                    grid max-h-[78vh] grid-cols-1 overflow-hidden
+                    lg:grid-cols-[1.45fr_0.8fr]
+                "
+            >
                 <div className="grid min-h-[70vh] grid-rows-[1fr_auto] border-r border-border">
                     {vm.loading && !ticket ? (
                         <LoadingScreen label="Loading ticket conversation..." />
                     ) : vm.error ? (
                         <div className="p-6">
-                            <p className="rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                            <p
+                                className="
+                                    rounded-md border border-destructive/20 bg-destructive/5 px-4
+                                    py-3 text-sm text-destructive
+                                "
+                            >
                                 {vm.error}
                             </p>
                         </div>
@@ -98,7 +114,11 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                             />
 
                             {isClosed ? (
-                                <div className="border-t border-border px-4 py-4 text-sm text-muted-foreground">
+                                <div
+                                    className="
+                                        border-t border-border p-4 text-sm text-muted-foreground
+                                    "
+                                >
                                     This ticket is closed. Replies are disabled.
                                 </div>
                             ) : vm.canReply ? (
@@ -110,7 +130,11 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                                     placeholder="Reply to ticket..."
                                 />
                             ) : (
-                                <div className="border-t border-border px-4 py-4 text-sm text-muted-foreground">
+                                <div
+                                    className="
+                                        border-t border-border p-4 text-sm text-muted-foreground
+                                    "
+                                >
                                     Claim this ticket to reply.
                                 </div>
                             )}
@@ -128,7 +152,11 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                                 !isClosed ? (
                                     <>
                                         {vm.canClaim ? (
-                                            <Button type="button" onClick={vm.claimTicket} disabled={vm.updatingTicket}>
+                                            <Button
+                                                type="button"
+                                                onClick={vm.claimTicket}
+                                                disabled={vm.updatingTicket}
+                                            >
                                                 {vm.updatingTicket ? "Claiming..." : "Claim Ticket"}
                                             </Button>
                                         ) : null}
@@ -148,7 +176,9 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
                             }
                         />
                     ) : (
-                        <div className="p-6 text-sm text-muted-foreground">Participant details unavailable.</div>
+                        <div className="p-6 text-sm text-muted-foreground">
+                            Participant details unavailable.
+                        </div>
                     )}
 
                     {ticket ? (
@@ -157,33 +187,58 @@ export function TicketDetailModal({ ticketId, open, onClose, currentUserId, onTi
 
                             <div className="mt-5 overflow-hidden rounded-2xl border border-border">
                                 <div className="grid grid-cols-[auto_1fr]">
-                                    <p className="border-b border-r px-4 py-4 text-lg font-semibold text-foreground">
+                                    <p
+                                        className="
+                                            border-r border-b p-4 text-lg font-semibold
+                                            text-foreground
+                                        "
+                                    >
                                         Category:
                                     </p>
-                                    <p className="border-b px-4 py-4 text-lg text-muted-foreground">
+                                    <p className="border-b p-4 text-lg text-muted-foreground">
                                         {formatCategory(ticket.category)}
                                     </p>
 
-                                    <p className="border-b border-r px-4 py-4 text-lg font-semibold text-foreground">
+                                    <p
+                                        className="
+                                            border-r border-b p-4 text-lg font-semibold
+                                            text-foreground
+                                        "
+                                    >
                                         Priority:
                                     </p>
-                                    <div className="border-b px-4 py-4">
+                                    <div className="border-b p-4">
                                         <span
-                                            className={`inline-flex rounded-full px-4 py-1 text-sm font-bold uppercase ${getUrgencyClasses(ticket.urgencyRating)}`}
+                                            className={`
+                                                inline-flex rounded-full px-4 py-1 text-sm font-bold
+                                                uppercase
+                                                ${getUrgencyClasses(ticket.urgencyRating)}
+                                            `}
                                         >
                                             {ticket.urgencyRating}
                                         </span>
                                     </div>
 
-                                    <p className="border-b border-r px-4 py-4 text-lg font-semibold text-foreground">
+                                    <p
+                                        className="
+                                            border-r border-b p-4 text-lg font-semibold
+                                            text-foreground
+                                        "
+                                    >
                                         Time Open:
                                     </p>
-                                    <p className="border-b px-4 py-4 text-lg text-muted-foreground">
+                                    <p className="border-b p-4 text-lg text-muted-foreground">
                                         {getTimeOpen(ticket.createdAt)}
                                     </p>
 
-                                    <p className="border-r px-4 py-4 text-lg font-semibold text-foreground">Status:</p>
-                                    <p className="px-4 py-4 text-lg text-muted-foreground">
+                                    <p
+                                        className="
+                                            border-r p-4 text-lg font-semibold text-foreground
+                                        "
+                                    >
+                                        Status:
+                                    </p>
+                                    <p className="p-4 text-lg text-muted-foreground">
                                         {ticket.status === "OPEN" ? "Open" : "Closed"}
                                     </p>
                                 </div>

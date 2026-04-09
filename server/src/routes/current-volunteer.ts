@@ -156,7 +156,13 @@ currentVolunteerRouter.post("/opportunities/backfill-vectors", async (req, res, 
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
         const oppsWithoutVector = await prisma.$queryRaw<
-            { id: string; name: string; category: string; description: string; candidate_desc: string }[]
+            {
+                id: string;
+                name: string;
+                category: string;
+                description: string;
+                candidate_desc: string;
+            }[]
         >`
             SELECT id, name, category, description, candidate_desc
             FROM opportunities
@@ -245,9 +251,13 @@ currentVolunteerRouter.get("/monthly-hours", async (req, res, next) => {
 currentVolunteerRouter.get("/", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
-        if (!userId) return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+        if (!userId)
+            return res
+                .status(401)
+                .json({ error: "Unauthorized", message: "User context missing." });
         const user = await getCurrentVolunteer(userId);
-        if (!user) return res.status(404).json({ error: "Not Found", message: "Volunteer not found." });
+        if (!user)
+            return res.status(404).json({ error: "Not Found", message: "Volunteer not found." });
         res.status(200).json(user);
     } catch (error) {
         next(error);
@@ -275,7 +285,10 @@ currentVolunteerRouter.put("/", async (req, res, next) => {
             );
         }
         if (!modified_user)
-            return res.status(500).json({ error: "Cannot update/create Volunteer", message: "Internal server error." });
+            return res.status(500).json({
+                error: "Cannot update/create Volunteer",
+                message: "Internal server error.",
+            });
         res.status(200).json(modified_user);
     } catch (error) {
         console.error(error);
@@ -338,7 +351,8 @@ currentVolunteerRouter.post("/opportunities/:oppId/skills", async (req, res, nex
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
         const { oppId } = req.params;
         const { skills } = req.body;
-        if (!Array.isArray(skills)) return res.status(400).json({ error: "skills must be an array" });
+        if (!Array.isArray(skills))
+            return res.status(400).json({ error: "skills must be an array" });
         await logOpportunitySkills(userId, oppId, skills);
         res.status(201).json({ success: true });
     } catch (error: any) {
