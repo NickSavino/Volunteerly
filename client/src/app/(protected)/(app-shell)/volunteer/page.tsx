@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Clock, Star, DollarSign, Building2, Search } from "lucide-react";
+import { Clock, Star, DollarSign, Building2, Search, User } from "lucide-react";
 import { useState } from "react";
 import {
     NavigationMenu,
@@ -14,6 +14,9 @@ import logo from "@/assets/logo.png";
 import avtImg from "@/assets/avatarImg.png";
 import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
 import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { UserService } from "@/services/UserService";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
 
 const STATUS_STYLES: Record<string, string> = {
     OPEN: "bg-green-50 text-green-700",
@@ -70,7 +73,7 @@ export default function VolunteerDashboardPage() {
         <div className="min-h-screen bg-gray-50">
             <main className="mx-auto max-w-7xl px=4 py-8 sm:px-6 lg:px-8">
                 <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-gray-900">Welcome back, {firstName}!</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 pl-2 md:pl-0">Welcome back, {firstName}!</h1>
                 </div>
 
                 {error && (
@@ -174,7 +177,12 @@ export default function VolunteerDashboardPage() {
                                         onClick={() => router.push(`/volunteer/organizations/${org.id}`)}
                                     >
                                         <div className="cursor-pointer flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-xs font-semibold text-yellow-700">
-                                            {org.orgName.slice(0, 2).toUpperCase()}
+                                            <Avatar className="h-12 w-12">
+                                                <AvatarImage src={UserService.getAvatarURL(org?.id || "")} />
+                                                <AvatarFallback className="h-12 w-12">
+                                                    {getAvatarFallback(org.orgName)}
+                                                </AvatarFallback>
+                                            </Avatar>
                                         </div>
                                         <div className="cursor-pointer min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-gray-800">{org.orgName}</p>
@@ -215,7 +223,12 @@ export default function VolunteerDashboardPage() {
                                         }}
                                     >
                                         <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                                            {org.orgName.slice(0, 2).toUpperCase()}
+                                            <Avatar className="h-10 w-10">
+                                                <AvatarImage src={UserService.getAvatarURL(org?.id || "")} />
+                                                <AvatarFallback>
+                                                    {getAvatarFallback(org?.orgName)}
+                                                </AvatarFallback>
+                                            </Avatar>
                                         </div>
                                         <p className="flex-1 text-left">{org.orgName}</p>
                                         <p>{org.totalHours}h</p>
