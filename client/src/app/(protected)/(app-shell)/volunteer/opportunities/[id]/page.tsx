@@ -6,6 +6,9 @@ import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
 import { VolunteerService } from "@/services/VolunteerService";
 import { useVolOppDetailViewModel } from "./volOppDetailVm";
 import { AppModal } from "@/components/common/app-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserService } from "@/services/UserService";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
 
 const ALL_SKILLS = [
     "Python",
@@ -140,7 +143,13 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                 }
                                 className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600 hover:opacity-75 transition-opacity"
                             >
-                                {vm.opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
+                                <Avatar className="h-auto w-15">
+                                    <AvatarImage src={UserService.getAvatarURL(vm.opp.organization?.id || "")} />
+                                    <AvatarFallback>
+                                        {getAvatarFallback(vm.opp.organization?.orgName)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                
                             </button>
                             <div>
                                 <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
