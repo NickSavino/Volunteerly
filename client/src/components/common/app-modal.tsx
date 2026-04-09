@@ -62,7 +62,8 @@ export function AppModal({
                             type="button"
                             aria-label="Close"
                             className="
-                                rounded-md p-1 text-muted-foreground transition-colors
+                                cursor-pointer rounded-md p-1 text-muted-foreground
+                                transition-colors
                                 hover:text-foreground
                             "
                         >

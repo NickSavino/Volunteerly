@@ -1,12 +1,22 @@
+/**
+ * page.tsx
+ * Organization public profile page - shows stats, mission, cause info, and volunteer reviews
+ */
 "use client";
 
 import { Briefcase, Globe, MapPin, Users } from "lucide-react";
 import { use } from "react";
 import { useOrgPublicProfileViewModel } from "./orgPublicProfileVm";
 
+/**
+ * Formats a large number into a human-readable abbreviated form (ex. 1500 --> "1.5k")
+ * @param value - the raw numeric value
+ * @returns formatted string
+ */
 function formatStatValue(value: number): string {
     if (value >= 1000) {
         const shortened = value / 1000;
+        // Avoid unnecessary decimals for clean thousands (ex. 2000 --> "2k" not "2.0k")
         return shortened % 1 === 0 ? `${shortened}k` : `${shortened.toFixed(1)}k`;
     }
     return value.toString();
@@ -50,6 +60,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
 
                 {org && (
                     <>
+                        {/* Hero banner with org name, category badge, and star rating */}
                         <div
                             className="
                                 relative mb-6 h-40 w-full overflow-hidden rounded-xl bg-gray-800
@@ -61,6 +72,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                 "
                             />
                             <div className="absolute bottom-4 left-6 flex items-end gap-4">
+                                {/* Org avatar uses the first two letters of the org name */}
                                 <div
                                     className="
                                         flex size-16 items-center justify-center rounded-xl bg-white
@@ -84,6 +96,8 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                     )}
                                 </div>
                             </div>
+
+                            {/* Star rating display - uses a partial-fill trick for fractional stars */}
                             <div
                                 className="
                                     absolute right-6 bottom-2 flex flex-col items-end gap-0.5
@@ -93,6 +107,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                     <>
                                         <div className="flex items-center gap-0.5">
                                             {[1, 2, 3, 4, 5].map((star) => {
+                                                // Clamp fill between 0 and 1 for partial stars
                                                 const fill = Math.min(
                                                     1,
                                                     Math.max(
@@ -107,6 +122,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                                         className="relative text-2xl leading-none"
                                                     >
                                                         <span className="text-gray-500">★</span>
+                                                        {/* Overlay filled portion using CSS clip */}
                                                         <span
                                                             className="
                                                                 absolute inset-0 overflow-hidden
@@ -134,6 +150,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                             </div>
                         </div>
 
+                        {/* Stats grid - always shows volunteers hired and active postings, then up to 2 impact highlights */}
                         <div
                             className="
                                 mb-6 grid grid-cols-2 gap-4
@@ -168,6 +185,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                 <p className="mt-1 text-xs text-gray-400">Open opportunities now</p>
                             </div>
 
+                            {/* Render at most 2 custom impact highlights set by the org */}
                             {org.impactHighlights.slice(0, 2).map((highlight, i) => (
                                 <div key={i} className="rounded-xl border bg-white p-5 shadow-sm">
                                     <div className="mb-3">
@@ -188,6 +206,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                             ))}
                         </div>
 
+                        {/* Public info section - mission, cause, website, and address */}
                         <div className="rounded-xl border bg-white p-6 shadow-sm">
                             <h2 className="mb-4 font-semibold text-gray-800">Public Information</h2>
 
@@ -233,6 +252,7 @@ export default function OrgPublicProfilePage({ params }: { params: Promise<{ id:
                                         </p>
                                         <div className="flex items-center gap-1.5">
                                             <Globe className="size-4 text-gray-400" />
+                                            {/* Prepend https:// if the stored URL doesn't already have a scheme */}
                                             <a
                                                 href={
                                                     org.website.startsWith("http")

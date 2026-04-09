@@ -80,22 +80,28 @@ export async function addProgressUpdate(
     oppId: string,
     input: { title: string; description: string; hoursContributed: number },
 ) {
-    await prisma.opportunity.update({
-        where: { id: oppId },
-        data: {
-            hours: {increment:input.hoursContributed},
-        },
-    });
+    return prisma.$transaction(async (tx) => {
+        const update = await tx.progressUpdate.create({
+            data: {
+                opportunityId: oppId,
+                senderId: userId,
+                senderRole: "VOLUNTEER",
+                title: input.title,
+                description: input.description,
+                hoursContributed: input.hoursContributed,
+            },
+        });
 
-    return prisma.progressUpdate.create({
-        data: {
-            opportunityId: oppId,
-            senderId: userId,
-            senderRole: "VOLUNTEER",
-            title: input.title,
-            description: input.description,
-            hoursContributed: input.hoursContributed,
-        },
+        await tx.opportunity.update({
+            where: { id: oppId },
+            data: {
+                hours: {
+                    increment: input.hoursContributed,
+                },
+            },
+        });
+
+        return update;
     });
 }
 
@@ -136,50 +142,37 @@ export async function postReview(
             rating: input.rating,
         },
     });
-
-    const allReviews = await prisma.review.findMany({
-        where: { revieweeId },
-        select: { rating: true },
-    });
-
-    const newAverage = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
-    await prisma.volunteer.update({
-        where: { id: revieweeId },
-        data: { averageRating: newAverage },
-    });
 }
 
-export async function postFlag(issuerId: string, flaggedUserId: string, reason: string) {
+export async function postFlag(
+    issuerId: string,
+    flaggedUserId: string,
+    opportunityId: string,
+    reason: string,
+) {
+    const existing = await prisma.flag.findUnique({
+        where: { flagIssuerId_opportunityId: { flagIssuerId: issuerId, opportunityId } },
+    });
+    if (existing) throw new Error("ALREADY_FLAGGED");
+
     return prisma.$transaction(async (tx) => {
         const flag = await tx.flag.create({
             data: {
                 flagIssuerId: issuerId,
                 flaggedUserId,
+                opportunityId,
                 reason,
             },
         });
 
-        const flaggedVolunteer = await tx.volunteer.findUnique({
+        const flaggedOrg = await tx.organization.findUnique({
             where: { id: flaggedUserId },
             select: { id: true },
         });
 
-        if (flaggedVolunteer) {
-            await tx.volunteerReport.create({
-                data: {
-                    reportedUserId: flaggedUserId,
-                    reportingUserId: issuerId,
-                    reason,
-                },
-            });
-
-            await tx.volunteer.update({
-                where: { id: flaggedUserId },
-                data: { status: "FLAGGED" },
-            });
-
-            await tx.user.update({
-                where: { id: flaggedUserId },
+        if (flaggedOrg) {
+            await tx.user.updateMany({
+                where: { id: flaggedUserId, status: { not: "FLAGGED" } },
                 data: { status: "FLAGGED" },
             });
         }
@@ -275,14 +268,19 @@ export async function browseOpportunities(filters: OpportunityFilters) {
     });
 }
 
-export async function applyToOpportunity(volId: string, oppId: string, message: string) {
+export async function applyToOpportunity(
+    volId: string,
+    oppId: string,
+    message: string,
+    matchPercentage: number,
+) {
     const existing = await prisma.application.findUnique({
         where: { oppId_volId: { oppId, volId } },
     });
     if (existing) throw new Error("ALREADY_APPLIED");
 
     return prisma.application.create({
-        data: { oppId, volId, message, matchPercentage: 0 },
+        data: { oppId, volId, message, matchPercentage },
     });
 }
 
@@ -330,4 +328,33 @@ export async function getVolunteerSkillCounts(volId: string): Promise<Record<str
         counts[skillName] = (counts[skillName] ?? 0) + 1;
     }
     return counts;
+}
+
+export async function getOpportunityMatchScores(userId: string): Promise<Record<string, number>> {
+    const volunteer = await prisma.$queryRaw<{ has_vector: boolean }[]>`
+        SELECT (skill_vector IS NOT NULL) AS has_vector
+        FROM volunteers
+        WHERE id = ${userId}
+        LIMIT 1
+    `;
+
+    const hasVector = volunteer?.[0]?.has_vector ?? false;
+    if (!hasVector) return {};
+
+    const scores = await prisma.$queryRaw<{ id: string; match_pct: number }[]>`
+        SELECT
+            o.id,
+            GREATEST(1, ROUND(CAST((1 - (o.skill_vector <=> v.skill_vector)) * 100 AS NUMERIC), 0)::int) AS match_pct
+        FROM opportunities o, volunteers v
+        WHERE v.id = ${userId}
+          AND v.skill_vector IS NOT NULL
+          AND o.skill_vector IS NOT NULL
+    `;
+
+    const scoreMap: Record<string, number> = {};
+    for (const row of scores) {
+        scoreMap[row.id] = Math.min(100, Math.max(1, Number(row.match_pct)));
+    }
+
+    return scoreMap;
 }

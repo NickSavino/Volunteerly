@@ -1,8 +1,11 @@
+/**
+ * volunteer-navbar.tsx
+ * Top navigation bar for the volunteer app shell - logo, nav links, and profile dropdown
+ */
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import avtImg from "@/assets/avatarImg.png";
+import logo from "@/assets/logo.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     NavigationMenu,
@@ -11,10 +14,12 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import logo from "@/assets/logo.png";
-import avtImg from "@/assets/avatarImg.png";
 import type { CurrentVolunteer } from "@volunteerly/shared";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
+// Static nav link definitions - kept here so the component stays declarative
 const NAV_LINKS = [
     { label: "Dashboard", href: "/volunteer" },
     { label: "Opportunities", href: "/volunteer/opportunities" },
@@ -27,9 +32,19 @@ type VolunteerNavbarProps = {
     onSignOut: () => void;
 };
 
+/**
+ * Renders the sticky top navigation bar with:
+ * - Volunteerly logo linking to the dashboard
+ * - Desktop nav links with active-state underline
+ * - Profile avatar dropdown with name, role label, and sign-out button
+ *
+ * @param currentVolunteer - the logged-in volunteer's profile (undefined while loading)
+ * @param onSignOut - callback invoked when the user clicks "Log Out"
+ */
 export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbarProps) {
     const pathname = usePathname();
 
+    // Show a placeholder until the volunteer data arrives
     const fullName = currentVolunteer
         ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
         : "Loading...";
@@ -37,10 +52,12 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
     return (
         <header className="relative z-999 w-full shrink-0 border-b bg-card px-6 py-3">
             <div className="mx-auto flex max-w-full items-center justify-between">
+                {/* Logo - always links back to the volunteer dashboard */}
                 <Link href="/volunteer" className="shrink-0">
                     <Image src={logo} alt="Volunteerly" width={140} height={40} priority />
                 </Link>
 
+                {/* Desktop nav links - hidden on mobile */}
                 <NavigationMenu
                     className="
                         hidden
@@ -69,11 +86,13 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                     </NavigationMenuList>
                 </NavigationMenu>
 
+                {/* Profile dropdown - always visible */}
                 <NavigationMenu>
                     <NavigationMenuList>
                         <NavigationMenuItem>
                             <NavigationMenuTrigger className="p-0">
                                 <div className="flex items-center gap-2">
+                                    {/* Name and role - hidden on very small screens */}
                                     <div
                                         className="
                                             hidden text-right

@@ -539,7 +539,6 @@ export async function createOpportunity(
         throw new Error("Error creating the Opportunity.");
     }
 
-    //create the embedding
     (async () => {
         try {
             const skills = await extractSkillsFromOpportunity(
@@ -612,20 +611,41 @@ export async function orgPostReview(
     });
     if (existing) throw new Error("ALREADY_REVIEWED");
 
-    return prisma.review.create({
+    await prisma.review.create({
         data: { issuerId, revieweeId, opportunityId, rating },
+    });
+
+    const allReviews = await prisma.review.findMany({
+        where: { revieweeId },
+        select: { rating: true },
+    });
+
+    const newAverage = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+    await prisma.volunteer.update({
+        where: { id: revieweeId },
+        data: { averageRating: newAverage },
     });
 }
 
-export async function orgPostFlag(issuerId: string, flaggedUserId: string, reason: string) {
+export async function orgPostFlag(
+    issuerId: string,
+    flaggedUserId: string,
+    opportunityId: string,
+    reason: string,
+) {
+    const existing = await prisma.flag.findUnique({
+        where: { flagIssuerId_opportunityId: { flagIssuerId: issuerId, opportunityId } },
+    });
+    if (existing) throw new Error("ALREADY_FLAGGED");
+
     return prisma.$transaction(async (tx) => {
         const flag = await tx.flag.create({
-            data: { flagIssuerId: issuerId, flaggedUserId, reason },
+            data: { flagIssuerId: issuerId, flaggedUserId, opportunityId, reason },
         });
 
         const flaggedVolunteer = await tx.volunteer.findUnique({
             where: { id: flaggedUserId },
-            select: { id: true },
+            select: { id: true, status: true },
         });
 
         if (flaggedVolunteer) {
@@ -637,13 +657,15 @@ export async function orgPostFlag(issuerId: string, flaggedUserId: string, reaso
                 },
             });
 
-            await tx.volunteer.update({
-                where: { id: flaggedUserId },
-                data: { status: "FLAGGED" },
-            });
+            if (flaggedVolunteer.status !== "FLAGGED") {
+                await tx.volunteer.update({
+                    where: { id: flaggedUserId },
+                    data: { status: "FLAGGED" },
+                });
+            }
 
-            await tx.user.update({
-                where: { id: flaggedUserId },
+            await tx.user.updateMany({
+                where: { id: flaggedUserId, status: { not: "FLAGGED" } },
                 data: { status: "FLAGGED" },
             });
         }

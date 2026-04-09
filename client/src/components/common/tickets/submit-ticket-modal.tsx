@@ -105,6 +105,7 @@ export function SubmitTicketModal({ open, onClose, onSubmitted }: SubmitTicketMo
             footer={
                 <>
                     <Button
+                        className="cursor-pointer"
                         type="button"
                         variant="outline"
                         onClick={handleClose}
@@ -112,7 +113,12 @@ export function SubmitTicketModal({ open, onClose, onSubmitted }: SubmitTicketMo
                     >
                         Cancel
                     </Button>
-                    <Button type="button" onClick={handleSubmit} disabled={submitting}>
+                    <Button
+                        className="cursor-pointer"
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={submitting}
+                    >
                         {submitting ? "Submitting..." : "Submit Ticket"}
                     </Button>
                 </>

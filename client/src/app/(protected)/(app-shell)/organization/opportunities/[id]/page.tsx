@@ -1,6 +1,5 @@
 "use client";
 
-import avtImg from "@/assets/avatarImg.png";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
 import { AppModal } from "@/components/common/app-modal";
 import { LoadingScreen } from "@/components/common/loading-screen";
@@ -50,7 +49,6 @@ import {
     User,
     UserStar,
 } from "lucide-react";
-import Image from "next/image";
 import { use, useState } from "react";
 import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
 
@@ -91,7 +89,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                 >
                     <div
                         className="
-                            max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                            mx-auto mb-10 flex min-h-full w-full flex-col gap-6
                             md:mb-0 md:w-3/4
                         "
                     >
@@ -118,8 +116,13 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             </div>
                         </div>
 
-                        <h2 className="text-2xl font-bold">
-                            {opportunity?.name} - {opportunity?.workType} - {opportunity?.category}
+                        <h2 className="font-bold">
+                            {opportunity?.name} -{" "}
+                            {opportunity?.workType
+                                .replaceAll("_", " ")
+                                .toLowerCase()
+                                .replace(/\b\w/g, (char) => char.toUpperCase())}{" "}
+                            - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
                             <div className="md:grid md:grid-cols-2 md:justify-around md:gap-3">
@@ -208,7 +211,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
                                                 <span className="text-sm">
-                                                    {opportunity?.commitmentLevel}
+                                                    {opportunity?.commitmentLevel
+                                                        .replaceAll("_", " ")
+                                                        .toLowerCase()
+                                                        .replace(/\b\w/g, (char) =>
+                                                            char.toUpperCase(),
+                                                        )}
                                                 </span>
                                             </div>
                                         </span>
@@ -358,7 +366,14 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
-                                                <span>{opportunity?.commitmentLevel}</span>
+                                                <span>
+                                                    {opportunity?.commitmentLevel
+                                                        .replaceAll("_", " ")
+                                                        .toLowerCase()
+                                                        .replace(/\b\w/g, (char) =>
+                                                            char.toUpperCase(),
+                                                        )}
+                                                </span>
                                             </div>
                                         </span>
                                     </CardContent>
@@ -368,23 +383,30 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                     <CardContent>
                                         <div
                                             className="
-                                                gap-6 text-center
-                                                md:grid md:grid-cols-8 md:text-left
+                                                text-center
+                                                md:text-left md:grid md:grid-cols-8
+                                                gap-6
                                             "
                                         >
                                             <div
                                                 className="
-                                                    flex justify-center
-                                                    md:col-span-2 md:w-full
+                                                    flex
+                                                    md:w-full
+                                                    justify-center
+                                                    md:col-span-2
                                                 "
                                             >
-                                                <Image
-                                                    src={avtImg.src}
-                                                    width={avtImg.width}
-                                                    height={avtImg.height}
-                                                    alt="Avatar"
-                                                    className="w-22 rounded-lg object-cover"
-                                                />
+                                                <Avatar className="h-auto w-20">
+                                                    <AvatarImage
+                                                        src={UserService.getAvatarURL(
+                                                            opportunity?.volId || "",
+                                                        )}
+                                                    />
+                                                    <AvatarFallback>
+                                                        {" "}
+                                                        <User className="h-auto w-20"></User>
+                                                    </AvatarFallback>
+                                                </Avatar>
                                             </div>
 
                                             <div

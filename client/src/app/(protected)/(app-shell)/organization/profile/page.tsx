@@ -227,7 +227,7 @@ export default function OrgProfilePage() {
                 >
                     <div
                         className="
-                            max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                            mx-auto mb-5 flex min-h-full w-full flex-col gap-6
                             md:mb-0 md:w-2/3
                         "
                     >

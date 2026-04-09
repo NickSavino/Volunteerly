@@ -95,13 +95,26 @@ export function AppNavbar({
                         <button
                             type="button"
                             className="
-                                flex min-w-55 items-center justify-between gap-3 rounded-full
-                                bg-yellow-50 px-4 py-2 text-left transition-colors
-                                hover:bg-yellow-100
+                                cursor-pointer flex min-w-55 items-center justify-between gap-3
+                                rounded-full
+                                md:bg-yellow-50
+                                px-4 py-2 text-left transition-colors
+                                md:hover:bg-yellow-100
                             "
                         >
-                            <div className="flex min-w-0 items-center gap-3">
-                                <div className="min-w-0">
+                            <div
+                                className="
+                                    flex min-w-0 items-center gap-3 ml-auto
+                                    md:ml-0
+                                    w-fit
+                                "
+                            >
+                                <div
+                                    className="
+                                        min-w-0 hidden
+                                        md:block
+                                    "
+                                >
                                     <p className="truncate text-sm font-medium text-yellow-600">
                                         {displayName}
                                     </p>
@@ -153,7 +166,7 @@ export function AppNavbar({
 
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuItem asChild>
+                        <DropdownMenuItem asChild className="cursor-pointer">
                             <Link href={profileHref}>Profile</Link>
                         </DropdownMenuItem>
 
