@@ -1,8 +1,13 @@
+/**
+ * page.tsx
+ * Skill tree page - renders an SVG skill tree with nodes that unlock as the volunteer logs skills
+ */
 "use client";
 
 import React from "react";
 import { ALL_NODE_LABELS, ICON_PATHS, useSkillTreeViewModel, type SkillNode } from "./skillTreeVm";
 
+// Layout constants for the SVG grid
 const NODE_W = 88;
 const NODE_H = 88;
 const COL_GAP = 124;
@@ -12,6 +17,7 @@ const PAD_Y = 56;
 const COLS = 5;
 const MAX_TIER = 5;
 
+// Horizontal nudge per tier to stagger nodes and reduce visual monotony
 const TIER_OFFSET_X: Record<number, number> = {
     1: 0,
     2: 28,
@@ -20,13 +26,29 @@ const TIER_OFFSET_X: Record<number, number> = {
     5: 0,
 };
 
+/**
+ * Calculates the SVG x/y center position of a node given its tier and column
+ * Tier 1 is at the bottom, tier 5 is at the top
+ * @param tier - node tier (1–5)
+ * @param col - column index (0-based)
+ * @param svgH - total SVG height
+ * @returns {x, y} center coordinates
+ */
 function getPos(tier: number, col: number, svgH: number) {
     const baseX = PAD_X + col * COL_GAP + COL_GAP / 2;
     const x = baseX + (TIER_OFFSET_X[tier] ?? 0);
+    // Y is inverted - higher tier = higher up on the canvas
     const y = svgH - PAD_Y - (tier - 1) * ROW_GAP - ROW_GAP / 2;
     return { x, y };
 }
 
+/**
+ * Builds the list of edges (connector lines) between parent and child nodes
+ * Only draws edges between nodes that are exactly one tier apart
+ * @param nodes - full list of skill nodes with computed statuses
+ * @param svgH - total SVG height
+ * @returns array of edge objects with start/end coordinates and style flags
+ */
 function buildEdges(
     nodes: SkillNode[],
     svgH: number,
@@ -47,6 +69,7 @@ function buildEdges(
             for (const reqId of orGroup) {
                 const req = byId[reqId];
                 if (!req) continue;
+                // Skip edges that span more than one tier (they'd look confusing)
                 if (node.tier - req.tier !== 1) continue;
                 const from = getPos(req.tier, req.col, svgH);
                 edges.push({
@@ -63,6 +86,10 @@ function buildEdges(
     return edges;
 }
 
+/**
+ * Renders a single bezier curve connector between two nodes
+ * Color and dash style reflect the source node's unlock status
+ */
 function CurvedEdge({
     x1,
     y1,
@@ -78,6 +105,7 @@ function CurvedEdge({
     lit: boolean;
     mastered: boolean;
 }) {
+    // Cubic bezier with symmetric control points for a smooth S-curve
     const cy = (y1 + y2) / 2;
     const d = `M ${x1} ${y1} C ${x1} ${cy}, ${x2} ${cy}, ${x2} ${y2}`;
     const colour = mastered ? "var(--mastered-edge)" : lit ? "var(--accent)" : "var(--line-locked)";
@@ -93,6 +121,9 @@ function CurvedEdge({
     );
 }
 
+/**
+ * Renders the full skill tree SVG with edges and clickable node groups
+ */
 function SkillTree({
     nodes,
     onSelect,
@@ -120,6 +151,7 @@ function SkillTree({
                 height={svgH}
                 style={{ display: "block", minWidth: svgW }}
             >
+                {/* Draw edges first so they appear behind the nodes */}
                 {edges.map((e, i) => (
                     <CurvedEdge key={i} {...e} />
                 ))}
@@ -149,6 +181,9 @@ function SkillTree({
     );
 }
 
+/**
+ * Renders a single skill node rectangle with icon, label, glow, and status badge
+ */
 function TreeNode({
     node,
     w,
@@ -161,12 +196,16 @@ function TreeNode({
     selected: boolean;
 }) {
     const r = 20;
+
+    // Background fill color based on node status
     const fill =
         node.status === "mastered"
             ? "var(--mastered-fill)"
             : node.status === "in_progress"
               ? "var(--progress-fill)"
               : "var(--locked-fill)";
+
+    // Border stroke color - selected nodes always get the blue highlight
     const stroke = selected
         ? "var(--selected)"
         : node.status === "mastered"
@@ -174,8 +213,10 @@ function TreeNode({
           : node.status === "in_progress"
             ? "var(--accent)"
             : "var(--locked-stroke)";
+
     const dimmed = node.status === "locked";
 
+    // Split the label into two lines if it has multiple words for better readability in the node
     const words = node.label.toUpperCase().split(" ");
     const mid = Math.ceil(words.length / 2);
     const line1 = words.slice(0, mid).join(" ");
@@ -187,6 +228,7 @@ function TreeNode({
 
     return (
         <g>
+            {/* Glow ring - only shown for unlocked or mastered nodes */}
             {node.status !== "locked" && (
                 <rect
                     x={-7}
@@ -200,7 +242,9 @@ function TreeNode({
                     opacity={selected ? 0.6 : 0.18}
                 />
             )}
+            {/* Subtle drop shadow */}
             <rect x={3} y={5} width={w} height={h} rx={r} fill="rgba(0,0,0,0.06)" />
+            {/* Main node rectangle */}
             <rect
                 x={0}
                 y={0}
@@ -211,6 +255,7 @@ function TreeNode({
                 stroke={stroke}
                 strokeWidth={selected ? 3 : 2}
             />
+            {/* Icon drawn from the pre-defined SVG path data */}
             <g
                 transform={`translate(${(w - 20) / 2}, ${h / 2 - 20}) scale(${scale})`}
                 opacity={dimmed ? 0.55 : 1}
@@ -231,6 +276,7 @@ function TreeNode({
             >
                 <path d={iconPath} />
             </g>
+            {/* Label text - split across two lines if needed */}
             <text
                 textAnchor="middle"
                 fontSize={9}
@@ -256,6 +302,7 @@ function TreeNode({
                     </tspan>
                 )}
             </text>
+            {/* Green checkmark badge - only on mastered nodes */}
             {node.status === "mastered" && (
                 <g transform={`translate(${w - 14}, -4)`} pointerEvents="none">
                     <circle r={9} fill="#16A34A" stroke="white" strokeWidth={1.5} />
@@ -268,9 +315,15 @@ function TreeNode({
     );
 }
 
+/**
+ * Side panel shown when a node is selected - displays requirement details and progress bar
+ */
 function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }) {
+    // Cap the displayed progress at the threshold so the bar never overflows
     const capped = Math.min(node.current, node.threshold);
-    const pct = node.threshold > 0 ? Math.min(100, Math.round((capped / node.threshold) * 100)) : 0;
+    const pct =
+        node.threshold > 0 ? Math.min(100, Math.round((capped / node.threshold) * 100)) : 0;
+
     const statusLabel =
         node.status === "mastered"
             ? "Mastered"
@@ -292,6 +345,7 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
 
     const Icon = node.icon;
 
+    // Converts a node ID like "nt_project_mgmt" to a readable label, falling back to the registry
     const getLabel = (id: string) =>
         ALL_NODE_LABELS[id] ??
         id
@@ -351,6 +405,7 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
                 <div className="st-req-box">{node.requirementLabel}</div>
             </div>
 
+            {/* Progress bar showing how far along the volunteer is toward mastery */}
             <div className="st-section">
                 <div
                     style={{
@@ -394,6 +449,7 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
                 </div>
             </div>
 
+            {/* Prerequisites section - shows AND/OR logic between requirement groups */}
             {node.requiresAny.length > 0 && (
                 <div className="st-section">
                     <div className="st-section-label">Requires</div>
@@ -402,6 +458,7 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
                     >
                         {node.requiresAny.map((orGroup, i) => (
                             <React.Fragment key={i}>
+                                {/* Each orGroup is connected by AND; within a group the items are OR */}
                                 {i > 0 && (
                                     <span
                                         style={{
@@ -443,6 +500,7 @@ export default function SkillTreePage() {
 
     return (
         <>
+            {/* Scoped CSS - keeps skill tree styles isolated from the rest of the app */}
             <style>{`
         :root {
           --accent: #F5C842;
@@ -500,6 +558,7 @@ export default function SkillTreePage() {
         }
       `}</style>
 
+            {/* Clicking anywhere on the page background deselects the active node */}
             <div className="st-page" onClick={() => setSelected(null)}>
                 <div className="st-header">
                     <h1>Skill Tree</h1>
@@ -508,6 +567,7 @@ export default function SkillTreePage() {
                         Start at the bottom and work your way up.
                     </p>
 
+                    {/* Summary chips - only shown once data is loaded */}
                     {!loading && !error && (
                         <div className="st-stats">
                             <div className="st-chip">
@@ -531,6 +591,7 @@ export default function SkillTreePage() {
                         </div>
                     )}
 
+                    {/* Tab switcher between Technical and Non-Technical trees */}
                     <div className="st-tabs">
                         <button
                             className={`
@@ -573,6 +634,7 @@ export default function SkillTreePage() {
                         )}
                         <div className="st-body">
                             <div className="st-canvas">
+                                {/* Legend - hidden on mobile via CSS */}
                                 <div className="st-legend">
                                     <div className="st-legend-item">
                                         <div
@@ -605,6 +667,7 @@ export default function SkillTreePage() {
                                         Locked
                                     </div>
                                 </div>
+                                {/* Clicking the same node again toggles it off */}
                                 <SkillTree
                                     nodes={nodes}
                                     onSelect={(n) =>

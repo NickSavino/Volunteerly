@@ -1,3 +1,7 @@
+/**
+ * skillTreeVm.ts
+ * View model and data definitions for the skill tree - node configs, status computation, and API fetching
+ */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -56,6 +60,7 @@ export interface SkillNode extends SkillNodeDef {
     current: number;
 }
 
+// SVG path data for each icon key - used for rendering icons directly inside the SVG canvas
 export const ICON_PATHS: Record<string, string> = {
     Code: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
     Table: "M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18",
@@ -94,9 +99,13 @@ export const ICON_PATHS: Record<string, string> = {
     PieChart: "M21.21 15.89A10 10 0 118 2.83M22 12A10 10 0 0012 2v10z",
 };
 
+// Registry populated at module load time so the detail panel can look up labels by node ID
 export const ALL_NODE_LABELS: Record<string, string> = {};
 
+// Technical skill tree node definitions
+// Nodes are arranged in 5 tiers, bottom (tier 1) to top (tier 5)
 export const TECH_NODES: SkillNodeDef[] = [
+    // Tier 1 - Foundation skills
     {
         id: "javascript",
         label: "JS Basics",
@@ -163,6 +172,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requirementLabel: "Log Mobile Development 2 times",
     },
 
+    // Tier 2 - Intermediate skills, each requires at least one tier-1 prerequisite
     {
         id: "webdev",
         label: "Web Dev",
@@ -213,7 +223,8 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["excel"]],
         description: "Build dashboards and BI reports to drive org decisions.",
-        requirementLabel: "Unlock Spreadsheets, then log Excel or Data Analysis 3 times",
+        requirementLabel:
+            "Unlock Spreadsheets, then log Excel or Data Analysis 3 times",
     },
     {
         id: "cybersecurity",
@@ -224,12 +235,14 @@ export const TECH_NODES: SkillNodeDef[] = [
         col: 4,
         trackedSkills: ["Cybersecurity"],
         threshold: 2,
+        // OR logic: unlocking any of these three tier-1 nodes satisfies the requirement
         requiresAny: [["javascript", "python", "mobile"]],
         description: "Apply security best practices across volunteer systems.",
         requirementLabel:
             "Unlock JS Basics, Python Basics, or Mobile Dev, then log Cybersecurity 2 times",
     },
 
+    // Tier 3 - Advanced skills
     {
         id: "devops",
         label: "DevOps & CI/CD",
@@ -253,7 +266,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         trackedSkills: ["Data Analysis", "Python", "SQL", "Excel"],
         threshold: 4,
         requiresAny: [["sql", "powerbi"]],
-        description: "Full data analysis — reachable via Python/SQL or Excel/Power BI.",
+        description: "Full data analysis - reachable via Python/SQL or Excel/Power BI.",
         requirementLabel:
             "Unlock SQL/DBs or Power BI, then log Data Analysis, Python, SQL, or Excel 4 times",
     },
@@ -300,6 +313,7 @@ export const TECH_NODES: SkillNodeDef[] = [
             "Unlock Cyber Basics or Web Dev, then log Mobile Development, JavaScript, TypeScript, or React 3 times",
     },
 
+    // Tier 4 - Expert skills
     {
         id: "cloud",
         label: "Cloud Arch.",
@@ -311,7 +325,8 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 4,
         requiresAny: [["devops", "networking_infra"]],
         description: "Design and manage scalable cloud-based systems for nonprofits.",
-        requirementLabel: "Unlock DevOps or IT & Networks, then log Cloud or DevOps 4 times",
+        requirementLabel:
+            "Unlock DevOps or IT & Networks, then log Cloud or DevOps 4 times",
     },
     {
         id: "machine_learning",
@@ -369,6 +384,7 @@ export const TECH_NODES: SkillNodeDef[] = [
             "Unlock App Dev, then log Mobile Development, JavaScript, TypeScript, React, or UI/UX Design 3 times",
     },
 
+    // Tier 5 - Capstone
     {
         id: "tech_expert",
         label: "Tech Expert",
@@ -385,6 +401,7 @@ export const TECH_NODES: SkillNodeDef[] = [
             "Cybersecurity",
         ],
         threshold: 6,
+        // Any single tier-4 node unlocks this capstone
         requiresAny: [
             ["machine_learning", "cloud", "business_intelligence", "it_management", "product_dev"],
         ],
@@ -394,7 +411,9 @@ export const TECH_NODES: SkillNodeDef[] = [
     },
 ];
 
+// Non-technical skill tree node definitions
 export const NT_NODES: SkillNodeDef[] = [
+    // Tier 1 - People and communication foundations
     {
         id: "nt_teamwork",
         label: "Team Player",
@@ -435,6 +454,7 @@ export const NT_NODES: SkillNodeDef[] = [
         requirementLabel: "Log Writing 2 times",
     },
 
+    // Tier 2
     {
         id: "nt_mentoring",
         label: "Mentor",
@@ -485,9 +505,11 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["nt_communication"]],
         description: "Drive fundraising efforts and build donor or sponsor networks.",
-        requirementLabel: "Unlock Clear Comms, then log Fundraising or Networking 2 times",
+        requirementLabel:
+            "Unlock Clear Comms, then log Fundraising or Networking 2 times",
     },
 
+    // Tier 3
     {
         id: "nt_event_planning",
         label: "Event Planning",
@@ -527,9 +549,11 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["nt_fundraising"]],
         description: "Promote causes and grow audiences using marketing and social media.",
-        requirementLabel: "Unlock Fundraiser, then log Marketing or Social Media 2 times",
+        requirementLabel:
+            "Unlock Fundraiser, then log Marketing or Social Media 2 times",
     },
 
+    // Tier 4
     {
         id: "nt_leadership",
         label: "Team Leader",
@@ -541,7 +565,8 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["nt_event_planning", "nt_project_mgmt"]],
         description: "Lead volunteers, coordinate multi-person teams, own outcomes.",
-        requirementLabel: "Unlock Event Planning or Project Mgmt, then log Leadership 3 times",
+        requirementLabel:
+            "Unlock Event Planning or Project Mgmt, then log Leadership 3 times",
     },
     {
         id: "nt_strategy",
@@ -558,6 +583,7 @@ export const NT_NODES: SkillNodeDef[] = [
             "Unlock Project Mgmt or Marketer, then log Problem Solving, Critical Thinking, or Project Management 5 times",
     },
 
+    // Tier 5 - Capstone
     {
         id: "nt_community_leader",
         label: "Community Leader",
@@ -575,10 +601,18 @@ export const NT_NODES: SkillNodeDef[] = [
     },
 ];
 
+// Populate the label registry from both trees so the detail panel can look them up
 [...TECH_NODES, ...NT_NODES].forEach((n) => {
     ALL_NODE_LABELS[n.id] = n.label;
 });
 
+/**
+ * Checks whether all prerequisite groups for a node are satisfied
+ * requiresAny is an array of OR-groups; every group must have at least one mastered node
+ * @param node - the node to check
+ * @param byId - lookup map of all nodes by ID
+ * @returns true if all prerequisites are met
+ */
 function prereqsMet(node: SkillNode, byId: Record<string, SkillNode>): boolean {
     if (node.requiresAny.length === 0) return true;
     return node.requiresAny.every((orGroup) =>
@@ -586,17 +620,26 @@ function prereqsMet(node: SkillNode, byId: Record<string, SkillNode>): boolean {
     );
 }
 
+/**
+ * Computes the status and progress for each node based on the volunteer's skill counts
+ * Skills are consumed greedily from lowest tier upward so each skill only counts once
+ * @param defs - the static node definitions
+ * @param skillCounts - map of skill label to number of times it has been logged
+ * @returns array of SkillNodes with computed status and current progress
+ */
 export function computeNodes(
     defs: SkillNodeDef[],
     skillCounts: Record<string, number>,
 ): SkillNode[] {
     const map: Record<string, SkillNode> = {};
+    // Copy skill counts so we can subtract as we assign them to nodes
     const remaining: Record<string, number> = { ...skillCounts };
 
     for (const def of defs) {
         map[def.id] = { ...def, status: "locked", current: 0 };
     }
 
+    // Process nodes tier by tier so prerequisites are resolved before their dependants
     const ordered = [...defs].sort((a, b) => a.tier - b.tier);
 
     for (const def of ordered) {
@@ -610,6 +653,7 @@ export function computeNodes(
 
         let total = 0;
 
+        // Greedily consume skill counts from the remaining pool
         for (const skill of def.trackedSkills) {
             const available = remaining[skill] ?? 0;
             if (available <= 0) continue;
@@ -641,6 +685,10 @@ export function computeNodes(
     return defs.map((d) => map[d.id]);
 }
 
+/**
+ * Fetches the volunteer's skill counts from the API and computes the full skill tree state
+ * @returns tab, selected node, computed nodes, loading/error state, and summary counts
+ */
 export function useSkillTreeViewModel() {
     const [tab, setTab] = useState<"technical" | "nontechnical">("technical");
     const [selected, setSelected] = useState<SkillNode | null>(null);
@@ -663,6 +711,7 @@ export function useSkillTreeViewModel() {
                     setLoading(false);
                 }
             });
+        // Cleanup flag prevents setting state on an unmounted component
         return () => {
             cancelled = true;
         };
@@ -672,6 +721,8 @@ export function useSkillTreeViewModel() {
     const techNodes = computeNodes(TECH_NODES, counts);
     const ntNodes = computeNodes(NT_NODES, counts);
     const nodes = tab === "technical" ? techNodes : ntNodes;
+
+    // Summary counts for the header chips
     const mastered = nodes.filter((n) => n.status === "mastered").length;
     const inProg = nodes.filter((n) => n.status === "in_progress").length;
 
