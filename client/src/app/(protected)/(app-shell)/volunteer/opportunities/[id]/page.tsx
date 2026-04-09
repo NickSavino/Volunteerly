@@ -177,10 +177,10 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 </div>
 
                 <div className="rounded-xl border bg-white p-5 shadow-sm">
-                    <h2 className="mb-4 flex items-center gap-2 font-semibold text-gray-800">
-                        <TrendingUp className="h-4 w-4 text-yellow-500" />
+                    <h3 className="mb-4 flex items-center gap-2 text-gray-800">
+                        <TrendingUp className="h-7 w-7 text-yellow-500" />
                         Progress Tracking
-                    </h2>
+                    </h3>
 
                     {sortedUpdates.length === 0 ? (
                         <p className="py-4 text-center text-sm text-gray-400">No progress updates yet.</p>
