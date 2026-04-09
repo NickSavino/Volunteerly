@@ -80,15 +80,28 @@ export async function addProgressUpdate(
     oppId: string,
     input: { title: string; description: string; hoursContributed: number },
 ) {
-    return prisma.progressUpdate.create({
-        data: {
-            opportunityId: oppId,
-            senderId: userId,
-            senderRole: "VOLUNTEER",
-            title: input.title,
-            description: input.description,
-            hoursContributed: input.hoursContributed,
-        },
+    return prisma.$transaction(async (tx) => {
+        const update = await tx.progressUpdate.create({
+            data: {
+                opportunityId: oppId,
+                senderId: userId,
+                senderRole: "VOLUNTEER",
+                title: input.title,
+                description: input.description,
+                hoursContributed: input.hoursContributed,
+            },
+        });
+
+        await tx.opportunity.update({
+            where: { id: oppId },
+            data: {
+                hours: {
+                    increment: input.hoursContributed,
+                },
+            },
+        });
+
+        return update;
     });
 }
 
@@ -129,50 +142,37 @@ export async function postReview(
             rating: input.rating,
         },
     });
-
-    const allReviews = await prisma.review.findMany({
-        where: { revieweeId },
-        select: { rating: true },
-    });
-
-    const newAverage = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
-    await prisma.volunteer.update({
-        where: { id: revieweeId },
-        data: { averageRating: newAverage },
-    });
 }
 
-export async function postFlag(issuerId: string, flaggedUserId: string, reason: string) {
+export async function postFlag(
+    issuerId: string,
+    flaggedUserId: string,
+    opportunityId: string,
+    reason: string,
+) {
+    const existing = await prisma.flag.findUnique({
+        where: { flagIssuerId_opportunityId: { flagIssuerId: issuerId, opportunityId } },
+    });
+    if (existing) throw new Error("ALREADY_FLAGGED");
+
     return prisma.$transaction(async (tx) => {
         const flag = await tx.flag.create({
             data: {
                 flagIssuerId: issuerId,
                 flaggedUserId,
+                opportunityId,
                 reason,
             },
         });
 
-        const flaggedVolunteer = await tx.volunteer.findUnique({
+        const flaggedOrg = await tx.organization.findUnique({
             where: { id: flaggedUserId },
             select: { id: true },
         });
 
-        if (flaggedVolunteer) {
-            await tx.volunteerReport.create({
-                data: {
-                    reportedUserId: flaggedUserId,
-                    reportingUserId: issuerId,
-                    reason,
-                },
-            });
-
-            await tx.volunteer.update({
-                where: { id: flaggedUserId },
-                data: { status: "FLAGGED" },
-            });
-
-            await tx.user.update({
-                where: { id: flaggedUserId },
+        if (flaggedOrg) {
+            await tx.user.updateMany({
+                where: { id: flaggedUserId, status: { not: "FLAGGED" } },
                 data: { status: "FLAGGED" },
             });
         }

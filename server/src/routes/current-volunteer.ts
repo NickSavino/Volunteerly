@@ -1,3 +1,7 @@
+/**
+ * current-volunteer.ts
+ * Express router for all endpoints scoped to the authenticated volunteer (profile, opportunities, skills, etc.)
+ */
 import { Router } from "express";
 import {
     createCurrentVolunteer,
@@ -25,6 +29,13 @@ import { embedText } from "../services/gemini-service.js";
 
 export const currentVolunteerRouter = Router();
 
+/**
+ * GET /current-volunteer/skill-counts
+ * Returns a map of skill label --> count of times the volunteer has logged that skill
+ * Auth: required
+ * Returns: 200 with Record<string, number>
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/skill-counts", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -36,6 +47,15 @@ currentVolunteerRouter.get("/skill-counts", async (req, res, next) => {
     }
 });
 
+/**
+ * POST /current-volunteer/opportunities/:oppId/apply
+ * Submits a volunteer application for the specified opportunity
+ * Auth: required
+ * Params: oppId - opportunity UUID
+ * Body: { message: string }
+ * Returns: 201 { success: true }
+ * Errors: 401, 409 (already applied)
+ */
 currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -54,6 +74,15 @@ currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next
     }
 });
 
+/**
+ * POST /current-volunteer/opportunities/:oppId/progress
+ * Adds a progress update (title, description, hours) to an in-progress opportunity
+ * Auth: required
+ * Params: oppId - opportunity UUID
+ * Body: { title: string, description: string, hoursContributed: number }
+ * Returns: 201 { success: true }
+ * Errors: 401
+ */
 currentVolunteerRouter.post("/opportunities/:oppId/progress", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -67,6 +96,14 @@ currentVolunteerRouter.post("/opportunities/:oppId/progress", async (req, res, n
     }
 });
 
+/**
+ * POST /current-volunteer/opportunities/:oppId/request-completion
+ * Signals that the volunteer believes the opportunity is done and requests org sign-off
+ * Auth: required
+ * Params: oppId - opportunity UUID
+ * Returns: 200 { success: true }
+ * Errors: 401
+ */
 currentVolunteerRouter.post("/opportunities/:oppId/request-completion", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -79,6 +116,14 @@ currentVolunteerRouter.post("/opportunities/:oppId/request-completion", async (r
     }
 });
 
+/**
+ * POST /current-volunteer/reviews
+ * Posts a star rating review for an organization tied to a specific opportunity
+ * Auth: required
+ * Body: { revieweeId: string, rating: number, opportunityId: string }
+ * Returns: 201 { success: true }
+ * Errors: 401, 409 (already reviewed for this opportunity)
+ */
 currentVolunteerRouter.post("/reviews", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -94,18 +139,37 @@ currentVolunteerRouter.post("/reviews", async (req, res, next) => {
     }
 });
 
+/**
+ * POST /current-volunteer/flags
+ * Flags an organization for review by the platform, tied to a specific opportunity
+ * Auth: required
+ * Body: { flaggedUserId: string, opportunityId: string, reason: string }
+ * Returns: 201 { success: true }
+ * Errors: 401, 409 (already flagged for this opportunity)
+ */
 currentVolunteerRouter.post("/flags", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
-        const { flaggedUserId, reason } = req.body;
-        await postFlag(userId, flaggedUserId, reason);
+        const { flaggedUserId, opportunityId, reason } = req.body;
+        await postFlag(userId, flaggedUserId, opportunityId, reason);
         res.status(201).json({ success: true });
-    } catch (error) {
+    } catch (error: any) {
+        if (error?.message === "ALREADY_FLAGGED") {
+            return res.status(409).json({ error: "Already flagged for this opportunity." });
+        }
         next(error);
     }
 });
 
+/**
+ * GET /current-volunteer/opportunities/applied-ids
+ * Returns the list of opportunity IDs the volunteer has already applied to
+ * Used by the browse page to show "Applied" badges without re-fetching full opportunity data
+ * Auth: required
+ * Returns: 200 string[]
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/opportunities/applied-ids", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -117,6 +181,19 @@ currentVolunteerRouter.get("/opportunities/applied-ids", async (req, res, next) 
     }
 });
 
+/**
+ * GET /current-volunteer/opportunities/browse
+ * Returns a filtered list of open opportunities available to browse
+ * Auth: required
+ * Query params:
+ *   search?: string - full-text search term
+ *   category?: string - role/category filter
+ *   workType?: "IN_PERSON" | "REMOTE" | "HYBRID"
+ *   commitmentLevel?: "FLEXIBLE" | "PART_TIME" | "FULL_TIME"
+ *   maxHours?: number - maximum weekly hours filter
+ * Returns: 200 Opportunity[]
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -138,6 +215,14 @@ currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-volunteer/opportunities/match-scores
+ * Returns a map of opportunity ID --> match percentage (1–100) based on pgvector cosine similarity
+ * Returns an empty object if the volunteer has no skill vector yet
+ * Auth: required
+ * Returns: 200 Record<string, number>
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/opportunities/match-scores", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -149,6 +234,14 @@ currentVolunteerRouter.get("/opportunities/match-scores", async (req, res, next)
     }
 });
 
+/**
+ * POST /current-volunteer/opportunities/backfill-vectors
+ * Fire-and-forget endpoint that generates skill vectors for any OPEN opportunities missing one
+ * Responds immediately with the count of opportunities being processed; work happens asynchronously
+ * Auth: required
+ * Returns: 200 { success: true, count: number } or { skipped: true }
+ * Errors: 401
+ */
 currentVolunteerRouter.post("/opportunities/backfill-vectors", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -173,9 +266,11 @@ currentVolunteerRouter.post("/opportunities/backfill-vectors", async (req, res, 
             return res.status(200).json({ skipped: true });
         }
 
+        // Process in the background so the HTTP response isn't held open
         (async () => {
             for (const opp of oppsWithoutVector) {
                 try {
+                    // Use Groq to extract skill tags, then Gemini to embed them as a vector
                     const skills = await extractSkillsFromOpportunity(
                         opp.name,
                         opp.category,
@@ -201,6 +296,14 @@ currentVolunteerRouter.post("/opportunities/backfill-vectors", async (req, res, 
     }
 });
 
+/**
+ * GET /current-volunteer/opportunities/:oppId
+ * Returns the full details for a single opportunity the volunteer is enrolled in
+ * Auth: required
+ * Params: oppId - opportunity UUID
+ * Returns: 200 Opportunity
+ * Errors: 401, 404
+ */
 currentVolunteerRouter.get("/opportunities/:oppId", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -214,6 +317,13 @@ currentVolunteerRouter.get("/opportunities/:oppId", async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-volunteer/opportunities
+ * Returns all opportunities the volunteer is currently enrolled in
+ * Auth: required
+ * Returns: 200 Opportunity[]
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/opportunities", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -225,6 +335,13 @@ currentVolunteerRouter.get("/opportunities", async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-volunteer/organizations
+ * Returns all organizations the volunteer has worked with
+ * Auth: required
+ * Returns: 200 Organization[]
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/organizations", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -236,6 +353,13 @@ currentVolunteerRouter.get("/organizations", async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-volunteer/monthly-hours
+ * Returns the volunteer's logged hours aggregated by month
+ * Auth: required
+ * Returns: 200 monthly hours data
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/monthly-hours", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -247,6 +371,13 @@ currentVolunteerRouter.get("/monthly-hours", async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-volunteer/
+ * Returns the authenticated volunteer's full profile
+ * Auth: required
+ * Returns: 200 CurrentVolunteer
+ * Errors: 401, 404
+ */
 currentVolunteerRouter.get("/", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -263,6 +394,15 @@ currentVolunteerRouter.get("/", async (req, res, next) => {
     }
 });
 
+/**
+ * PUT /current-volunteer/
+ * Creates or updates the authenticated volunteer's profile
+ * Creates a new volunteer record if one doesn't exist yet (e.g. first login after role assignment)
+ * Auth: required
+ * Body: { firstName, lastName, location?, bio?, availability?, hourlyValue? }
+ * Returns: 200 CurrentVolunteer
+ * Errors: 401, 500
+ */
 currentVolunteerRouter.put("/", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
@@ -271,6 +411,7 @@ currentVolunteerRouter.put("/", async (req, res, next) => {
         const user = await getCurrentVolunteer(userId);
         let modified_user;
         if (!user) {
+            // First-time setup - create a bare profile with just name
             modified_user = await createCurrentVolunteer(userId, firstName, lastName);
         } else {
             modified_user = await updateCurrentVolunteer(
@@ -295,6 +436,14 @@ currentVolunteerRouter.put("/", async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-volunteer/awards
+ * Computes and returns the badges/awards the volunteer has earned based on their activity
+ * Award criteria are evaluated at request time (not stored separately)
+ * Auth: required
+ * Returns: 200 Record<string, string> - map of award name to description
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/awards", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -306,6 +455,7 @@ currentVolunteerRouter.get("/awards", async (req, res, next) => {
         const locationLength = vol?.location?.length || 0;
         const bioLength = vol?.bio?.length || 0;
 
+        // Profile completeness award
         if (locationLength >= 1 && bioLength >= 1) {
             awards["Profile Pro"] = "Completed all volunteer profile details!";
         }
@@ -313,6 +463,7 @@ currentVolunteerRouter.get("/awards", async (req, res, next) => {
         const opportunities = await getYourOpportunities(userId);
         const num_opporuntities = opportunities?.length || 0;
 
+        // Opportunity milestone awards - only the highest tier is awarded
         if (num_opporuntities >= 1) {
             awards["First Step"] = "Completed your first opportunity!";
         }
@@ -327,6 +478,7 @@ currentVolunteerRouter.get("/awards", async (req, res, next) => {
         const hours = await getVolunteerOrganizations(userId);
         const num_unique_orgs = hours?.length || 0;
 
+        // Organization diversity awards - same tiered approach
         if (num_unique_orgs >= 1) {
             awards["Helping Hand"] = "Assisted your first Organization!";
         }
@@ -344,6 +496,16 @@ currentVolunteerRouter.get("/awards", async (req, res, next) => {
         next(error);
     }
 });
+
+/**
+ * POST /current-volunteer/opportunities/:oppId/skills
+ * Logs the skills a volunteer used during a completed opportunity
+ * Auth: required
+ * Params: oppId - opportunity UUID
+ * Body: { skills: string[] }
+ * Returns: 201 { success: true }
+ * Errors: 400 (skills not an array), 401, 409 (already submitted)
+ */
 currentVolunteerRouter.post("/opportunities/:oppId/skills", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -362,6 +524,14 @@ currentVolunteerRouter.post("/opportunities/:oppId/skills", async (req, res, nex
     }
 });
 
+/**
+ * GET /current-volunteer/opportunities/:oppId/skills
+ * Returns the skills the volunteer has already logged for a specific opportunity
+ * Auth: required
+ * Params: oppId - opportunity UUID
+ * Returns: 200 string[]
+ * Errors: 401
+ */
 currentVolunteerRouter.get("/opportunities/:oppId/skills", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;

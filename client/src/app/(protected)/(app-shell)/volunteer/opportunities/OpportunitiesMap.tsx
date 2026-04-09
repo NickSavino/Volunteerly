@@ -1,10 +1,21 @@
+/**
+ * OpportunitiesMap.tsx
+ * Leaflet map that geocodes organization addresses and drops pins for each open opportunity
+ */
 "use client";
 
 import type { Opportunity } from "@volunteerly/shared";
 import { useEffect, useRef } from "react";
 
+/**
+ * Geocodes a plain-text address string to [lat, lng] using the Nominatim API
+ * Returns null if the address can't be resolved or the request fails
+ * @param address - full address string (e.g. "123 Main St, Calgary, T2P 1A1")
+ * @returns a [lat, lng] tuple or null
+ */
 async function geocodeAddress(address: string): Promise<[number, number] | null> {
     try {
+        // Split the address into parts so we can pass structured fields to Nominatim
         const parts = address.split(",").map((s) => s.trim());
         const street = parts[0] ?? "";
         const city = parts[1] ?? "Calgary";
@@ -31,17 +42,27 @@ async function geocodeAddress(address: string): Promise<[number, number] | null>
     }
 }
 
+/**
+ * Renders an interactive Leaflet map with a marker for each opportunity's organization location
+ * Lazily loaded (ssr: false) since Leaflet requires the browser DOM
+ * @param opportunities - the list of opportunities to plot
+ */
 export default function OpportunitiesMap({ opportunities }: { opportunities: Opportunity[] }) {
     const mapRef = useRef<HTMLDivElement>(null);
+    // Keep a reference to the map instance so we can clean it up on unmount
     const mapInstance = useRef<import("leaflet").Map | null>(null);
 
     useEffect(() => {
+        // Guard against SSR and double-mount in strict mode
         if (typeof window === "undefined" || mapInstance.current || !mapRef.current) return;
 
         import("leaflet").then(async (LeafletModule) => {
             if (!mapRef.current || mapInstance.current) return;
 
             const L = LeafletModule.default;
+
+            // Leaflet's default icon relies on a webpack url-loader trick that breaks in Next.js,
+            // so we manually point it at the CDN images instead
             const defaultIconPrototype = L.Icon.Default
                 .prototype as typeof L.Icon.Default.prototype & {
                 _getIconUrl?: string;
@@ -54,6 +75,7 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
                 shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
             });
 
+            // Default view centered on Calgary
             const map = L.map(mapRef.current).setView([51.0447, -114.0719], 11);
 
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -62,6 +84,7 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
 
             mapInstance.current = map;
 
+            // Cache geocoded results so we don't hit the API multiple times for the same address
             const geocodeCache = new Map<string, [number, number] | null>();
 
             for (const opp of opportunities) {
@@ -75,14 +98,17 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
                 } else {
                     coords = await geocodeAddress(address);
                     geocodeCache.set(address, coords);
+                    // Nominatim enforces a 1 req/sec rate limit - this delay keeps us compliant
                     await new Promise((r) => setTimeout(r, 1100));
                 }
 
                 if (!coords || !mapInstance.current) continue;
 
                 const [lat, lng] = coords;
+                // Use the first letter of the org name as the marker label
                 const label = opp.organization?.orgName?.slice(0, 1).toUpperCase() ?? "O";
 
+                // Build a custom circular div icon styled with the app's yellow brand color
                 const el = document.createElement("div");
                 el.style.cssText = [
                     "display:flex",
@@ -121,6 +147,7 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
             }
         });
 
+        // Clean up the map instance when the component unmounts to avoid memory leaks
         return () => {
             if (mapInstance.current) {
                 mapInstance.current.remove();

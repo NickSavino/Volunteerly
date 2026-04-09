@@ -1,3 +1,7 @@
+/**
+ * page.tsx
+ * Volunteer opportunity detail page — shows progress, stats, and actions for a specific opportunity
+ */
 "use client";
 
 import { use, useState } from "react";
@@ -8,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserService } from "@/services/UserService";
 import { getAvatarFallback } from "@/components/navigation/nav-utils";
 
+// Full list of skills available to log after completing an opportunity
 const ALL_SKILLS = [
     "Python",
     "JavaScript",
@@ -70,6 +75,8 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
     }
 
     const isCompleted = vm.opp.status === "CLOSED";
+
+    // Sort updates newest-first so the latest activity is always at the top
     const sortedUpdates = [...(vm.opp.progressUpdates ?? [])].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
@@ -93,6 +100,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     Back to Dashboard
                 </button>
 
+                {/* Inline error banner - non-blocking so the rest of the page still renders */}
                 {vm.error && (
                     <p
                         className="
@@ -104,6 +112,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     </p>
                 )}
 
+                {/* Status badge and start/completion date */}
                 <div className="mb-1 flex items-center gap-2">
                     {isCompleted ? (
                         <span
@@ -134,6 +143,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 <h1 className="mb-1 text-3xl font-bold text-gray-900">{vm.opp.name}</h1>
                 <p className="mb-6 text-sm text-gray-500">{vm.opp.category}</p>
 
+                {/* Impact summary cards - only shown once the opportunity is completed */}
                 {isCompleted && (
                     <div className="mb-6 grid grid-cols-2 gap-4">
                         <div className="rounded-xl border bg-white p-5 shadow-sm">
@@ -158,6 +168,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     </div>
                 )}
 
+                {/* Organization card with link to the org's public profile */}
                 <div className="mb-6 rounded-xl border bg-white p-5 shadow-sm">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -225,6 +236,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     </div>
                 </div>
 
+                {/* Progress timeline - updates are ordered newest first */}
                 <div className="rounded-xl border bg-white p-5 shadow-sm">
                     <h3 className="mb-4 flex items-center gap-2 text-gray-800">
                         <TrendingUp className="size-7 text-yellow-500" />
@@ -238,6 +250,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                     ) : (
                         <ol className="relative space-y-6 border-l border-gray-200 pl-6">
                             {sortedUpdates.map((update, idx) => {
+                                // The most recent update gets a highlighted dot
                                 const isFirst = idx === 0;
                                 return (
                                     <li key={update.id} className="relative">
@@ -275,6 +288,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                         </ol>
                     )}
 
+                    {/* Action buttons - differ based on whether the opportunity is still active */}
                     {!isCompleted && (
                         <div className="mt-6 flex gap-3">
                             <button
@@ -302,6 +316,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                         </div>
                     )}
 
+                    {/* Skill logging is only available once the opportunity is marked complete */}
                     {isCompleted && (
                         <div className="mt-6">
                             <button
@@ -323,6 +338,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 </div>
             </main>
 
+            {/* Modals are rendered outside main to avoid stacking context issues */}
             <ProgressUpdateModal
                 open={vm.progressModalOpen}
                 submitting={vm.submitting}
@@ -345,6 +361,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                 onSubmit={vm.submitSkills}
             />
 
+            {/* Confirmation dialog before submitting a completion request */}
             <AppModal
                 open={vm.completeConfirmOpen}
                 onClose={() => vm.setCompleteConfirmOpen(false)}
@@ -404,6 +421,9 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
     );
 }
 
+/**
+ * Modal for selecting which skills the volunteer used during the opportunity
+ */
 function SkillPickerModal({
     open,
     submitting,
@@ -417,6 +437,7 @@ function SkillPickerModal({
 }) {
     const [selected, setSelected] = useState<string[]>([]);
 
+    // Toggle a skill in/out of the selection
     function toggle(skill: string) {
         setSelected((prev) =>
             prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill],
@@ -494,6 +515,9 @@ function SkillPickerModal({
     );
 }
 
+/**
+ * Modal for logging a progress update with a title, description, and hours
+ */
 function ProgressUpdateModal({
     open,
     submitting,
@@ -512,6 +536,7 @@ function ProgressUpdateModal({
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [hours, setHours] = useState("");
+    // Only show validation errors after the user has tried to submit once
     const [touched, setTouched] = useState(false);
 
     const titleEmpty = title.trim().length === 0;
@@ -522,6 +547,7 @@ function ProgressUpdateModal({
         setTouched(true);
         if (titleEmpty || descEmpty || hoursInvalid || submitting) return;
         await onSubmit({ title, description, hoursContributed: Number(hours) });
+        // Reset form fields after a successful submit
         setTitle("");
         setDescription("");
         setHours("");
@@ -645,6 +671,9 @@ function ProgressUpdateModal({
     );
 }
 
+/**
+ * Modal for posting a star rating and optional flag against an organization
+ */
 function ReviewModal({
     open,
     orgName,
@@ -671,6 +700,7 @@ function ReviewModal({
         setTouched(true);
         if (ratingMissing || flagReasonEmpty || submitting) return;
         await onSubmit({ rating, flagged, flagReason: flagged ? flagReason : undefined });
+        // Reset everything after submit
         setRating(0);
         setFlagged(false);
         setFlagReason("");
@@ -726,6 +756,7 @@ function ReviewModal({
                     Reviewing: <span className="font-semibold">{orgName}</span>
                 </p>
 
+                {/* Interactive star rating - hover previews before clicking to confirm */}
                 <div>
                     <label className="mb-1 block text-sm font-medium text-foreground">Rating</label>
                     <div className="flex gap-1">
@@ -770,6 +801,7 @@ function ReviewModal({
                     <span className="text-sm text-foreground">Flag this organization</span>
                 </label>
 
+                {/* Flag reason textarea - only shown when the flag checkbox is checked */}
                 {flagged && (
                     <div>
                         <label className="mb-1 block text-sm font-medium text-foreground">
