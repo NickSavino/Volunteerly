@@ -380,6 +380,8 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             >
                                                 <Image
                                                     src={avtImg.src}
+                                                    width={avtImg.width}
+                                                    height={avtImg.height}
                                                     alt="Avatar"
                                                     className="w-22 rounded-lg object-cover"
                                                 />
