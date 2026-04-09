@@ -91,7 +91,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                 >
                     <div
                         className="
-                            max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                            mx-auto mb-10 flex min-h-full w-full flex-col gap-6
                             md:mb-0 md:w-3/4
                         "
                     >
@@ -118,7 +118,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             </div>
                         </div>
 
-                        <h2 className="text-2xl font-bold">
+                        <h2 className="font-bold">
                             {opportunity?.name} - {opportunity?.workType} - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
@@ -380,10 +380,10 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             >
                                                 <Image
                                                     src={avtImg.src}
-                                                    width={avtImg.width}
-                                                    height={avtImg.height}
-                                                    alt="Avatar"
                                                     className="w-22 rounded-lg object-cover"
+                                                    height={10}
+                                                    width={10}
+                                                    alt=""
                                                 />
                                             </div>
 
