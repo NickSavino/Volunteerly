@@ -32,21 +32,26 @@ export function Navbar({
                 <NavigationMenu>
                     <NavigationMenuList className="flex gap-2">
                         <NavigationMenuItem>
-                            <NavigationMenuTrigger className="
-                                md:w-50
-                                w-20
-                            "
+                            <NavigationMenuTrigger
+                                className="
+                                    md:w-50
+                                    w-20
+                                "
                             >
-                                <div className="
-                                    flex w-full min-w-0 items-center gap-2 cursor-pointer
-                                ">
-                                    <div className="
-                                        hidden
-                                        md:flex
-                                        min-w-0
-                                        md:flex-col
-                                        text-left
-                                    ">
+                                <div
+                                    className="
+                                        flex w-full min-w-0 items-center gap-2 cursor-pointer
+                                    "
+                                >
+                                    <div
+                                        className="
+                                            hidden
+                                            md:flex
+                                            min-w-0
+                                            md:flex-col
+                                            text-left
+                                        "
+                                    >
                                         <p className="text-sm text-primary">{name}</p>
                                         <p className="text-sm">{role}</p>
                                     </div>
@@ -60,10 +65,13 @@ export function Navbar({
                                 </div>
                             </NavigationMenuTrigger>
                             <NavigationMenuContent>
-                                <button className="
-                                    md:w-50
-                                    w-20 cursor-pointer
-                                " onClick={onLogout}>
+                                <button
+                                    className="
+                                        md:w-50
+                                        w-20 cursor-pointer
+                                    "
+                                    onClick={onLogout}
+                                >
                                     Log Out{" "}
                                 </button>
                             </NavigationMenuContent>

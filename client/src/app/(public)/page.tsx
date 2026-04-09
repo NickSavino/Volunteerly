@@ -34,15 +34,18 @@ export default function LandingPage() {
                     <Image
                         src={tms.src}
                         alt="Preview"
-                        width={tms.width}
-                        height={tms.height}
-                        className="
-                            h-auto w-full
-                            md:h-full
-                        "
+                        fill
+                        priority
+                        className="object-cover"
                     />
-                    <div className="absolute inset-0 w-full bg-black/50"></div>
-                    <div className="absolute bottom-20 left-12 text-left">
+                    <div className="absolute inset-0 w-full bg-black/65"></div>
+                    <div className="
+                        absolute bottom-20
+                        md:bottom-10
+                        left-5
+                        md:left-6
+                        text-left
+                    ">
                         <h1 className="text-4xl pb-2 font-bold tracking-tight text-muted">
                             Turn Skills Into Real Impact
                         </h1>
