@@ -484,7 +484,7 @@ export async function createOrgProgressUpdate(
     await prisma.opportunity.update({
         where: { id: oppId },
         data: {
-            hours: {increment:hoursContributed},
+            hours: { increment: hoursContributed },
         },
     });
 

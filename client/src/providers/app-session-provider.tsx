@@ -64,7 +64,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
 
         if (authLoading) return;
 
-        if (!session || !session?.access_token) {
+        if (!session?.access_token) {
             clear();
             setLoading(false);
             setInitialized(true);
