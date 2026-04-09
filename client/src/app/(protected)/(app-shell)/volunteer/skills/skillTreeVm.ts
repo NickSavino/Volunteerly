@@ -108,7 +108,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [],
         description: "Use JavaScript or TypeScript in volunteer web projects.",
-        requirementLabel: "Log JavaScript or TypeScript in 2 opportunities",
+        requirementLabel: "Log JavaScript or TypeScript 2 times",
     },
     {
         id: "python",
@@ -121,7 +121,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [],
         description: "Use Python scripting or automation in volunteer work.",
-        requirementLabel: "Log Python in 2 opportunities",
+        requirementLabel: "Log Python 2 times",
     },
     {
         id: "accounting",
@@ -134,7 +134,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [],
         description: "Apply bookkeeping and accounting practices in volunteer finance roles.",
-        requirementLabel: "Log Accounting or Bookkeeping in 2 opportunities",
+        requirementLabel: "Log Accounting or Bookkeeping 2 times",
     },
     {
         id: "excel",
@@ -147,7 +147,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [],
         description: "Use Excel spreadsheets to manage or analyse data for organisations.",
-        requirementLabel: "Log Excel in 2 opportunities",
+        requirementLabel: "Log Excel 2 times",
     },
     {
         id: "mobile",
@@ -160,7 +160,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [],
         description: "Build mobile apps that serve community organisations.",
-        requirementLabel: "Log Mobile Development in 2 opportunities",
+        requirementLabel: "Log Mobile Development 2 times",
     },
 
     {
@@ -174,7 +174,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["javascript"]],
         description: "Build web interfaces and full-stack apps for nonprofits.",
-        requirementLabel: "Unlock JS Basics, then log any web dev skills in 3 opportunities",
+        requirementLabel: "Unlock JS Basics, then log any web dev skills 3 times",
     },
     {
         id: "sql",
@@ -187,7 +187,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["python"]],
         description: "Write SQL queries and work with databases in volunteer systems.",
-        requirementLabel: "Unlock Python Basics, then log SQL or Databases in 2 opportunities",
+        requirementLabel: "Unlock Python Basics, then log SQL or Databases 2 times",
     },
     {
         id: "finance",
@@ -200,7 +200,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["accounting"]],
         description: "Manage budgets and financial planning for nonprofit organisations.",
-        requirementLabel: "Unlock Bookkeeping, then log Finance or Budgeting in 2 opportunities",
+        requirementLabel: "Unlock Bookkeeping, then log Finance or Budgeting 2 times",
     },
     {
         id: "powerbi",
@@ -214,7 +214,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["excel"]],
         description: "Build dashboards and BI reports to drive org decisions.",
         requirementLabel:
-            "Unlock Spreadsheets, then log Excel or Data Analysis across 3 combined opportunities",
+            "Unlock Spreadsheets, then log Excel or Data Analysis 3 times",
     },
     {
         id: "cybersecurity",
@@ -228,7 +228,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["javascript", "python", "mobile"]],
         description: "Apply security best practices across volunteer systems.",
         requirementLabel:
-            "Unlock JS Basics, Python Basics, or Mobile Dev, then log Cybersecurity in 2 opportunities",
+            "Unlock JS Basics, Python Basics, or Mobile Dev, then log Cybersecurity 2 times",
     },
 
     {
@@ -242,7 +242,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["webdev", "sql"]],
         description: "CI/CD pipelines, infrastructure, and deployment for volunteer tech.",
-        requirementLabel: "Unlock Web Dev or SQL/DBs, then log DevOps or Cloud in 3 opportunities",
+        requirementLabel: "Unlock Web Dev or SQL/DBs, then log DevOps or Cloud 3 times",
     },
     {
         id: "data_analysis",
@@ -256,7 +256,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["sql", "powerbi"]],
         description: "Full data analysis — reachable via Python/SQL or Excel/Power BI.",
         requirementLabel:
-            "Unlock SQL/DBs or Power BI, then log Data Analysis, Python, SQL, or Excel in 4 total opportunities",
+            "Unlock SQL/DBs or Power BI, then log Data Analysis, Python, SQL, or Excel 4 times",
     },
     {
         id: "financial_analysis",
@@ -270,7 +270,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["finance", "powerbi"]],
         description: "Analyse financial data and produce reports to guide org decisions.",
         requirementLabel:
-            "Unlock Finance or Power BI, then log Financial Analysis, Excel, or Data Analysis in 3 opportunities",
+            "Unlock Finance or Power BI, then log Financial Analysis, Excel, or Data Analysis 3 times",
     },
     {
         id: "networking_infra",
@@ -284,7 +284,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["cybersecurity"]],
         description: "Manage IT infrastructure and networking for volunteer organisations.",
         requirementLabel:
-            "Unlock Cyber Basics, then log Networking, IT Support, or Cybersecurity in 3 opportunities",
+            "Unlock Cyber Basics, then log Networking, IT Support, or Cybersecurity 3 times",
     },
     {
         id: "mobile_advanced",
@@ -298,7 +298,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["cybersecurity", "webdev"]],
         description: "Build advanced cross-platform applications for nonprofits.",
         requirementLabel:
-            "Unlock Cyber Basics or Web Dev, then log Mobile Development, JavaScript, TypeScript, or React in 3 opportunities",
+            "Unlock Cyber Basics or Web Dev, then log Mobile Development, JavaScript, TypeScript, or React 3 times",
     },
 
     {
@@ -313,7 +313,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["devops", "networking_infra"]],
         description: "Design and manage scalable cloud-based systems for nonprofits.",
         requirementLabel:
-            "Unlock DevOps or IT & Networks, then log Cloud or DevOps in 4 total opportunities",
+            "Unlock DevOps or IT & Networks, then log Cloud or DevOps 4 times",
     },
     {
         id: "machine_learning",
@@ -326,7 +326,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["data_analysis"]],
         description: "Apply machine learning and AI in real nonprofit projects.",
-        requirementLabel: "Unlock Data Analyst, then log Machine Learning in 3 opportunities",
+        requirementLabel: "Unlock Data Analyst, then log Machine Learning 3 times",
     },
     {
         id: "business_intelligence",
@@ -340,7 +340,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["financial_analysis", "data_analysis"]],
         description: "Drive data-informed decisions across finance and operations.",
         requirementLabel:
-            "Unlock Finance Analyst or Data Analyst, then log Financial Analysis, Data Analysis, or Excel in 4 opportunities",
+            "Unlock Finance Analyst or Data Analyst, then log Financial Analysis, Data Analysis, or Excel 3 times",
     },
     {
         id: "it_management",
@@ -354,7 +354,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["networking_infra", "devops"]],
         description: "Oversee IT systems, security, and infrastructure for organisations.",
         requirementLabel:
-            "Unlock IT & Networks or DevOps, then log DevOps, Cybersecurity, Networking, or IT Support in 4 opportunities",
+            "Unlock IT & Networks or DevOps, then log DevOps, Cybersecurity, Networking, or IT Support 3 times",
     },
     {
         id: "product_dev",
@@ -368,7 +368,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         requiresAny: [["mobile_advanced"]],
         description: "Lead end-to-end product development for nonprofit digital tools.",
         requirementLabel:
-            "Unlock App Dev, then log Mobile Development, JavaScript, TypeScript, React, or UI/UX Design in 4 opportunities",
+            "Unlock App Dev, then log Mobile Development, JavaScript, TypeScript, React, or UI/UX Design 3 times",
     },
 
     {
@@ -392,7 +392,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         ],
         description: "Recognised technical leader across engineering, data, and business paths.",
         requirementLabel:
-            "Unlock any tier-4 node, then log Machine Learning, Cloud, DevOps, Data Analysis, Financial Analysis, or Cybersecurity in 6 total opportunities",
+            "Unlock any tier-4 node, then log Machine Learning, Cloud, DevOps, Data Analysis, Financial Analysis, or Cybersecurity 6 times",
     },
 ];
 
@@ -408,7 +408,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [],
         description: "Collaborate and adapt effectively in diverse volunteer teams.",
-        requirementLabel: "Log Teamwork or Adaptability in 2 opportunities",
+        requirementLabel: "Log Teamwork or Adaptability 2 times",
     },
     {
         id: "nt_communication",
@@ -421,7 +421,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [],
         description: "Demonstrate clear, effective communication in volunteer roles.",
-        requirementLabel: "Log Communication in 2 opportunities",
+        requirementLabel: "Log Communication 2 times",
     },
     {
         id: "nt_writing",
@@ -434,7 +434,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [],
         description: "Professional writing, reports, and documentation for organisations.",
-        requirementLabel: "Log Writing in 2 opportunities",
+        requirementLabel: "Log Writing 2 times",
     },
 
     {
@@ -448,7 +448,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["nt_teamwork"]],
         description: "Guide and develop other volunteers or community members.",
-        requirementLabel: "Unlock Team Player, then log Mentoring or Teaching in 2 opportunities",
+        requirementLabel: "Unlock Team Player, then log Mentoring or Teaching 2 times",
     },
     {
         id: "nt_public_speaking",
@@ -461,7 +461,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["nt_communication"]],
         description: "Present, pitch, or speak on behalf of organisations.",
-        requirementLabel: "Unlock Clear Comms, then log Public Speaking in 2 opportunities",
+        requirementLabel: "Unlock Clear Comms, then log Public Speaking 2 times",
     },
     {
         id: "nt_research",
@@ -474,7 +474,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["nt_writing"]],
         description: "Conduct structured research and produce insights for nonprofits.",
-        requirementLabel: "Unlock Written Comms, then log Research in 2 opportunities",
+        requirementLabel: "Unlock Written Comms, then log Research 2 times",
     },
     {
         id: "nt_fundraising",
@@ -488,7 +488,7 @@ export const NT_NODES: SkillNodeDef[] = [
         requiresAny: [["nt_communication"]],
         description: "Drive fundraising efforts and build donor or sponsor networks.",
         requirementLabel:
-            "Unlock Clear Comms, then log Fundraising or Networking in 2 opportunities",
+            "Unlock Clear Comms, then log Fundraising or Networking 2 times",
     },
 
     {
@@ -503,7 +503,7 @@ export const NT_NODES: SkillNodeDef[] = [
         requiresAny: [["nt_public_speaking", "nt_mentoring", "nt_fundraising"]],
         description: "Organise and run volunteer events end-to-end.",
         requirementLabel:
-            "Unlock Public Speaking, Mentor, or Fundraiser, then log Event Planning or Time Management in 3 opportunities",
+            "Unlock Public Speaking, Mentor, or Fundraiser, then log Event Planning or Time Management 3 times",
     },
     {
         id: "nt_project_mgmt",
@@ -517,7 +517,7 @@ export const NT_NODES: SkillNodeDef[] = [
         requiresAny: [["nt_research", "nt_mentoring"]],
         description: "Deliver projects on time with clear ownership and accountability.",
         requirementLabel:
-            "Unlock Researcher or Mentor, then log Project Management or Problem Solving in 3 opportunities",
+            "Unlock Researcher or Mentor, then log Project Management or Problem Solving 3 times",
     },
     {
         id: "nt_marketing",
@@ -531,7 +531,7 @@ export const NT_NODES: SkillNodeDef[] = [
         requiresAny: [["nt_fundraising"]],
         description: "Promote causes and grow audiences using marketing and social media.",
         requirementLabel:
-            "Unlock Fundraiser, then log Marketing or Social Media in 2 opportunities",
+            "Unlock Fundraiser, then log Marketing or Social Media 2 times",
     },
 
     {
@@ -546,7 +546,7 @@ export const NT_NODES: SkillNodeDef[] = [
         requiresAny: [["nt_event_planning", "nt_project_mgmt"]],
         description: "Lead volunteers, coordinate multi-person teams, own outcomes.",
         requirementLabel:
-            "Unlock Event Planning or Project Mgmt, then log Leadership in 3 opportunities",
+            "Unlock Event Planning or Project Mgmt, then log Leadership 3 times",
     },
     {
         id: "nt_strategy",
@@ -560,7 +560,7 @@ export const NT_NODES: SkillNodeDef[] = [
         requiresAny: [["nt_project_mgmt", "nt_marketing"]],
         description: "Strategic planning and high-level decision-making for organisations.",
         requirementLabel:
-            "Unlock Project Mgmt or Marketer, then log Problem Solving, Critical Thinking, or Project Management in 5 total opportunities",
+            "Unlock Project Mgmt or Marketer, then log Problem Solving, Critical Thinking, or Project Management 5 times",
     },
 
     {
@@ -576,7 +576,7 @@ export const NT_NODES: SkillNodeDef[] = [
         description:
             "Recognised community leader with broad impact across people, projects, and organisations.",
         requirementLabel:
-            "Unlock Team Leader or Strategy, then log Leadership, Project Management, or Communication in 8 total opportunities",
+            "Unlock Team Leader or Strategy, then log Leadership, Project Management, or Communication 8 times",
     },
 ];
 
@@ -596,36 +596,53 @@ export function computeNodes(
     skillCounts: Record<string, number>,
 ): SkillNode[] {
     const map: Record<string, SkillNode> = {};
+    const remaining: Record<string, number> = { ...skillCounts };
+
     for (const def of defs) {
         map[def.id] = { ...def, status: "locked", current: 0 };
     }
-    let changed = true;
-    while (changed) {
-        changed = false;
-        for (const id of Object.keys(map)) {
-            const node = map[id];
-            const unlocked = prereqsMet(node, map);
-            const current = unlocked
-                ? defs
-                      .find((d) => d.id === id)!
-                      .trackedSkills.reduce((s, k) => s + (skillCounts[k] ?? 0), 0)
-                : 0;
-            let status: NodeStatus;
-            if (!unlocked) {
-                status = "locked";
-            } else if (current >= node.threshold) {
-                status = "mastered";
-            } else if (current > 0) {
-                status = "in_progress";
-            } else {
-                status = "locked";
-            }
-            if (map[id].status !== status || map[id].current !== current) {
-                map[id] = { ...map[id], status, current };
-                changed = true;
-            }
+
+    const ordered = [...defs].sort((a, b) => a.tier - b.tier);
+
+    for (const def of ordered) {
+        const node = map[def.id];
+        const unlocked = prereqsMet(node, map);
+
+        if (!unlocked) {
+            map[def.id] = { ...node, status: "locked", current: 0 };
+            continue;
         }
+
+        let total = 0;
+
+        for (const skill of def.trackedSkills) {
+            const available = remaining[skill] ?? 0;
+            if (available <= 0) continue;
+
+            const needed = def.threshold - total;
+            if (needed <= 0) break;
+
+            const used = Math.min(available, needed);
+            total += used;
+            remaining[skill] = available - used;
+        }
+
+        let status: NodeStatus;
+        if (total >= def.threshold) {
+            status = "mastered";
+        } else if (total > 0) {
+            status = "in_progress";
+        } else {
+            status = "locked";
+        }
+
+        map[def.id] = {
+            ...node,
+            status,
+            current: Math.min(total, def.threshold),
+        };
     }
+
     return defs.map((d) => map[d.id]);
 }
 

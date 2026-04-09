@@ -269,8 +269,9 @@ function TreeNode({
 }
 
 function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }) {
+    const capped = Math.min(node.current, node.threshold);
     const pct =
-        node.threshold > 0 ? Math.min(100, Math.round((node.current / node.threshold) * 100)) : 0;
+        node.threshold > 0 ? Math.min(100, Math.round((capped / node.threshold) * 100)) : 0;
     const statusLabel =
         node.status === "mastered"
             ? "Mastered"
@@ -362,7 +363,7 @@ function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }
                 >
                     <span className="st-section-label">Progress</span>
                     <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text)" }}>
-                        {node.current} / {node.threshold}
+                        {Math.min(node.current, node.threshold)} / {node.threshold}
                     </span>
                 </div>
                 <div className="st-bar-bg">
