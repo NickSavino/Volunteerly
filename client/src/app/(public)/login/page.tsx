@@ -45,21 +45,17 @@ export default function LoginPage() {
                         md:flex md:h-full md:w-1/2
                     "
                 >
-                    <Image
-                        src={tms.src}
-                        alt="Preview"
-                        fill
-                        priority
-                        className="object-cover"
-                    />
+                    <Image src={tms.src} alt="Preview" fill priority className="object-cover" />
                     <div className="absolute inset-0 w-full bg-black/65"></div>
-                    <div className="
-                        absolute bottom-20
-                        md:bottom-10
-                        left-5
-                        md:left-6
-                        text-left
-                    ">
+                    <div
+                        className="
+                            absolute bottom-20
+                            md:bottom-10
+                            left-5
+                            md:left-6
+                            text-left
+                        "
+                    >
                         <h1 className="text-4xl pb-2 font-bold tracking-tight text-muted">
                             Turn Skills Into Real Impact
                         </h1>
