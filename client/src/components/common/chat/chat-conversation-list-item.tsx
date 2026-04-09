@@ -42,7 +42,10 @@ export function ChatConversationListItem({
             type="button"
             onClick={onClick}
             className={cn(
-                "flex w-full items-start gap-3 border-l-4 p-4 text-left transition-colors",
+                `
+                    grid w-full min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3
+                    overflow-hidden border-l-4 p-4 text-left transition-colors
+                `,
                 active
                     ? "border-l-primary bg-secondary"
                     : `
@@ -51,18 +54,24 @@ export function ChatConversationListItem({
                     `,
             )}
         >
-            <Avatar className="size-12 border border-border">
+            <Avatar className="size-12 shrink-0 border border-border">
                 <AvatarImage src={conversation.otherParticipant?.avatarUrl ?? undefined} />
                 <AvatarFallback>{fallback}</AvatarFallback>
             </Avatar>
 
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1 overflow-hidden">
                 <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                        <p className="truncate text-lg font-semibold text-foreground">
+                    <div className="min-w-0 overflow-hidden">
+                        <p
+                            className="
+                                block max-w-full truncate text-lg font-semibold text-foreground
+                            "
+                        >
                             {conversationTitle}
                         </p>
-                        <p className="truncate text-sm text-muted-foreground">{preview}</p>
+                        <p className="block max-w-full truncate text-sm text-muted-foreground">
+                            {preview}
+                        </p>
                     </div>
                     <p className="shrink-0 text-xs text-muted-foreground">
                         {formatTime(conversation.lastMessageAt)}

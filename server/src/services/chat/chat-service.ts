@@ -1,6 +1,6 @@
 import { ChatConversationDetail, ChatConversationList, ChatMessage } from "@volunteerly/shared";
-import { getDisplayName } from "../helpers/service-utils.js";
 import { prisma } from "../../lib/prisma.js";
+import { getDisplayName } from "../helpers/service-utils.js";
 import {
     chatConversationDetailArgs,
     ChatConversationDetailRecord,
@@ -151,4 +151,38 @@ export async function createChatMessage(
     });
 
     return toChatMessage(message);
+}
+
+export async function getOrCreateDirectConversation(userId: string, participantUserId: string) {
+    const existingConversation = await prisma.chatConversation.findFirst({
+        where: {
+            kind: "DIRECT",
+            AND: [
+                { participants: { some: { userId } } },
+                { participants: { some: { userId: participantUserId } } },
+                {
+                    participants: {
+                        every: {
+                            userId: { in: [userId, participantUserId] },
+                        },
+                    },
+                },
+            ],
+        },
+        select: { id: true },
+    });
+
+    if (existingConversation) {
+        return existingConversation;
+    }
+
+    return prisma.chatConversation.create({
+        data: {
+            kind: "DIRECT",
+            participants: {
+                create: [{ userId }, { userId: participantUserId }],
+            },
+        },
+        select: { id: true },
+    });
 }

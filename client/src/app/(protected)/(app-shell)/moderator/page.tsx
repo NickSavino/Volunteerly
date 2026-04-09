@@ -1,24 +1,54 @@
 "use client";
 
-import { Building2, Flag, Ticket } from "lucide-react";
-import { useModDashboardViewModel } from "./ModDashboardVm";
+import { LoadingScreen } from "@/components/common/loading-screen";
 import { ModStatCard } from "@/components/custom/mod_stat_card";
+import { ModeratorTicketDetail } from "@volunteerly/shared";
+import { Building2, Flag, Ticket } from "lucide-react";
+import Image from "next/image";
+import { useModDashboardViewModel } from "./ModDashboardVm";
 
 export default function ModeratorDashboardPage() {
-    const {
-        loading,
-        session,
-        router,
-        currentModerator,
-        pendingOrgsCount,
-        recentPendingOrgs,
-        error,
-    } = useModDashboardViewModel();
+    const { loading, session, router, currentModerator, data, error } = useModDashboardViewModel();
 
     if (loading || !session) {
-        return <main className="p-6">Loading...</main>;
+        return <LoadingScreen />;
     }
 
+    function getSeverity(pastFlagsCount: number) {
+        return pastFlagsCount >= 3 ? "HIGH" : "MEDIUM";
+    }
+
+    function getSeverityClasses(severity: ReturnType<typeof getSeverity>) {
+        return severity === "HIGH" ? "bg-destructive text-white" : "bg-orange-500 text-white";
+    }
+
+    function getUrgencyClasses(urgency: ModeratorTicketDetail["urgencyRating"]) {
+        switch (urgency) {
+            case "SERIOUS":
+                return "bg-destructive text-destructive-foreground";
+            case "MODERATE":
+                return "bg-orange-500 text-white";
+            case "MINOR":
+                return "bg-blue-100 text-blue-700";
+            default:
+                return "bg-secondary text-foreground";
+        }
+    }
+
+    function formatCategory(category: ModeratorTicketDetail["category"]) {
+        switch (category) {
+            case "BUG":
+                return "Platform Bug";
+            case "ABUSE":
+                return "Abuse Report";
+            case "BILLING":
+                return "Billing";
+            case "OTHER":
+                return "General Inquiry";
+            default:
+                return category;
+        }
+    }
     return (
         <div className="min-h-screen bg-gray-50">
             <main
@@ -55,10 +85,14 @@ export default function ModeratorDashboardPage() {
                     <ModStatCard
                         icon={Building2}
                         label="Pending Organizations"
-                        count={pendingOrgsCount}
+                        count={data.pendingOrgsCount}
                     />
-                    <ModStatCard icon={Flag} label="Flagged Accounts" count={0} />
-                    <ModStatCard icon={Ticket} label="Open Tickets" count={0} />
+                    <ModStatCard
+                        icon={Flag}
+                        label="Flagged Accounts"
+                        count={data.flaggedAccountsCount}
+                    />
+                    <ModStatCard icon={Ticket} label="Open Tickets" count={data.openTicketsCount} />
                 </div>
 
                 <div
@@ -91,13 +125,13 @@ export default function ModeratorDashboardPage() {
                             </button>
                         </div>
 
-                        {recentPendingOrgs.length === 0 ? (
+                        {data.recentPendingOrgs.length === 0 ? (
                             <p className="py-8 text-center text-sm text-gray-400">
                                 No Pending Organizations Found.
                             </p>
                         ) : (
                             <ul className="divide-y">
-                                {recentPendingOrgs.map((org) => (
+                                {data.recentPendingOrgs.map((org) => (
                                     <li
                                         key={org.id}
                                         className="flex items-center justify-between py-3"
@@ -134,7 +168,11 @@ export default function ModeratorDashboardPage() {
                                                 font-medium text-black
                                                 hover:bg-yellow-500
                                             "
-                                            onClick={() => router.push("/moderator/organizations")}
+                                            onClick={() =>
+                                                router.push(
+                                                    `/moderator/organizations?orgId=${org.id}&action=review`,
+                                                )
+                                            }
                                         >
                                             View Application
                                         </button>
@@ -158,9 +196,140 @@ export default function ModeratorDashboardPage() {
                                 View All
                             </button>
                         </div>
-                        <p className="py-4 text-center text-sm text-gray-400">
-                            No Flagged Accounts Found.
-                        </p>
+
+                        {data.recentFlaggedAccounts.length === 0 ? (
+                            <p className="py-4 text-center text-sm text-gray-400">
+                                No Flagged Accounts Found.
+                            </p>
+                        ) : (
+                            <>
+                                <div className="space-y-4">
+                                    {data.recentFlaggedAccounts.map((volunteer) => {
+                                        const severity = getSeverity(volunteer.pastFlagsCount);
+
+                                        return (
+                                            <div
+                                                key={volunteer.id}
+                                                className="rounded-xl border bg-gray-50 p-4"
+                                            >
+                                                <div className="flex items-start gap-3">
+                                                    <div
+                                                        className="
+                                                            relative size-14 shrink-0
+                                                            overflow-hidden rounded-xl bg-secondary
+                                                        "
+                                                    >
+                                                        {volunteer.avatarUrl ? (
+                                                            <Image
+                                                                src={volunteer.avatarUrl}
+                                                                alt={`${volunteer.firstName} ${volunteer.lastName}`}
+                                                                fill
+                                                                className="object-cover"
+                                                            />
+                                                        ) : (
+                                                            <div
+                                                                className="
+                                                                    flex size-full items-center
+                                                                    justify-center font-semibold
+                                                                    text-gray-500
+                                                                "
+                                                            >
+                                                                {volunteer.firstName[0]}
+                                                                {volunteer.lastName[0]}
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    <div className="min-w-0 flex-1">
+                                                        <p
+                                                            className="
+                                                                truncate text-base font-semibold
+                                                                text-gray-900
+                                                            "
+                                                        >
+                                                            {volunteer.firstName}{" "}
+                                                            {volunteer.lastName}
+                                                        </p>
+                                                        <p
+                                                            className="
+                                                                truncate text-sm text-gray-500
+                                                            "
+                                                        >
+                                                            {volunteer.location}
+                                                        </p>
+
+                                                        {volunteer.flaggedByDisplayName ? (
+                                                            <p
+                                                                className="
+                                                                    mt-1 text-xs text-gray-500
+                                                                "
+                                                            >
+                                                                Flagged By:{" "}
+                                                                {volunteer.flaggedByDisplayName}
+                                                            </p>
+                                                        ) : null}
+
+                                                        {volunteer.latestFlagReason ? (
+                                                            <p
+                                                                className="
+                                                                    mt-2 text-sm text-gray-700
+                                                                "
+                                                            >
+                                                                {volunteer.latestFlagReason}
+                                                            </p>
+                                                        ) : null}
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    className="
+                                                        mt-3 flex items-center justify-between gap-3
+                                                    "
+                                                >
+                                                    <span
+                                                        className={`
+                                                            rounded-full px-3 py-1 text-[11px]
+                                                            font-bold tracking-wide uppercase
+                                                            ${getSeverityClasses(severity)}
+                                                        `}
+                                                    >
+                                                        {severity}
+                                                    </span>
+
+                                                    <button
+                                                        className="
+                                                            rounded-md bg-yellow-400 px-3 py-1
+                                                            text-sm font-medium text-black
+                                                            hover:bg-yellow-500
+                                                        "
+                                                        onClick={() =>
+                                                            router.push(
+                                                                `/moderator/volunteers?volunteerId=${volunteer.id}&mode=profile`,
+                                                            )
+                                                        }
+                                                    >
+                                                        View Account
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                <div className="mt-4 flex justify-center">
+                                    <button
+                                        className="
+                                            rounded-md bg-yellow-400 px-4 py-2 text-sm font-medium
+                                            text-black
+                                            hover:bg-yellow-500
+                                        "
+                                        onClick={() => router.push("/moderator/volunteers")}
+                                    >
+                                        View All
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -177,7 +346,126 @@ export default function ModeratorDashboardPage() {
                             View All
                         </button>
                     </div>
-                    <p className="py-8 text-center text-sm text-gray-400">No Tickets Found.</p>
+                    {data.recentOpenTickets.length === 0 ? (
+                        <p className="py-8 text-center text-sm text-gray-400">No Tickets Found.</p>
+                    ) : (
+                        <div className="space-y-5">
+                            {data.recentOpenTickets.map((ticket) => (
+                                <div
+                                    key={ticket.id}
+                                    className="overflow-hidden rounded-xl border bg-white"
+                                >
+                                    <div
+                                        className="
+                                            flex flex-col gap-3 border-b px-5 py-4
+                                            sm:flex-row sm:items-center sm:justify-between
+                                        "
+                                    >
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <h3 className="text-lg font-bold text-foreground">
+                                                Ticket #{ticket.id.slice(-8).toUpperCase()}
+                                            </h3>
+
+                                            <span
+                                                className="
+                                                    rounded-full bg-blue-100 px-3 py-1 text-xs
+                                                    font-bold tracking-wide text-blue-700 uppercase
+                                                "
+                                            >
+                                                {formatCategory(ticket.category)}
+                                            </span>
+                                        </div>
+
+                                        <div className="flex items-center gap-3">
+                                            <span
+                                                className={`
+                                                    rounded-full px-4 py-1 text-xs font-bold
+                                                    tracking-wide uppercase
+                                                    ${getUrgencyClasses(ticket.urgencyRating)}
+                                                `}
+                                            >
+                                                {ticket.urgencyRating}
+                                            </span>
+                                            <span className="text-sm text-muted-foreground">
+                                                Awaiting Response
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        className="
+                                            flex flex-col gap-4 px-5 py-4
+                                            md:flex-row md:items-center md:justify-between
+                                        "
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <div
+                                                className="
+                                                    relative size-12 shrink-0 overflow-hidden
+                                                    rounded-xl bg-secondary
+                                                "
+                                            >
+                                                {ticket.issuer.avatarUrl ? (
+                                                    <Image
+                                                        src={ticket.issuer.avatarUrl}
+                                                        alt={ticket.issuer.displayName}
+                                                        fill
+                                                        className="object-cover"
+                                                    />
+                                                ) : (
+                                                    <div
+                                                        className="
+                                                            flex size-full items-center
+                                                            justify-center font-semibold
+                                                            text-gray-500
+                                                        "
+                                                    >
+                                                        {ticket.issuer.displayName
+                                                            .slice(0, 2)
+                                                            .toUpperCase()}
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="min-w-0">
+                                                <p className="font-semibold text-foreground">
+                                                    {ticket.issuer.displayName}
+                                                </p>
+                                                <p className="text-xs text-gray-500">
+                                                    {ticket.issuer.role}
+                                                </p>
+                                                <p
+                                                    className="
+                                                        mt-2 text-sm font-medium text-foreground
+                                                    "
+                                                >
+                                                    {ticket.title}
+                                                </p>
+                                                <p className="mt-1 text-sm text-muted-foreground">
+                                                    {ticket.description}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            className="
+                                                rounded-md bg-yellow-400 px-3 py-1 text-sm
+                                                font-medium text-black
+                                                hover:bg-yellow-500
+                                            "
+                                            onClick={() =>
+                                                router.push(
+                                                    `/moderator/tickets?ticketId=${ticket.id}`,
+                                                )
+                                            }
+                                        >
+                                            View Ticket
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </main>
         </div>

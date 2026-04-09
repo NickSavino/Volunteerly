@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import type { ChatConversationDetail, ChatConversationList } from "@volunteerly/shared";
-import { useAuth } from "@/providers/auth-provider";
-import { useAppSession } from "@/providers/app-session-provider";
 import { api } from "@/lib/api";
-import { useSearchParams } from "next/navigation";
+import { useAppSession } from "@/providers/app-session-provider";
+import { useAuth } from "@/providers/auth-provider";
+import type { ChatConversationDetail, ChatConversationList } from "@volunteerly/shared";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export function useOrganizationMessagesViewModel() {
     const { session, loading } = useAuth();
@@ -23,8 +23,17 @@ export function useOrganizationMessagesViewModel() {
     const [sending, setSending] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const router = useRouter();
+    const pathname = usePathname();
     const searchParams = useSearchParams();
     const requestedConversationId = searchParams.get("conversationId") ?? undefined;
+
+    function clearSelection() {
+        setSelectedConversationId(undefined);
+        setSelectedConversation(null);
+        setError(null);
+        router.replace(pathname);
+    }
 
     useEffect(() => {
         async function load() {
@@ -210,5 +219,6 @@ export function useOrganizationMessagesViewModel() {
         threadTitle,
         threadSubtitle,
         threadMeta,
+        clearSelection,
     };
 }

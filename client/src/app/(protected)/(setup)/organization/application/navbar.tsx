@@ -32,13 +32,13 @@ export function Navbar({
                 <NavigationMenu>
                     <NavigationMenuList className="flex gap-2">
                         <NavigationMenuItem>
-                            <NavigationMenuTrigger className="w-45">
+                            <NavigationMenuTrigger className="w-auto max-w-[calc(100vw-10rem)] sm:min-w-[220px]">
                                 <div className="flex w-full min-w-0 items-center gap-2">
                                     <div className="flex min-w-0 flex-col text-left">
                                         <p className="truncate text-sm text-primary">{name}</p>
                                         <p className="truncate text-sm">{role}</p>
                                     </div>
-                                    <Avatar>
+                                    <Avatar className="shrink-0">
                                         <AvatarImage>
                                             {" "}
                                             <User />{" "}

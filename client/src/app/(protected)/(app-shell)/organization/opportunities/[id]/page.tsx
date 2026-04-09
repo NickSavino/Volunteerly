@@ -72,6 +72,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
         setReviewModalOpen,
         submitting,
         submitReview,
+        openMessageThread,
     } = useOrgViewOpportunityViewModel(id);
 
     if (loading || !session || fetching) {
@@ -419,6 +420,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                     variant="outline"
                                                     data-icon="inline-end"
                                                     className="cursor-pointer"
+                                                    onClick={() => void openMessageThread()}
                                                 >
                                                     {" "}
                                                     <MessageCircleMore /> Message
