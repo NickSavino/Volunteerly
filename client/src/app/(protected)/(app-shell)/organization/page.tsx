@@ -190,7 +190,13 @@ export default function HomePage() {
                                                         </span>
 
                                                         <span className="flex items-center gap-1">
-                                                            <Briefcase /> {opp.workType.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}
+                                                            <Briefcase />{" "}
+                                                            {opp.workType
+                                                                .replaceAll("_", " ")
+                                                                .toLowerCase()
+                                                                .replace(/\b\w/g, (char) =>
+                                                                    char.toUpperCase(),
+                                                                )}
                                                         </span>
                                                     </ItemDescription>
                                                 )}

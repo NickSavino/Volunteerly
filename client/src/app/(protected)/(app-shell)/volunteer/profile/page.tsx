@@ -245,7 +245,12 @@ export default function ProfilePage() {
                                 </div>
                                 <div className="ml-4 flex shrink-0 items-center gap-2">
                                     {editing && (
-                                        <Button variant="ghost" onClick={handleCancel} disabled={saving} className="cursor-pointer">
+                                        <Button
+                                            variant="ghost"
+                                            onClick={handleCancel}
+                                            disabled={saving}
+                                            className="cursor-pointer"
+                                        >
                                             Cancel
                                         </Button>
                                     )}

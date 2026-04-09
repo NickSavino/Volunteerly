@@ -113,11 +113,13 @@ export function OpportunityDetailModal({
                         )}
                     >
                         <Avatar className="h-12 w-12">
-                                    <AvatarImage src={UserService.getAvatarURL(opp.organization?.id || "")} />
-                                    <AvatarFallback>
-                                            {getAvatarFallback(opp.organization?.orgName)}
-                                    </AvatarFallback>
-                                </Avatar>
+                            <AvatarImage
+                                src={UserService.getAvatarURL(opp.organization?.id || "")}
+                            />
+                            <AvatarFallback>
+                                {getAvatarFallback(opp.organization?.orgName)}
+                            </AvatarFallback>
+                        </Avatar>
                     </button>
                     <div>
                         <button

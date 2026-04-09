@@ -60,7 +60,11 @@ export default function SkillExtractionPage() {
                     <Button className="cursor-pointer" variant="ghost" onClick={handleBack}>
                         Back to Experience Input
                     </Button>
-                    <Button className="cursor-pointer" onClick={handleConfirm} disabled={confirming}>
+                    <Button
+                        className="cursor-pointer"
+                        onClick={handleConfirm}
+                        disabled={confirming}
+                    >
                         {confirming ? "Saving..." : "Confirm & Continue"}
                     </Button>
                 </div>

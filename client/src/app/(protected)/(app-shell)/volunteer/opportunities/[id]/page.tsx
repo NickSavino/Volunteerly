@@ -175,12 +175,15 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                 "
                             >
                                 <Avatar className="h-auto w-15">
-                                    <AvatarImage src={UserService.getAvatarURL(vm.opp.organization?.id || "")} />
+                                    <AvatarImage
+                                        src={UserService.getAvatarURL(
+                                            vm.opp.organization?.id || "",
+                                        )}
+                                    />
                                     <AvatarFallback>
                                         {getAvatarFallback(vm.opp.organization?.orgName)}
                                     </AvatarFallback>
                                 </Avatar>
-                                
                             </button>
                             <div>
                                 <p

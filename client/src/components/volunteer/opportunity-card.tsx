@@ -53,7 +53,7 @@ function MatchBadge({ pct }: { pct: number }) {
 export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick }: OppCardProps) {
     const router = useRouter();
     const avatarColor = getAvatarColor(opp.organization?.orgName ?? "O");
-    const initials = getAvatarFallback(opp.organization?.orgName)
+    const initials = getAvatarFallback(opp.organization?.orgName);
     const orgId = opp.organization?.id;
 
     function handleOrgClick(e: React.MouseEvent) {
@@ -89,9 +89,7 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                     >
                         <Avatar className="h-10 w-10">
                             <AvatarImage src={UserService.getAvatarURL(orgId || "")} />
-                            <AvatarFallback>
-                                {initials}
-                            </AvatarFallback>
+                            <AvatarFallback>{initials}</AvatarFallback>
                         </Avatar>
                     </button>
                     <div>

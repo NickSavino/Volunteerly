@@ -106,7 +106,12 @@ export default function ExperienceInputPage() {
                                 </p>
                             )}
                         </div>
-                        <Button className="cursor-pointer" variant="ghost" size="sm" onClick={addWorkExperience}>
+                        <Button
+                            className="cursor-pointer"
+                            variant="ghost"
+                            size="sm"
+                            onClick={addWorkExperience}
+                        >
                             + Add New
                         </Button>
                     </CardHeader>
@@ -229,7 +234,12 @@ export default function ExperienceInputPage() {
                                 <p className="mt-1 text-sm text-destructive">{errors.education}</p>
                             )}
                         </div>
-                        <Button className="cursor-pointer" variant="ghost" size="sm" onClick={addEducation}>
+                        <Button
+                            className="cursor-pointer"
+                            variant="ghost"
+                            size="sm"
+                            onClick={addEducation}
+                        >
                             + Add New
                         </Button>
                     </CardHeader>
@@ -297,7 +307,11 @@ export default function ExperienceInputPage() {
                     </CardContent>
                 </Card>
 
-                <Button className="w-full cursor-pointer" onClick={handleSubmit} disabled={submitting}>
+                <Button
+                    className="w-full cursor-pointer"
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                >
                     {submitting ? "Extracting skills..." : "Submit Application"}
                 </Button>
             </main>

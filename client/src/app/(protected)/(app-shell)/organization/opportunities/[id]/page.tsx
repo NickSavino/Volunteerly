@@ -119,7 +119,12 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                         </div>
 
                         <h2 className="text-2x1 font-bold">
-                            {opportunity?.name} - {opportunity?.workType.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())} - {opportunity?.category}
+                            {opportunity?.name} -{" "}
+                            {opportunity?.workType
+                                .replaceAll("_", " ")
+                                .toLowerCase()
+                                .replace(/\b\w/g, (char) => char.toUpperCase())}{" "}
+                            - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
                             <div className="md:grid md:grid-cols-2 md:justify-around md:gap-3">
@@ -207,7 +212,14 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
-                                                <span className="text-sm">{opportunity?.commitmentLevel.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</span>
+                                                <span className="text-sm">
+                                                    {opportunity?.commitmentLevel
+                                                        .replaceAll("_", " ")
+                                                        .toLowerCase()
+                                                        .replace(/\b\w/g, (char) =>
+                                                            char.toUpperCase(),
+                                                        )}
+                                                </span>
                                             </div>
                                         </span>
                                     </CardContent>
@@ -356,7 +368,14 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             <Handshake className="size-9" />
                                             <div className="flex flex-col">
                                                 <span className="text-xs">Commitment</span>
-                                                <span>{opportunity?.commitmentLevel.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</span>
+                                                <span>
+                                                    {opportunity?.commitmentLevel
+                                                        .replaceAll("_", " ")
+                                                        .toLowerCase()
+                                                        .replace(/\b\w/g, (char) =>
+                                                            char.toUpperCase(),
+                                                        )}
+                                                </span>
                                             </div>
                                         </span>
                                     </CardContent>
@@ -367,7 +386,11 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
                                             <div className="flex md:w-full justify-center md:col-span-2">
                                                 <Avatar className="h-auto w-20">
-                                                    <AvatarImage src={UserService.getAvatarURL(opportunity?.volId || "")} />
+                                                    <AvatarImage
+                                                        src={UserService.getAvatarURL(
+                                                            opportunity?.volId || "",
+                                                        )}
+                                                    />
                                                     <AvatarFallback>
                                                         {" "}
                                                         <User className="h-auto w-20"></User>

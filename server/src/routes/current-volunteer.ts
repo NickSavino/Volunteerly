@@ -23,7 +23,6 @@ import { prisma } from "../lib/prisma.js";
 import { extractSkillsFromOpportunity } from "../services/groq-service.js";
 import { embedText } from "../services/gemini-service.js";
 
-
 export const currentVolunteerRouter = Router();
 
 currentVolunteerRouter.get("/skill-counts", async (req, res, next) => {

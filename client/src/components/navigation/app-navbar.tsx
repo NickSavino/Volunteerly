@@ -98,7 +98,9 @@ export function AppNavbar({
                         >
                             <div className="flex min-w-0 items-center gap-3 ml-auto md:ml-0 w-fit">
                                 <div className="min-w-0 hidden md:block">
-                                    <p className="truncate text-sm font-medium text-yellow-600">{displayName}</p>
+                                    <p className="truncate text-sm font-medium text-yellow-600">
+                                        {displayName}
+                                    </p>
                                     <p className="truncate text-sm text-gray-400">{subtitle}</p>
                                 </div>
 

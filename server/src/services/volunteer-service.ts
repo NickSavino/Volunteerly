@@ -268,7 +268,12 @@ export async function browseOpportunities(filters: OpportunityFilters) {
     });
 }
 
-export async function applyToOpportunity(volId: string, oppId: string, message: string, matchPercentage: number) {
+export async function applyToOpportunity(
+    volId: string,
+    oppId: string,
+    message: string,
+    matchPercentage: number,
+) {
     const existing = await prisma.application.findUnique({
         where: { oppId_volId: { oppId, volId } },
     });
@@ -324,7 +329,6 @@ export async function getVolunteerSkillCounts(volId: string): Promise<Record<str
     }
     return counts;
 }
-
 
 export async function getOpportunityMatchScores(userId: string): Promise<Record<string, number>> {
     const volunteer = await prisma.$queryRaw<{ has_vector: boolean }[]>`

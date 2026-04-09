@@ -58,7 +58,9 @@ export default function VolunteerDashboardPage() {
                 "
             >
                 <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-gray-900 pl-2 md:pl-0">Welcome back, {firstName}!</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 pl-2 md:pl-0">
+                        Welcome back, {firstName}!
+                    </h1>
                 </div>
 
                 {error && (
@@ -216,14 +218,18 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div className="cursor-pointer flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-xs font-semibold text-yellow-700">
                                             <Avatar className="h-12 w-12">
-                                                <AvatarImage src={UserService.getAvatarURL(org?.id || "")} />
+                                                <AvatarImage
+                                                    src={UserService.getAvatarURL(org?.id || "")}
+                                                />
                                                 <AvatarFallback className="h-12 w-12">
                                                     {getAvatarFallback(org.orgName)}
                                                 </AvatarFallback>
                                             </Avatar>
                                         </div>
                                         <div className="cursor-pointer min-w-0 flex-1">
-                                            <p className="truncate text-sm font-medium text-gray-800">{org.orgName}</p>
+                                            <p className="truncate text-sm font-medium text-gray-800">
+                                                {org.orgName}
+                                            </p>
                                         </div>
                                         <div className="shrink-0 text-right">
                                             <p className="text-sm font-semibold text-gray-800">
@@ -275,7 +281,9 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
                                             <Avatar className="h-10 w-10">
-                                                <AvatarImage src={UserService.getAvatarURL(org?.id || "")} />
+                                                <AvatarImage
+                                                    src={UserService.getAvatarURL(org?.id || "")}
+                                                />
                                                 <AvatarFallback>
                                                     {getAvatarFallback(org?.orgName)}
                                                 </AvatarFallback>
@@ -345,9 +353,18 @@ export default function VolunteerDashboardPage() {
                                                     (opp.organization?.orgName ?? "—")
                                                 )}
                                             </td>
-                                            <td className="py-3 pr-4 text-gray-600">{opp.category}</td>
-                                            <td className="py-3 pr-4 text-gray-600">{opp.commitmentLevel.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</td>
-                                            <td className="py-3 pr-4 text-gray-800">{opp.hours}h</td>
+                                            <td className="py-3 pr-4 text-gray-600">
+                                                {opp.category}
+                                            </td>
+                                            <td className="py-3 pr-4 text-gray-600">
+                                                {opp.commitmentLevel
+                                                    .replaceAll("_", " ")
+                                                    .toLowerCase()
+                                                    .replace(/\b\w/g, (char) => char.toUpperCase())}
+                                            </td>
+                                            <td className="py-3 pr-4 text-gray-800">
+                                                {opp.hours}h
+                                            </td>
                                             <td className="py-3 pr-4">
                                                 <span
                                                     className={`
@@ -371,7 +388,11 @@ export default function VolunteerDashboardPage() {
                                             <td className="py-3">
                                                 <button
                                                     className="cursor-pointer rounded-md bg-yellow-400 px-3 py-1 text-xs font-medium text-black hover:bg-yellow-500"
-                                                    onClick={() => router.push(`/volunteer/opportunities/${opp.id}`)}
+                                                    onClick={() =>
+                                                        router.push(
+                                                            `/volunteer/opportunities/${opp.id}`,
+                                                        )
+                                                    }
                                                 >
                                                     View More
                                                 </button>
