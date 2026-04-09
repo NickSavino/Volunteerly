@@ -196,12 +196,12 @@ export default function ProfilePage() {
                                 </div>
                                 <div className="flex items-center gap-2 flex-shrink-0 ml-4">
                                     {editing && (
-                                        <Button variant="ghost" onClick={handleCancel} disabled={saving}>
+                                        <Button variant="ghost" onClick={handleCancel} disabled={saving} className="cursor-pointer">
                                             Cancel
                                         </Button>
                                     )}
                                     <Button
-                                        className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl px-6"
+                                        className="cursor-pointer bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl px-6"
                                         onClick={editing ? handleSave : handleEdit}
                                         disabled={saving}
                                     >
@@ -271,7 +271,7 @@ export default function ProfilePage() {
 
                                 <div className="flex flex-col gap-2">
                                     <Label>Preferred Availability</Label>
-                                    <div className="grid grid-cols-7 gap-1">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-7 gap-1">
                                         {DAYS.map((day) => (
                                             <Toggle
                                                 key={day}
