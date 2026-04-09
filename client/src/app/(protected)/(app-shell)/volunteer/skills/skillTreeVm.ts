@@ -213,8 +213,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["excel"]],
         description: "Build dashboards and BI reports to drive org decisions.",
-        requirementLabel:
-            "Unlock Spreadsheets, then log Excel or Data Analysis 3 times",
+        requirementLabel: "Unlock Spreadsheets, then log Excel or Data Analysis 3 times",
     },
     {
         id: "cybersecurity",
@@ -312,8 +311,7 @@ export const TECH_NODES: SkillNodeDef[] = [
         threshold: 4,
         requiresAny: [["devops", "networking_infra"]],
         description: "Design and manage scalable cloud-based systems for nonprofits.",
-        requirementLabel:
-            "Unlock DevOps or IT & Networks, then log Cloud or DevOps 4 times",
+        requirementLabel: "Unlock DevOps or IT & Networks, then log Cloud or DevOps 4 times",
     },
     {
         id: "machine_learning",
@@ -487,8 +485,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["nt_communication"]],
         description: "Drive fundraising efforts and build donor or sponsor networks.",
-        requirementLabel:
-            "Unlock Clear Comms, then log Fundraising or Networking 2 times",
+        requirementLabel: "Unlock Clear Comms, then log Fundraising or Networking 2 times",
     },
 
     {
@@ -530,8 +527,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 2,
         requiresAny: [["nt_fundraising"]],
         description: "Promote causes and grow audiences using marketing and social media.",
-        requirementLabel:
-            "Unlock Fundraiser, then log Marketing or Social Media 2 times",
+        requirementLabel: "Unlock Fundraiser, then log Marketing or Social Media 2 times",
     },
 
     {
@@ -545,8 +541,7 @@ export const NT_NODES: SkillNodeDef[] = [
         threshold: 3,
         requiresAny: [["nt_event_planning", "nt_project_mgmt"]],
         description: "Lead volunteers, coordinate multi-person teams, own outcomes.",
-        requirementLabel:
-            "Unlock Event Planning or Project Mgmt, then log Leadership 3 times",
+        requirementLabel: "Unlock Event Planning or Project Mgmt, then log Leadership 3 times",
     },
     {
         id: "nt_strategy",
