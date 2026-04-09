@@ -195,9 +195,14 @@ export default function VolunteerDashboardPage() {
                                 ))}
                             </div>
                         )}
-                        <button className="cursor-pointer mt-5 w-full border py-2 rounded-lg" onClick={() => setShowAllPartners(true)}>
-                            Expand All
-                        </button>
+                        {partnerOrgs.length > 0 && (
+                            <button
+                                className="cursor-pointer mt-5 w-full border py-2 rounded-lg"
+                                onClick={() => setShowAllPartners(true)}
+                            >
+                                Expand All
+                            </button>
+                        )}
                     </div>
                 </div>
 
