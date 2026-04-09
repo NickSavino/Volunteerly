@@ -30,6 +30,7 @@
     "private": "true",
     "scripts": {
         "build": "npm run build -w shared && npm run build -w server && npm run build -w client",
+        "typecheck": "npm run typecheck -w shared && npm run typecheck -w server && npm run typecheck -w client",
         "db:reset": "npx supabase db reset && npm run db:reset -w server",
         "dev": "concurrently -n shared,server,client -c auto \"npm run dev -w shared\" \"npm run dev -w server\" \"npm run dev -w client\"",
         "fix:client": "prettier ./client --write && npm run lint -w client -- --fix",

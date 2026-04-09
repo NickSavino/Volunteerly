@@ -233,7 +233,9 @@ export default function HomePage() {
                                     <div className="mb-4 flex justify-center">
                                         <Avatar className="h-auto w-20">
                                             <AvatarImage
-                                                src={UserService.getAvatarURL(currentUser?.id || "")}
+                                                src={UserService.getAvatarURL(
+                                                    currentUser?.id || "",
+                                                )}
                                             />
                                             <AvatarFallback>
                                                 {" "}
