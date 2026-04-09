@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { Opportunity } from "@volunteerly/shared";
@@ -108,10 +108,6 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
 
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5" />
-                        {opp.hours}h/week
-                    </span>
                     <span className="flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5" />
                         {WORK_TYPE_LABELS[opp.workType] ?? opp.workType}
