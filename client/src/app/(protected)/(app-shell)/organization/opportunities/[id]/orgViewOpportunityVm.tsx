@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
-import { Application, CurrentOrganization, Opportunity, ProgressUpdate } from "@volunteerly/shared";
 import { OrganizationService } from "@/services/OrganizationService";
+import { Application, CurrentOrganization, Opportunity, ProgressUpdate } from "@volunteerly/shared";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function useOrgViewOpportunityViewModel(id: string) {
@@ -63,13 +63,6 @@ export function useOrgViewOpportunityViewModel(id: string) {
                 toast.error("Failed to load Opportunity.", { position: "top-right" });
                 return;
             }
-
-            const sortedApp = {
-                ...opp.data,
-                progressUpdates: opp.data?.progressUpdates?.sort(
-                    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-                ),
-            };
 
             setOpportunity(opp.data);
 

@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
-import { CurrentOrganization, UpdateOpportunitySchema } from "@volunteerly/shared";
 import { OrganizationService } from "@/services/OrganizationService";
+import { CurrentOrganization, UpdateOpportunitySchema } from "@volunteerly/shared";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function useCreateOpportunityViewModel(oppId?: string) {
     const router = useRouter();
-    const { session, user, loading, signOut } = useAuth();
+    const { session, loading, signOut } = useAuth();
     const [currentOrg, setCurrentOrg] = useState<CurrentOrganization>();
     const [opportunity, setOpportunity] = useState<UpdateOpportunitySchema>({
         orgId: "",
@@ -48,9 +48,9 @@ export function useCreateOpportunityViewModel(oppId?: string) {
             setSubmitting(false);
         }
         loadCurrentUser();
-    }, [session, router]);
+    }, [session, router, currentOrg, oppId]);
 
-    async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    async function handleSubmit() {
         if (opportunity && currentOrg) {
             setSubmitting(true);
             setError(null);
@@ -63,7 +63,7 @@ export function useCreateOpportunityViewModel(oppId?: string) {
                     orgId: orgId,
                     deadlineDate: deadlineDate,
                 };
-                const { data, error, success } = await OrganizationService.updateOpportunity(
+                const { error, success } = await OrganizationService.updateOpportunity(
                     oppId,
                     opp,
                 );
@@ -85,7 +85,7 @@ export function useCreateOpportunityViewModel(oppId?: string) {
                     orgId: orgId,
                     deadlineDate: deadlineDate,
                 };
-                const { data, error, success } = await OrganizationService.addOpportunity(opp);
+                const { error, success } = await OrganizationService.addOpportunity(opp);
                 if (success) {
                     toast.success("Opportunity Successfully Created!", { position: "top-right" });
                     router.replace("/organization/opportunities");
