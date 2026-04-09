@@ -77,10 +77,10 @@ export class VolunteerService {
         });
     }
 
-    static async postFlag(flaggedUserId: string, reason: string) {
+    static async postFlag(flaggedUserId: string, opportunityId: string, reason: string) {
         return api<{ success: boolean }>(`/current-volunteer/flags`, {
             method: "POST",
-            body: JSON.stringify({ flaggedUserId, reason }),
+            body: JSON.stringify({ flaggedUserId, opportunityId, reason }),
         });
     }
 
