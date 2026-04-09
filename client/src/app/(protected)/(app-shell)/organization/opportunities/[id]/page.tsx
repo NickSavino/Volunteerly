@@ -296,7 +296,13 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                     <CardContent>
                                         <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
                                             <div className="flex md:w-full justify-center md:col-span-2">
-                                                <img src={avtImg.src} className="w-22 rounded-lg object-cover" />
+                                                <Avatar className="h-auto w-20">
+                                                    <AvatarImage src={UserService.getAvatarURL(opportunity?.volId || "")} />
+                                                    <AvatarFallback>
+                                                        {" "}
+                                                        <User className="h-auto w-20"></User>
+                                                    </AvatarFallback>
+                                                </Avatar>
                                             </div>
 
                                             <div className="md:col-span-4 flex flex-col gap-3">
