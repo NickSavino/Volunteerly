@@ -95,10 +95,13 @@ currentVolunteerRouter.post("/flags", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
-        const { flaggedUserId, reason } = req.body;
-        await postFlag(userId, flaggedUserId, reason);
+        const { flaggedUserId, opportunityId, reason } = req.body;
+        await postFlag(userId, flaggedUserId, opportunityId, reason);
         res.status(201).json({ success: true });
-    } catch (error) {
+    } catch (error: any) {
+        if (error?.message === "ALREADY_FLAGGED") {
+            return res.status(409).json({ error: "Already flagged for this opportunity." });
+        }
         next(error);
     }
 });
