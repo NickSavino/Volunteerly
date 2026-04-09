@@ -155,6 +155,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
             try {
                 await OrganizationService.postFlag(
                     opportunity.volunteer.id,
+                    opportunity.id,
                     input.flagReason.trim(),
                 );
             } catch {

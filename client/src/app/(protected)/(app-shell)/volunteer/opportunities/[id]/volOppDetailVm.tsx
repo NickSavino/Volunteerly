@@ -107,7 +107,7 @@ export function useVolOppDetailViewModel(oppId: string) {
         }
         if (input.flagged && input.flagReason?.trim()) {
             try {
-                await VolunteerService.postFlag(opp.organization.id, input.flagReason.trim());
+                await VolunteerService.postFlag(opp.organization.id, oppId, input.flagReason.trim());
             } catch {
                 setReviewModalOpen(false);
                 setSubmitting(false);
