@@ -21,6 +21,7 @@ import {
     logOpportunitySkills,
     getOpportunitySkills,
     getVolunteerSkillCounts,
+    getOpportunityMatchScores,
 } from "../services/volunteer-service.js";
 import { prisma } from "../lib/prisma.js";
 import { extractSkillsFromOpportunity } from "../services/groq-service.js";
@@ -61,7 +62,9 @@ currentVolunteerRouter.post("/opportunities/:oppId/apply", async (req, res, next
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
         const { oppId } = req.params;
         const { message } = req.body;
-        await applyToOpportunity(userId, oppId, message ?? "");
+        const match_map = await getOpportunityMatchScores(userId);
+        const matchPercentage = match_map[oppId];
+        await applyToOpportunity(userId, oppId, message ?? "", matchPercentage || 1);
         res.status(201).json({ success: true });
     } catch (error: any) {
         if (error?.message === "ALREADY_APPLIED") {
@@ -221,44 +224,10 @@ currentVolunteerRouter.get("/opportunities/browse", async (req, res, next) => {
  * Errors: 401
  */
 currentVolunteerRouter.get("/opportunities/match-scores", async (req, res, next) => {
-    console.log("MATCH SCORES ROUTE HIT");
     try {
         const userId = req.auth?.userId;
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
-
-        // Check whether the volunteer has a skill vector before running the similarity query
-        const volunteer = await prisma.$queryRaw<{ has_vector: boolean }[]>`
-            SELECT (skill_vector IS NOT NULL) AS has_vector
-            FROM volunteers
-            WHERE id = ${userId}
-            LIMIT 1
-        `;
-
-        const hasVector = volunteer?.[0]?.has_vector ?? false;
-        if (!hasVector) {
-            // No vector yet - all opportunities default to 1% on the client
-            return res.status(200).json({});
-        }
-
-        // Cosine similarity via pgvector: 1 - (a <=> b) where <=> is cosine distance
-        // Multiply by 100 and round to integer percentage; floor at 1 so no opp shows 0%
-        const scores = await prisma.$queryRaw<{ id: string; match_pct: number }[]>`
-            SELECT
-                o.id,
-                GREATEST(1, ROUND(CAST((1 - (o.skill_vector <=> v.skill_vector)) * 100 AS NUMERIC), 0)::int) AS match_pct
-            FROM opportunities o, volunteers v
-            WHERE v.id = ${userId}
-              AND v.skill_vector IS NOT NULL
-              AND o.skill_vector IS NOT NULL
-        `;
-
-        const scoreMap: Record<string, number> = {};
-        for (const row of scores) {
-            scoreMap[row.id] = Math.min(100, Math.max(1, Number(row.match_pct)));
-        }
-
-        console.log("SCORE MAP HERE: ", scoreMap);
-
+        const scoreMap = await getOpportunityMatchScores(userId);
         res.status(200).json(scoreMap);
     } catch (error) {
         next(error);

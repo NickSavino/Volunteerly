@@ -8,6 +8,9 @@ import { MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { Opportunity } from "@volunteerly/shared";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { UserService } from "@/services/UserService";
+import { getAvatarFallback } from "../navigation/nav-utils";
 
 const WORK_TYPE_LABELS: Record<string, string> = {
     IN_PERSON: "On-site",
@@ -69,7 +72,7 @@ function MatchBadge({ pct }: { pct: number }) {
 export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick }: OppCardProps) {
     const router = useRouter();
     const avatarColor = getAvatarColor(opp.organization?.orgName ?? "O");
-    const initials = opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG";
+    const initials = getAvatarFallback(opp.organization?.orgName);
     const orgId = opp.organization?.id;
 
     /**
@@ -108,7 +111,10 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                             !orgId && "pointer-events-none",
                         )}
                     >
-                        {initials}
+                        <Avatar className="size-10">
+                            <AvatarImage src={UserService.getAvatarURL(orgId || "")} />
+                            <AvatarFallback>{initials}</AvatarFallback>
+                        </Avatar>
                     </button>
                     <div>
                         <p className="font-semibold text-foreground leading-tight">{opp.name}</p>
@@ -162,7 +168,8 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                         onClick();
                     }}
                     className="
-                        rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-foreground
+                        cursor-pointer rounded-full bg-primary px-4 py-1.5 text-xs font-semibold
+                        text-foreground
                         hover:opacity-90
                         transition-opacity
                     "

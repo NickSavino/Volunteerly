@@ -75,7 +75,7 @@ describe("volunteer-service", () => {
         mockPrisma.application.findUnique.mockResolvedValueOnce(null);
         mockPrisma.application.create.mockResolvedValueOnce({ id: "app-1" });
 
-        await applyToOpportunity("vol-1", "opp-1", "hello");
+        await applyToOpportunity("vol-1", "opp-1", "hello", 0);
 
         expect(mockPrisma.application.create).toHaveBeenCalledWith({
             data: { oppId: "opp-1", volId: "vol-1", message: "hello", matchPercentage: 0 },

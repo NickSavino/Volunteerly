@@ -8,6 +8,9 @@ import { use, useState } from "react";
 import { ArrowLeft, Clock, TrendingUp, DollarSign, CheckCircle } from "lucide-react";
 import { useVolOppDetailViewModel } from "./volOppDetailVm";
 import { AppModal } from "@/components/common/app-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserService } from "@/services/UserService";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
 
 // Full list of skills available to log after completing an opportunity
 const ALL_SKILLS = [
@@ -182,7 +185,16 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
                                     hover:opacity-75
                                 "
                             >
-                                {vm.opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
+                                <Avatar className="h-auto w-15">
+                                    <AvatarImage
+                                        src={UserService.getAvatarURL(
+                                            vm.opp.organization?.id || "",
+                                        )}
+                                    />
+                                    <AvatarFallback>
+                                        {getAvatarFallback(vm.opp.organization?.orgName)}
+                                    </AvatarFallback>
+                                </Avatar>
                             </button>
                             <div>
                                 <p
@@ -226,10 +238,10 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
 
                 {/* Progress timeline - updates are ordered newest first */}
                 <div className="rounded-xl border bg-white p-5 shadow-sm">
-                    <h2 className="mb-4 flex items-center gap-2 font-semibold text-gray-800">
-                        <TrendingUp className="size-4 text-yellow-500" />
+                    <h3 className="mb-4 flex items-center gap-2 text-gray-800">
+                        <TrendingUp className="size-7 text-yellow-500" />
                         Progress Tracking
-                    </h2>
+                    </h3>
 
                     {sortedUpdates.length === 0 ? (
                         <p className="py-4 text-center text-sm text-gray-400">

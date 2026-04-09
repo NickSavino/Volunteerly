@@ -4,6 +4,9 @@ import { Building2, Clock, DollarSign, Star } from "lucide-react";
 import { useState } from "react";
 
 import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { UserService } from "@/services/UserService";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
 import { ChartRange, useVltDashboardViewModel } from "./vltDashboardVm";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -55,7 +58,14 @@ export default function VolunteerDashboardPage() {
                 "
             >
                 <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-gray-900">Welcome back, {firstName}!</h1>
+                    <h1
+                        className="
+                            text-2xl font-bold text-gray-900 pl-2
+                            md:pl-0
+                        "
+                    >
+                        Welcome back, {firstName}!
+                    </h1>
                 </div>
 
                 {error && (
@@ -213,14 +223,21 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div
                                             className="
-                                                flex size-10 shrink-0 items-center justify-center
-                                                rounded-full bg-yellow-100 text-xs font-semibold
-                                                text-yellow-700
+                                                cursor-pointer flex size-10 shrink-0 items-center
+                                                justify-center rounded-full bg-yellow-100 text-xs
+                                                font-semibold text-yellow-700
                                             "
                                         >
-                                            {org.orgName.slice(0, 2).toUpperCase()}
+                                            <Avatar className="size-12">
+                                                <AvatarImage
+                                                    src={UserService.getAvatarURL(org?.id || "")}
+                                                />
+                                                <AvatarFallback className="size-12">
+                                                    {getAvatarFallback(org.orgName)}
+                                                </AvatarFallback>
+                                            </Avatar>
                                         </div>
-                                        <div className="min-w-0 flex-1">
+                                        <div className="cursor-pointer min-w-0 flex-1">
                                             <p
                                                 className="
                                                     truncate text-sm font-medium text-gray-800
@@ -239,12 +256,14 @@ export default function VolunteerDashboardPage() {
                                 ))}
                             </div>
                         )}
-                        <button
-                            className="mt-5 w-full rounded-lg border py-2"
-                            onClick={() => setShowAllPartners(true)}
-                        >
-                            Expand All
-                        </button>
+                        {partnerOrgs.length > 0 && (
+                            <button
+                                className="cursor-pointer mt-5 w-full border py-2 rounded-lg"
+                                onClick={() => setShowAllPartners(true)}
+                            >
+                                Expand All
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -277,11 +296,18 @@ export default function VolunteerDashboardPage() {
                                     >
                                         <div
                                             className="
-                                                flex size-10 items-center justify-center
-                                                rounded-full bg-yellow-100
+                                                size-10 rounded-full bg-yellow-100 flex items-center
+                                                justify-center
                                             "
                                         >
-                                            {org.orgName.slice(0, 2).toUpperCase()}
+                                            <Avatar className="size-10">
+                                                <AvatarImage
+                                                    src={UserService.getAvatarURL(org?.id || "")}
+                                                />
+                                                <AvatarFallback>
+                                                    {getAvatarFallback(org?.orgName)}
+                                                </AvatarFallback>
+                                            </Avatar>
                                         </div>
                                         <p className="flex-1 text-left">{org.orgName}</p>
                                         <p>{org.totalHours}h</p>
@@ -351,7 +377,10 @@ export default function VolunteerDashboardPage() {
                                                 {opp.category}
                                             </td>
                                             <td className="py-3 pr-4 text-gray-600">
-                                                {opp.commitmentLevel}
+                                                {opp.commitmentLevel
+                                                    .replaceAll("_", " ")
+                                                    .toLowerCase()
+                                                    .replace(/\b\w/g, (char) => char.toUpperCase())}
                                             </td>
                                             <td className="py-3 pr-4 text-gray-800">
                                                 {opp.hours}h
@@ -379,8 +408,8 @@ export default function VolunteerDashboardPage() {
                                             <td className="py-3">
                                                 <button
                                                     className="
-                                                        rounded-md bg-yellow-400 px-3 py-1 text-xs
-                                                        font-medium text-black
+                                                        cursor-pointer rounded-md bg-yellow-400 px-3
+                                                        py-1 text-xs font-medium text-black
                                                         hover:bg-yellow-500
                                                     "
                                                     onClick={() =>

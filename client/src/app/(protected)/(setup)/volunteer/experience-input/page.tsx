@@ -106,7 +106,12 @@ export default function ExperienceInputPage() {
                                 </p>
                             )}
                         </div>
-                        <Button variant="ghost" size="sm" onClick={addWorkExperience}>
+                        <Button
+                            className="cursor-pointer"
+                            variant="ghost"
+                            size="sm"
+                            onClick={addWorkExperience}
+                        >
                             + Add New
                         </Button>
                     </CardHeader>
@@ -117,7 +122,9 @@ export default function ExperienceInputPage() {
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="absolute top-0 right-0 text-destructive"
+                                        className="
+                                            cursor-pointer absolute top-0 right-0 text-destructive
+                                        "
                                         onClick={() => removeWorkExperience(i)}
                                     >
                                         Remove
@@ -229,7 +236,12 @@ export default function ExperienceInputPage() {
                                 <p className="mt-1 text-sm text-destructive">{errors.education}</p>
                             )}
                         </div>
-                        <Button variant="ghost" size="sm" onClick={addEducation}>
+                        <Button
+                            className="cursor-pointer"
+                            variant="ghost"
+                            size="sm"
+                            onClick={addEducation}
+                        >
                             + Add New
                         </Button>
                     </CardHeader>
@@ -240,7 +252,9 @@ export default function ExperienceInputPage() {
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="absolute top-0 right-0 text-destructive"
+                                        className="
+                                            cursor-pointer absolute top-0 right-0 text-destructive
+                                        "
                                         onClick={() => removeEducation(i)}
                                     >
                                         Remove
@@ -297,7 +311,11 @@ export default function ExperienceInputPage() {
                     </CardContent>
                 </Card>
 
-                <Button className="w-full" onClick={handleSubmit} disabled={submitting}>
+                <Button
+                    className="w-full cursor-pointer"
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                >
                     {submitting ? "Extracting skills..." : "Submit Application"}
                 </Button>
             </main>
