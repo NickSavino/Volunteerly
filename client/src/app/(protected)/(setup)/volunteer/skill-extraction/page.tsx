@@ -106,7 +106,11 @@ function SkillCard({
                             {skill}
                             <button
                                 onClick={() => onRemove(skill)}
-                                className="cursor-pointer ml-1 text-muted-foreground hover:text-destructive transition-colors text-xs font-bold"
+                                className="
+                                    cursor-pointer ml-1 text-muted-foreground
+                                    hover:text-destructive
+                                    transition-colors text-xs font-bold
+                                "
                                 aria-label={`Remove ${skill}`}
                             >
                                 ×

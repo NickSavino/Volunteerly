@@ -227,7 +227,7 @@ export default function VolOppDetailPage({ params }: { params: Promise<{ id: str
 
                 <div className="rounded-xl border bg-white p-5 shadow-sm">
                     <h3 className="mb-4 flex items-center gap-2 text-gray-800">
-                        <TrendingUp className="h-7 w-7 text-yellow-500" />
+                        <TrendingUp className="size-7 text-yellow-500" />
                         Progress Tracking
                     </h3>
 

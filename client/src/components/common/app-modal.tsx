@@ -61,7 +61,11 @@ export function AppModal({
                         <button
                             type="button"
                             aria-label="Close"
-                            className="cursor-pointer rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
+                            className="
+                                cursor-pointer rounded-md p-1 text-muted-foreground
+                                transition-colors
+                                hover:text-foreground
+                            "
                         >
                             <X className="size-6" />
                         </button>

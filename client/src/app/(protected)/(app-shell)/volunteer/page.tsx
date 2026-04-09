@@ -58,7 +58,10 @@ export default function VolunteerDashboardPage() {
                 "
             >
                 <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-gray-900 pl-2 md:pl-0">
+                    <h1 className="
+                        text-2xl font-bold text-gray-900 pl-2
+                        md:pl-0
+                    ">
                         Welcome back, {firstName}!
                     </h1>
                 </div>
@@ -216,18 +219,24 @@ export default function VolunteerDashboardPage() {
                                             router.push(`/volunteer/organizations/${org.id}`)
                                         }
                                     >
-                                        <div className="cursor-pointer flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-xs font-semibold text-yellow-700">
-                                            <Avatar className="h-12 w-12">
+                                        <div className="
+                                            cursor-pointer flex size-10 shrink-0 items-center
+                                            justify-center rounded-full bg-yellow-100 text-xs
+                                            font-semibold text-yellow-700
+                                        ">
+                                            <Avatar className="size-12">
                                                 <AvatarImage
                                                     src={UserService.getAvatarURL(org?.id || "")}
                                                 />
-                                                <AvatarFallback className="h-12 w-12">
+                                                <AvatarFallback className="size-12">
                                                     {getAvatarFallback(org.orgName)}
                                                 </AvatarFallback>
                                             </Avatar>
                                         </div>
                                         <div className="cursor-pointer min-w-0 flex-1">
-                                            <p className="truncate text-sm font-medium text-gray-800">
+                                            <p className="
+                                                truncate text-sm font-medium text-gray-800
+                                            ">
                                                 {org.orgName}
                                             </p>
                                         </div>
@@ -279,8 +288,11 @@ export default function VolunteerDashboardPage() {
                                             router.push(`/volunteer/organizations/${org.id}`);
                                         }}
                                     >
-                                        <div className="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                                            <Avatar className="h-10 w-10">
+                                        <div className="
+                                            size-10 rounded-full bg-yellow-100 flex items-center
+                                            justify-center
+                                        ">
+                                            <Avatar className="size-10">
                                                 <AvatarImage
                                                     src={UserService.getAvatarURL(org?.id || "")}
                                                 />
@@ -387,7 +399,11 @@ export default function VolunteerDashboardPage() {
                                             </td>
                                             <td className="py-3">
                                                 <button
-                                                    className="cursor-pointer rounded-md bg-yellow-400 px-3 py-1 text-xs font-medium text-black hover:bg-yellow-500"
+                                                    className="
+                                                        cursor-pointer rounded-md bg-yellow-400 px-3
+                                                        py-1 text-xs font-medium text-black
+                                                        hover:bg-yellow-500
+                                                    "
                                                     onClick={() =>
                                                         router.push(
                                                             `/volunteer/opportunities/${opp.id}`,

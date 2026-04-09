@@ -75,7 +75,11 @@ export function OpportunityDetailModal({
                 <>
                     <button
                         onClick={onClose}
-                        className="cursor-pointer h-11 min-w-28 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary"
+                        className="
+                            cursor-pointer h-11 min-w-28 rounded-xl border border-border bg-card
+                            px-5 text-sm font-semibold text-foreground
+                            hover:bg-secondary
+                        "
                     >
                         Close
                     </button>
@@ -91,7 +95,11 @@ export function OpportunityDetailModal({
                     ) : (
                         <button
                             onClick={onApply}
-                            className="cursor-pointer h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90"
+                            className="
+                                cursor-pointer h-11 min-w-36 rounded-xl bg-primary px-5 text-sm
+                                font-semibold text-foreground
+                                hover:opacity-90
+                            "
                         >
                             Apply Now
                         </button>
@@ -112,7 +120,7 @@ export function OpportunityDetailModal({
                             !orgId && "pointer-events-none",
                         )}
                     >
-                        <Avatar className="h-12 w-12">
+                        <Avatar className="size-12">
                             <AvatarImage
                                 src={UserService.getAvatarURL(opp.organization?.id || "")}
                             />

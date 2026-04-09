@@ -122,7 +122,9 @@ export default function ExperienceInputPage() {
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="cursor-pointer absolute top-0 right-0 text-destructive"
+                                        className="
+                                            cursor-pointer absolute top-0 right-0 text-destructive
+                                        "
                                         onClick={() => removeWorkExperience(i)}
                                     >
                                         Remove
@@ -250,7 +252,9 @@ export default function ExperienceInputPage() {
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="cursor-pointer absolute top-0 right-0 text-destructive"
+                                        className="
+                                            cursor-pointer absolute top-0 right-0 text-destructive
+                                        "
                                         onClick={() => removeEducation(i)}
                                     >
                                         Remove

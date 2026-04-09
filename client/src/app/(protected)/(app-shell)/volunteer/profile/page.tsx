@@ -223,7 +223,11 @@ export default function ProfilePage() {
                                 <p className="font-semibold text-gray-800">Technical Issues?</p>
                             </div>
                             <Button
-                                className="cursor-pointer w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
+                                className="
+                                    cursor-pointer w-full bg-yellow-400
+                                    hover:bg-yellow-500
+                                    text-black font-semibold
+                                "
                                 onClick={() => setIsTicketModalOpen(true)}
                             >
                                 Submit a Ticket
@@ -255,7 +259,11 @@ export default function ProfilePage() {
                                         </Button>
                                     )}
                                     <Button
-                                        className="cursor-pointer bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl px-6"
+                                        className="
+                                            cursor-pointer bg-yellow-400
+                                            hover:bg-yellow-500
+                                            text-black font-semibold rounded-xl px-6
+                                        "
                                         onClick={editing ? handleSave : handleEdit}
                                         disabled={saving}
                                     >
@@ -363,7 +371,12 @@ export default function ProfilePage() {
 
                                 <div className="flex flex-col gap-2">
                                     <Label>Preferred Availability</Label>
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-7 gap-1">
+                                    <div className="
+                                        grid grid-cols-1
+                                        sm:grid-cols-3
+                                        md:grid-cols-7
+                                        gap-1
+                                    ">
                                         {DAYS.map((day) => (
                                             <Toggle
                                                 key={day}

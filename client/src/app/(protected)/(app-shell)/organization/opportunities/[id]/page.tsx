@@ -1,6 +1,5 @@
 "use client";
 
-import avtImg from "@/assets/avatarImg.png";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
 import { AppModal } from "@/components/common/app-modal";
 import { LoadingScreen } from "@/components/common/loading-screen";
@@ -50,7 +49,6 @@ import {
     User,
     UserStar,
 } from "lucide-react";
-import Image from "next/image";
 import { use, useState } from "react";
 import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
 
@@ -118,7 +116,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             </div>
                         </div>
 
-                        <h2 className="text-2x1 font-bold">
+                        <h2 className="font-bold">
                             {opportunity?.name} -{" "}
                             {opportunity?.workType
                                 .replaceAll("_", " ")
@@ -383,8 +381,17 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
 
                                 <Card className="mb-5">
                                     <CardContent>
-                                        <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
-                                            <div className="flex md:w-full justify-center md:col-span-2">
+                                        <div className="
+                                            text-center
+                                            md:text-left md:grid md:grid-cols-8
+                                            gap-6
+                                        ">
+                                            <div className="
+                                                flex
+                                                md:w-full
+                                                justify-center
+                                                md:col-span-2
+                                            ">
                                                 <Avatar className="h-auto w-20">
                                                     <AvatarImage
                                                         src={UserService.getAvatarURL(

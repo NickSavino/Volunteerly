@@ -87,7 +87,7 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                             !orgId && "pointer-events-none",
                         )}
                     >
-                        <Avatar className="h-10 w-10">
+                        <Avatar className="size-10">
                             <AvatarImage src={UserService.getAvatarURL(orgId || "")} />
                             <AvatarFallback>{initials}</AvatarFallback>
                         </Avatar>
@@ -141,7 +141,12 @@ export function OpportunityCard({ opp, matchPct, isSelected, hasApplied, onClick
                         e.stopPropagation();
                         onClick();
                     }}
-                    className="cursor-pointer rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-foreground hover:opacity-90 transition-opacity"
+                    className="
+                        cursor-pointer rounded-full bg-primary px-4 py-1.5 text-xs font-semibold
+                        text-foreground
+                        hover:opacity-90
+                        transition-opacity
+                    "
                 >
                     View Details
                 </button>
