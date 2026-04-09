@@ -81,10 +81,12 @@ export function OpportunityDetailModal({
                         Close
                     </button>
                     {hasApplied ? (
-                        <span className="
-                            flex h-11 min-w-36 items-center justify-center rounded-xl bg-green-100
-                            px-5 text-sm font-semibold text-green-700
-                        ">
+                        <span
+                            className="
+                                flex h-11 min-w-36 items-center justify-center rounded-xl
+                                bg-green-100 px-5 text-sm font-semibold text-green-700
+                            "
+                        >
                             ✓ Applied
                         </span>
                     ) : (
@@ -141,10 +143,12 @@ export function OpportunityDetailModal({
                             {matchPct}% Match
                         </span>
                         {hasApplied && (
-                            <span className="
-                                rounded-full bg-green-100 px-3 py-1 text-sm font-semibold
-                                text-green-700
-                            ">
+                            <span
+                                className="
+                                    rounded-full bg-green-100 px-3 py-1 text-sm font-semibold
+                                    text-green-700
+                                "
+                            >
                                 ✓ Applied
                             </span>
                         )}
@@ -211,9 +215,7 @@ export function OpportunityDetailModal({
                     <h3 className="mb-2 text-sm font-semibold text-foreground">
                         About This Opportunity
                     </h3>
-                    <p className="text-sm/relaxed text-muted-foreground">
-                        {opp.description}
-                    </p>
+                    <p className="text-sm/relaxed text-muted-foreground">{opp.description}</p>
                 </div>
 
                 {opp.candidateDesc && (
@@ -221,9 +223,7 @@ export function OpportunityDetailModal({
                         <h3 className="mb-2 text-sm font-semibold text-foreground">
                             Ideal Candidate
                         </h3>
-                        <p className="text-sm/relaxed text-muted-foreground">
-                            {opp.candidateDesc}
-                        </p>
+                        <p className="text-sm/relaxed text-muted-foreground">{opp.candidateDesc}</p>
                     </div>
                 )}
             </div>

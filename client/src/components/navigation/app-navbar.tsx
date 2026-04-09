@@ -58,10 +58,12 @@ export function AppNavbar({
                     <Image src={logo} alt="Volunteerly" width={170} height={40} priority />
                 </Link>
 
-                <NavigationMenu className="
-                    absolute left-1/2 hidden -translate-x-1/2
-                    md:flex
-                ">
+                <NavigationMenu
+                    className="
+                        absolute left-1/2 hidden -translate-x-1/2
+                        md:flex
+                    "
+                >
                     <NavigationMenuList className="flex gap-6">
                         {items.map(({ label, href }) => {
                             const isActive = isNavItemActive(pathname, href);
@@ -74,10 +76,10 @@ export function AppNavbar({
                                             text-sm font-medium transition-colors
                                             hover:text-yellow-500
                                             ${
-                                            isActive
-                                                ? "border-b-2 border-yellow-400 text-yellow-500"
-                                                : "text-gray-600"
-                                        }
+                                                isActive
+                                                    ? "border-b-2 border-yellow-400 text-yellow-500"
+                                                    : "text-gray-600"
+                                            }
                                         `}
                                     >
                                         {label}
@@ -117,10 +119,12 @@ export function AppNavbar({
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end" className="w-56 p-2">
-                        <div className="
-                            px-2 py-1.5
-                            md:hidden
-                        ">
+                        <div
+                            className="
+                                px-2 py-1.5
+                                md:hidden
+                            "
+                        >
                             <p className="truncate text-sm font-medium text-gray-900">
                                 {displayName}
                             </p>
