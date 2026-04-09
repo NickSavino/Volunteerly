@@ -119,7 +119,7 @@ export function useOpportunitiesViewModel() {
                 setError("Failed to load opportunities.");
             }
         },
-        [currentVolunteer?.availability],
+        [],
     );
 
     useEffect(() => {
