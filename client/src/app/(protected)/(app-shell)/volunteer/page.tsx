@@ -173,10 +173,10 @@ export default function VolunteerDashboardPage() {
                                         className="flex w-full items-center gap-3 rounded-lg p-1 text-left hover:bg-gray-50"
                                         onClick={() => router.push(`/volunteer/organizations/${org.id}`)}
                                     >
-                                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-xs font-semibold text-yellow-700">
+                                        <div className="cursor-pointer flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-yellow-100 text-xs font-semibold text-yellow-700">
                                             {org.orgName.slice(0, 2).toUpperCase()}
                                         </div>
-                                        <div className="min-w-0 flex-1">
+                                        <div className="cursor-pointer min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-gray-800">{org.orgName}</p>
                                         </div>
                                         <div className="flex-shrink-0 text-right">
@@ -187,7 +187,7 @@ export default function VolunteerDashboardPage() {
                                 ))}
                             </div>
                         )}
-                        <button className="mt-5 w-full border py-2 rounded-lg" onClick={() => setShowAllPartners(true)}>
+                        <button className="cursor-pointer mt-5 w-full border py-2 rounded-lg" onClick={() => setShowAllPartners(true)}>
                             Expand All
                         </button>
                     </div>
@@ -289,7 +289,7 @@ export default function VolunteerDashboardPage() {
                                             </td>
                                             <td className="py-3">
                                                 <button
-                                                    className="rounded-md bg-yellow-400 px-3 py-1 text-xs font-medium text-black hover:bg-yellow-500"
+                                                    className="cursor-pointer rounded-md bg-yellow-400 px-3 py-1 text-xs font-medium text-black hover:bg-yellow-500"
                                                     onClick={() => router.push(`/volunteer/opportunities/${opp.id}`)}
                                                 >
                                                     View More
