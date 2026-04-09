@@ -321,8 +321,7 @@ function TreeNode({
 function DetailPanel({ node, onClose }: { node: SkillNode; onClose: () => void }) {
     // Cap the displayed progress at the threshold so the bar never overflows
     const capped = Math.min(node.current, node.threshold);
-    const pct =
-        node.threshold > 0 ? Math.min(100, Math.round((capped / node.threshold) * 100)) : 0;
+    const pct = node.threshold > 0 ? Math.min(100, Math.round((capped / node.threshold) * 100)) : 0;
 
     const statusLabel =
         node.status === "mastered"

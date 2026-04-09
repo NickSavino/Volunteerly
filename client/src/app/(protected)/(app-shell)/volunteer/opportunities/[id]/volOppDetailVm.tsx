@@ -133,7 +133,11 @@ export function useVolOppDetailViewModel(oppId: string) {
         // If the volunteer also flagged, submit that separately after the review
         if (input.flagged && input.flagReason?.trim()) {
             try {
-                await VolunteerService.postFlag(opp.organization.id, oppId, input.flagReason.trim());
+                await VolunteerService.postFlag(
+                    opp.organization.id,
+                    oppId,
+                    input.flagReason.trim(),
+                );
             } catch {
                 setReviewModalOpen(false);
                 setSubmitting(false);
