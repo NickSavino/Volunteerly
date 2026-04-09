@@ -11,7 +11,8 @@ volunteerOrganizationRouter.get("/:orgId", async (req, res, next) => {
         const { orgId } = req.params;
         const profile = await getPublicOrgProfile(orgId);
 
-        if (!profile) return res.status(404).json({ error: "Not Found", message: "Organization not found." });
+        if (!profile)
+            return res.status(404).json({ error: "Not Found", message: "Organization not found." });
 
         res.status(200).json(profile);
     } catch (error) {

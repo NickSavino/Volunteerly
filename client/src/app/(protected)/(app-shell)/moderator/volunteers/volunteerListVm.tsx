@@ -89,7 +89,10 @@ export function useVolunteerListViewModel() {
     }, [volunteersList, activeTab, searchQuery, sortBy]);
 
     const totalPages = Math.max(1, Math.ceil(filteredVolunteers.length / pageSize));
-    const paginatedVolunteers = filteredVolunteers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const paginatedVolunteers = filteredVolunteers.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    );
 
     const startItem = filteredVolunteers.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
     const endItem = Math.min(currentPage * pageSize, filteredVolunteers.length);

@@ -1,33 +1,32 @@
 "use client";
 
-import { ArrowLeft, Briefcase, GraduationCap, MapPin, School, User } from "lucide-react";
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import avtImg from "@/assets/avatarImg.png";
-import { use } from "react";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
-import { useOppApplicationViewModel } from "./oppApplicationVm";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Item,
+    ItemActions,
+    ItemContent,
+    ItemDescription,
+    ItemMedia,
+    ItemTitle,
+} from "@/components/ui/item";
 import { UserService } from "@/services/UserService";
+import { ArrowLeft, Briefcase, GraduationCap, MapPin, User } from "lucide-react";
+import { use } from "react";
+import { useOppApplicationViewModel } from "./oppApplicationVm";
 
-export default function ViewApplicationPage({ params }: { params: Promise<{ id: string; appId: string }> }) {
+export default function ViewApplicationPage({
+    params,
+}: {
+    params: Promise<{ id: string; appId: string }>;
+}) {
     const { id, appId } = use(params);
-    const {
-        loading,
-        fetching,
-        session,
-        signOut,
-        router,
-        user,
-        error,
-        matchedSchedule,
-        currentUser,
-        application,
-        selectVolunteer,
-    } = useOppApplicationViewModel(id, appId);
+    const { loading, fetching, session, router, matchedSchedule, application, selectVolunteer } =
+        useOppApplicationViewModel(id, appId);
 
     if (loading || !session || fetching) {
         return <LoadingScreen />;
@@ -37,11 +36,25 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
         <div className="min-h-screen">
             <title>Organization View Opportunity - Volunteerly</title>
 
-            <main className="flex flex-col md:flex-row p-6 md:mx-10">
-                <div className="w-full md:w-3/4 mb-5 md:mb-0 mx-auto max-w-3xl flex flex-col gap-6 mb-10">
+            <main
+                className="
+                    flex flex-col p-6
+                    md:mx-10 md:flex-row
+                "
+            >
+                <div
+                    className="
+                        mx-auto mb-5 flex w-full max-w-3xl flex-col gap-6
+                        md:mb-0 md:w-3/4
+                    "
+                >
                     <div>
-                        <Button variant="ghost" className="cursor-pointer" onClick={() => router.back()}>
-                            <ArrowLeft className="w-4 h-4" />
+                        <Button
+                            variant="ghost"
+                            className="cursor-pointer"
+                            onClick={() => router.back()}
+                        >
+                            <ArrowLeft className="size-4" />
                             Back
                         </Button>
 
@@ -50,10 +63,22 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
 
                     <Card>
                         <CardContent>
-                            <div className="text-center md:text-left md:grid md:grid-cols-8 gap-6">
-                                <div className="flex md:w-full justify-center md:col-span-2">
+                            <div
+                                className="
+                                    gap-6 text-center
+                                    md:grid md:grid-cols-8 md:text-left
+                                "
+                            >
+                                <div
+                                    className="
+                                        flex justify-center
+                                        md:col-span-2 md:w-full
+                                    "
+                                >
                                     <Avatar className="h-auto w-20">
-                                        <AvatarImage src={UserService.getAvatarURL(application?.volId || "")} />
+                                        <AvatarImage
+                                            src={UserService.getAvatarURL(application?.volId || "")}
+                                        />
                                         <AvatarFallback>
                                             {" "}
                                             <User className="h-auto w-20"></User>
@@ -61,10 +86,21 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                     </Avatar>
                                 </div>
 
-                                <div className="md:col-span-4 flex flex-col gap-1">
-                                    <div className="md:flex gap-3">
+                                <div
+                                    className="
+                                        flex flex-col gap-1
+                                        md:col-span-4
+                                    "
+                                >
+                                    <div
+                                        className="
+                                            gap-3
+                                            md:flex
+                                        "
+                                    >
                                         <h3>
-                                            {application?.volunteer?.firstName} {application?.volunteer?.lastName}
+                                            {application?.volunteer?.firstName}{" "}
+                                            {application?.volunteer?.lastName}
                                         </h3>
                                         <Badge
                                             className={
@@ -79,14 +115,28 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                         </Badge>
                                     </div>
                                     {application?.volunteer?.workExperiences && (
-                                        <h4>{application?.volunteer?.workExperiences[0].jobTitle}</h4>
+                                        <h4>
+                                            {application?.volunteer?.workExperiences[0].jobTitle}
+                                        </h4>
                                     )}
-                                    <p className="text-sm">Applied {application?.dateApplied?.toLocaleDateString()}</p>
+                                    <p className="text-sm">
+                                        Applied {application?.dateApplied?.toLocaleDateString()}
+                                    </p>
                                     <p className="text-sm">{application?.volunteer?.bio}</p>
                                 </div>
 
-                                <div className="pt-3 md:pt-0 md:col-span-2 flex flex-col items-center gap-3">
-                                    <span className="flex flex-1 items-center gap-3 justify-center md:justify-start">
+                                <div
+                                    className="
+                                        flex flex-col items-center gap-3 pt-3
+                                        md:col-span-2 md:pt-0
+                                    "
+                                >
+                                    <span
+                                        className="
+                                            flex flex-1 items-center justify-center gap-3
+                                            md:justify-start
+                                        "
+                                    >
                                         <MapPin className="text-primary" />
                                         <div className="flex flex-col">
                                             <span className="text-sm text-muted-foreground">
@@ -102,15 +152,25 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                                         1,
                                                         Math.max(
                                                             0,
-                                                            (application?.volunteer?.averageRating ?? 0) - (star - 1),
+                                                            (application?.volunteer
+                                                                ?.averageRating ?? 0) -
+                                                                (star - 1),
                                                         ),
                                                     );
                                                     const pct = Math.round(fill * 100);
                                                     return (
-                                                        <span key={star} className="relative text-2xl leading-none">
+                                                        <span
+                                                            key={star}
+                                                            className="
+                                                                relative text-2xl leading-none
+                                                            "
+                                                        >
                                                             <span className="text-gray-500">★</span>
                                                             <span
-                                                                className="absolute inset-0 overflow-hidden text-primary"
+                                                                className="
+                                                                    absolute inset-0 overflow-hidden
+                                                                    text-primary
+                                                                "
                                                                 style={{ width: `${pct}%` }}
                                                             >
                                                                 ★
@@ -120,7 +180,10 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                                 })}
                                             </div>
                                             <p className="text-xs text-muted-foreground">
-                                                {(application?.volunteer?.averageRating || 0).toFixed(1)} / 5.0
+                                                {(
+                                                    application?.volunteer?.averageRating || 0
+                                                ).toFixed(1)}{" "}
+                                                / 5.0
                                             </p>
                                         </>
                                     )}
@@ -135,8 +198,8 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                         </CardHeader>
                         {application?.volunteer?.workExperiences?.length === 0 &&
                             application?.volunteer?.educations?.length === 0 && (
-                                <CardContent className="flex flex-col justify-center h-full text-center justify-center">
-                                    <div className="flex justify-center mb-4">
+                                <CardContent className="flex h-full flex-col justify-center text-center">
+                                    <div className="mb-4 flex justify-center">
                                         <Avatar size="lg">
                                             <AvatarImage src={volunteerly_logo.src} />
                                             <AvatarFallback></AvatarFallback>
@@ -147,7 +210,9 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                             )}
                         {(application?.volunteer?.workExperiences?.length || 0) > 0 && (
                             <CardContent>
-                                <CardTitle className="text-muted-foreground text-sm">Employment Experience</CardTitle>
+                                <CardTitle className="text-sm text-muted-foreground">
+                                    Employment Experience
+                                </CardTitle>
                                 {application?.volunteer?.workExperiences?.map((exp) => (
                                     <Item key={exp.id}>
                                         <ItemMedia>
@@ -157,7 +222,9 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                                             <ItemTitle>
                                                 {exp.jobTitle} | {exp.company}
                                             </ItemTitle>
-                                            <ItemDescription>{exp.responsibilities}</ItemDescription>
+                                            <ItemDescription>
+                                                {exp.responsibilities}
+                                            </ItemDescription>
                                         </ItemContent>
                                         <ItemActions>
                                             <ItemDescription>
@@ -171,7 +238,9 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                         )}
                         {(application?.volunteer?.educations?.length || 0) > 0 && (
                             <CardContent>
-                                <CardTitle className="text-muted-foreground text-sm">Education</CardTitle>
+                                <CardTitle className="text-sm text-muted-foreground">
+                                    Education
+                                </CardTitle>
                                 {application?.volunteer?.educations?.map((edu) => (
                                     <Item key={edu.id}>
                                         <ItemMedia>
@@ -195,11 +264,11 @@ export default function ViewApplicationPage({ params }: { params: Promise<{ id: 
                             <CardTitle>Opportunity Specific Details</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <CardTitle className="text-md pb-2">Message to Organization</CardTitle>
+                            <CardTitle className="pb-2">Message to Organization</CardTitle>
                             <p>{application?.message}</p>
                         </CardContent>
                         <CardContent>
-                            <CardTitle className="text-md pb-2">Availability Match</CardTitle>
+                            <CardTitle className="pb-2">Availability Match</CardTitle>
                             {matchedSchedule?.length === 0 ? (
                                 <p className="text-destructive">No Days Match</p>
                             ) : (

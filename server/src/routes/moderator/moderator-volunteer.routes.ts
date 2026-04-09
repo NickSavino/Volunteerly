@@ -26,7 +26,9 @@ moderatorVolunteersRouter.get("/", async (_, res, next) => {
             return res.status(404).json({ error: "Not Found", message: "Volunteer not found." });
         }
         if ((error as Error)?.message === "VOLUNTEER_ALREADY_SUSPENDED") {
-            return res.status(409).json({ error: "Conflict", message: "Volunteer is already suspended." });
+            return res
+                .status(409)
+                .json({ error: "Conflict", message: "Volunteer is already suspended." });
         }
         next(error);
     }
@@ -51,7 +53,9 @@ moderatorVolunteersRouter.post("/:volunteerId/flag", async (req, res, next) => {
 
         const parsed = ModeratorVolunteerFlagInputSchema.safeParse(req.body);
         if (!parsed.success) {
-            return res.status(400).json({ error: "Invalid body", message: parsed.error.issues[0]?.message });
+            return res
+                .status(400)
+                .json({ error: "Invalid body", message: parsed.error.issues[0]?.message });
         }
 
         await flagVolunteerByModerator(req.params.volunteerId, moderatorId, parsed.data);
@@ -68,7 +72,9 @@ moderatorVolunteersRouter.post("/:volunteerId/warn", async (req, res, next) => {
 
         const parsed = ModeratorVolunteerWarnInputSchema.safeParse(req.body);
         if (!parsed.success) {
-            return res.status(400).json({ error: "Invalid body", message: parsed.error.issues[0]?.message });
+            return res
+                .status(400)
+                .json({ error: "Invalid body", message: parsed.error.issues[0]?.message });
         }
 
         await warnVolunteer(req.params.volunteerId, moderatorId, parsed.data);
@@ -78,7 +84,9 @@ moderatorVolunteersRouter.post("/:volunteerId/warn", async (req, res, next) => {
             return res.status(404).json({ error: "Not Found", message: "Volunteer not found." });
         }
         if (error?.message === "VOLUNTEER_ALREADY_SUSPENDED") {
-            return res.status(409).json({ error: "Conflict", message: "Volunteer is already suspended." });
+            return res
+                .status(409)
+                .json({ error: "Conflict", message: "Volunteer is already suspended." });
         }
         if (error?.message === "REPORT_NOT_FOUND") {
             return res.status(404).json({ error: "Not Found", message: "Open report not found." });
@@ -94,7 +102,9 @@ moderatorVolunteersRouter.post("/:volunteerId/suspend", async (req, res, next) =
 
         const parsed = ModeratorVolunteerSuspendInputSchema.safeParse(req.body);
         if (!parsed.success) {
-            return res.status(400).json({ error: "Invalid body", message: parsed.error.issues[0]?.message });
+            return res
+                .status(400)
+                .json({ error: "Invalid body", message: parsed.error.issues[0]?.message });
         }
 
         await suspendVolunteer(req.params.volunteerId, moderatorId, parsed.data);
@@ -114,7 +124,9 @@ moderatorVolunteersRouter.post("/:volunteerId/escalate", async (req, res, next) 
 
         const parsed = ModeratorVolunteerEscalateInputSchema.safeParse(req.body);
         if (!parsed.success) {
-            return res.status(400).json({ error: "Invalid body", message: parsed.error.issues[0]?.message });
+            return res
+                .status(400)
+                .json({ error: "Invalid body", message: parsed.error.issues[0]?.message });
         }
 
         await escalateVolunteer(req.params.volunteerId, moderatorId, parsed.data);

@@ -13,13 +13,19 @@ export function getDisplayName(user?: {
 
     switch (user.role) {
         case "VOLUNTEER":
-            return `${user.volunteer?.firstName ?? ""} ${user.volunteer?.lastName ?? ""}`.trim() || user.email;
+            return (
+                `${user.volunteer?.firstName ?? ""} ${user.volunteer?.lastName ?? ""}`.trim() ||
+                user.email
+            );
 
         case "ORGANIZATION":
             return user.organization?.orgName?.trim() || user.email;
 
         case "MODERATOR":
-            return `${user.moderator?.firstName ?? ""} ${user.moderator?.lastName ?? ""}`.trim() || user.email;
+            return (
+                `${user.moderator?.firstName ?? ""} ${user.moderator?.lastName ?? ""}`.trim() ||
+                user.email
+            );
 
         default:
             return user.email;

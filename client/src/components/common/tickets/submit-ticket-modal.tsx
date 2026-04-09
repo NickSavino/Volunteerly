@@ -9,7 +9,13 @@ import { TicketService } from "@/services/TicketService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 type SubmitTicketModalProps = {
@@ -98,7 +104,12 @@ export function SubmitTicketModal({ open, onClose, onSubmitted }: SubmitTicketMo
             maxWidthClassName="sm:max-w-xl"
             footer={
                 <>
-                    <Button type="button" variant="outline" onClick={handleClose} disabled={submitting}>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleClose}
+                        disabled={submitting}
+                    >
                         Cancel
                     </Button>
                     <Button type="button" onClick={handleSubmit} disabled={submitting}>
@@ -109,14 +120,22 @@ export function SubmitTicketModal({ open, onClose, onSubmitted }: SubmitTicketMo
         >
             <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                    Your description becomes the opening message in the support thread. After you submit, you can track
-                    moderator replies in Messages.
+                    Your description becomes the opening message in the support thread. After you
+                    submit, you can track moderator replies in Messages.
                 </p>
 
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div
+                    className="
+                        grid gap-4
+                        sm:grid-cols-2
+                    "
+                >
                     <div className="space-y-2">
                         <Label>Category</Label>
-                        <Select value={category} onValueChange={(value) => setCategory(value as TicketCategory)}>
+                        <Select
+                            value={category}
+                            onValueChange={(value) => setCategory(value as TicketCategory)}
+                        >
                             <SelectTrigger>
                                 <SelectValue />
                             </SelectTrigger>

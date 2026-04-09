@@ -1,18 +1,8 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
-import { UserService } from "@/services/UserService";
 import { useAuth } from "@/providers/auth-provider";
-import {
-    Application,
-    CurrentOrganization,
-    CurrentUser,
-    CurrentUserSchema,
-    Opportunity,
-    ProgressUpdate,
-} from "@volunteerly/shared";
-import { api } from "@/lib/api";
 import { OrganizationService } from "@/services/OrganizationService";
+import { Application, CurrentOrganization, Opportunity, ProgressUpdate } from "@volunteerly/shared";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export function useOrgViewOpportunityViewModel(id: string) {
@@ -73,13 +63,6 @@ export function useOrgViewOpportunityViewModel(id: string) {
                 toast.error("Failed to load Opportunity.", { position: "top-right" });
                 return;
             }
-
-            const sortedApp = {
-                ...opp.data,
-                progressUpdates: opp.data?.progressUpdates?.sort(
-                    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-                ),
-            };
 
             setOpportunity(opp.data);
 
@@ -150,7 +133,11 @@ export function useOrgViewOpportunityViewModel(id: string) {
         if (submitting || !opportunity?.volunteer?.id) return;
         setSubmitting(true);
         try {
-            await OrganizationService.postReview(opportunity.volunteer.id, opportunity.id, input.rating);
+            await OrganizationService.postReview(
+                opportunity.volunteer.id,
+                opportunity.id,
+                input.rating,
+            );
         } catch (err) {
             setReviewModalOpen(false);
             setSubmitting(false);
@@ -166,7 +153,10 @@ export function useOrgViewOpportunityViewModel(id: string) {
         }
         if (input.flagged && input.flagReason?.trim()) {
             try {
-                await OrganizationService.postFlag(opportunity.volunteer.id, input.flagReason.trim());
+                await OrganizationService.postFlag(
+                    opportunity.volunteer.id,
+                    input.flagReason.trim(),
+                );
             } catch {
                 setReviewModalOpen(false);
                 setSubmitting(false);
@@ -178,7 +168,9 @@ export function useOrgViewOpportunityViewModel(id: string) {
         }
         setReviewModalOpen(false);
         setSubmitting(false);
-        toast.success(input.flagged ? "Review and flag posted!" : "Review posted!", { position: "top-right" });
+        toast.success(input.flagged ? "Review and flag posted!" : "Review posted!", {
+            position: "top-right",
+        });
     }
 
     return {

@@ -38,7 +38,9 @@ export async function getChatConversationList(userId: string): Promise<ChatConve
 
     return conversations.map((conversation) => {
         const latestMessage = conversation.messages[0];
-        const otherParticipant = conversation.participants.find((participant) => participant.userId !== userId);
+        const otherParticipant = conversation.participants.find(
+            (participant) => participant.userId !== userId,
+        );
 
         return {
             id: conversation.id,
@@ -66,15 +68,16 @@ export async function getChatConversationDetail(
     userId: string,
     conversationId: string,
 ): Promise<ChatConversationDetail | null> {
-    const conversation: ChatConversationDetailRecord | null = await prisma.chatConversation.findFirst({
-        where: {
-            id: conversationId,
-            participants: {
-                some: { userId },
+    const conversation: ChatConversationDetailRecord | null =
+        await prisma.chatConversation.findFirst({
+            where: {
+                id: conversationId,
+                participants: {
+                    some: { userId },
+                },
             },
-        },
-        ...chatConversationDetailArgs,
-    });
+            ...chatConversationDetailArgs,
+        });
 
     if (!conversation) return null;
 

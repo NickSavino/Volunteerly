@@ -1,15 +1,10 @@
 "use client";
 
-import {
-    MessageCircleQuestionMark,
-    ArrowLeft,
-    Pencil,
-    Trophy,
-    Rocket,
-    ShieldCheck,
-    LucideIcon,
-    Award,
-} from "lucide-react";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardAction,
@@ -19,21 +14,37 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useOrgProfileViewModel } from "./orgProfileVm";
 import { Field } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserService } from "@/services/UserService";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { LoadingScreen } from "@/components/common/loading-screen";
-import { getAvatarFallback } from "@/components/navigation/nav-utils";
-import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { Input } from "@/components/ui/input";
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+    InputGroupText,
+} from "@/components/ui/input-group";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { UserService } from "@/services/UserService";
+import {
+    ArrowLeft,
+    Award,
+    LucideIcon,
+    MessageCircleQuestionMark,
+    Pencil,
+    Rocket,
+    ShieldCheck,
+    Trophy,
+} from "lucide-react";
 import { useState } from "react";
+import { useOrgProfileViewModel } from "./orgProfileVm";
 
 const awardIcons: Record<string, LucideIcon> = {
     "First Step": Rocket,
@@ -46,7 +57,6 @@ export default function OrgProfilePage() {
         loading,
         session,
         fetching,
-        signOut,
         router,
         currentOrg,
         setCurrentOrg,
@@ -74,22 +84,47 @@ export default function OrgProfilePage() {
     return (
         <div className="min-h-screen">
             <title>Organization Profile - Volunteerly</title>
-            <main className="md:h-[calc(100vh-64px)] md:px-10 py-5">
-                <Button variant="ghost" className="cursor-pointer pb-8" onClick={() => router.back()}>
-                    <ArrowLeft className="w-4 h-4" />
+            <main
+                className="
+                    py-5
+                    md:h-[calc(100vh-64px)] md:px-10
+                "
+            >
+                <Button
+                    variant="ghost"
+                    className="cursor-pointer pb-8"
+                    onClick={() => router.back()}
+                >
+                    <ArrowLeft className="size-4" />
                     Back
                 </Button>
 
-                <div className="relative mb-6 min-h-48 w-full overflow-hidden rounded-xl bg-gray-800 md:h-40">
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-700 to-gray-900" />
-                    <div className="absolute md:bottom-4 top-4 left-6 flex items-end gap-4">
+                <div
+                    className="
+                        relative mb-6 min-h-48 w-full overflow-hidden rounded-xl bg-gray-800
+                        md:h-40
+                    "
+                >
+                    <div className="absolute inset-0 bg-linear-to-br from-gray-700 to-gray-900" />
+                    <div
+                        className="
+                            absolute top-4 left-6 flex items-end gap-4
+                            md:bottom-4
+                        "
+                    >
                         <div className="relative">
-                            <Avatar className="h-20 w-20">
+                            <Avatar className="size-20">
                                 <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")} />
-                                <AvatarFallback> {getAvatarFallback(currentOrg?.orgName)}</AvatarFallback>
+                                <AvatarFallback>
+                                    {" "}
+                                    {getAvatarFallback(currentOrg?.orgName)}
+                                </AvatarFallback>
                             </Avatar>
                             <Button
-                                className="absolute bottom-0 right-0 bg-white rounded-full p-1 text-gray-700 text-xs cursor-pointer"
+                                className="
+                                    absolute right-0 bottom-0 cursor-pointer rounded-full bg-white
+                                    p-1 text-xs text-gray-700
+                                "
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 <Pencil />
@@ -105,17 +140,23 @@ export default function OrgProfilePage() {
                         <div>
                             <h1 className="text-xl font-bold text-white">{currentOrg?.orgName}</h1>
                             <p className="text-sm font-bold text-white">
-                                Member Since {new Date(currentOrg?.createdAt || "").toLocaleDateString()}
+                                Member Since{" "}
+                                {new Date(currentOrg?.createdAt || "").toLocaleDateString()}
                             </p>
                             {currentOrg?.causeCategory && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-yellow-400 px-2.5 py-0.5 text-xs font-medium text-black">
+                                <span
+                                    className="
+                                        inline-flex items-center gap-1 rounded-full bg-yellow-400
+                                        px-2.5 py-0.5 text-xs font-medium text-black
+                                    "
+                                >
                                     {currentOrg?.causeCategory}
                                 </span>
                             )}
                         </div>
                     </div>
-                    <div className="absolute bottom-4 right-6 flex flex-col gap-2 text-center">
-                        <div className="flex flex-row gap-2 justify-end">
+                    <div className="absolute right-6 bottom-4 flex flex-col gap-2 text-center">
+                        <div className="flex flex-row justify-end gap-2">
                             {Object.entries(awards).map(([title, description]) => {
                                 const Icon = awardIcons[title] || Award;
                                 return (
@@ -141,14 +182,23 @@ export default function OrgProfilePage() {
                                         {[1, 2, 3, 4, 5].map((star) => {
                                             const fill = Math.min(
                                                 1,
-                                                Math.max(0, (reviewSummary.avgRating ?? 0) - (star - 1)),
+                                                Math.max(
+                                                    0,
+                                                    (reviewSummary.avgRating ?? 0) - (star - 1),
+                                                ),
                                             );
                                             const pct = Math.round(fill * 100);
                                             return (
-                                                <span key={star} className="relative text-2xl leading-none">
+                                                <span
+                                                    key={star}
+                                                    className="relative text-2xl leading-none"
+                                                >
                                                     <span className="text-gray-500">★</span>
                                                     <span
-                                                        className="absolute inset-0 overflow-hidden text-primary"
+                                                        className="
+                                                            absolute inset-0 overflow-hidden
+                                                            text-primary
+                                                        "
                                                         style={{ width: `${pct}%` }}
                                                     >
                                                         ★
@@ -159,7 +209,9 @@ export default function OrgProfilePage() {
                                     </Button>
                                 </HoverCardTrigger>
                                 <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
-                                    <div className="font-semibold">Rating {reviewSummary.avgRating || 0} / 5</div>
+                                    <div className="font-semibold">
+                                        Rating {reviewSummary.avgRating || 0} / 5
+                                    </div>
                                     <div>Based on {reviewSummary.totalReviews} Review(s)</div>
                                 </HoverCardContent>
                             </HoverCard>
@@ -167,8 +219,18 @@ export default function OrgProfilePage() {
                     </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row pb-6 px-3">
-                    <div className="w-full mb-5 md:mb-0 md:w-2/3 mx-auto max-w-3x1 flex flex-col min-h-full gap-6">
+                <div
+                    className="
+                        flex flex-col px-3 pb-6
+                        md:flex-row
+                    "
+                >
+                    <div
+                        className="
+                            max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                            md:mb-0 md:w-2/3
+                        "
+                    >
                         <Card>
                             <CardHeader>
                                 <CardTitle className="text-xl">Public Details</CardTitle>
@@ -197,9 +259,11 @@ export default function OrgProfilePage() {
                             <form onSubmit={handleSubmit}>
                                 <CardContent className="space-y-3">
                                     <Field>
-                                        <Label className="text-muted-foreground text-lg">Mission Statement</Label>
+                                        <Label className="text-lg text-muted-foreground">
+                                            Mission Statement
+                                        </Label>
                                         {!editing ? (
-                                            <Label className="text-md">{currentOrg?.missionStatement}</Label>
+                                            <Label>{currentOrg?.missionStatement}</Label>
                                         ) : (
                                             <Textarea
                                                 id="mission_statement"
@@ -207,18 +271,30 @@ export default function OrgProfilePage() {
                                                 value={currentOrg?.missionStatement}
                                                 onChange={(e) =>
                                                     setCurrentOrg((prev) =>
-                                                        prev ? { ...prev, missionStatement: e.target.value } : prev,
+                                                        prev
+                                                            ? {
+                                                                  ...prev,
+                                                                  missionStatement: e.target.value,
+                                                              }
+                                                            : prev,
                                                     )
                                                 }
                                                 required
                                             />
                                         )}
                                     </Field>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div
+                                        className="
+                                            grid grid-cols-1 gap-4
+                                            md:grid-cols-2
+                                        "
+                                    >
                                         <Field>
-                                            <Label className="text-muted-foreground text-lg">Cause Category</Label>
+                                            <Label className="text-lg text-muted-foreground">
+                                                Cause Category
+                                            </Label>
                                             {!editing ? (
-                                                <Label className="text-md">{currentOrg?.causeCategory}</Label>
+                                                <Label>{currentOrg?.causeCategory}</Label>
                                             ) : (
                                                 <Input
                                                     id="causeCategory"
@@ -227,7 +303,12 @@ export default function OrgProfilePage() {
                                                     value={currentOrg?.causeCategory}
                                                     onChange={(e) =>
                                                         setCurrentOrg((prev) =>
-                                                            prev ? { ...prev, causeCategory: e.target.value } : prev,
+                                                            prev
+                                                                ? {
+                                                                      ...prev,
+                                                                      causeCategory: e.target.value,
+                                                                  }
+                                                                : prev,
                                                         )
                                                     }
                                                     required
@@ -235,12 +316,17 @@ export default function OrgProfilePage() {
                                             )}
                                         </Field>
                                         <Field>
-                                            <Label className="text-muted-foreground text-lg">Website</Label>
+                                            <Label className="text-lg text-muted-foreground">
+                                                Website
+                                            </Label>
                                             {!editing ? (
-                                                <Label className="text-md">
+                                                <Label>
                                                     <a
                                                         href={currentOrg?.website}
-                                                        className="hover:underline text-blue-600"
+                                                        className="
+                                                            text-blue-600
+                                                            hover:underline
+                                                        "
                                                     >
                                                         {currentOrg?.website}
                                                     </a>
@@ -254,7 +340,12 @@ export default function OrgProfilePage() {
                                                         value={currentOrg?.website}
                                                         onChange={(e) =>
                                                             setCurrentOrg((prev) =>
-                                                                prev ? { ...prev, website: e.target.value } : prev,
+                                                                prev
+                                                                    ? {
+                                                                          ...prev,
+                                                                          website: e.target.value,
+                                                                      }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -267,14 +358,17 @@ export default function OrgProfilePage() {
                                         </Field>
                                     </div>
                                     <Field>
-                                        <Label className="text-muted-foreground text-lg">Address</Label>
+                                        <Label className="text-lg text-muted-foreground">
+                                            Address
+                                        </Label>
                                         {!editing ? (
-                                            <Label className="text-md">{currentOrg?.hqAdr}</Label>
+                                            <Label>{currentOrg?.hqAdr}</Label>
                                         ) : (
                                             <div className="space-y-3">
                                                 <Field>
                                                     <Label htmlFor="address">
-                                                        Street Address<span className="text-destructive">*</span>
+                                                        Street Address
+                                                        <span className="text-destructive">*</span>
                                                     </Label>
                                                     <Input
                                                         id="address"
@@ -283,7 +377,12 @@ export default function OrgProfilePage() {
                                                         value={address.streetAdr}
                                                         onChange={(e) =>
                                                             setAddress((prev) =>
-                                                                prev ? { ...prev, streetAdr: e.target.value } : prev,
+                                                                prev
+                                                                    ? {
+                                                                          ...prev,
+                                                                          streetAdr: e.target.value,
+                                                                      }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -291,7 +390,8 @@ export default function OrgProfilePage() {
                                                 </Field>
                                                 <Field>
                                                     <Label htmlFor="city">
-                                                        City<span className="text-destructive">*</span>
+                                                        City
+                                                        <span className="text-destructive">*</span>
                                                     </Label>
                                                     <Input
                                                         id="city"
@@ -300,7 +400,12 @@ export default function OrgProfilePage() {
                                                         value={address.city}
                                                         onChange={(e) =>
                                                             setAddress((prev) =>
-                                                                prev ? { ...prev, city: e.target.value } : prev,
+                                                                prev
+                                                                    ? {
+                                                                          ...prev,
+                                                                          city: e.target.value,
+                                                                      }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -309,13 +414,16 @@ export default function OrgProfilePage() {
 
                                                 <Field>
                                                     <Label htmlFor="province">
-                                                        Province<span className="text-destructive">*</span>
+                                                        Province
+                                                        <span className="text-destructive">*</span>
                                                     </Label>
                                                     <Select
                                                         value={address.province}
                                                         onValueChange={(e) =>
                                                             setAddress((prev) =>
-                                                                prev ? { ...prev, province: e } : prev,
+                                                                prev
+                                                                    ? { ...prev, province: e }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -324,28 +432,53 @@ export default function OrgProfilePage() {
                                                             <SelectValue />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            <SelectItem value="AB">Alberta</SelectItem>
-                                                            <SelectItem value="BC">British Columbia</SelectItem>
-                                                            <SelectItem value="MB">Manitoba</SelectItem>
-                                                            <SelectItem value="NB">New Brunswick</SelectItem>
+                                                            <SelectItem value="AB">
+                                                                Alberta
+                                                            </SelectItem>
+                                                            <SelectItem value="BC">
+                                                                British Columbia
+                                                            </SelectItem>
+                                                            <SelectItem value="MB">
+                                                                Manitoba
+                                                            </SelectItem>
+                                                            <SelectItem value="NB">
+                                                                New Brunswick
+                                                            </SelectItem>
                                                             <SelectItem value="NL">
                                                                 Newfoundland and Labrador
                                                             </SelectItem>
-                                                            <SelectItem value="NS">Nova Scotia</SelectItem>
-                                                            <SelectItem value="ON">Ontario</SelectItem>
-                                                            <SelectItem value="PE">Prince Edward Island</SelectItem>
-                                                            <SelectItem value="QC">Quebec</SelectItem>
-                                                            <SelectItem value="SK">Saskatchewan</SelectItem>
-                                                            <SelectItem value="NT">Northwest Territories</SelectItem>
-                                                            <SelectItem value="NU">Nunavut</SelectItem>
-                                                            <SelectItem value="YT">Yukon</SelectItem>
+                                                            <SelectItem value="NS">
+                                                                Nova Scotia
+                                                            </SelectItem>
+                                                            <SelectItem value="ON">
+                                                                Ontario
+                                                            </SelectItem>
+                                                            <SelectItem value="PE">
+                                                                Prince Edward Island
+                                                            </SelectItem>
+                                                            <SelectItem value="QC">
+                                                                Quebec
+                                                            </SelectItem>
+                                                            <SelectItem value="SK">
+                                                                Saskatchewan
+                                                            </SelectItem>
+                                                            <SelectItem value="NT">
+                                                                Northwest Territories
+                                                            </SelectItem>
+                                                            <SelectItem value="NU">
+                                                                Nunavut
+                                                            </SelectItem>
+                                                            <SelectItem value="YT">
+                                                                Yukon
+                                                            </SelectItem>
                                                         </SelectContent>
                                                     </Select>
                                                 </Field>
 
                                                 <Field>
                                                     <Label htmlFor="postalCode">
-                                                        Postal Code<span className="text-destructive">*</span>
+                                                        Postal Code
+                                                        <span className="text-destructive">*</span>
                                                     </Label>
                                                     <Input
                                                         id="postalCode"
@@ -354,7 +487,13 @@ export default function OrgProfilePage() {
                                                         value={address.postalCode}
                                                         onChange={(e) =>
                                                             setAddress((prev) =>
-                                                                prev ? { ...prev, postalCode: e.target.value } : prev,
+                                                                prev
+                                                                    ? {
+                                                                          ...prev,
+                                                                          postalCode:
+                                                                              e.target.value,
+                                                                      }
+                                                                    : prev,
                                                             )
                                                         }
                                                         required
@@ -366,22 +505,35 @@ export default function OrgProfilePage() {
 
                                     <hr className="mx-2 border-gray-300" />
                                     <CardTitle className="text-xl">Impact Highlights</CardTitle>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {(!currentOrg?.impactHighlights || currentOrg?.impactHighlights.length == 0) &&
+                                    <div
+                                        className="
+                                            grid grid-cols-1 gap-4
+                                            md:grid-cols-2
+                                        "
+                                    >
+                                        {(!currentOrg?.impactHighlights ||
+                                            currentOrg?.impactHighlights.length == 0) &&
                                             !editing && <p>No Highlights</p>}
                                         {!editing ? (
                                             <>
-                                                {currentOrg?.impactHighlights?.map((item, index) => {
-                                                    const [[key, value]] = Object.entries(item);
-                                                    return (
-                                                        <Field key={index}>
-                                                            <Label className="text-muted-foreground text-lg">
-                                                                {key}
-                                                            </Label>
-                                                            <Label className="text-md">{value as string}</Label>
-                                                        </Field>
-                                                    );
-                                                })}
+                                                {currentOrg?.impactHighlights?.map(
+                                                    (item, index) => {
+                                                        const [[key, value]] = Object.entries(item);
+                                                        return (
+                                                            <Field key={index}>
+                                                                <Label
+                                                                    className="
+                                                                        text-lg
+                                                                        text-muted-foreground
+                                                                    "
+                                                                >
+                                                                    {key}
+                                                                </Label>
+                                                                <Label>{value as string}</Label>
+                                                            </Field>
+                                                        );
+                                                    },
+                                                )}
                                             </>
                                         ) : (
                                             <>
@@ -471,8 +623,12 @@ export default function OrgProfilePage() {
                                     </div>
                                 </CardContent>
                                 {editing && (
-                                    <CardFooter className="pt-5 cursor-pointer">
-                                        <Button type="submit" variant={"outline"} className="cursor-pointer w-full">
+                                    <CardFooter className="cursor-pointer pt-5">
+                                        <Button
+                                            type="submit"
+                                            variant={"outline"}
+                                            className="w-full cursor-pointer"
+                                        >
                                             Save
                                         </Button>
                                     </CardFooter>
@@ -480,40 +636,52 @@ export default function OrgProfilePage() {
                             </form>
                         </Card>
                     </div>
-                    <div className="w-full md:w-1/3 mx-auto max-w-3xl space-y-6 h-full ">
+                    <div
+                        className="
+                            mx-auto size-full max-w-3xl space-y-6
+                            md:w-1/3
+                        "
+                    >
                         <Card className="md:ml-5">
                             <CardHeader>
                                 <CardTitle className="text-xl">Private Details</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 <Field>
-                                    <Label className="text-muted-foreground text-lg">Charity Number</Label>
+                                    <Label className="text-lg text-muted-foreground">
+                                        Charity Number
+                                    </Label>
                                     <Label className="text-sm">{currentOrg?.charityNum}</Label>
                                 </Field>
 
                                 <Field>
-                                    <Label className="text-muted-foreground text-lg">Primary Contact</Label>
+                                    <Label className="text-lg text-muted-foreground">
+                                        Primary Contact
+                                    </Label>
                                     <Label className="text-sm">
-                                        {currentOrg?.contactName}, {currentOrg?.contactNum}, {currentOrg?.contactEmail}
+                                        {currentOrg?.contactName}, {currentOrg?.contactNum},{" "}
+                                        {currentOrg?.contactEmail}
                                     </Label>
                                 </Field>
                                 <Field>
-                                    <Label className="text-muted-foreground text-lg">Verification Document</Label>
+                                    <Label className="text-lg text-muted-foreground">
+                                        Verification Document
+                                    </Label>
                                     <Button onClick={viewSubmittedDoc} className="cursor-pointer">
                                         View Document
                                     </Button>
                                 </Field>
                                 <hr className="mx-2 border-gray-300" />
                                 <CardDescription>
-                                    Due to platform integrity, our moderator team can help you update private
-                                    information.
+                                    Due to platform integrity, our moderator team can help you
+                                    update private information.
                                 </CardDescription>
                                 <Button
                                     onClick={() => setIsTicketModalOpen(true)}
                                     variant="ghost"
-                                    className="w-full text-md py-6 cursor-pointer flex items-center gap-3 cursor-pointer"
+                                    className="flex w-full cursor-pointer items-center gap-3 py-6"
                                 >
-                                    <MessageCircleQuestionMark className="!w-7 !h-7 shrink-0" />
+                                    <MessageCircleQuestionMark className="size-7! shrink-0" />
                                     Contact Support
                                 </Button>
                             </CardContent>
@@ -524,7 +692,9 @@ export default function OrgProfilePage() {
             <SubmitTicketModal
                 open={isTicketModalOpen}
                 onClose={() => setIsTicketModalOpen(false)}
-                onSubmitted={(ticket) => router.push(`/organization/messages?conversationId=${ticket.conversationId}`)}
+                onSubmitted={(ticket) =>
+                    router.push(`/organization/messages?conversationId=${ticket.conversationId}`)
+                }
             />
         </div>
     );

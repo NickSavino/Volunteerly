@@ -68,7 +68,10 @@ ${resumeText}`;
     }
 }
 
-export async function calculateHourlyRate(workExperience: string, education: string): Promise<number> {
+export async function calculateHourlyRate(
+    workExperience: string,
+    education: string,
+): Promise<number> {
     const prompt = `
 You are a hourly rate guesser in Alberta, Canada. Based on the following work experience and education, calculate a reasonable hourly rate in Canadian dollars (CAD) for this person, consider their base salary rom their work experience and add or subtract slightly based on additional responsibilities or education.
 

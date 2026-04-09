@@ -8,7 +8,10 @@ const mockPrisma = {
 
 jest.mock("../../../src/lib/prisma.js", () => ({ prisma: mockPrisma }));
 
-import { createChatMessage, getChatConversationList } from "../../../src/services/chat/chat-service.js";
+import {
+    createChatMessage,
+    getChatConversationList,
+} from "../../../src/services/chat/chat-service.js";
 
 describe("chat-service", () => {
     beforeEach(() => {

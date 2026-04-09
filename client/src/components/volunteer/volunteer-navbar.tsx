@@ -30,26 +30,37 @@ type VolunteerNavbarProps = {
 export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbarProps) {
     const pathname = usePathname();
 
-    const fullName = currentVolunteer ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}` : "Loading...";
+    const fullName = currentVolunteer
+        ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
+        : "Loading...";
 
     return (
-        <header className="w-full flex-shrink-0 border-b bg-card px-6 py-3 relative z-[999]">
+        <header className="relative z-999 w-full shrink-0 border-b bg-card px-6 py-3">
             <div className="mx-auto flex max-w-full items-center justify-between">
-                <Link href="/volunteer" className="flex-shrink-0">
+                <Link href="/volunteer" className="shrink-0">
                     <Image src={logo} alt="Volunteerly" width={140} height={40} priority />
                 </Link>
 
-                <NavigationMenu className="hidden md:flex">
+                <NavigationMenu
+                    className="
+                        hidden
+                        md:flex
+                    "
+                >
                     <NavigationMenuList className="flex gap-6">
                         {NAV_LINKS.map(({ label, href }) => (
                             <NavigationMenuItem key={href}>
                                 <Link
                                     href={href}
-                                    className={`text-sm font-medium transition-colors hover:text-primary ${
-                                        pathname === href
-                                            ? "border-b-2 border-primary text-primary"
-                                            : "text-muted-foreground"
-                                    }`}
+                                    className={`
+                                        text-sm font-medium transition-colors
+                                        hover:text-primary
+                                        ${
+                                            pathname === href
+                                                ? "border-b-2 border-primary text-primary"
+                                                : "text-muted-foreground"
+                                        }
+                                    `}
                                 >
                                     {label}
                                 </Link>
@@ -63,13 +74,20 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                         <NavigationMenuItem>
                             <NavigationMenuTrigger className="p-0">
                                 <div className="flex items-center gap-2">
-                                    <div className="hidden text-right sm:block">
-                                        <p className="text-sm font-semibold text-foreground leading-tight">
+                                    <div
+                                        className="
+                                            hidden text-right
+                                            sm:block
+                                        "
+                                    >
+                                        <p className="text-sm/tight font-semibold text-foreground">
                                             {fullName}
                                         </p>
-                                        <p className="text-xs text-muted-foreground">Verified Volunteer</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Verified Volunteer
+                                        </p>
                                     </div>
-                                    <Avatar className="h-9 w-9">
+                                    <Avatar className="size-9">
                                         <AvatarImage src={avtImg.src} />
                                         <AvatarFallback>
                                             {currentVolunteer?.firstName?.[0] ?? "V"}
@@ -80,11 +98,19 @@ export function VolunteerNavbar({ currentVolunteer, onSignOut }: VolunteerNavbar
                             </NavigationMenuTrigger>
                             <NavigationMenuContent>
                                 <div className="w-40 p-1">
-                                    <p className="px-2 py-1 text-sm font-medium text-foreground">{fullName}</p>
-                                    <p className="px-2 pb-2 text-xs text-muted-foreground">Volunteer</p>
+                                    <p className="px-2 py-1 text-sm font-medium text-foreground">
+                                        {fullName}
+                                    </p>
+                                    <p className="px-2 pb-2 text-xs text-muted-foreground">
+                                        Volunteer
+                                    </p>
                                     <hr className="mb-1 border-border" />
                                     <button
-                                        className="w-full rounded px-2 py-1 text-left text-sm text-foreground hover:bg-secondary"
+                                        className="
+                                            w-full rounded-sm px-2 py-1 text-left text-sm
+                                            text-foreground
+                                            hover:bg-secondary
+                                        "
                                         onClick={onSignOut}
                                     >
                                         Log Out
