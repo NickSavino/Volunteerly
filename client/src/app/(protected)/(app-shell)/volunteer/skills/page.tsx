@@ -473,7 +473,7 @@ export default function SkillTreePage() {
         .st-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
         .st-tabs { display: flex; gap: 4px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 4px; width: fit-content; }
         .st-tab { padding: 7px 18px; border-radius: 9px; border: none; background: transparent; font-size: 0.82rem; font-weight: 700; cursor: pointer; color: var(--text-muted); transition: all 0.18s; white-space: nowrap; }
-        .st-tab.active { background: #0F172A; color: #fff; }
+        .st-tab.st-tab-active { background: #0F172A; color: #fff; }
         .st-body { display: flex; align-items: flex-start; gap: 24px; max-width: 1140px; margin: 0 auto; padding: 0 20px 40px; }
         .st-canvas { position: relative; flex-shrink: 0; padding-top: 12px; }
         .st-legend { position: absolute; top: 20px; right: 0px; background: var(--card); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px; font-size: 0.73rem; z-index: 10; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
@@ -534,7 +534,8 @@ export default function SkillTreePage() {
                     <div className="st-tabs">
                         <button
                             className={`
-                                st-tab${tab === "technical" ? "active" : ""}
+                                st-tab
+                                ${tab === "technical" ? "st-tab-active" : ""}
                             `}
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -546,7 +547,8 @@ export default function SkillTreePage() {
                         </button>
                         <button
                             className={`
-                                st-tab${tab === "nontechnical" ? "active" : ""}
+                                st-tab
+                                ${tab === "nontechnical" ? "st-tab-active" : ""}
                             `}
                             onClick={(e) => {
                                 e.stopPropagation();

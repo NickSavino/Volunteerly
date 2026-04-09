@@ -1,19 +1,18 @@
 "use client";
 
-import { useProfileViewModel } from "./profileVm";
-import { UserService } from "@/services/UserService";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
-import { Settings, Pencil } from "lucide-react";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
-import { LoadingScreen } from "@/components/common/loading-screen";
-import { Rocket, Handshake, Star, Award, type LucideIcon } from "lucide-react";
+import { UserService } from "@/services/UserService";
+import { Award, Handshake, Pencil, Rocket, Settings, Star, type LucideIcon } from "lucide-react";
 import { useState } from "react";
-import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { useProfileViewModel } from "./profileVm";
 
 export default function ProfilePage() {
     const {
@@ -38,7 +37,6 @@ export default function ProfilePage() {
         handleAvatarChange,
         fileInputRef,
         avatarKey,
-        signOut,
         DAYS,
         loading,
         session,

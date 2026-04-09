@@ -1,20 +1,20 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useRef, useCallback, useState } from "react";
-import { ArrowUpDown, SlidersHorizontal, Map } from "lucide-react";
-import { OpportunityCard } from "@/components/volunteer/opportunity-card";
-import { OpportunityDetailModal } from "@/components/volunteer/opportunity-detail-modal";
-import { ApplyModal } from "@/components/volunteer/apply-modal";
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ApplyModal } from "@/components/volunteer/apply-modal";
+import { OpportunityCard } from "@/components/volunteer/opportunity-card";
+import { OpportunityDetailModal } from "@/components/volunteer/opportunity-detail-modal";
 import { cn } from "@/lib/utils";
+import { ArrowUpDown, Map, SlidersHorizontal } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useCallback, useRef, useState } from "react";
 import {
-    useOpportunitiesViewModel,
     OPPORTUNITY_CATEGORIES,
-    type WorkTypeFilter,
+    useOpportunitiesViewModel,
     type CommitmentFilter,
     type SortOption,
+    type WorkTypeFilter,
 } from "./opportunitiesVm";
 
 const OpportunitiesMap = dynamic(() => import("./OpportunitiesMap"), {
@@ -200,8 +200,6 @@ export default function OpportunitiesPage() {
     const {
         loading,
         session,
-        handleSignOut,
-        currentVolunteer,
         opportunities,
         error,
         oppCount,

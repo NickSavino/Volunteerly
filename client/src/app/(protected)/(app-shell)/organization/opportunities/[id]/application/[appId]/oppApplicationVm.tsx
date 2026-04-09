@@ -73,7 +73,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
             }
         }
         loadApplication();
-    }, [appId]);
+    }, [appId, oppId, router]);
 
     async function selectVolunteer() {
         if (application?.volunteer?.id) {

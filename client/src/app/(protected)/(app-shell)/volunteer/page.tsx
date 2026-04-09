@@ -1,11 +1,10 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { Clock, Star, DollarSign, Building2 } from "lucide-react";
+import { Building2, Clock, DollarSign, Star } from "lucide-react";
 import { useState } from "react";
 
-import { useVltDashboardViewModel, ChartRange } from "./vltDashboardVm";
 import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { ChartRange, useVltDashboardViewModel } from "./vltDashboardVm";
 
 const STATUS_STYLES: Record<string, string> = {
     OPEN: "bg-green-50 text-green-700",
@@ -24,13 +23,10 @@ const RANGE_LABELS: Record<ChartRange, string> = {
 
 export default function VolunteerDashboardPage() {
     const {
-        loading,
-        session,
         error,
         currentVolunteer,
         opportunities,
         partnerOrgs,
-        handleSignOut,
         firstName,
         totalHours,
         economicValue,
@@ -41,20 +37,9 @@ export default function VolunteerDashboardPage() {
         chartRange,
         setChartRange,
         router,
-        hourlyRate,
-        fetching,
     } = useVltDashboardViewModel();
 
-    const pathname = usePathname();
-    const fullName = currentVolunteer
-        ? `${currentVolunteer.firstName} ${currentVolunteer.lastName}`
-        : "Loading...";
-
     const [showAllPartners, setShowAllPartners] = useState(false);
-
-    //if (loading || !session || fetching) {
-    //    return (<VolunteerLoadingPage />)
-    //}
 
     const maxHours = Math.max(...chartData, 1);
 
@@ -64,7 +49,7 @@ export default function VolunteerDashboardPage() {
         <div className="min-h-screen bg-gray-50">
             <main
                 className="
-                    px=4 mx-auto max-w-7xl py-8
+                    px-4 mx-auto max-w-7xl py-8
                     sm:px-6
                     lg:px-8
                 "

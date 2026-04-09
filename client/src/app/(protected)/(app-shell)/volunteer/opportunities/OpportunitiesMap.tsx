@@ -127,7 +127,7 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
                 mapInstance.current = null;
             }
         };
-    }, []);
+    }, [opportunities]);
 
     return <div ref={mapRef} className="size-full" />;
 }

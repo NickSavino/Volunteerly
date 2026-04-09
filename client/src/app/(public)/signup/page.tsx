@@ -1,16 +1,17 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Link from "next/link";
 import tms from "@/assets/tms.png";
 import avtImg from "@/assets/volunteerly_logo.png";
-import { useSignUpViewModel } from "./signupVM";
 import { Navbar } from "@/components/custom/login_navbar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
+import Link from "next/link";
+import { Card, CardContent, CardHeader } from "../../../components/ui/card";
+import { useSignUpViewModel } from "./signupVM";
 
 export default function LoginPage() {
     const {
@@ -47,9 +48,11 @@ export default function LoginPage() {
                         md:flex md:h-full md:w-1/2
                     "
                 >
-                    <img
+                    <Image
                         src={tms.src}
                         alt="Preview"
+                        width={tms.width}
+                        height={tms.height}
                         className="
                             h-auto w-full
                             md:h-full
@@ -57,10 +60,10 @@ export default function LoginPage() {
                     />
                     <div className="absolute inset-0 w-full bg-black/50"></div>
                     <div className="absolute bottom-20 left-12 text-left">
-                        <h1 className="text-4x1 pb-2 font-bold tracking-tight text-muted">
+                        <h1 className="text-4xl pb-2 font-bold tracking-tight text-muted">
                             Turn Skills Into Real Impact
                         </h1>
-                        <h3 className="text-2x1 pb-5 font-bold tracking-tight text-muted">
+                        <h3 className="text-2xl pb-5 font-bold tracking-tight text-muted">
                             AI-Powered Matching for Skilled Volunteering
                         </h3>
                         <p className="text-lg text-muted">
@@ -161,8 +164,8 @@ export default function LoginPage() {
                                     <div>
                                         <p
                                             className="
-                                                radius-2 my-2 rounded-sm bg-warning p-1 text-center
-                                                text-sm text-foreground
+                                                my-2 rounded-sm bg-warning p-1 text-center text-sm
+                                                text-foreground
                                             "
                                         >
                                             Must Complete Application upon account creation.

@@ -1,7 +1,7 @@
 "use client";
 
+import { Briefcase, Globe, MapPin, Users } from "lucide-react";
 import { use } from "react";
-import { Globe, MapPin, Users, Briefcase } from "lucide-react";
 import { useOrgPublicProfileViewModel } from "./orgPublicProfileVm";
 
 function formatStatValue(value: number): string {
@@ -14,8 +14,7 @@ function formatStatValue(value: number): string {
 
 export default function OrgPublicProfilePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const { loading, session, error, org, currentVolunteer, handleSignOut, router } =
-        useOrgPublicProfileViewModel(id);
+    const { loading, session, error, org, router } = useOrgPublicProfileViewModel(id);
 
     if (loading || !session) return <main className="p-6">Loading...</main>;
 

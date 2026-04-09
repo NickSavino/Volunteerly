@@ -2,15 +2,16 @@ import Link from "next/link";
 
 import {
     NavigationMenu,
-    NavigationMenuList,
-    NavigationMenuItem,
-    NavigationMenuTrigger,
     NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuList,
+    NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
+import Image from "next/image";
 
 export function Navbar({
     name,
@@ -25,7 +26,7 @@ export function Navbar({
         <header className="w-full border-b bg-white px-6 py-3">
             <div className="mx-auto flex max-w-7xl items-center justify-between">
                 <Link href="/" className="text-lg font-bold">
-                    <img src={logo.src} alt="Logo" width="200" height="200" />
+                    <Image src={logo.src} alt="Logo" width={200} height={200} />
                 </Link>
 
                 <NavigationMenu>
@@ -35,7 +36,7 @@ export function Navbar({
                                 <div className="flex w-full min-w-0 items-center gap-2">
                                     <div className="flex min-w-0 flex-col text-left">
                                         <p className="truncate text-sm text-primary">{name}</p>
-                                        <p className="text-bright truncate text-sm">{role}</p>
+                                        <p className="truncate text-sm">{role}</p>
                                     </div>
                                     <Avatar>
                                         <AvatarImage>

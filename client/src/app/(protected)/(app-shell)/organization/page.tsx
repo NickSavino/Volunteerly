@@ -1,37 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import {
-    FolderKanban,
-    PersonStanding,
-    Hourglass,
-    UserRoundPen,
-    LogOut,
-    MessageCircleQuestionMark,
-    Users,
-    Calendar,
-    CalendarCheck,
-    Briefcase,
-} from "lucide-react";
-import { useOrgDashboardViewModel } from "./orgDashboardVm";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 import { OrgStatCard } from "@/components/custom/org_stat_card";
-import { UserService } from "@/services/UserService";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
     Card,
-    CardHeader,
-    CardTitle,
     CardAction,
     CardContent,
     CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { LoadingScreen } from "@/components/common/loading-screen";
-import { getAvatarFallback } from "@/components/navigation/nav-utils";
-import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import { UserService } from "@/services/UserService";
+import {
+    Briefcase,
+    Calendar,
+    CalendarCheck,
+    FolderKanban,
+    Hourglass,
+    LogOut,
+    MessageCircleQuestionMark,
+    PersonStanding,
+    UserRoundPen,
+    Users,
+} from "lucide-react";
+import { useState } from "react";
+import { useOrgDashboardViewModel } from "./orgDashboardVm";
 
 export default function HomePage() {
     const {
@@ -40,8 +40,6 @@ export default function HomePage() {
         fetching,
         signOut,
         router,
-        user,
-        error,
         currentUser,
         opportunities,
         totalOpps,
@@ -66,7 +64,7 @@ export default function HomePage() {
             >
                 <div
                     className="
-                        max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                        max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6
                         md:mb-0 md:w-2/3
                     "
                 >
@@ -77,7 +75,7 @@ export default function HomePage() {
                         "
                     >
                         <div>
-                            <h1 className="text-2x1 font-bold">Welcome, {currentUser?.orgName}</h1>
+                            <h1 className="text-2xl font-bold">Welcome, {currentUser?.orgName}</h1>
                             <p>Here&apos;s what&apos;s happening with your projects today.</p>
                         </div>
 
@@ -94,7 +92,7 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    <div className="md:flex md:grid md:grid-cols-3 md:justify-around md:gap-3">
+                    <div className="md:grid md:grid-cols-3 md:justify-around md:gap-3">
                         <OrgStatCard
                             icon={PersonStanding}
                             label="Active Volunteers"
@@ -279,7 +277,7 @@ export default function HomePage() {
                             <Button
                                 variant="ghost"
                                 className="
-                                    text-md flex w-full cursor-pointer items-center gap-3 py-6
+                                    text-base flex w-full cursor-pointer items-center gap-3 py-6
                                 "
                                 onClick={() => setIsTicketModalOpen(true)}
                             >

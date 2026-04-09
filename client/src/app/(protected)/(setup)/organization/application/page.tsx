@@ -1,10 +1,10 @@
 "use client";
 
+import { Navbar } from "@/app/(protected)/(setup)/organization/application/navbar";
+import { LoadingScreen } from "@/components/common/loading-screen";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription } from "@/components/ui/field";
-import { useOrgApplicationViewModel } from "./orgApplicationVm";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
     InputGroup,
@@ -12,7 +12,7 @@ import {
     InputGroupInput,
     InputGroupText,
 } from "@/components/ui/input-group";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
@@ -20,9 +20,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft } from "lucide-react";
-import { Navbar } from "@/app/(protected)/(setup)/organization/application/navbar";
-import { LoadingScreen } from "@/components/common/loading-screen";
+import { useOrgApplicationViewModel } from "./orgApplicationVm";
 
 export default function OrgApplicationPage() {
     const {
@@ -67,12 +67,11 @@ export default function OrgApplicationPage() {
                     )}
                 </div>
                 <div className="pb-5 text-center">
-                    <div className="radius-2 mb-5 rounded-sm bg-warning p-1 text-foreground">
+                    <div className="mb-5 rounded-sm bg-warning p-1 text-foreground">
                         <h2>{isReadOnly ? "Application Submitted" : "Limited Functionality"}</h2>
                         <p
                             className="
-                                radius-2 my-2 rounded-sm bg-warning p-1 text-center text-sm
-                                text-foreground
+                                my-2 rounded-sm bg-warning p-1 text-center text-sm text-foreground
                             "
                         >
                             {isReadOnly
@@ -431,7 +430,7 @@ export default function OrgApplicationPage() {
                             <Button
                                 type="submit"
                                 disabled={isReadOnly || submitting}
-                                className="pointer-cursor w-full"
+                                className="cursor-pointer w-full"
                             >
                                 {submitting ? "Submitting..." : "Submit"}
                             </Button>
@@ -442,7 +441,7 @@ export default function OrgApplicationPage() {
                             <Button
                                 type="button"
                                 onClick={viewSubmittedDoc}
-                                className="pointer-cursor w-full"
+                                className="cursor-pointer w-full"
                             >
                                 View Submitted Document
                             </Button>

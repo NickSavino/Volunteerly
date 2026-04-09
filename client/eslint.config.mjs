@@ -45,7 +45,13 @@ export default defineConfig([
                 },
             ],
             "better-tailwindcss/no-conflicting-classes": "error",
-            "better-tailwindcss/no-unknown-classes": "error",
+            "better-tailwindcss/no-unknown-classes": [
+                "error",
+                {
+                    ignore: ["^st-"],
+                },
+            ],
+
             "better-tailwindcss/no-duplicate-classes": "warn",
             "better-tailwindcss/no-unnecessary-whitespace": "warn",
             "better-tailwindcss/no-deprecated-classes": "warn",

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { appToast } from "@/components/common/app-toast";
 import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { VolunteerService } from "@/services/VolunteerService";
-import { appToast } from "@/components/common/app-toast";
 import type { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 export type WorkTypeFilter = "ALL" | "REMOTE" | "IN_PERSON" | "HYBRID";
 export type CommitmentFilter = "ALL" | "FLEXIBLE" | "PART_TIME" | "FULL_TIME";
@@ -132,7 +132,7 @@ export function useOpportunitiesViewModel() {
                 setError("Failed to load opportunities.");
             }
         },
-        [],
+        [currentVolunteer?.availability],
     );
 
     useEffect(() => {

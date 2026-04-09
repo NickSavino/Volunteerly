@@ -9,13 +9,9 @@ export default function OppUpdatePage({ params }: { params: Promise<{ id: string
     const { id } = use(params);
     const {
         loading,
-        error,
         submitting,
-        currentOrg,
-        router,
         opportunity,
         setOpportunity,
-        signOut,
         handleSubmit,
         deadlineDate,
         handleDayToggle,

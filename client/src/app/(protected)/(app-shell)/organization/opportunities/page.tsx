@@ -1,30 +1,19 @@
 "use client";
 
-import { Calendar, PersonStanding, Hourglass, Users, CalendarCheck, Briefcase } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
-import { useOrgOpportunitiesViewModel } from "./orgOpportunitiesVm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Briefcase, Calendar, CalendarCheck, Hourglass, PersonStanding, Users } from "lucide-react";
+import { useOrgOpportunitiesViewModel } from "./orgOpportunitiesVm";
 
 export default function OrgOpportunitiesPage() {
-    const {
-        loading,
-        session,
-        fetching,
-        signOut,
-        router,
-        user,
-        error,
-        currentUser,
-        filteredOpportunities,
-        currentTab,
-        setCurrentTab,
-    } = useOrgOpportunitiesViewModel();
+    const { loading, session, fetching, router, filteredOpportunities, currentTab, setCurrentTab } =
+        useOrgOpportunitiesViewModel();
 
     if (loading || !session || fetching) {
         return <LoadingScreen />;
@@ -39,7 +28,7 @@ export default function OrgOpportunitiesPage() {
                     md:h-[calc(100vh-64px)] md:flex-row md:p-6
                 "
             >
-                <div className="max-w-3x1 mx-auto mb-5 flex min-h-full w-full flex-col gap-6 md:mb-0">
+                <div className="max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6 md:mb-0">
                     <div
                         className="
                             mx-3 items-center justify-between
@@ -47,7 +36,7 @@ export default function OrgOpportunitiesPage() {
                         "
                     >
                         <div>
-                            <h1 className="text-2x1 font-bold">Opportunities</h1>
+                            <h1 className="text-2xl font-bold">Opportunities</h1>
                             <p>Manage and track your organization&apos;s volunteer projects.</p>
                         </div>
 

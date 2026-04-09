@@ -7,13 +7,9 @@ import { LoadingScreen } from "@/components/common/loading-screen";
 export default function OppCreatePage() {
     const {
         loading,
-        error,
         submitting,
-        currentOrg,
-        router,
         opportunity,
         setOpportunity,
-        signOut,
         handleSubmit,
         deadlineDate,
         handleDayToggle,

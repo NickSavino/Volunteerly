@@ -1,12 +1,13 @@
 "use client";
 
-import { useAuth } from "../../providers/auth-provider";
-import { Navbar } from "@/components/custom/login_navbar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import tms from "@/assets/tms.png";
 import avtImg from "@/assets/volunteerly_logo.png";
+import { Navbar } from "@/components/custom/login_navbar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item";
-import { User, Upload, Merge, HandHeart, HouseHeart } from "lucide-react";
+import { HandHeart, HouseHeart, Merge, Upload, User } from "lucide-react";
+import Image from "next/image";
+import { useAuth } from "../../providers/auth-provider";
 
 export default function LandingPage() {
     const { loading } = useAuth();
@@ -30,9 +31,11 @@ export default function LandingPage() {
                         md:h-full md:w-1/2
                     "
                 >
-                    <img
+                    <Image
                         src={tms.src}
                         alt="Preview"
+                        width={tms.width}
+                        height={tms.height}
                         className="
                             h-auto w-full
                             md:h-full
@@ -40,10 +43,10 @@ export default function LandingPage() {
                     />
                     <div className="absolute inset-0 w-full bg-black/50"></div>
                     <div className="absolute bottom-20 left-12 text-left">
-                        <h1 className="text-4x1 pb-2 font-bold tracking-tight text-muted">
+                        <h1 className="text-4xl pb-2 font-bold tracking-tight text-muted">
                             Turn Skills Into Real Impact
                         </h1>
-                        <h3 className="text-2x1 pb-5 font-bold tracking-tight text-muted">
+                        <h3 className="text-2xl pb-5 font-bold tracking-tight text-muted">
                             AI-Powered Matching for Skilled Volunteering
                         </h3>
                         <p className="text-lg text-muted">
@@ -69,7 +72,7 @@ export default function LandingPage() {
                         md:w-1/2
                     "
                 >
-                    <h1 className="text-4x1 pt-5 text-left font-bold tracking-tight">
+                    <h1 className="text-4xl pt-5 text-left font-bold tracking-tight">
                         How It Works?
                     </h1>
                     <div className="flex flex-1 flex-col justify-around">
