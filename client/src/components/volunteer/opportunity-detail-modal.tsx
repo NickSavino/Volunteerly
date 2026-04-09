@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Clock, Building2 } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AppModal } from "@/components/common/app-modal";
 import { cn } from "@/lib/utils";
@@ -13,9 +13,9 @@ const WORK_TYPE_LABELS: Record<string, string> = {
 };
 
 const COMMITMENT_LABELS: Record<string, string> = {
-    FLEXIBLE: "Flexible",
-    PART_TIME: "Part-Time",
-    FULL_TIME: "Full-Time",
+    FLEXIBLE: "Flexible (2–5 hrs)",
+    PART_TIME: "Part-Time (5–20 hrs)",
+    FULL_TIME: "Full-Time (20+ hrs)",
 };
 
 type OppDetailModalProps = {
@@ -35,7 +35,13 @@ function DetailRow({ label, value }: { label: string; value: string }) {
     );
 }
 
-export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onApply }: OppDetailModalProps) {
+export function OpportunityDetailModal({
+    opp,
+    matchPct,
+    hasApplied,
+    onClose,
+    onApply,
+}: OppDetailModalProps) {
     const router = useRouter();
 
     if (!opp) return null;
@@ -60,24 +66,37 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
             open={!!opp}
             onClose={onClose}
             title={opp.name}
-            icon={<Building2 className="h-5 w-5 text-primary" />}
+            icon={<Building2 className="size-5 text-primary" />}
             maxWidthClassName="sm:max-w-2xl"
             footer={
                 <>
                     <button
                         onClick={onClose}
-                        className="h-11 min-w-28 rounded-xl border border-border bg-card px-5 text-sm font-semibold text-foreground hover:bg-secondary"
+                        className="
+                            h-11 min-w-28 rounded-xl border border-border bg-card px-5 text-sm
+                            font-semibold text-foreground
+                            hover:bg-secondary
+                        "
                     >
                         Close
                     </button>
                     {hasApplied ? (
-                        <span className="flex h-11 min-w-36 items-center justify-center rounded-xl bg-green-100 px-5 text-sm font-semibold text-green-700">
+                        <span
+                            className="
+                                flex h-11 min-w-36 items-center justify-center rounded-xl
+                                bg-green-100 px-5 text-sm font-semibold text-green-700
+                            "
+                        >
                             ✓ Applied
                         </span>
                     ) : (
                         <button
                             onClick={onApply}
-                            className="h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold text-foreground hover:opacity-90"
+                            className="
+                                h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold
+                                text-foreground
+                                hover:opacity-90
+                            "
                         >
                             Apply Now
                         </button>
@@ -90,7 +109,11 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                     <button
                         onClick={handleOrgClick}
                         className={cn(
-                            "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-bold text-primary transition-opacity hover:opacity-75",
+                            `
+                                flex size-12 shrink-0 items-center justify-center rounded-full
+                                bg-secondary text-sm font-bold text-primary transition-opacity
+                                hover:opacity-75
+                            `,
                             !orgId && "pointer-events-none",
                         )}
                     >
@@ -100,20 +123,32 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                         <button
                             onClick={handleOrgClick}
                             className={cn(
-                                "font-semibold text-foreground text-left hover:underline",
+                                `
+                                    font-semibold text-foreground text-left
+                                    hover:underline
+                                `,
                                 !orgId && "pointer-events-none",
                             )}
                         >
                             {opp.organization?.orgName ?? "—"}
                         </button>
-                        <p className="text-sm text-muted-foreground">{opp.organization?.hqAdr ?? ""}</p>
+                        <p className="text-sm text-muted-foreground">
+                            {opp.organization?.hqAdr ?? ""}
+                        </p>
                     </div>
                     <div className="flex flex-col items-end gap-1.5 ml-auto">
-                        <span className={cn("rounded-full px-3 py-1 text-sm font-semibold", matchCls)}>
+                        <span
+                            className={cn("rounded-full px-3 py-1 text-sm font-semibold", matchCls)}
+                        >
                             {matchPct}% Match
                         </span>
                         {hasApplied && (
-                            <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700">
+                            <span
+                                className="
+                                    rounded-full bg-green-100 px-3 py-1 text-sm font-semibold
+                                    text-green-700
+                                "
+                            >
                                 ✓ Applied
                             </span>
                         )}
@@ -133,7 +168,6 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                    <DetailRow label="Hours / Week" value={`${opp.hours}h`} />
                     <DetailRow label="Length" value={opp.length || "Flexible"} />
                     <DetailRow
                         label="Deadline"
@@ -165,8 +199,10 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                             {opp.availability.map((day: string) => (
                                 <span
                                     key={day}
-                                    className="px-3 py-1.5 rounded-lg border text-xs font-medium
-                                            border-yellow-400 text-gray-800 bg-yellow-50"
+                                    className="
+                                        px-3 py-1.5 rounded-lg border text-xs font-medium
+                                        border-yellow-400 text-gray-800 bg-yellow-50
+                                    "
                                 >
                                     {day}
                                 </span>
@@ -176,21 +212,18 @@ export function OpportunityDetailModal({ opp, matchPct, hasApplied, onClose, onA
                 )}
 
                 <div>
-                    <h3 className="mb-2 text-sm font-semibold text-foreground">About This Opportunity</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{opp.description}</p>
+                    <h3 className="mb-2 text-sm font-semibold text-foreground">
+                        About This Opportunity
+                    </h3>
+                    <p className="text-sm/relaxed text-muted-foreground">{opp.description}</p>
                 </div>
 
                 {opp.candidateDesc && (
                     <div>
-                        <h3 className="mb-2 text-sm font-semibold text-foreground">Ideal Candidate</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{opp.candidateDesc}</p>
-                    </div>
-                )}
-
-                {opp.organization?.hqAdr && (
-                    <div className="flex items-start gap-2 text-sm text-muted-foreground">
-                        <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
-                        <span>{opp.organization.hqAdr}</span>
+                        <h3 className="mb-2 text-sm font-semibold text-foreground">
+                            Ideal Candidate
+                        </h3>
+                        <p className="text-sm/relaxed text-muted-foreground">{opp.candidateDesc}</p>
                     </div>
                 )}
             </div>

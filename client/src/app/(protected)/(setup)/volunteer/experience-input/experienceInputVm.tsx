@@ -33,7 +33,9 @@ export function useExperienceInputViewModel() {
     const [workExperiences, setWorkExperiences] = useState<WorkExperience[]>([
         { jobTitle: "", company: "", startDate: "", endDate: "", responsibilities: "" },
     ]);
-    const [educations, setEducations] = useState<Education[]>([{ institution: "", degree: "", graduationYear: "" }]);
+    const [educations, setEducations] = useState<Education[]>([
+        { institution: "", degree: "", graduationYear: "" },
+    ]);
     const [errors, setErrors] = useState<FormErrors>({});
     const [submitting, setSubmitting] = useState(false);
     const [fullName, setFullName] = useState("Volunteer");
@@ -61,7 +63,9 @@ export function useExperienceInputViewModel() {
     };
 
     function updateWorkExperience(index: number, field: keyof WorkExperience, value: string) {
-        setWorkExperiences((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
+        setWorkExperiences((prev) =>
+            prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)),
+        );
     }
 
     function addEducation() {
@@ -73,7 +77,9 @@ export function useExperienceInputViewModel() {
     };
 
     function updateEducation(index: number, field: keyof Education, value: string) {
-        setEducations((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
+        setEducations((prev) =>
+            prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)),
+        );
     }
 
     function validate(): boolean {
@@ -90,7 +96,9 @@ export function useExperienceInputViewModel() {
             newErrors.workExperience = "Please fill in all fields.";
         }
 
-        const hasIncompleteEdu = educations.some((e) => !e.institution || !e.degree || !e.graduationYear);
+        const hasIncompleteEdu = educations.some(
+            (e) => !e.institution || !e.degree || !e.graduationYear,
+        );
         if (hasIncompleteEdu) {
             newErrors.education = "Please fill in all fields.";
         }

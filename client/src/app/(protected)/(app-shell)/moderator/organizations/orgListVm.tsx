@@ -1,14 +1,12 @@
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
-import { UserService } from "@/services/UserService";
 import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
 import type {
     CurrentModerator,
     ModeratorOrganizationList,
     ModeratorOrganizationListItem,
-    Organization,
 } from "@volunteerly/shared";
 import { appToast } from "@/components/common/app-toast";
 
@@ -28,7 +26,9 @@ export function useOrgListViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
 
-    const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(undefined);
+    const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(
+        undefined,
+    );
     const [allOrgs, setAllOrgs] = useState<ModeratorOrganizationList>([]);
     const [error, setError] = useState<string | null>(null);
     const [loadingData, setLoadingData] = useState(true);
@@ -103,9 +103,13 @@ export function useOrgListViewModel() {
         if (sortBy === "alphabetical") {
             orgs = [...orgs].sort((a, b) => a.orgName.localeCompare(b.orgName));
         } else if (sortBy === "newest") {
-            orgs = [...orgs].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            orgs = [...orgs].sort(
+                (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+            );
         } else if (sortBy === "oldest") {
-            orgs = [...orgs].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+            orgs = [...orgs].sort(
+                (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+            );
         }
 
         return orgs;
@@ -131,7 +135,12 @@ export function useOrgListViewModel() {
 
     function openReviewModal(org: ModeratorOrganizationListItem) {
         setSelectedOrg(org);
-        setChecks({ charityVerified: false, websiteMatches: false, documentsValid: false, addressConfirmed: false });
+        setChecks({
+            charityVerified: false,
+            websiteMatches: false,
+            documentsValid: false,
+            addressConfirmed: false,
+        });
         setShowRejectModal(false);
         setShowApproveConfirm(false);
         setRejectionReason("");
@@ -162,7 +171,9 @@ export function useOrgListViewModel() {
                 return;
             }
             setAllOrgs((prev) =>
-                prev.map((o) => (o.id === selectedOrg.id ? { ...o, status: "VERIFIED" as const } : o)),
+                prev.map((o) =>
+                    o.id === selectedOrg.id ? { ...o, status: "VERIFIED" as const } : o,
+                ),
             );
             closeReviewModal();
             appToast.success("Organization approved", {
@@ -178,13 +189,18 @@ export function useOrgListViewModel() {
     async function handleReject() {
         if (!selectedOrg || !rejectionReason.trim()) return;
         try {
-            const result = await OrganizationService.rejectOrganization(selectedOrg.id, rejectionReason);
+            const result = await OrganizationService.rejectOrganization(
+                selectedOrg.id,
+                rejectionReason,
+            );
             if (!result.success) {
                 setError("Failed to reject organization.");
                 return;
             }
             setAllOrgs((prev) =>
-                prev.map((o) => (o.id === selectedOrg.id ? { ...o, status: "REJECTED" as const } : o)),
+                prev.map((o) =>
+                    o.id === selectedOrg.id ? { ...o, status: "REJECTED" as const } : o,
+                ),
             );
             closeReviewModal();
 

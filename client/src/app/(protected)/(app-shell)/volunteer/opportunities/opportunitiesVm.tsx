@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { appToast } from "@/components/common/app-toast";
 import { useAuth } from "@/providers/auth-provider";
 import { UserService } from "@/services/UserService";
 import { VolunteerService } from "@/services/VolunteerService";
-import { appToast } from "@/components/common/app-toast";
 import type { CurrentVolunteer, Opportunity } from "@volunteerly/shared";
-import { match } from "assert";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type WorkTypeFilter = "ALL" | "REMOTE" | "IN_PERSON" | "HYBRID";
 export type CommitmentFilter = "ALL" | "FLEXIBLE" | "PART_TIME" | "FULL_TIME";
-export type SortOption = "RELEVANT" | "MATCH_HIGH" | "MATCH_LOW" | "HOURS_LOW" | "HOURS_HIGH" | "NEWEST";
+export type SortOption = "MATCH_HIGH" | "MATCH_LOW" | "NEWEST";
 
 export const OPPORTUNITY_CATEGORIES = [
     "Frontend Developer",
@@ -30,7 +29,11 @@ export const OPPORTUNITY_CATEGORIES = [
 
 const DEFAULT_MATCH_PCT = 1;
 
-function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Record<string, number>): Opportunity[] {
+function sortOpportunities(
+    opps: Opportunity[],
+    sort: SortOption,
+    scoreMap: Record<string, number>,
+): Opportunity[] {
     const arr = [...opps];
     const getScore = (opp: Opportunity) => scoreMap[opp.id] ?? DEFAULT_MATCH_PCT;
     switch (sort) {
@@ -38,13 +41,10 @@ function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Reco
             return arr.sort((a, b) => getScore(b) - getScore(a));
         case "MATCH_LOW":
             return arr.sort((a, b) => getScore(a) - getScore(b));
-        case "HOURS_LOW":
-            return arr.sort((a, b) => a.hours - b.hours);
-        case "HOURS_HIGH":
-            return arr.sort((a, b) => b.hours - a.hours);
         case "NEWEST":
-            return arr.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
-        case "RELEVANT":
+            return arr.sort(
+                (a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime(),
+            );
         default:
             return arr.sort((a, b) => getScore(b) - getScore(a));
     }
@@ -53,7 +53,9 @@ function sortOpportunities(opps: Opportunity[], sort: SortOption, scoreMap: Reco
 export function useOpportunitiesViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
-    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(undefined);
+    const [currentVolunteer, setCurrentVolunteer] = useState<CurrentVolunteer | undefined>(
+        undefined,
+    );
     const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
     const [matchScores, setMatchScores] = useState<Record<string, number>>({});
     const [error, setError] = useState<string | null>(null);
@@ -65,9 +67,9 @@ export function useOpportunitiesViewModel() {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [workType, setWorkType] = useState<WorkTypeFilter>("ALL");
     const [commitmentLevel, setCommitmentLevel] = useState<CommitmentFilter>("ALL");
-    const [maxHours, setMaxHours] = useState<number>(40);
     const [searchQuery, setSearchQuery] = useState("");
-    const [sortBy, setSortBy] = useState<SortOption>("RELEVANT");
+    const [sortBy, setSortBy] = useState<SortOption>("MATCH_HIGH");
+    const searchDebounce = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         if (!loading && !session) router.replace("/login");
@@ -78,7 +80,6 @@ export function useOpportunitiesViewModel() {
             cats: string[],
             wt: WorkTypeFilter,
             cl: CommitmentFilter,
-            mh: number,
             sq: string,
             sort: SortOption,
             scores: Record<string, number>,
@@ -89,7 +90,6 @@ export function useOpportunitiesViewModel() {
                     search: sq || undefined,
                     workType: wt !== "ALL" ? wt : undefined,
                     commitmentLevel: cl !== "ALL" ? cl : undefined,
-                    maxHours: mh < 40 ? mh : undefined,
                 });
 
                 if (!result.success) {
@@ -105,7 +105,8 @@ export function useOpportunitiesViewModel() {
                     );
                 }
 
-                const userAvailability = volunteer?.availability ?? currentVolunteer?.availability ?? [];
+                const userAvailability =
+                    volunteer?.availability ?? currentVolunteer?.availability ?? [];
                 if (userAvailability.length > 0) {
                     filtered = filtered.filter((opp) =>
                         opp.availability?.some((day) => userAvailability.includes(day)),
@@ -118,7 +119,7 @@ export function useOpportunitiesViewModel() {
                 setError("Failed to load opportunities.");
             }
         },
-        [],
+        [currentVolunteer?.availability],
     );
 
     useEffect(() => {
@@ -144,7 +145,7 @@ export function useOpportunitiesViewModel() {
                 const scores = await VolunteerService.getOpportunityMatchScores();
                 setMatchScores(scores);
 
-                await fetchOpportunities([], "ALL", "ALL", 40, "", "RELEVANT", scores, volunteer);
+                await fetchOpportunities([], "ALL", "ALL", "", "MATCH_HIGH", scores, volunteer);
 
                 //backfill opps
                 VolunteerService.backfillOpportunityVectors();
@@ -163,20 +164,61 @@ export function useOpportunitiesViewModel() {
     }, [sortBy, matchScores]);
 
     function toggleCategory(cat: string) {
-        setSelectedCategories((prev) => (prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]));
-    }
-
-    function applyFilters() {
+        const next = selectedCategories.includes(cat)
+            ? selectedCategories.filter((c) => c !== cat)
+            : [...selectedCategories, cat];
+        setSelectedCategories(next);
         fetchOpportunities(
-            selectedCategories,
+            next,
             workType,
             commitmentLevel,
-            maxHours,
             searchQuery,
             sortBy,
             matchScores,
             currentVolunteer,
         );
+    }
+
+    function handleSetWorkType(wt: WorkTypeFilter) {
+        setWorkType(wt);
+        fetchOpportunities(
+            selectedCategories,
+            wt,
+            commitmentLevel,
+            searchQuery,
+            sortBy,
+            matchScores,
+            currentVolunteer,
+        );
+    }
+
+    function handleSetCommitmentLevel(cl: CommitmentFilter) {
+        setCommitmentLevel(cl);
+        fetchOpportunities(
+            selectedCategories,
+            workType,
+            cl,
+            searchQuery,
+            sortBy,
+            matchScores,
+            currentVolunteer,
+        );
+    }
+
+    function handleSetSearchQuery(sq: string) {
+        setSearchQuery(sq);
+        if (searchDebounce.current) clearTimeout(searchDebounce.current);
+        searchDebounce.current = setTimeout(() => {
+            fetchOpportunities(
+                selectedCategories,
+                workType,
+                commitmentLevel,
+                sq,
+                sortBy,
+                matchScores,
+                currentVolunteer,
+            );
+        }, 300);
     }
 
     function getMatchPct(opp: Opportunity): number {
@@ -223,17 +265,14 @@ export function useOpportunitiesViewModel() {
         setSelectedOpp,
         selectedCategories,
         workType,
-        setWorkType,
+        setWorkType: handleSetWorkType,
         commitmentLevel,
-        setCommitmentLevel,
-        maxHours,
-        setMaxHours,
+        setCommitmentLevel: handleSetCommitmentLevel,
         searchQuery,
-        setSearchQuery,
+        setSearchQuery: handleSetSearchQuery,
         sortBy,
         setSortBy,
         toggleCategory,
-        applyFilters,
         getMatchPct,
         handleApply,
         applyModalOpen,

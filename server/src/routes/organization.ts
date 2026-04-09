@@ -19,14 +19,20 @@ type AuthenticatedRequest = {
 
 export const OrganizationRouter = Router();
 
-async function requireModerator(userId: string, res: Parameters<Parameters<typeof OrganizationRouter.put>[1]>[1]) {
+async function requireModerator(
+    userId: string,
+    res: Parameters<Parameters<typeof OrganizationRouter.put>[1]>[1],
+) {
     const mod = await getCurrentUser(userId);
     if (!mod) {
         res.status(404).json({ error: "Not Found", message: "User not found." });
         return null;
     }
     if (mod.role !== "MODERATOR") {
-        res.status(403).json({ error: "Forbidden", message: "Only moderators can perform this action." });
+        res.status(403).json({
+            error: "Forbidden",
+            message: "Only moderators can perform this action.",
+        });
         return null;
     }
     return mod;
@@ -38,7 +44,9 @@ OrganizationRouter.get("/", auth, async (req, res, next) => {
         const userId = typedReq.auth?.userId;
 
         if (!userId) {
-            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+            return res
+                .status(401)
+                .json({ error: "Unauthorized", message: "User context missing." });
         }
 
         const mod = await requireModerator(userId, res);
@@ -46,7 +54,8 @@ OrganizationRouter.get("/", auth, async (req, res, next) => {
 
         const { status } = req.query;
 
-        const organizations = status === "APPLIED" ? await getAppliedOrganizations() : await getAllOrganizations();
+        const organizations =
+            status === "APPLIED" ? await getAppliedOrganizations() : await getAllOrganizations();
 
         res.status(200).json(organizations);
     } catch (error) {
@@ -60,7 +69,9 @@ OrganizationRouter.get("/document", auth, async (req: any, res, next) => {
         const userId = typedReq.auth?.userId;
 
         if (!userId) {
-            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+            return res
+                .status(401)
+                .json({ error: "Unauthorized", message: "User context missing." });
         }
 
         const { file_path } = req.query;
@@ -93,7 +104,9 @@ OrganizationRouter.put("/approve", auth, async (req, res, next) => {
         const userId = typedReq.auth?.userId;
 
         if (!userId) {
-            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+            return res
+                .status(401)
+                .json({ error: "Unauthorized", message: "User context missing." });
         }
 
         const mod = await requireModerator(userId, res);
@@ -106,7 +119,9 @@ OrganizationRouter.put("/approve", auth, async (req, res, next) => {
             return res.status(404).json({ error: "Not Found", message: "Organization not found." });
         }
         if (org.status !== "APPLIED") {
-            return res.status(400).json({ error: "Invalid state", message: "Organization has not applied." });
+            return res
+                .status(400)
+                .json({ error: "Invalid state", message: "Organization has not applied." });
         }
 
         const approved_org = await approveOrganization(orgId);
@@ -123,7 +138,9 @@ OrganizationRouter.put("/reject", auth, async (req, res, next) => {
         const userId = typedReq.auth?.userId;
 
         if (!userId) {
-            return res.status(401).json({ error: "Unauthorized", message: "User context missing." });
+            return res
+                .status(401)
+                .json({ error: "Unauthorized", message: "User context missing." });
         }
 
         const mod = await requireModerator(userId, res);
@@ -136,7 +153,9 @@ OrganizationRouter.put("/reject", auth, async (req, res, next) => {
             return res.status(404).json({ error: "Not Found", message: "Organization not found." });
         }
         if (org.status !== "APPLIED") {
-            return res.status(400).json({ error: "Invalid state", message: "Organization has not applied." });
+            return res
+                .status(400)
+                .json({ error: "Invalid state", message: "Organization has not applied." });
         }
 
         const rejected_org = await rejectOrganization(orgId, rejectionReason ?? "");

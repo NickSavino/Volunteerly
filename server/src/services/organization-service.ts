@@ -110,11 +110,15 @@ export async function autoApproval(orgName: string, charityNum: number, file: Ex
             p.content.toLowerCase().includes("registered under the name"),
         );
 
-        const businessNumberParagraph = result.find((p: any) => p.content.toLowerCase().includes("business number is"));
+        const businessNumberParagraph = result.find((p: any) =>
+            p.content.toLowerCase().includes("business number is"),
+        );
 
-        const officialName = officialNameParagraph?.content.split(":")[1]?.trim().slice(0, -1) || null;
+        const officialName =
+            officialNameParagraph?.content.split(":")[1]?.trim().slice(0, -1) || null;
         const officialNumber = Number(
-            businessNumberParagraph?.content.toLowerCase().split("business number is")[1]?.trim() || null,
+            businessNumberParagraph?.content.toLowerCase().split("business number is")[1]?.trim() ||
+                null,
         );
 
         if (officialName == orgName && charityNum == officialNumber) {
@@ -126,7 +130,13 @@ export async function autoApproval(orgName: string, charityNum: number, file: Ex
                 return false;
             }
         } else {
-            console.log("Values did not match those given.", officialName, orgName, charityNum, officialNumber);
+            console.log(
+                "Values did not match those given.",
+                officialName,
+                orgName,
+                charityNum,
+                officialNumber,
+            );
             return false;
         }
     } catch (error) {
@@ -149,10 +159,12 @@ export async function checkCharityExistence(orgName: string, charityNum: number)
 export async function saveFile(orgId: string, file: Express.Multer.File) {
     const fileName = `org_${orgId}.pdf`;
 
-    const { data, error } = await supabase.storage.from("organization-documents").upload(fileName, file.buffer, {
-        contentType: file.mimetype,
-        upsert: true,
-    });
+    const { data, error } = await supabase.storage
+        .from("organization-documents")
+        .upload(fileName, file.buffer, {
+            contentType: file.mimetype,
+            upsert: true,
+        });
 
     if (error) {
         throw new Error(`Failed to upload file: ${error.message}`);
@@ -523,7 +535,12 @@ export async function createOpportunity(
     //create the embedding
     (async () => {
         try {
-            const skills = await extractSkillsFromOpportunity(name, category, description, candidateDesc);
+            const skills = await extractSkillsFromOpportunity(
+                name,
+                category,
+                description,
+                candidateDesc,
+            );
             const allSkills = [...skills.technical, ...skills.nonTechnical].join(", ");
             const vector = await embedText(allSkills);
             await prisma.$executeRaw`
@@ -577,7 +594,12 @@ export async function updateOpportunity(
     return org;
 }
 
-export async function orgPostReview(issuerId: string, revieweeId: string, opportunityId: string, rating: number) {
+export async function orgPostReview(
+    issuerId: string,
+    revieweeId: string,
+    opportunityId: string,
+    rating: number,
+) {
     const existing = await prisma.review.findUnique({
         where: { issuerId_opportunityId: { issuerId, opportunityId } },
     });

@@ -18,7 +18,9 @@ jest.mock("../../src/lib/supabase.js", () => ({
     },
 }));
 jest.mock("../../src/services/azure-service.js", () => ({ callDocumentAnalysis: jest.fn() }));
-jest.mock("../../src/services/groq-service.js", () => ({ extractSkillsFromOpportunity: jest.fn() }));
+jest.mock("../../src/services/groq-service.js", () => ({
+    extractSkillsFromOpportunity: jest.fn(),
+}));
 jest.mock("../../src/services/gemini-service.js", () => ({ embedText: jest.fn() }));
 
 import {
@@ -46,14 +48,20 @@ describe("organization-service", () => {
 
     it("throws when opportunity analytics cannot find opportunity", async () => {
         mockPrisma.opportunity.findFirst.mockResolvedValueOnce(null);
-        await expect(getOpportunityAnalytics("org-1", "opp-1")).rejects.toThrow("Error getting Opportunity Analytics.");
+        await expect(getOpportunityAnalytics("org-1", "opp-1")).rejects.toThrow(
+            "Error getting Opportunity Analytics.",
+        );
     });
 
     it("creates completion progress update when org exists", async () => {
         mockPrisma.progressUpdate.aggregate.mockResolvedValueOnce({
             _sum: { hoursContributed: 7 },
         });
-        mockPrisma.opportunity.update.mockResolvedValueOnce({ id: "opp-1", status: "CLOSED", hours: 7 });
+        mockPrisma.opportunity.update.mockResolvedValueOnce({
+            id: "opp-1",
+            status: "CLOSED",
+            hours: 7,
+        });
         mockPrisma.opportunity.findUnique.mockResolvedValueOnce({ orgId: "org-1" });
         mockPrisma.progressUpdate.create.mockResolvedValueOnce({ id: "pu-1" });
 

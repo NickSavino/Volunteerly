@@ -46,7 +46,11 @@ export default function OrganizationMessagesPage() {
                             </div>
 
                             {vm.isClosedTicketConversation ? (
-                                <div className="border-t border-border px-4 py-4 text-sm text-muted-foreground">
+                                <div
+                                    className="
+                                        border-t border-border p-4 text-sm text-muted-foreground
+                                    "
+                                >
                                     This ticket is closed. Replies are disabled.
                                 </div>
                             ) : (
@@ -56,7 +60,9 @@ export default function OrganizationMessagesPage() {
                                     onSend={vm.sendMessage}
                                     sending={vm.sending}
                                     placeholder={
-                                        vm.isTicketConversation ? "Reply to support ticket..." : "Type a message..."
+                                        vm.isTicketConversation
+                                            ? "Reply to support ticket..."
+                                            : "Type a message..."
                                     }
                                 />
                             )}

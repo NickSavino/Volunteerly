@@ -1,7 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, Flag, ShieldAlert, UserRound } from "lucide-react";
+import { AppModal } from "@/components/common/app-modal";
+import { appToast } from "@/components/common/app-toast";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { ModeratorService } from "@/services/ModeratorService";
+import { UserService } from "@/services/UserService";
 import type {
     ModeratorUrgencyRating,
     ModeratorVolunteerDetail,
@@ -10,18 +24,16 @@ import type {
     ModeratorVolunteerSuspendInput,
     ModeratorVolunteerWarnInput,
 } from "@volunteerly/shared";
-import { AppModal } from "@/components/common/app-modal";
-import { appToast } from "@/components/common/app-toast";
-import { ModeratorService } from "@/services/ModeratorService";
-import { UserService } from "@/services/UserService";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { AlertTriangle, Flag, ShieldAlert, UserRound } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
-export type VolunteerModalMode = "profile" | "investigation" | "flag" | "warning" | "suspend" | "escalate";
+export type VolunteerModalMode =
+    | "profile"
+    | "investigation"
+    | "flag"
+    | "warning"
+    | "suspend"
+    | "escalate";
 
 type VolunteerDetailModalProps = {
     volunteerId: string | null;
@@ -54,7 +66,13 @@ function actionLabel(action?: string | null) {
     }
 }
 
-export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdated }: VolunteerDetailModalProps) {
+export function VolunteerDetailModal({
+    volunteerId,
+    open,
+    mode,
+    onClose,
+    onUpdated,
+}: VolunteerDetailModalProps) {
     const [currentMode, setCurrentMode] = useState<VolunteerModalMode>(mode);
     const [detail, setDetail] = useState<ModeratorVolunteerDetail | null>(null);
     const [loading, setLoading] = useState(false);
@@ -67,17 +85,23 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
         severity: "MODERATE",
     });
 
-    const [warnForm, setWarnForm] = useState<Pick<ModeratorVolunteerWarnInput, "reason" | "severity">>({
+    const [warnForm, setWarnForm] = useState<
+        Pick<ModeratorVolunteerWarnInput, "reason" | "severity">
+    >({
         reason: "",
         severity: "MODERATE",
     });
 
-    const [suspendForm, setSuspendForm] = useState<Pick<ModeratorVolunteerSuspendInput, "reason" | "durationDays">>({
+    const [suspendForm, setSuspendForm] = useState<
+        Pick<ModeratorVolunteerSuspendInput, "reason" | "durationDays">
+    >({
         reason: "",
         durationDays: 7,
     });
 
-    const [escalateForm, setEscalateForm] = useState<Pick<ModeratorVolunteerEscalateInput, "reason">>({
+    const [escalateForm, setEscalateForm] = useState<
+        Pick<ModeratorVolunteerEscalateInput, "reason">
+    >({
         reason: "",
     });
 
@@ -146,7 +170,9 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                 details: flagForm.details?.trim() ?? "",
                 severity: flagForm.severity,
             });
-            appToast.success("Volunteer flagged", { message: "The account is now in the flagged queue." });
+            appToast.success("Volunteer flagged", {
+                message: "The account is now in the flagged queue.",
+            });
             await onUpdated();
             handleClose();
         } catch {
@@ -180,7 +206,9 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                 reason: warnForm.reason.trim(),
                 severity: warnForm.severity,
             });
-            appToast.success("Warning issued", { message: "The investigation was moved out of the flagged queue." });
+            appToast.success("Warning issued", {
+                message: "The investigation was moved out of the flagged queue.",
+            });
             await onUpdated();
             handleClose();
         } catch {
@@ -213,11 +241,15 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                 reason: suspendForm.reason.trim(),
                 durationDays: suspendForm.durationDays,
             });
-            appToast.success("Volunteer suspended", { message: "The account was moved to the suspended tab." });
+            appToast.success("Volunteer suspended", {
+                message: "The account was moved to the suspended tab.",
+            });
             await onUpdated();
             handleClose();
         } catch {
-            appToast.error("Suspension failed", { message: "The volunteer could not be suspended." });
+            appToast.error("Suspension failed", {
+                message: "The volunteer could not be suspended.",
+            });
         } finally {
             setSubmitting(false);
         }
@@ -245,11 +277,15 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                 reportId: openReport.id,
                 reason: escalateForm.reason.trim(),
             });
-            appToast.success("Investigation escalated", { message: "The account was moved to the suspended tab." });
+            appToast.success("Investigation escalated", {
+                message: "The account was moved to the suspended tab.",
+            });
             await onUpdated();
             handleClose();
         } catch {
-            appToast.error("Escalation failed", { message: "The investigation could not be escalated." });
+            appToast.error("Escalation failed", {
+                message: "The investigation could not be escalated.",
+            });
         } finally {
             setSubmitting(false);
         }
@@ -290,17 +326,23 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                         </p>
                     </div>
 
-                    <p className="mt-1 text-sm text-muted-foreground">Reported by {report.reporterDisplayName}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                        Reported by {report.reporterDisplayName}
+                    </p>
 
-                    {report.details ? <p className="mt-2 text-sm text-muted-foreground">{report.details}</p> : null}
+                    {report.details ? (
+                        <p className="mt-2 text-sm text-muted-foreground">{report.details}</p>
+                    ) : null}
 
                     <p className="mt-2 text-sm">
-                        <span className="font-medium text-foreground">Outcome:</span> {actionLabel(report.actionTaken)}
+                        <span className="font-medium text-foreground">Outcome:</span>{" "}
+                        {actionLabel(report.actionTaken)}
                     </p>
 
                     {report.moderatorNote ? (
                         <p className="mt-1 text-sm text-muted-foreground">
-                            <span className="font-medium text-foreground">Moderator note:</span> {report.moderatorNote}
+                            <span className="font-medium text-foreground">Moderator note:</span>{" "}
+                            {report.moderatorNote}
                         </p>
                     ) : null}
 
@@ -375,46 +417,80 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                     </>
                 ) : currentMode === "flag" ? (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("profile")} disabled={submitting}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setCurrentMode("profile")}
+                            disabled={submitting}
+                        >
                             Cancel
                         </Button>
-                        <Button onClick={submitFlag} disabled={submitting || !flagForm.reason.trim() || isSuspended}>
+                        <Button
+                            onClick={submitFlag}
+                            disabled={submitting || !flagForm.reason.trim() || isSuspended}
+                        >
                             {submitting ? "Saving..." : "Flag Account"}
                         </Button>
                     </>
                 ) : currentMode === "warning" ? (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setCurrentMode("investigation")}
+                            disabled={submitting}
+                        >
                             Cancel
                         </Button>
                         <Button
                             onClick={submitWarning}
-                            disabled={submitting || !warnForm.reason.trim() || !openReport?.id || isSuspended}
+                            disabled={
+                                submitting ||
+                                !warnForm.reason.trim() ||
+                                !openReport?.id ||
+                                isSuspended
+                            }
                         >
                             {submitting ? "Saving..." : "Issue Warning"}
                         </Button>
                     </>
                 ) : currentMode === "suspend" ? (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setCurrentMode("investigation")}
+                            disabled={submitting}
+                        >
                             Cancel
                         </Button>
                         <Button
                             variant="destructive"
                             onClick={submitSuspension}
-                            disabled={submitting || !suspendForm.reason.trim() || !openReport?.id || isSuspended}
+                            disabled={
+                                submitting ||
+                                !suspendForm.reason.trim() ||
+                                !openReport?.id ||
+                                isSuspended
+                            }
                         >
                             {submitting ? "Saving..." : "Suspend Account"}
                         </Button>
                     </>
                 ) : (
                     <>
-                        <Button variant="outline" onClick={() => setCurrentMode("investigation")} disabled={submitting}>
+                        <Button
+                            variant="outline"
+                            onClick={() => setCurrentMode("investigation")}
+                            disabled={submitting}
+                        >
                             Cancel
                         </Button>
                         <Button
                             onClick={submitEscalation}
-                            disabled={submitting || !escalateForm.reason.trim() || !openReport?.id || isSuspended}
+                            disabled={
+                                submitting ||
+                                !escalateForm.reason.trim() ||
+                                !openReport?.id ||
+                                isSuspended
+                            }
                         >
                             {submitting ? "Saving..." : "Confirm Escalation"}
                         </Button>
@@ -423,17 +499,26 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
             }
         >
             {loading ? (
-                <p className="py-10 text-center text-sm text-muted-foreground">Loading volunteer detail...</p>
+                <p className="py-10 text-center text-sm text-muted-foreground">
+                    Loading volunteer detail...
+                </p>
             ) : error ? (
-                <p className="rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                <p
+                    className="
+                        rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm
+                        text-destructive
+                    "
+                >
                     {error}
                 </p>
             ) : !detail ? (
-                <p className="py-10 text-center text-sm text-muted-foreground">Volunteer not found.</p>
+                <p className="py-10 text-center text-sm text-muted-foreground">
+                    Volunteer not found.
+                </p>
             ) : currentMode === "profile" ? (
                 <div className="space-y-6">
                     <div className="flex items-start gap-4 rounded-2xl border p-5">
-                        <Avatar className="h-20 w-20">
+                        <Avatar className="size-20">
                             <AvatarImage src={UserService.getAvatarURL(detail.id)} />
                             <AvatarFallback>
                                 {detail.firstName[0]}
@@ -445,25 +530,41 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                             <p className="text-2xl font-bold text-foreground">
                                 {detail.firstName} {detail.lastName}
                             </p>
-                            <p className="text-sm text-muted-foreground">{detail.location || "No location provided"}</p>
-                            <p className="mt-3 rounded-full bg-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide w-fit">
+                            <p className="text-sm text-muted-foreground">
+                                {detail.location || "No location provided"}
+                            </p>
+                            <p
+                                className="
+                                    mt-3 w-fit rounded-full bg-secondary px-3 py-1 text-xs
+                                    font-semibold tracking-wide uppercase
+                                "
+                            >
                                 {stateLabel(detail.state)}
                             </p>
                         </div>
                     </div>
 
-                    <div className="grid gap-4 md:grid-cols-4">
+                    <div
+                        className="
+                            grid gap-4
+                            md:grid-cols-4
+                        "
+                    >
                         <div className="rounded-xl border p-4">
                             <p className="text-xs text-muted-foreground">Past Flags</p>
                             <p className="mt-1 text-2xl font-bold">{detail.pastFlagsCount}</p>
                         </div>
                         <div className="rounded-xl border p-4">
                             <p className="text-xs text-muted-foreground">Completed</p>
-                            <p className="mt-1 text-2xl font-bold">{detail.completedOpportunities}</p>
+                            <p className="mt-1 text-2xl font-bold">
+                                {detail.completedOpportunities}
+                            </p>
                         </div>
                         <div className="rounded-xl border p-4">
                             <p className="text-xs text-muted-foreground">Rating</p>
-                            <p className="mt-1 text-2xl font-bold">{detail.averageRating.toFixed(1)}</p>
+                            <p className="mt-1 text-2xl font-bold">
+                                {detail.averageRating.toFixed(1)}
+                            </p>
                         </div>
                         <div className="rounded-xl border p-4">
                             <p className="text-xs text-muted-foreground">Hourly Value</p>
@@ -473,10 +574,13 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
 
                     <div className="rounded-xl border p-4">
                         <p className="text-sm font-semibold text-foreground">Bio</p>
-                        <p className="mt-2 text-sm text-muted-foreground">{detail.bio || "No bio provided."}</p>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                            {detail.bio || "No bio provided."}
+                        </p>
                         <p className="mt-4 text-sm font-semibold text-foreground">Availability</p>
                         <p className="mt-2 text-sm text-muted-foreground">
-                            {(detail.availability ?? []).map(String).join(", ") || "No availability provided."}
+                            {(detail.availability ?? []).map(String).join(", ") ||
+                                "No availability provided."}
                         </p>
                     </div>
 
@@ -484,16 +588,23 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                         <p className="text-sm font-semibold text-foreground">Skills</p>
                         <div className="mt-3 flex flex-wrap gap-2">
                             {[...detail.technicalSkills, ...detail.nonTechnicalSkills].length ? (
-                                [...detail.technicalSkills, ...detail.nonTechnicalSkills].map((skill) => (
-                                    <span
-                                        key={skill}
-                                        className="rounded-full bg-secondary px-3 py-1 text-xs font-medium"
-                                    >
-                                        {skill}
-                                    </span>
-                                ))
+                                [...detail.technicalSkills, ...detail.nonTechnicalSkills].map(
+                                    (skill) => (
+                                        <span
+                                            key={skill}
+                                            className="
+                                                rounded-full bg-secondary px-3 py-1 text-xs
+                                                font-medium
+                                            "
+                                        >
+                                            {skill}
+                                        </span>
+                                    ),
+                                )
                             ) : (
-                                <p className="text-sm text-muted-foreground">No extracted skills available.</p>
+                                <p className="text-sm text-muted-foreground">
+                                    No extracted skills available.
+                                </p>
                             )}
                         </div>
                     </div>
@@ -507,41 +618,59 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                 <div className="space-y-6">
                     {reportForView ? (
                         <div className="rounded-xl border p-5">
-                            <p className="text-xl font-bold text-foreground">{reportForView.reason}</p>
+                            <p className="text-xl font-bold text-foreground">
+                                {reportForView.reason}
+                            </p>
                             <p className="mt-2 text-sm text-muted-foreground">
                                 Reported by {reportForView.reporterDisplayName} on{" "}
                                 {new Date(reportForView.createdAt).toLocaleDateString("en-US")}
                             </p>
                             {reportForView.severity ? (
-                                <p className="mt-2 text-sm text-muted-foreground">Severity: {reportForView.severity}</p>
+                                <p className="mt-2 text-sm text-muted-foreground">
+                                    Severity: {reportForView.severity}
+                                </p>
                             ) : null}
                             {reportForView.details ? (
-                                <p className="mt-4 text-sm text-muted-foreground">{reportForView.details}</p>
+                                <p className="mt-4 text-sm text-muted-foreground">
+                                    {reportForView.details}
+                                </p>
                             ) : null}
 
                             {!hasOpenReport ? (
-                                <p className="mt-4 rounded-md border border-border bg-secondary/30 px-4 py-3 text-sm text-muted-foreground">
-                                    This investigation is already closed. You can review the history, but no further
-                                    action can be taken.
+                                <p
+                                    className="
+                                        mt-4 rounded-md border border-border bg-secondary/30 px-4
+                                        py-3 text-sm text-muted-foreground
+                                    "
+                                >
+                                    This investigation is already closed. You can review the
+                                    history, but no further action can be taken.
                                 </p>
                             ) : null}
 
                             {isSuspended ? (
-                                <p className="mt-4 rounded-md border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-                                    This volunteer is already suspended. Additional suspension or escalation actions are
-                                    disabled.
+                                <p
+                                    className="
+                                        mt-4 rounded-md border border-destructive/20
+                                        bg-destructive/5 px-4 py-3 text-sm text-destructive
+                                    "
+                                >
+                                    This volunteer is already suspended. Additional suspension or
+                                    escalation actions are disabled.
                                 </p>
                             ) : null}
                         </div>
                     ) : (
-                        <p className="text-sm text-muted-foreground">No report is attached to this volunteer.</p>
+                        <p className="text-sm text-muted-foreground">
+                            No report is attached to this volunteer.
+                        </p>
                     )}
 
                     <div className="rounded-xl border p-4">
                         <p className="text-sm font-semibold text-foreground">Volunteer Snapshot</p>
                         <p className="mt-2 text-sm text-muted-foreground">
-                            {detail.firstName} {detail.lastName} - {detail.location || "No location"} -{" "}
-                            {stateLabel(detail.state)}
+                            {detail.firstName} {detail.lastName} -{" "}
+                            {detail.location || "No location"} - {stateLabel(detail.state)}
                         </p>
                     </div>
 
@@ -556,7 +685,9 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                         <Label>Reason</Label>
                         <Input
                             value={flagForm.reason}
-                            onChange={(e) => setFlagForm((prev) => ({ ...prev, reason: e.target.value }))}
+                            onChange={(e) =>
+                                setFlagForm((prev) => ({ ...prev, reason: e.target.value }))
+                            }
                             placeholder="e.g. Repeated no-shows"
                         />
                     </div>
@@ -566,7 +697,10 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                         <Select
                             value={flagForm.severity}
                             onValueChange={(value) =>
-                                setFlagForm((prev) => ({ ...prev, severity: value as ModeratorUrgencyRating }))
+                                setFlagForm((prev) => ({
+                                    ...prev,
+                                    severity: value as ModeratorUrgencyRating,
+                                }))
                             }
                         >
                             <SelectTrigger className="w-full">
@@ -587,7 +721,9 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                         <Textarea
                             rows={5}
                             value={flagForm.details}
-                            onChange={(e) => setFlagForm((prev) => ({ ...prev, details: e.target.value }))}
+                            onChange={(e) =>
+                                setFlagForm((prev) => ({ ...prev, details: e.target.value }))
+                            }
                             placeholder="Provide moderator-only context for this flag..."
                         />
                     </div>
@@ -599,7 +735,9 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                         <Textarea
                             rows={5}
                             value={warnForm.reason}
-                            onChange={(e) => setWarnForm((prev) => ({ ...prev, reason: e.target.value }))}
+                            onChange={(e) =>
+                                setWarnForm((prev) => ({ ...prev, reason: e.target.value }))
+                            }
                             placeholder="Describe the violation and what the volunteer must correct..."
                         />
                     </div>
@@ -609,7 +747,10 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                         <Select
                             value={warnForm.severity}
                             onValueChange={(value) =>
-                                setWarnForm((prev) => ({ ...prev, severity: value as ModeratorUrgencyRating }))
+                                setWarnForm((prev) => ({
+                                    ...prev,
+                                    severity: value as ModeratorUrgencyRating,
+                                }))
                             }
                         >
                             <SelectTrigger className="w-full">
@@ -652,7 +793,9 @@ export function VolunteerDetailModal({ volunteerId, open, mode, onClose, onUpdat
                         <Textarea
                             rows={5}
                             value={suspendForm.reason}
-                            onChange={(e) => setSuspendForm((prev) => ({ ...prev, reason: e.target.value }))}
+                            onChange={(e) =>
+                                setSuspendForm((prev) => ({ ...prev, reason: e.target.value }))
+                            }
                             placeholder="Provide the suspension reason that should remain in moderator history..."
                         />
                     </div>

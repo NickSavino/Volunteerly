@@ -1,26 +1,25 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useRef, useCallback, useState } from "react";
-import { ArrowUpDown, SlidersHorizontal, Map, X } from "lucide-react";
-import { VolunteerNavbar } from "@/components/volunteer/volunteer-navbar";
-import { OpportunityCard } from "@/components/volunteer/opportunity-card";
-import { OpportunityDetailModal } from "@/components/volunteer/opportunity-detail-modal";
-import { ApplyModal } from "@/components/volunteer/apply-modal";
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ApplyModal } from "@/components/volunteer/apply-modal";
+import { OpportunityCard } from "@/components/volunteer/opportunity-card";
+import { OpportunityDetailModal } from "@/components/volunteer/opportunity-detail-modal";
 import { cn } from "@/lib/utils";
+import { ArrowUpDown, Map, SlidersHorizontal } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useCallback, useRef, useState } from "react";
 import {
-    useOpportunitiesViewModel,
     OPPORTUNITY_CATEGORIES,
-    type WorkTypeFilter,
+    useOpportunitiesViewModel,
     type CommitmentFilter,
     type SortOption,
+    type WorkTypeFilter,
 } from "./opportunitiesVm";
 
 const OpportunitiesMap = dynamic(() => import("./OpportunitiesMap"), {
     ssr: false,
-    loading: () => <div className="h-full w-full animate-pulse bg-muted" />,
+    loading: () => <div className="size-full animate-pulse bg-muted" />,
 });
 
 const WORK_TYPE_LABELS: Record<WorkTypeFilter, string> = {
@@ -32,17 +31,14 @@ const WORK_TYPE_LABELS: Record<WorkTypeFilter, string> = {
 
 const COMMITMENT_LABELS: Record<CommitmentFilter, string> = {
     ALL: "Any",
-    FLEXIBLE: "Flexible",
-    PART_TIME: "Part-Time",
-    FULL_TIME: "Full-Time",
+    FLEXIBLE: "Flexible (2–5 hrs)",
+    PART_TIME: "Part-Time (5–20 hrs)",
+    FULL_TIME: "Full-Time (20+ hrs)",
 };
 
 const SORT_LABELS: Record<SortOption, string> = {
-    RELEVANT: "Relevant",
     MATCH_HIGH: "Best Match",
     MATCH_LOW: "Lowest Match",
-    HOURS_LOW: "Fewest Hours",
-    HOURS_HIGH: "Most Hours",
     NEWEST: "Newest",
 };
 
@@ -57,10 +53,6 @@ function FiltersContent({
     setWorkType,
     commitmentLevel,
     setCommitmentLevel,
-    maxHours,
-    setMaxHours,
-    applyFilters,
-    onClose,
 }: {
     selectedCategories: string[];
     toggleCategory: (cat: string) => void;
@@ -68,15 +60,18 @@ function FiltersContent({
     setWorkType: (v: WorkTypeFilter) => void;
     commitmentLevel: CommitmentFilter;
     setCommitmentLevel: (v: CommitmentFilter) => void;
-    maxHours: number;
-    setMaxHours: (v: number) => void;
-    applyFilters: () => void;
     onClose?: () => void;
 }) {
     return (
         <>
             <div className="mb-6">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Roles</p>
+                <p
+                    className="
+                        mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground
+                    "
+                >
+                    Roles
+                </p>
                 <div className="space-y-2">
                     {OPPORTUNITY_CATEGORIES.map((cat) => (
                         <label key={cat} className="flex cursor-pointer items-center gap-2">
@@ -84,7 +79,7 @@ function FiltersContent({
                                 type="checkbox"
                                 checked={selectedCategories.includes(cat)}
                                 onChange={() => toggleCategory(cat)}
-                                className="h-4 w-4 rounded accent-yellow-400"
+                                className="size-4 rounded-sm accent-yellow-400"
                             />
                             <span className="text-sm text-foreground">{cat}</span>
                         </label>
@@ -93,7 +88,13 @@ function FiltersContent({
             </div>
 
             <div className="mb-6">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Engagement</p>
+                <p
+                    className="
+                        mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground
+                    "
+                >
+                    Engagement
+                </p>
                 <div className="flex flex-wrap gap-2">
                     {(["REMOTE", "IN_PERSON", "HYBRID"] as const).map((wt) => (
                         <button
@@ -103,7 +104,10 @@ function FiltersContent({
                                 "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                                 workType === wt
                                     ? "bg-primary text-foreground"
-                                    : "bg-muted text-muted-foreground hover:bg-secondary",
+                                    : `
+                                        bg-muted text-muted-foreground
+                                        hover:bg-secondary
+                                    `,
                             )}
                         >
                             {WORK_TYPE_LABELS[wt]}
@@ -113,7 +117,13 @@ function FiltersContent({
             </div>
 
             <div className="mb-6">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Commitment</p>
+                <p
+                    className="
+                        mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground
+                    "
+                >
+                    Commitment
+                </p>
                 <div className="flex flex-wrap gap-2">
                     {(["FLEXIBLE", "PART_TIME", "FULL_TIME"] as const).map((cl) => (
                         <button
@@ -123,7 +133,10 @@ function FiltersContent({
                                 "rounded-full px-3 py-1 text-xs font-medium transition-colors",
                                 commitmentLevel === cl
                                     ? "bg-primary text-foreground"
-                                    : "bg-muted text-muted-foreground hover:bg-secondary",
+                                    : `
+                                        bg-muted text-muted-foreground
+                                        hover:bg-secondary
+                                    `,
                             )}
                         >
                             {COMMITMENT_LABELS[cl]}
@@ -131,35 +144,6 @@ function FiltersContent({
                     ))}
                 </div>
             </div>
-
-            <div className="mb-6">
-                <div className="mb-2 flex items-center justify-between">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Max Hours</p>
-                    <span className="text-xs font-semibold text-primary">{maxHours}h/wk</span>
-                </div>
-                <input
-                    type="range"
-                    min={1}
-                    max={40}
-                    value={maxHours}
-                    onChange={(e) => setMaxHours(Number(e.target.value))}
-                    className="w-full accent-yellow-400"
-                />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>1h</span>
-                    <span>40h</span>
-                </div>
-            </div>
-
-            <button
-                onClick={() => {
-                    applyFilters();
-                    onClose?.();
-                }}
-                className="w-full rounded-xl bg-primary py-2 text-sm font-semibold text-foreground hover:opacity-90"
-            >
-                Apply Filters
-            </button>
         </>
     );
 }
@@ -168,8 +152,6 @@ export default function OpportunitiesPage() {
     const {
         loading,
         session,
-        handleSignOut,
-        currentVolunteer,
         opportunities,
         error,
         oppCount,
@@ -180,14 +162,11 @@ export default function OpportunitiesPage() {
         setWorkType,
         commitmentLevel,
         setCommitmentLevel,
-        maxHours,
-        setMaxHours,
         searchQuery,
         setSearchQuery,
         sortBy,
         setSortBy,
         toggleCategory,
-        applyFilters,
         getMatchPct,
         handleApply,
         applyModalOpen,
@@ -236,9 +215,6 @@ export default function OpportunitiesPage() {
         setWorkType,
         commitmentLevel,
         setCommitmentLevel,
-        maxHours,
-        setMaxHours,
-        applyFilters,
     };
 
     if (loading || !session) {
@@ -252,55 +228,93 @@ export default function OpportunitiesPage() {
     return (
         <div className="flex h-screen flex-col overflow-hidden bg-background">
             <div className="flex flex-1 overflow-hidden">
-                <aside className="hidden w-56 flex-shrink-0 overflow-y-auto border-r bg-card p-5 lg:block">
+                <aside
+                    className="
+                        hidden w-56 shrink-0 overflow-y-auto border-r bg-card p-5
+                        lg:block
+                    "
+                >
                     <p className="mb-5 text-sm font-semibold text-foreground">= Filters</p>
                     <FiltersContent {...filterProps} />
                 </aside>
 
                 <div className="flex flex-1 overflow-hidden">
                     <div className="flex flex-1 flex-col overflow-hidden">
-                        <div className="flex-shrink-0 border-b bg-card px-5 py-4">
+                        <div className="shrink-0 border-b bg-card px-5 py-4">
                             <div className="flex items-center justify-between gap-3">
                                 <h1 className="font-bold text-foreground">
-                                    {oppCount} {oppCount === 1 ? "Opportunity" : "Opportunities"} Found
+                                    {oppCount} {oppCount === 1 ? "Opportunity" : "Opportunities"}{" "}
+                                    Found
                                 </h1>
                                 <input
                                     type="text"
                                     placeholder="Search opportunities..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    onKeyDown={(e) => e.key === "Enter" && applyFilters()}
-                                    className="hidden rounded-lg border bg-muted px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring sm:block sm:w-56"
+                                    className="
+                                        hidden rounded-lg border bg-muted px-3 py-1.5 text-sm
+                                        text-foreground
+                                        placeholder:text-muted-foreground
+                                        focus:outline-none focus:ring-2 focus:ring-ring
+                                        sm:block sm:w-56
+                                    "
                                 />
                                 <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => setFiltersOpen(true)}
-                                        className="flex items-center gap-1.5 rounded-lg border bg-muted px-3 py-1.5 text-sm font-medium text-foreground lg:hidden"
+                                        className="
+                                            flex items-center gap-1.5 rounded-lg border bg-muted
+                                            px-3 py-1.5 text-sm font-medium text-foreground
+                                            lg:hidden
+                                        "
                                     >
-                                        <SlidersHorizontal className="h-4 w-4" />
+                                        <SlidersHorizontal className="size-4" />
                                         Filters
                                     </button>
                                     <button
                                         onClick={() => setMapOpen(true)}
-                                        className="flex items-center gap-1.5 rounded-lg border bg-muted px-3 py-1.5 text-sm font-medium text-foreground lg:hidden"
+                                        className="
+                                            flex items-center gap-1.5 rounded-lg border bg-muted
+                                            px-3 py-1.5 text-sm font-medium text-foreground
+                                            lg:hidden
+                                        "
                                     >
-                                        <Map className="h-4 w-4" />
+                                        <Map className="size-4" />
                                         Map
                                     </button>
 
-                                    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                                        <ArrowUpDown className="h-3.5 w-3.5 flex-shrink-0" />
-                                        <span className="hidden sm:inline">Sort:</span>
+                                    <div
+                                        className="
+                                            flex items-center gap-1.5 text-sm text-muted-foreground
+                                        "
+                                    >
+                                        <ArrowUpDown className="size-3.5 shrink-0" />
+                                        <span
+                                            className="
+                                                hidden
+                                                sm:inline
+                                            "
+                                        >
+                                            Sort:
+                                        </span>
                                         <select
                                             value={sortBy}
-                                            onChange={(e) => setSortBy(e.target.value as SortOption)}
-                                            className="cursor-pointer rounded-md border-0 bg-transparent py-0 pr-6 text-sm font-medium text-foreground focus:outline-none focus:ring-0"
+                                            onChange={(e) =>
+                                                setSortBy(e.target.value as SortOption)
+                                            }
+                                            className="
+                                                cursor-pointer rounded-md border-0 bg-transparent
+                                                py-0 pr-6 text-sm font-medium text-foreground
+                                                focus:outline-none focus:ring-0
+                                            "
                                         >
-                                            {(Object.keys(SORT_LABELS) as SortOption[]).map((opt) => (
-                                                <option key={opt} value={opt}>
-                                                    {SORT_LABELS[opt]}
-                                                </option>
-                                            ))}
+                                            {(Object.keys(SORT_LABELS) as SortOption[]).map(
+                                                (opt) => (
+                                                    <option key={opt} value={opt}>
+                                                        {SORT_LABELS[opt]}
+                                                    </option>
+                                                ),
+                                            )}
                                         </select>
                                     </div>
                                 </div>
@@ -308,14 +322,24 @@ export default function OpportunitiesPage() {
                         </div>
 
                         {error && (
-                            <div className="mx-5 mt-4 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-2 text-sm text-destructive">
+                            <div
+                                className="
+                                    mx-5 mt-4 rounded-xl border border-destructive/20
+                                    bg-destructive/10 px-4 py-2 text-sm text-destructive
+                                "
+                            >
                                 {error}
                             </div>
                         )}
 
                         <div className="flex-1 overflow-y-auto p-5 space-y-4">
                             {opportunities.length === 0 ? (
-                                <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
+                                <div
+                                    className="
+                                        flex h-40 items-center justify-center text-sm
+                                        text-muted-foreground
+                                    "
+                                >
                                     No opportunities found. Try adjusting your filters.
                                 </div>
                             ) : (
@@ -326,7 +350,9 @@ export default function OpportunitiesPage() {
                                         matchPct={getMatchPct(opp)}
                                         isSelected={selectedOpp?.id === opp.id}
                                         hasApplied={appliedOppIds.has(opp.id)}
-                                        onClick={() => setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)}
+                                        onClick={() =>
+                                            setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)
+                                        }
                                     />
                                 ))
                             )}
@@ -335,15 +361,31 @@ export default function OpportunitiesPage() {
 
                     <div
                         onMouseDown={onMouseDown}
-                        className="hidden lg:flex w-1.5 flex-shrink-0 cursor-col-resize items-center justify-center bg-border hover:bg-primary/40 transition-colors group"
+                        className="
+                            hidden
+                            lg:flex
+                            w-1.5 shrink-0 cursor-col-resize items-center justify-center bg-border
+                            hover:bg-primary/40
+                            transition-colors group
+                        "
                         title="Drag to resize map"
                     >
-                        <div className="h-8 w-0.5 rounded-full bg-muted-foreground/30 group-hover:bg-primary/60 transition-colors" />
+                        <div
+                            className="
+                                h-8 w-0.5 rounded-full bg-muted-foreground/30
+                                group-hover:bg-primary/60
+                                transition-colors
+                            "
+                        />
                     </div>
 
                     <div
                         ref={mapPanelRef}
-                        className="hidden lg:block flex-shrink-0 overflow-hidden border-l isolate"
+                        className="
+                            hidden
+                            lg:block
+                            shrink-0 overflow-hidden border-l isolate
+                        "
                         style={{ width: MAP_DEFAULT_WIDTH }}
                     >
                         <OpportunitiesMap opportunities={opportunities} />
@@ -352,7 +394,12 @@ export default function OpportunitiesPage() {
             </div>
 
             <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
-                <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-sm">
+                <DialogContent
+                    className="
+                        max-h-[85vh] overflow-y-auto
+                        sm:max-w-sm
+                    "
+                >
                     <DialogHeader>
                         <DialogTitle>Filters</DialogTitle>
                     </DialogHeader>
@@ -361,8 +408,13 @@ export default function OpportunitiesPage() {
             </Dialog>
 
             <Dialog open={mapOpen} onOpenChange={setMapOpen}>
-                <DialogContent className="flex flex-col h-[80vh] max-w-full p-0 sm:max-w-2xl">
-                    <DialogHeader className="flex-shrink-0 px-4 pt-4 pb-2">
+                <DialogContent
+                    className="
+                        flex flex-col h-[80vh] max-w-full p-0
+                        sm:max-w-2xl
+                    "
+                >
+                    <DialogHeader className="shrink-0 px-4 pt-4 pb-2">
                         <DialogTitle>Map</DialogTitle>
                     </DialogHeader>
                     <div className="flex-1 min-h-0 isolate">

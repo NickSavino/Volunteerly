@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import type { Opportunity } from "@volunteerly/shared";
+import { useEffect, useRef } from "react";
 
 async function geocodeAddress(address: string): Promise<[number, number] | null> {
     try {
@@ -42,8 +42,12 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
             if (!mapRef.current || mapInstance.current) return;
 
             const L = LeafletModule.default;
+            const defaultIconPrototype = L.Icon.Default
+                .prototype as typeof L.Icon.Default.prototype & {
+                _getIconUrl?: string;
+            };
 
-            delete (L.Icon.Default.prototype as any)._getIconUrl;
+            delete defaultIconPrototype._getIconUrl;
             L.Icon.Default.mergeOptions({
                 iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
                 iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
@@ -123,7 +127,7 @@ export default function OpportunitiesMap({ opportunities }: { opportunities: Opp
                 mapInstance.current = null;
             }
         };
-    }, []);
+    }, [opportunities]);
 
-    return <div ref={mapRef} className="h-full w-full" />;
+    return <div ref={mapRef} className="size-full" />;
 }

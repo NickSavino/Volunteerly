@@ -34,7 +34,9 @@ export function ChatParticipantCard({
                     <h3 className="truncate text-2xl font-bold text-foreground">{displayName}</h3>
                     {subtitle ? <p className="text-sm text-muted-foreground">{subtitle}</p> : null}
                     {metaLine ? <p className="text-sm text-muted-foreground">{metaLine}</p> : null}
-                    {location ? <p className="mt-1 text-xl text-muted-foreground">{location}</p> : null}
+                    {location ? (
+                        <p className="mt-1 text-xl text-muted-foreground">{location}</p>
+                    ) : null}
                 </div>
             </div>
 

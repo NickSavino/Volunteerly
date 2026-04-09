@@ -1,19 +1,18 @@
 "use client";
 
-import { useProfileViewModel } from "./profileVm";
-import { UserService } from "@/services/UserService";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toggle } from "@/components/ui/toggle";
-import { Settings, Pencil } from "lucide-react";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
-import { LoadingScreen } from "@/components/common/loading-screen";
-import { Rocket, Trophy, ShieldCheck, Handshake, Star, Award, type LucideIcon } from "lucide-react";
+import { UserService } from "@/services/UserService";
+import { Award, Handshake, Pencil, Rocket, Settings, Star, type LucideIcon } from "lucide-react";
 import { useState } from "react";
-import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
+import { useProfileViewModel } from "./profileVm";
 
 export default function ProfilePage() {
     const {
@@ -38,7 +37,6 @@ export default function ProfilePage() {
         handleAvatarChange,
         fileInputRef,
         avatarKey,
-        signOut,
         DAYS,
         loading,
         session,
@@ -75,24 +73,51 @@ export default function ProfilePage() {
     return (
         <div className="min-h-screen bg-gray-50">
             <title>Volunteer - Profile</title>
-            <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row gap-6 items-stretch">
+            <main
+                className="
+                    mx-auto max-w-5xl px-4 py-10
+                    sm:px-6
+                    lg:px-8
+                "
+            >
+                <div
+                    className="
+                        flex flex-col items-stretch gap-6
+                        lg:flex-row
+                    "
+                >
                     {/* Left sidebar */}
-                    <div className="flex flex-col gap-4 w-full lg:w-72 flex-shrink-0">
-                        <div className="rounded-xl border bg-white p-6 flex flex-col items-center gap-3 shadow-sm">
+                    <div
+                        className="
+                            flex w-full shrink-0 flex-col gap-4
+                            lg:w-72
+                        "
+                    >
+                        <div
+                            className="
+                                flex flex-col items-center gap-3 rounded-xl border bg-white p-6
+                                shadow-sm
+                            "
+                        >
                             <div className="relative">
-                                <Avatar className="w-24 h-24">
-                                    <AvatarImage key={avatarKey} src={UserService.getAvatarURL(currentVolunteer.id)} />
+                                <Avatar className="size-24">
+                                    <AvatarImage
+                                        key={avatarKey}
+                                        src={UserService.getAvatarURL(currentVolunteer.id)}
+                                    />
                                     <AvatarFallback className="text-2xl">
                                         {currentVolunteer.firstName[0]}
                                         {currentVolunteer.lastName[0]}
                                     </AvatarFallback>
                                 </Avatar>
                                 <Button
-                                    className="absolute bottom-0 right-0 bg-white rounded-full p-1 text-gray-700 text-xs cursor-pointer h-7 w-7"
+                                    className="
+                                        absolute right-0 bottom-0 size-7 cursor-pointer rounded-full
+                                        bg-white p-1 text-xs text-gray-700
+                                    "
                                     onClick={() => fileInputRef.current?.click()}
                                 >
-                                    <Pencil className="h-3 w-3" />
+                                    <Pencil className="size-3" />
                                 </Button>
                                 <input
                                     type="file"
@@ -103,27 +128,41 @@ export default function ProfilePage() {
                                 />
                             </div>
                             <div className="text-center">
-                                <p className="font-bold text-lg text-gray-900">{fullName}</p>
+                                <p className="text-lg font-bold text-gray-900">{fullName}</p>
                                 <p className="text-sm text-gray-400">Member since {memberSince}</p>
                             </div>
                         </div>
 
-                        <div className="rounded-xl border bg-white p-6 shadow-sm flex flex-col items-center gap-2">
-                            <h2 className="font-semibold text-gray-800 text-lg">Your Rating</h2>
+                        <div
+                            className="
+                                flex flex-col items-center gap-2 rounded-xl border bg-white p-6
+                                shadow-sm
+                            "
+                        >
+                            <h2 className="text-lg font-semibold text-gray-800">Your Rating</h2>
                             {currentVolunteer.reviewCount > 0 ? (
                                 <>
-                                    <div className="flex items-center gap-0.5 mt-1">
+                                    <div className="mt-1 flex items-center gap-0.5">
                                         {[1, 2, 3, 4, 5].map((star) => {
                                             const fill = Math.min(
                                                 1,
-                                                Math.max(0, currentVolunteer.averageRating - (star - 1)),
+                                                Math.max(
+                                                    0,
+                                                    currentVolunteer.averageRating - (star - 1),
+                                                ),
                                             );
                                             const pct = Math.round(fill * 100);
                                             return (
-                                                <span key={star} className="relative text-2xl leading-none">
+                                                <span
+                                                    key={star}
+                                                    className="relative text-2xl leading-none"
+                                                >
                                                     <span className="text-gray-300">★</span>
                                                     <span
-                                                        className="absolute inset-0 overflow-hidden text-yellow-400"
+                                                        className="
+                                                            absolute inset-0 overflow-hidden
+                                                            text-yellow-400
+                                                        "
                                                         style={{ width: `${pct}%` }}
                                                     >
                                                         ★
@@ -141,13 +180,18 @@ export default function ProfilePage() {
                                     </p>
                                 </>
                             ) : (
-                                <p className="text-sm text-gray-400 text-center">No reviews yet.</p>
+                                <p className="text-center text-sm text-gray-400">No reviews yet.</p>
                             )}
                         </div>
 
-                        <div className="rounded-xl border bg-white p-6 shadow-sm flex flex-col items-center gap-3">
-                            <h2 className="font-semibold text-gray-800 text-lg mb-3">Milestones</h2>
-                            <div className="flex flex-wrap gap-2 justify-center">
+                        <div
+                            className="
+                                flex flex-col items-center gap-3 rounded-xl border bg-white p-6
+                                shadow-sm
+                            "
+                        >
+                            <h2 className="mb-3 text-lg font-semibold text-gray-800">Milestones</h2>
+                            <div className="flex flex-wrap justify-center gap-2">
                                 {Object.entries(awards).length > 0 ? (
                                     Object.entries(awards).map(([title, description]) => {
                                         const Icon = awardIcons[title] || Award;
@@ -155,7 +199,7 @@ export default function ProfilePage() {
                                             <HoverCard key={title}>
                                                 <HoverCardTrigger asChild>
                                                     <Button className="cursor-pointer">
-                                                        <Icon className="w-5 h-5" />
+                                                        <Icon className="size-5" />
                                                     </Button>
                                                 </HoverCardTrigger>
                                                 <HoverCardContent className="flex w-64 flex-col gap-0.5 pl-3">
@@ -166,18 +210,23 @@ export default function ProfilePage() {
                                         );
                                     })
                                 ) : (
-                                    <p className="text-gray-500 text-sm">No milestones reached yet.</p>
+                                    <p className="text-sm text-gray-500">
+                                        No milestones reached yet.
+                                    </p>
                                 )}
                             </div>
                         </div>
 
                         <div className="rounded-xl border bg-white p-6 shadow-sm">
-                            <div className="flex items-center gap-2 mb-3">
-                                <Settings className="h-5 w-5 text-gray-600" />
+                            <div className="mb-3 flex items-center gap-2">
+                                <Settings className="size-5 text-gray-600" />
                                 <p className="font-semibold text-gray-800">Technical Issues?</p>
                             </div>
                             <Button
-                                className="w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold"
+                                className="
+                                    w-full bg-yellow-400 font-semibold text-black
+                                    hover:bg-yellow-500
+                                "
                                 onClick={() => setIsTicketModalOpen(true)}
                             >
                                 Submit a Ticket
@@ -185,36 +234,61 @@ export default function ProfilePage() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-4 w-full min-h-full">
+                    <div className="flex min-h-full w-full flex-col gap-4">
                         <div className="rounded-xl border bg-white p-6 shadow-sm">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
-                                    <p className="text-sm text-gray-500 mt-1">
-                                        A complete profile increases your chances of being selected by organizations.
+                                    <h1 className="text-2xl font-bold text-gray-900">
+                                        Edit Profile
+                                    </h1>
+                                    <p className="mt-1 text-sm text-gray-500">
+                                        A complete profile increases your chances of being selected
+                                        by organizations.
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-2 flex-shrink-0 ml-4">
+                                <div className="ml-4 flex shrink-0 items-center gap-2">
                                     {editing && (
-                                        <Button variant="ghost" onClick={handleCancel} disabled={saving}>
+                                        <Button
+                                            variant="ghost"
+                                            onClick={handleCancel}
+                                            disabled={saving}
+                                        >
                                             Cancel
                                         </Button>
                                     )}
                                     <Button
-                                        className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold rounded-xl px-6"
+                                        className="
+                                            rounded-xl bg-yellow-400 px-6 font-semibold text-black
+                                            hover:bg-yellow-500
+                                        "
                                         onClick={editing ? handleSave : handleEdit}
                                         disabled={saving}
                                     >
-                                        {saving ? "Saving..." : editing ? "Save Edits" : "Edit Profile"}
+                                        {saving
+                                            ? "Saving..."
+                                            : editing
+                                              ? "Save Edits"
+                                              : "Edit Profile"}
                                     </Button>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="rounded-xl border bg-white p-6 shadow-sm flex-1 flex flex-col">
-                            <h2 className="font-semibold text-gray-800 text-lg mb-5">General Information</h2>
-                            <div className="flex flex-col gap-4 flex-1">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div
+                            className="
+                                flex flex-1 flex-col rounded-xl border bg-white p-6 shadow-sm
+                            "
+                        >
+                            <h2 className="mb-5 text-lg font-semibold text-gray-800">
+                                General Information
+                            </h2>
+                            <div className="flex flex-1 flex-col gap-4">
+                                <div
+                                    className="
+                                        grid grid-cols-1 gap-4
+                                        md:grid-cols-2
+                                    "
+                                >
                                     <div className="flex flex-col gap-1">
                                         <Label>First Name</Label>
                                         <Input
@@ -222,10 +296,15 @@ export default function ProfilePage() {
                                             disabled={!editing}
                                             onChange={(e) => setFirstName(e.target.value)}
                                             placeholder="First name"
-                                            className={`${!editing ? "text-gray-700" : ""} ${errors.firstName ? "border-destructive" : ""}`}
+                                            className={`
+                                                ${!editing ? "text-gray-700" : ""}
+                                                ${errors.firstName ? "border-destructive" : ""}
+                                            `}
                                         />
                                         {errors.firstName && (
-                                            <p className="text-destructive text-xs mt-1">{errors.firstName}</p>
+                                            <p className="mt-1 text-xs text-destructive">
+                                                {errors.firstName}
+                                            </p>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1">
@@ -235,10 +314,15 @@ export default function ProfilePage() {
                                             disabled={!editing}
                                             onChange={(e) => setLastName(e.target.value)}
                                             placeholder="Last name"
-                                            className={`${!editing ? "text-gray-700" : ""} ${errors.lastName ? "border-destructive" : ""}`}
+                                            className={`
+                                                ${!editing ? "text-gray-700" : ""}
+                                                ${errors.lastName ? "border-destructive" : ""}
+                                            `}
                                         />
                                         {errors.lastName && (
-                                            <p className="text-destructive text-xs mt-1">{errors.lastName}</p>
+                                            <p className="mt-1 text-xs text-destructive">
+                                                {errors.lastName}
+                                            </p>
                                         )}
                                     </div>
                                 </div>
@@ -250,23 +334,36 @@ export default function ProfilePage() {
                                         disabled={!editing}
                                         onChange={(e) => setLocation(e.target.value)}
                                         placeholder="Calgary, AB"
-                                        className={`${!editing ? "text-gray-700" : ""} ${errors.location ? "border-destructive" : ""}`}
+                                        className={`
+                                            ${!editing ? "text-gray-700" : ""}
+                                            ${errors.location ? "border-destructive" : ""}
+                                        `}
                                     />
                                     {errors.location && (
-                                        <p className="text-destructive text-xs mt-1">{errors.location}</p>
+                                        <p className="mt-1 text-xs text-destructive">
+                                            {errors.location}
+                                        </p>
                                     )}
                                 </div>
 
-                                <div className="flex flex-col gap-1 flex-1">
+                                <div className="flex flex-1 flex-col gap-1">
                                     <Label>Bio / About Me</Label>
                                     <Textarea
                                         value={bio}
                                         disabled={!editing}
                                         onChange={(e) => setBio(e.target.value)}
                                         placeholder="Describe your passion for volunteering and what you hope to achieve..."
-                                        className={`flex-1 resize-none ${!editing ? "text-gray-700" : ""} ${errors.bio ? "border-destructive" : ""}`}
+                                        className={`
+                                            flex-1 resize-none
+                                            ${!editing ? "text-gray-700" : ""}
+                                            ${errors.bio ? "border-destructive" : ""}
+                                        `}
                                     />
-                                    {errors.bio && <p className="text-destructive text-xs mt-1">{errors.bio}</p>}
+                                    {errors.bio && (
+                                        <p className="mt-1 text-xs text-destructive">
+                                            {errors.bio}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="flex flex-col gap-2">
@@ -278,20 +375,32 @@ export default function ProfilePage() {
                                                 pressed={availability.includes(day)}
                                                 onPressedChange={() => editing && toggleDay(day)}
                                                 disabled={!editing}
-                                                className={`w-full px-1 py-2 rounded-lg border text-xs font-medium transition-colors text-center
+                                                className={`
+                                                    w-full rounded-lg border px-1 py-2 text-center
+                                                    text-xs font-medium transition-colors
                                                     ${
                                                         availability.includes(day)
-                                                            ? "bg-yellow-400 border-yellow-400 text-black hover:bg-yellow-500"
-                                                            : "bg-white border-gray-300 text-gray-600 hover:bg-gray-50"
+                                                            ? `
+                                                                border-yellow-400 bg-yellow-400
+                                                                text-black
+                                                                hover:bg-yellow-500
+                                                            `
+                                                            : `
+                                                                border-gray-300 bg-white
+                                                                text-gray-600
+                                                                hover:bg-gray-50
+                                                            `
                                                     }
-                                                    ${!editing ? "opacity-70 cursor-default" : "cursor-pointer"}`}
+                                                    ${!editing ? "cursor-default opacity-70" : "cursor-pointer"}`}
                                             >
                                                 {day}
                                             </Toggle>
                                         ))}
                                     </div>
                                     {errors.availability && (
-                                        <p className="text-destructive text-xs mt-1">{errors.availability}</p>
+                                        <p className="mt-1 text-xs text-destructive">
+                                            {errors.availability}
+                                        </p>
                                     )}
                                 </div>
                             </div>
@@ -300,7 +409,10 @@ export default function ProfilePage() {
                 </div>
             </main>
 
-            <SubmitTicketModal open={isTicketModalOpen} onClose={() => setIsTicketModalOpen(false)} />
+            <SubmitTicketModal
+                open={isTicketModalOpen}
+                onClose={() => setIsTicketModalOpen(false)}
+            />
         </div>
     );
 }

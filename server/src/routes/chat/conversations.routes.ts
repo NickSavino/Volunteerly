@@ -53,7 +53,11 @@ conversationsRouter.post("/:conversationId/messages", async (req, res, next) => 
             });
         }
 
-        const message = await createChatMessage(userId, req.params.conversationId, parsed.data.content);
+        const message = await createChatMessage(
+            userId,
+            req.params.conversationId,
+            parsed.data.content,
+        );
 
         if (!message) {
             return res.status(404).json({

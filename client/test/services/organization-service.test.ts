@@ -27,6 +27,8 @@ describe("OrganizationService", () => {
         const response: unknown = [{ id: "not-a-uuid" }];
         apiMockFn.mockResolvedValueOnce(response);
 
-        await expect(OrganizationService.getAllOrganizations()).rejects.toThrow("Error fetching organizations.");
+        await expect(OrganizationService.getAllOrganizations()).rejects.toThrow(
+            "Error fetching organizations.",
+        );
     });
 });

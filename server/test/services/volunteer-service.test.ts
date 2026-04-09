@@ -39,7 +39,9 @@ describe("volunteer-service", () => {
     it("throws ALREADY_REVIEWED when duplicate review exists", async () => {
         mockPrisma.review.findUnique.mockResolvedValueOnce({ id: "existing-review" });
 
-        await expect(postReview("issuer", "reviewee", "opp", { rating: 5 })).rejects.toThrow("ALREADY_REVIEWED");
+        await expect(postReview("issuer", "reviewee", "opp", { rating: 5 })).rejects.toThrow(
+            "ALREADY_REVIEWED",
+        );
         expect(mockPrisma.review.create).not.toHaveBeenCalled();
     });
 

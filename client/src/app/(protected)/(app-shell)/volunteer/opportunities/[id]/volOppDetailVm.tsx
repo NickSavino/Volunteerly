@@ -147,7 +147,9 @@ export function useVolOppDetailViewModel(oppId: string) {
             setSkillModalOpen(false);
             const msg = err instanceof Error ? err.message : String(err);
             if (msg.includes("409") || msg.includes("ALREADY_SUBMITTED")) {
-                toast.error("Already submitted", { description: "You've already logged skills for this opportunity." });
+                toast.error("Already submitted", {
+                    description: "You've already logged skills for this opportunity.",
+                });
             } else {
                 toast.error("Failed to log skills. Please try again.");
             }
@@ -157,7 +159,9 @@ export function useVolOppDetailViewModel(oppId: string) {
     }
 
     const totalHours = opp?.progressUpdates?.reduce((sum, u) => sum + u.hoursContributed, 0) ?? 0;
-    const economicValue = currentVolunteer ? Math.round(totalHours * currentVolunteer.hourlyValue) : 0;
+    const economicValue = currentVolunteer
+        ? Math.round(totalHours * currentVolunteer.hourlyValue)
+        : 0;
 
     return {
         opp,

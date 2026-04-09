@@ -1,11 +1,11 @@
 {
-    "js/ts.preferences.importModuleSpecifier": "non-relative",
-    "editor.formatOnSave": true,
-    "eslint.useFlatConfig": true,
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[javascriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[typescript]": {
@@ -14,10 +14,14 @@
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
-    }
+        "source.fixAll.eslint": "always",
+        "source.organizeImports": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "eslint.useFlatConfig": true,
+    "eslint.codeActionsOnSave.rules": ["@typescript-eslint/*"],
+    "js/ts.preferences.importModuleSpecifier": "non-relative",
+    "tailwindCSS.lint.suggestCanonicalClasses": "ignore",
+    "files.eol": "\n"
 }

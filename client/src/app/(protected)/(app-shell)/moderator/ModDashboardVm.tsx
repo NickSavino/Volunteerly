@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { UserService } from "@/services/UserService";
-import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
 import { useAuth } from "@/providers/auth-provider";
-import type { CurrentModerator, ModeratorOrganizationList } from "@volunteerly/shared";
+import type { ModeratorOrganizationList } from "@volunteerly/shared";
 import { useAppSession } from "@/providers/app-session-provider";
 
 export function useModDashboardViewModel() {

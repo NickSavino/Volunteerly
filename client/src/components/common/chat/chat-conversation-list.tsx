@@ -20,7 +20,9 @@ export function ChatConversationList({
     return (
         <div className="flex h-full flex-col border-r border-border bg-background">
             <div className="border-b border-border px-4 py-3">
-                <p className="text-sm font-bold uppercase tracking-[0.18em] text-muted-foreground">{sectionTitle}</p>
+                <p className="text-sm font-bold tracking-[0.18em] text-muted-foreground uppercase">
+                    {sectionTitle}
+                </p>
             </div>
 
             <ScrollArea className="h-full">

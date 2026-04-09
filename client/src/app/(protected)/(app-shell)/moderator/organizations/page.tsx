@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, X, CheckSquare, Square, BuildingIcon } from "lucide-react";
+import { Building2, CheckSquare, Square, BuildingIcon } from "lucide-react";
 import { SortKey, useOrgListViewModel, type TabKey } from "./orgListVm";
 import { AppModal } from "@/components/common/app-modal";
 import { ConfirmActionDialog } from "@/components/common/confirm-action-dialog";
@@ -26,11 +26,22 @@ export default function ModeratorOrganizationsPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <main
+                className="
+                    mx-auto max-w-7xl px-4 py-8
+                    sm:px-6
+                    lg:px-8
+                "
+            >
                 <ModeratorPageHeader title={page.title} subtitle={page.subtitle} />
 
                 {page.error && (
-                    <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-600">
+                    <p
+                        className="
+                            mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm
+                            text-red-600
+                        "
+                    >
                         {page.error}
                     </p>
                 )}
@@ -62,37 +73,62 @@ export default function ModeratorOrganizationsPage() {
                     onChange={filters.handleTabChange}
                 />
 
-                <ModeratorListContainer isEmpty={data.isEmpty} emptyMessage="No Organizations Found." className="p-6">
+                <ModeratorListContainer
+                    isEmpty={data.isEmpty}
+                    emptyMessage="No Organizations Found."
+                    className="p-6"
+                >
                     <div className="space-y-5">
                         {data.rows.map((org) => (
                             <div
                                 key={org.id}
-                                className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+                                className="
+                                    overflow-hidden rounded-2xl border border-border bg-card
+                                    shadow-sm
+                                "
                             >
                                 <div className="flex items-center justify-between px-6 py-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                                            <Building2 className="h-5 w-5 text-muted-foreground" />
+                                        <div
+                                            className="
+                                                flex size-10 items-center justify-center
+                                                rounded-full bg-secondary
+                                            "
+                                        >
+                                            <Building2 className="size-5 text-muted-foreground" />
                                         </div>
 
                                         <div>
-                                            <p className="font-medium text-foreground">{org.orgName}</p>
-                                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                            <p className="font-medium text-foreground">
+                                                {org.orgName}
+                                            </p>
+                                            <div
+                                                className="
+                                                    flex items-center gap-3 text-xs
+                                                    text-muted-foreground
+                                                "
+                                            >
                                                 <span>
                                                     Submitted{" "}
-                                                    {new Date(org.createdAt).toLocaleDateString("en-US", {
-                                                        month: "short",
-                                                        day: "numeric",
-                                                        year: "numeric",
-                                                    })}
+                                                    {new Date(org.createdAt).toLocaleDateString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                        },
+                                                    )}
                                                 </span>
                                                 <span>
                                                     Last Updated{" "}
-                                                    {new Date(org.updatedAt).toLocaleDateString("en-US", {
-                                                        month: "short",
-                                                        day: "numeric",
-                                                        year: "numeric",
-                                                    })}
+                                                    {new Date(org.updatedAt).toLocaleDateString(
+                                                        "en-US",
+                                                        {
+                                                            month: "short",
+                                                            day: "numeric",
+                                                            year: "numeric",
+                                                        },
+                                                    )}
                                                 </span>
                                             </div>
                                         </div>
@@ -101,7 +137,11 @@ export default function ModeratorOrganizationsPage() {
                                     <div className="flex items-center gap-3">
                                         {org.status === "APPLIED" && (
                                             <button
-                                                className="rounded-md border border-border bg-card px-4 py-1.5 text-sm font-medium text-foreground hover:bg-secondary"
+                                                className="
+                                                    rounded-md border border-border bg-card px-4
+                                                    py-1.5 text-sm font-medium text-foreground
+                                                    hover:bg-secondary
+                                                "
                                                 onClick={() => review.openReviewModal(org)}
                                             >
                                                 Review Application
@@ -109,19 +149,34 @@ export default function ModeratorOrganizationsPage() {
                                         )}
 
                                         {org.status === "VERIFIED" && (
-                                            <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                                            <span
+                                                className="
+                                                    rounded-full bg-green-100 px-3 py-1 text-xs
+                                                    font-medium text-green-700
+                                                "
+                                            >
                                                 Approved
                                             </span>
                                         )}
 
                                         {org.status === "REJECTED" && (
-                                            <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+                                            <span
+                                                className="
+                                                    rounded-full bg-red-100 px-3 py-1 text-xs
+                                                    font-medium text-red-700
+                                                "
+                                            >
                                                 Rejected
                                             </span>
                                         )}
 
                                         {org.status === "CREATED" && (
-                                            <span className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
+                                            <span
+                                                className="
+                                                    rounded-full bg-secondary px-3 py-1 text-xs
+                                                    font-medium text-muted-foreground
+                                                "
+                                            >
                                                 Not Applied
                                             </span>
                                         )}
@@ -151,12 +206,16 @@ export default function ModeratorOrganizationsPage() {
                 open={!!review.selectedOrg}
                 onClose={review.closeReviewModal}
                 title="Review Organization Application"
-                icon={<BuildingIcon className="h-5 w-5 text-primary" />}
+                icon={<BuildingIcon className="size-5 text-primary" />}
                 maxWidthClassName="sm:max-w-lg"
                 footer={
                     <>
                         <button
-                            className="rounded-md border bg-card px-5 py-2 text-sm font-medium text-foreground hover:bg-secondary"
+                            className="
+                                rounded-md border bg-card px-5 py-2 text-sm font-medium
+                                text-foreground
+                                hover:bg-secondary
+                            "
                             onClick={() => review.setShowRejectModal(true)}
                         >
                             Reject
@@ -164,11 +223,18 @@ export default function ModeratorOrganizationsPage() {
 
                         <button
                             disabled={!review.allChecked}
-                            className={`rounded-md px-6 py-2 text-sm font-medium text-foreground transition-colors ${
-                                review.allChecked
-                                    ? "bg-primary hover:opacity-90"
-                                    : "cursor-not-allowed bg-secondary text-muted-foreground"
-                            }`}
+                            className={`
+                                rounded-md px-6 py-2 text-sm font-medium text-foreground
+                                transition-colors
+                                ${
+                                    review.allChecked
+                                        ? `
+                                            bg-primary
+                                            hover:opacity-90
+                                        `
+                                        : "cursor-not-allowed bg-secondary text-muted-foreground"
+                                }
+                            `}
                             onClick={review.requestApprove}
                         >
                             Approve Organization
@@ -179,29 +245,43 @@ export default function ModeratorOrganizationsPage() {
                 {review.selectedOrg ? (
                     <>
                         <div className="mb-6">
-                            <h3 className="text-2xl font-bold text-foreground">{review.selectedOrg.orgName}</h3>
+                            <h3 className="text-2xl font-bold text-foreground">
+                                {review.selectedOrg.orgName}
+                            </h3>
                             <p className="text-sm text-muted-foreground">
                                 Submitted{" "}
-                                {new Date(review.selectedOrg.createdAt).toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                })}
+                                {new Date(review.selectedOrg.createdAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    },
+                                )}
                                 {" . "}Last Updated{" "}
-                                {new Date(review.selectedOrg.updatedAt).toLocaleDateString("en-US", {
-                                    month: "short",
-                                    day: "numeric",
-                                    year: "numeric",
-                                })}
+                                {new Date(review.selectedOrg.updatedAt).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    },
+                                )}
                             </p>
                         </div>
 
                         <div className="mb-6 rounded-xl border p-5">
-                            <h4 className="mb-4 font-semibold text-foreground">Organization Details</h4>
+                            <h4 className="mb-4 font-semibold text-foreground">
+                                Organization Details
+                            </h4>
                             <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
                                 <div>
-                                    <span className="font-medium text-foreground">Organization Name:</span>
-                                    <span className="text-muted-foreground">{review.selectedOrg.orgName}</span>
+                                    <span className="font-medium text-foreground">
+                                        Organization Name:
+                                    </span>
+                                    <span className="text-muted-foreground">
+                                        {review.selectedOrg.orgName}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -210,17 +290,21 @@ export default function ModeratorOrganizationsPage() {
                                         className="text-primary"
                                     >
                                         {review.checks.charityVerified ? (
-                                            <CheckSquare className="h-4 w-4" />
+                                            <CheckSquare className="size-4" />
                                         ) : (
-                                            <Square className="h-4 w-4" />
+                                            <Square className="size-4" />
                                         )}
                                     </button>
-                                    <span className="text-muted-foreground">Charity number verified</span>
+                                    <span className="text-muted-foreground">
+                                        Charity number verified
+                                    </span>
                                 </div>
 
                                 <div>
                                     <span className="font-medium text-foreground">Website: </span>
-                                    <span className="text-muted-foreground">{review.selectedOrg.website}</span>
+                                    <span className="text-muted-foreground">
+                                        {review.selectedOrg.website}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -229,17 +313,21 @@ export default function ModeratorOrganizationsPage() {
                                         className="text-primary"
                                     >
                                         {review.checks.websiteMatches ? (
-                                            <CheckSquare className="h-4 w-4" />
+                                            <CheckSquare className="size-4" />
                                         ) : (
-                                            <Square className="h-4 w-4" />
+                                            <Square className="size-4" />
                                         )}
                                     </button>
-                                    <span className="text-muted-foreground">Website matches name</span>
+                                    <span className="text-muted-foreground">
+                                        Website matches name
+                                    </span>
                                 </div>
 
                                 <div>
                                     <span className="font-medium text-foreground">Field: </span>
-                                    <span className="text-muted-foreground">{review.selectedOrg.causeCategory}</span>
+                                    <span className="text-muted-foreground">
+                                        {review.selectedOrg.causeCategory}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -248,17 +336,21 @@ export default function ModeratorOrganizationsPage() {
                                         className="text-primary"
                                     >
                                         {review.checks.documentsValid ? (
-                                            <CheckSquare className="h-4 w-4" />
+                                            <CheckSquare className="size-4" />
                                         ) : (
-                                            <Square className="h-4 w-4" />
+                                            <Square className="size-4" />
                                         )}
                                     </button>
-                                    <span className="text-muted-foreground">Supporting documents valid</span>
+                                    <span className="text-muted-foreground">
+                                        Supporting documents valid
+                                    </span>
                                 </div>
 
                                 <div>
                                     <span className="font-medium text-foreground">Address: </span>
-                                    <span className="text-muted-foreground">{review.selectedOrg.hqAdr}</span>
+                                    <span className="text-muted-foreground">
+                                        {review.selectedOrg.hqAdr}
+                                    </span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -267,9 +359,9 @@ export default function ModeratorOrganizationsPage() {
                                         className="text-primary"
                                     >
                                         {review.checks.addressConfirmed ? (
-                                            <CheckSquare className="h-4 w-4" />
+                                            <CheckSquare className="size-4" />
                                         ) : (
-                                            <Square className="h-4 w-4" />
+                                            <Square className="size-4" />
                                         )}
                                     </button>
                                     <span className="text-muted-foreground">Address confirmed</span>
@@ -278,25 +370,37 @@ export default function ModeratorOrganizationsPage() {
                         </div>
 
                         <div className="rounded-xl border p-5">
-                            <h4 className="mb-4 font-semibold text-foreground">Verification Documents</h4>
+                            <h4 className="mb-4 font-semibold text-foreground">
+                                Verification Documents
+                            </h4>
 
                             {review.selectedOrg.docId ? (
                                 <div className="flex gap-4">
-                                    <div className="flex flex-col items-center gap-2 rounded-xl border p-4">
-                                        <Building2 className="h-8 w-8 text-primary" />
+                                    <div
+                                        className="
+                                            flex flex-col items-center gap-2 rounded-xl border p-4
+                                        "
+                                    >
+                                        <Building2 className="size-8 text-primary" />
                                         <p className="text-xs text-muted-foreground">Document</p>
                                         <a
                                             href={review.selectedOrg.docId}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="rounded-md bg-primary px-3 py-1 text-xs font-medium text-foreground hover:opacity-90"
+                                            className="
+                                                rounded-md bg-primary px-3 py-1 text-xs font-medium
+                                                text-foreground
+                                                hover:opacity-90
+                                            "
                                         >
                                             View
                                         </a>
                                     </div>
                                 </div>
                             ) : (
-                                <p className="text-sm text-muted-foreground">No documents uploaded.</p>
+                                <p className="text-sm text-muted-foreground">
+                                    No documents uploaded.
+                                </p>
                             )}
                         </div>
                     </>
@@ -307,12 +411,16 @@ export default function ModeratorOrganizationsPage() {
                 open={!!review.selectedOrg && review.showRejectModal}
                 onClose={() => review.setShowRejectModal(false)}
                 title="Reject Organization"
-                icon={<BuildingIcon className="h-5 w-5 text-primary" />}
+                icon={<BuildingIcon className="size-5 text-primary" />}
                 maxWidthClassName="sm:max-w-lg"
                 footer={
                     <>
                         <button
-                            className="rounded-md border bg-card px-5 py-2 text-sm font-medium text-foreground hover:bg-secondary"
+                            className="
+                                rounded-md border bg-card px-5 py-2 text-sm font-medium
+                                text-foreground
+                                hover:bg-secondary
+                            "
                             onClick={() => review.setShowRejectModal(false)}
                         >
                             Cancel
@@ -320,11 +428,18 @@ export default function ModeratorOrganizationsPage() {
 
                         <button
                             disabled={!review.rejectionReason.trim()}
-                            className={`rounded-md px-6 py-2 text-sm font-medium text-foreground transition-colors ${
-                                review.rejectionReason.trim()
-                                    ? "bg-primary hover:opacity-90"
-                                    : "cursor-not-allowed bg-secondary text-muted-foreground"
-                            }`}
+                            className={`
+                                rounded-md px-6 py-2 text-sm font-medium text-foreground
+                                transition-colors
+                                ${
+                                    review.rejectionReason.trim()
+                                        ? `
+                                            bg-primary
+                                            hover:opacity-90
+                                        `
+                                        : "cursor-not-allowed bg-secondary text-muted-foreground"
+                                }
+                            `}
                             onClick={review.handleReject}
                         >
                             Confirm Rejection
@@ -335,12 +450,20 @@ export default function ModeratorOrganizationsPage() {
                 {review.selectedOrg ? (
                     <>
                         <div className="mb-4">
-                            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                            <p
+                                className="
+                                    text-xs font-semibold tracking-wide text-muted-foreground
+                                    uppercase
+                                "
+                            >
                                 Target Organization
                             </p>
-                            <p className="font-semibold text-foreground">Rejecting: {review.selectedOrg.orgName}</p>
+                            <p className="font-semibold text-foreground">
+                                Rejecting: {review.selectedOrg.orgName}
+                            </p>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                This action will notify the organization that their application has been declined.
+                                This action will notify the organization that their application has
+                                been declined.
                             </p>
                         </div>
 
@@ -349,14 +472,19 @@ export default function ModeratorOrganizationsPage() {
                                 Reason For Rejection
                             </label>
                             <textarea
-                                className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2"
+                                className="
+                                    w-full rounded-lg border border-input bg-background px-3 py-2
+                                    text-sm text-foreground
+                                    focus:ring-2 focus:outline-none
+                                "
                                 rows={5}
                                 placeholder="Describe reasons for rejecting organization..."
                                 value={review.rejectionReason}
                                 onChange={(e) => review.setRejectionReason(e.target.value)}
                             />
                             <p className="mt-1 text-xs text-muted-foreground">
-                                Please be specific to help the organization improve their application.
+                                Please be specific to help the organization improve their
+                                application.
                             </p>
                         </div>
                     </>

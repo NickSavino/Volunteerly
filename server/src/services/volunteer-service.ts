@@ -239,11 +239,17 @@ export async function browseOpportunities(filters: OpportunityFilters) {
                           { name: { contains: filters.search, mode: "insensitive" } },
                           { description: { contains: filters.search, mode: "insensitive" } },
                           { category: { contains: filters.search, mode: "insensitive" } },
-                          { organization: { orgName: { contains: filters.search, mode: "insensitive" } } },
+                          {
+                              organization: {
+                                  orgName: { contains: filters.search, mode: "insensitive" },
+                              },
+                          },
                       ],
                   }
                 : {}),
-            ...(filters.category ? { category: { equals: filters.category, mode: "insensitive" } } : {}),
+            ...(filters.category
+                ? { category: { equals: filters.category, mode: "insensitive" } }
+                : {}),
             ...(filters.workType ? { workType: filters.workType } : {}),
             ...(filters.commitmentLevel ? { commitmentLevel: filters.commitmentLevel } : {}),
             ...(filters.maxHours !== undefined ? { hours: { lte: filters.maxHours } } : {}),

@@ -22,14 +22,22 @@ export function ChatComposer({
     sending = false,
 }: ChatComposerProps) {
     return (
-        <div className="border-t bg-background px-4 py-4">
-            <div className="flex items-end gap-3 rounded-2xl border border-border bg-background p-3 shadow-sm">
+        <div className="border-t bg-background p-4">
+            <div
+                className="
+                    flex items-end gap-3 rounded-2xl border border-border bg-background p-3
+                    shadow-sm
+                "
+            >
                 <Textarea
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
                     disabled={disabled || sending}
-                    className="min-h-[52px] resize-none border-0 bg-transparent shadow-none focus-visible:ring-0"
+                    className="
+                        min-h-[52px] resize-none border-0 bg-transparent shadow-none
+                        focus-visible:ring-0
+                    "
                     onKeyDown={async (e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                             e.preventDefault();
@@ -41,7 +49,7 @@ export function ChatComposer({
                 <Button
                     type="button"
                     size="icon"
-                    className="h-11 w-11 rounded-xl"
+                    className="size-11 rounded-xl"
                     disabled={disabled || sending || !value.trim()}
                     onClick={onSend}
                 >

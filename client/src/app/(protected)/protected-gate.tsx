@@ -11,7 +11,9 @@ function isVolunteerSetupRoute(pathname: string) {
 }
 
 function isOrganizationSetupRoute(pathname: string) {
-    return pathname === "/organization/application" || pathname === "/organization/appliedDashboard";
+    return (
+        pathname === "/organization/application" || pathname === "/organization/appliedDashboard"
+    );
 }
 
 function getRoleBasePath(role: UserRole) {
@@ -32,7 +34,8 @@ export default function ProtectedGate({ children }: { children: ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
 
-    const { loading, initialized, isAuthenticated, currentUser, currentOrganization } = useAppSession();
+    const { loading, initialized, isAuthenticated, currentUser, currentOrganization } =
+        useAppSession();
 
     const { signOut } = useAuth();
 
@@ -99,7 +102,8 @@ export default function ProtectedGate({ children }: { children: ReactNode }) {
             const orgStatus = currentOrganization?.status;
             const onSetupRoute = isOrganizationSetupRoute(pathname);
 
-            const needsSetup = orgStatus === "CREATED" || orgStatus === "APPLIED" || orgStatus === "REJECTED";
+            const needsSetup =
+                orgStatus === "CREATED" || orgStatus === "APPLIED" || orgStatus === "REJECTED";
 
             if ((orgStatus == "APPLIED" || orgStatus == "REJECTED") && !onSetupRoute) {
                 return "/organization/appliedDashboard";
@@ -115,7 +119,8 @@ export default function ProtectedGate({ children }: { children: ReactNode }) {
         }
 
         if (currentUser.role === "MODERATOR") {
-            const isSetupRoute = isVolunteerSetupRoute(pathname) || isOrganizationSetupRoute(pathname);
+            const isSetupRoute =
+                isVolunteerSetupRoute(pathname) || isOrganizationSetupRoute(pathname);
 
             if (isSetupRoute) {
                 return "/moderator";

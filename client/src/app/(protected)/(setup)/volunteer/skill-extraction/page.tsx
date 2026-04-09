@@ -4,7 +4,6 @@ import { UnverifiedNavbar } from "@/app/(protected)/(setup)/volunteer/unverified
 import { useSkillExtractionViewModel } from "./skillExtractionVm";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExtractedSkills } from "@volunteerly/shared";
 
 export default function SkillExtractionPage() {
     const { skills, confirming, error, removeSkill, handleConfirm, signOut, fullName, handleBack } =
@@ -20,22 +19,28 @@ export default function SkillExtractionPage() {
 
             <UnverifiedNavbar fullName={fullName} onSignOut={signOut} />
 
-            <main className="flex flex-col items-center px-8 py-10 gap-8 max-w-4xl mx-auto">
+            <main className="mx-auto flex max-w-4xl flex-col items-center gap-8 px-8 py-10">
                 <Card className="w-full">
                     <CardContent className="pt-6">
                         <h1 className="text-2xl font-bold">Extraction Complete</h1>
-                        <p className="text-muted-foreground mt-1">
+                        <p className="mt-1 text-muted-foreground">
                             We&apos;ve finished extracting your skills from your profile.
                             <br />
-                            Please verify your skills before proceeding. Click the × to remove any incorrect skills.
+                            Please verify your skills before proceeding. Click the × to remove any
+                            incorrect skills.
                         </p>
-                        {error && <p className="text-destructive text-sm mt-3">{error}</p>}
+                        {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
                     </CardContent>
                 </Card>
 
                 <div className="w-full">
-                    <h2 className="text-lg font-semibold mb-4">Extracted Skills</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <h2 className="mb-4 text-lg font-semibold">Extracted Skills</h2>
+                    <div
+                        className="
+                            grid grid-cols-1 gap-4
+                            md:grid-cols-2
+                        "
+                    >
                         <SkillCard
                             title="Technical Skills"
                             icon=""
@@ -51,7 +56,7 @@ export default function SkillExtractionPage() {
                     </div>
                 </div>
 
-                <div className="w-full flex items-center justify-between">
+                <div className="flex w-full items-center justify-between">
                     <Button variant="ghost" onClick={handleBack}>
                         Back to Experience Input
                     </Button>
@@ -78,23 +83,29 @@ function SkillCard({
     return (
         <Card>
             <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
                     <span>{icon}</span> {title}
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
                 {skills.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">No skills extracted.</p>
+                    <p className="text-sm text-muted-foreground">No skills extracted.</p>
                 ) : (
                     skills.map((skill, index) => (
                         <span
                             key={`${skill}-${index}`}
-                            className="flex items-center gap-1 bg-secondary text-secondary-foreground text-sm px-3 py-1 rounded-full"
+                            className="
+                                flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-sm
+                                text-secondary-foreground
+                            "
                         >
                             {skill}
                             <button
                                 onClick={() => onRemove(skill)}
-                                className="ml-1 text-muted-foreground hover:text-destructive transition-colors text-xs font-bold"
+                                className="
+                                    ml-1 text-xs font-bold text-muted-foreground transition-colors
+                                    hover:text-destructive
+                                "
                                 aria-label={`Remove ${skill}`}
                             >
                                 ×
@@ -102,7 +113,7 @@ function SkillCard({
                         </span>
                     ))
                 )}
-                <p className="w-full text-xs text-muted-foreground mt-2">
+                <p className="mt-2 w-full text-xs text-muted-foreground">
                     {skills.length} skill{skills.length !== 1 ? "s" : ""} extracted
                 </p>
             </CardContent>

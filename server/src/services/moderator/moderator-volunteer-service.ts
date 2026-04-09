@@ -31,7 +31,9 @@ function buildModeratorName(moderator: { firstName: string; lastName: string } |
 }
 
 function toStringArray(value: unknown): string[] {
-    return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+    return Array.isArray(value)
+        ? value.filter((item): item is string => typeof item === "string")
+        : [];
 }
 
 async function getVolunteerStatusSnapshot(tx: Prisma.TransactionClient, volunteerId: string) {
@@ -98,7 +100,9 @@ export async function getModeratorVolunteerList(): Promise<ModeratorVolunteerLis
     });
 }
 
-export async function getModeratorVolunteerDetail(volunteerId: string): Promise<ModeratorVolunteerDetail | null> {
+export async function getModeratorVolunteerDetail(
+    volunteerId: string,
+): Promise<ModeratorVolunteerDetail | null> {
     const volunteer = await prisma.volunteer.findUnique({
         where: { id: volunteerId },
         include: {
@@ -151,7 +155,8 @@ export async function getModeratorVolunteerDetail(volunteerId: string): Promise<
         bio: volunteer.bio,
         availability: Array.isArray(volunteer.availability) ? volunteer.availability : [],
         pastFlagsCount: reports.length,
-        completedOpportunities: volunteer.opportunities.filter((opp) => opp.status === "CLOSED").length,
+        completedOpportunities: volunteer.opportunities.filter((opp) => opp.status === "CLOSED")
+            .length,
         averageRating: volunteer.averageRating,
         hourlyValue: volunteer.hourlyValue,
         state: reports.some((report) => report.isOpen) ? "FLAGGED" : volunteer.status,
@@ -204,7 +209,11 @@ export async function flagVolunteerByModerator(
     });
 }
 
-export async function warnVolunteer(volunteerId: string, moderatorId: string, input: ModeratorVolunteerWarnInput) {
+export async function warnVolunteer(
+    volunteerId: string,
+    moderatorId: string,
+    input: ModeratorVolunteerWarnInput,
+) {
     return prisma.$transaction(async (tx) => {
         const report = await tx.volunteerReport.findFirst({
             where: {

@@ -2,7 +2,11 @@ import type { Prisma } from "@prisma/client";
 import { CreateTicket, CreatedTicket } from "@volunteerly/shared";
 import { prisma } from "../lib/prisma.js";
 
-async function upsertConversationParticipant(tx: Prisma.TransactionClient, conversationId: string, userId: string) {
+async function upsertConversationParticipant(
+    tx: Prisma.TransactionClient,
+    conversationId: string,
+    userId: string,
+) {
     await tx.chatConversationParticipant.upsert({
         where: {
             conversationId_userId: {
@@ -49,7 +53,9 @@ export async function ensureTicketConversation(
             kind: "TICKET",
             ticketId,
             participants: {
-                create: moderatorId ? [{ userId: issuerId }, { userId: moderatorId }] : [{ userId: issuerId }],
+                create: moderatorId
+                    ? [{ userId: issuerId }, { userId: moderatorId }]
+                    : [{ userId: issuerId }],
             },
         },
         select: { id: true },

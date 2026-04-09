@@ -11,7 +11,12 @@ type ChatMessageListProps = {
     className?: string;
 };
 
-export function ChatMessageList({ messages, currentUserId, variant = "default", className }: ChatMessageListProps) {
+export function ChatMessageList({
+    messages,
+    currentUserId,
+    variant = "default",
+    className,
+}: ChatMessageListProps) {
     return (
         <ScrollArea className={className ?? "h-full"}>
             <div className="space-y-5 p-6">

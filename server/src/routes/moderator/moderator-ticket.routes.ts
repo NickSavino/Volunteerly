@@ -45,7 +45,9 @@ moderatorTicketsRouter.patch("/:ticketId/claim", async (req, res, next) => {
         }
 
         if (error?.message === "TICKET_CLOSED") {
-            return res.status(409).json({ error: "Conflict", message: "Closed tickets cannot be claimed." });
+            return res
+                .status(409)
+                .json({ error: "Conflict", message: "Closed tickets cannot be claimed." });
         }
 
         next(error);
@@ -62,11 +64,15 @@ moderatorTicketsRouter.patch("/:ticketId/close", async (req, res, next) => {
         }
 
         if (error?.message === "TICKET_CLOSED") {
-            return res.status(409).json({ error: "Conflict", message: "Ticket is already closed." });
+            return res
+                .status(409)
+                .json({ error: "Conflict", message: "Ticket is already closed." });
         }
 
         if (error?.message === "TICKET_NOT_ASSIGNED") {
-            return res.status(409).json({ error: "Conflict", message: "Claim the ticket before closing it." });
+            return res
+                .status(409)
+                .json({ error: "Conflict", message: "Claim the ticket before closing it." });
         }
 
         next(error);
