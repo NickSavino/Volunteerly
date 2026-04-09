@@ -284,7 +284,7 @@ export default function VolunteerDashboardPage() {
                                                 )}
                                             </td>
                                             <td className="py-3 pr-4 text-gray-600">{opp.category}</td>
-                                            <td className="py-3 pr-4 text-gray-600">{opp.commitmentLevel}</td>
+                                            <td className="py-3 pr-4 text-gray-600">{opp.commitmentLevel.replaceAll("_", " ").toLowerCase().replace(/\b\w/g, char => char.toUpperCase())}</td>
                                             <td className="py-3 pr-4 text-gray-800">{opp.hours}h</td>
                                             <td className="py-3 pr-4">
                                                 <span
