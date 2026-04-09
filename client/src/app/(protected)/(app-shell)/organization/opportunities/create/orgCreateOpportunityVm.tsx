@@ -63,10 +63,7 @@ export function useCreateOpportunityViewModel(oppId?: string) {
                     orgId: orgId,
                     deadlineDate: deadlineDate,
                 };
-                const { error, success } = await OrganizationService.updateOpportunity(
-                    oppId,
-                    opp,
-                );
+                const { error, success } = await OrganizationService.updateOpportunity(oppId, opp);
 
                 if (success) {
                     toast.success("Opportunity Successfully Updated!", { position: "top-right" });

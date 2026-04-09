@@ -122,8 +122,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             {opportunity?.name} - {opportunity?.workType} - {opportunity?.category}
                         </h2>
                         {opportunity?.status == "CLOSED" && (
-                            <div
-                                className="md:grid md:grid-cols-2 md:justify-around md:gap-3">
+                            <div className="md:grid md:grid-cols-2 md:justify-around md:gap-3">
                                 <OrgStatCard
                                     icon={Clock4}
                                     label="Hours Spent"
@@ -383,7 +382,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                     src={avtImg.src}
                                                     className="w-22 rounded-lg object-cover"
                                                     height={10}
-                                                    width={10}                                                
+                                                    width={10}
                                                     alt=""
                                                 />
                                             </div>

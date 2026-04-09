@@ -12,15 +12,8 @@ import { Briefcase, Calendar, CalendarCheck, Hourglass, PersonStanding, Users } 
 import { useOrgOpportunitiesViewModel } from "./orgOpportunitiesVm";
 
 export default function OrgOpportunitiesPage() {
-    const {
-        loading,
-        session,
-        fetching,
-        router,
-        filteredOpportunities,
-        currentTab,
-        setCurrentTab,
-    } = useOrgOpportunitiesViewModel();
+    const { loading, session, fetching, router, filteredOpportunities, currentTab, setCurrentTab } =
+        useOrgOpportunitiesViewModel();
 
     if (loading || !session || fetching) {
         return <LoadingScreen />;
@@ -35,7 +28,7 @@ export default function OrgOpportunitiesPage() {
                     md:h-[calc(100vh-64px)] md:flex-row md:p-6
                 "
             >
-                <div 
+                <div
                     className="
                         mx-auto mb-5 flex min-h-full w-full flex-col gap-6
                         md:mb-0
