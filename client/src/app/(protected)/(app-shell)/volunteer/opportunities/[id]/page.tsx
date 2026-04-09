@@ -4,13 +4,13 @@
  */
 "use client";
 
-import { use, useState } from "react";
-import { ArrowLeft, Clock, TrendingUp, DollarSign, CheckCircle } from "lucide-react";
-import { useVolOppDetailViewModel } from "./volOppDetailVm";
 import { AppModal } from "@/components/common/app-modal";
+import { getAvatarFallback } from "@/components/navigation/nav-utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserService } from "@/services/UserService";
-import { getAvatarFallback } from "@/components/navigation/nav-utils";
+import { ArrowLeft, CheckCircle, Clock, DollarSign, TrendingUp } from "lucide-react";
+import { use, useState } from "react";
+import { useVolOppDetailViewModel } from "./volOppDetailVm";
 
 // Full list of skills available to log after completing an opportunity
 const ALL_SKILLS = [
@@ -579,6 +579,7 @@ function ProgressUpdateModal({
                             font-semibold text-foreground
                             hover:bg-secondary
                             disabled:opacity-50
+                            cursor-pointer
                         "
                     >
                         Cancel
@@ -591,6 +592,7 @@ function ProgressUpdateModal({
                             text-foreground
                             hover:opacity-90
                             disabled:opacity-50
+                            cursor-pointer
                         "
                     >
                         {submitting ? "Posting..." : "Post"}
@@ -604,7 +606,7 @@ function ProgressUpdateModal({
                     <input
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Provide title summary for your reason..."
+                        placeholder="Provide Title Summary..."
                         disabled={submitting}
                         className={`
                             w-full rounded-xl border bg-muted px-4 py-2.5 text-sm text-foreground
@@ -625,7 +627,7 @@ function ProgressUpdateModal({
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Describe reasons for rating..."
+                        placeholder="Describe progress in detail..."
                         rows={4}
                         disabled={submitting}
                         className={`
