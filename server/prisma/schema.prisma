@@ -344,13 +344,13 @@ model Flag {
   id            String   @id @default(uuid())
   flagIssuerId  String   @map("flag_issuer_id")
   flaggedUserId String   @map("flagged_user_id")
-  opportunityId String   @map("opportunity_id")
+  opportunityId String?  @map("opportunity_id")
   reason        String
   createdAt     DateTime @default(now()) @map("created_at")
 
-  flagIssuer  User        @relation("FlagIssuer", fields: [flagIssuerId], references: [id])
-  flaggedUser User        @relation("FlaggedUser", fields: [flaggedUserId], references: [id])
-  opportunity Opportunity @relation(fields: [opportunityId], references: [id])
+  flagIssuer  User         @relation("FlagIssuer", fields: [flagIssuerId], references: [id])
+  flaggedUser User         @relation("FlaggedUser", fields: [flaggedUserId], references: [id])
+  opportunity Opportunity? @relation(fields: [opportunityId], references: [id])
 
   @@unique([flagIssuerId, opportunityId])
   @@map("flags")
