@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation";
 import { AppModal } from "@/components/common/app-modal";
 import { cn } from "@/lib/utils";
 import type { Opportunity } from "@volunteerly/shared";
+import { UserService } from "@/services/UserService";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { getAvatarFallback } from "../navigation/nav-utils";
 
 const WORK_TYPE_LABELS: Record<string, string> = {
     IN_PERSON: "On-site",
@@ -90,8 +93,8 @@ export function OpportunityDetailModal({
                     <button
                         onClick={onClose}
                         className="
-                            h-11 min-w-28 rounded-xl border border-border bg-card px-5 text-sm
-                            font-semibold text-foreground
+                            cursor-pointer h-11 min-w-28 rounded-xl border border-border bg-card
+                            px-5 text-sm font-semibold text-foreground
                             hover:bg-secondary
                         "
                     >
@@ -111,8 +114,8 @@ export function OpportunityDetailModal({
                         <button
                             onClick={onApply}
                             className="
-                                h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold
-                                text-foreground
+                                cursor-pointer h-11 min-w-36 rounded-xl bg-primary px-5 text-sm
+                                font-semibold text-foreground
                                 hover:opacity-90
                             "
                         >
@@ -136,7 +139,14 @@ export function OpportunityDetailModal({
                             !orgId && "pointer-events-none",
                         )}
                     >
-                        {opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
+                        <Avatar className="size-12">
+                            <AvatarImage
+                                src={UserService.getAvatarURL(opp.organization?.id || "")}
+                            />
+                            <AvatarFallback>
+                                {getAvatarFallback(opp.organization?.orgName)}
+                            </AvatarFallback>
+                        </Avatar>
                     </button>
                     <div>
                         <button

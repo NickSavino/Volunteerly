@@ -85,7 +85,15 @@ DECLARE
     review2_id   UUID := 'a0000000-0000-4000-8000-000000000902';
     flag1_id     UUID := 'a0000000-0000-4000-8000-000000001001';
     progress1_id UUID := 'a0000000-0000-4000-8000-000000001101';
-
+    progress2_id UUID := 'a0000000-0000-4000-8000-000000001102';
+    progress3_id UUID := 'a0000000-0000-4000-8000-000000001103';
+    progress4_id UUID := 'a0000000-0000-4000-8000-000000001104';
+    progress5_id UUID := 'a0000000-0000-4000-8000-000000001105';
+    progress6_id UUID := 'a0000000-0000-4000-8000-000000001106';
+    progress7_id UUID := 'a0000000-0000-4000-8000-000000001107';
+    progress8_id UUID := 'a0000000-0000-4000-8000-000000001108';
+    progress9_id UUID := 'a0000000-0000-4000-8000-000000001109';
+    
     work_exp1_id  UUID := 'a0000000-0000-4000-8000-000000001002';
     work_exp2_id  UUID := 'a0000000-0000-4000-8000-000000001003';
     work_exp3_id  UUID := 'a0000000-0000-4000-8000-000000001004';
@@ -201,9 +209,19 @@ VALUES
 
 
 --Progress Updates
-INSERT INTO public.progress_updates (id, opportunity_id, sender_id, sender_role, title, description, hours_contributed)
+INSERT INTO public.progress_updates (id, opportunity_id, sender_id, sender_role, title, description, hours_contributed, created_at)
 VALUES
-    (progress1_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 1 Update', 'Completed figma designs', 8);
+    (progress4_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 1 Update', 'Finished all the frontend pages', 3, '2026-01-04'),
+    (progress3_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 1 Update', 'Finished all backend server functionality', 7, '2026-01-03'),
+    (progress2_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 1 Update', 'Setup the backend server architecture', 2, '2026-01-02'),
+    (progress1_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 1 Update', 'Completed figma designs', 8, '2026-01-02'),
+    (progress5_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 2 Update', 'Created Unit tests and verified the completness of the project!', 10, '2026-01-05'),
+    
+    (progress6_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Implemented half of the requested charts', 8, '2026-02-10'),
+    (progress7_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Finished the flow from the db to tableau', 10, '2026-02-09'),
+    (progress8_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Created the base dashboard in tableau', 10, '2026-02-05'),
+    (progress9_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Created a data cleaning pipeline', 4, '2026-02-02');
+
 
 --Reviews
 INSERT INTO public.reviews (id, issuer_id, reviewee_id, opportunity_id, rating)

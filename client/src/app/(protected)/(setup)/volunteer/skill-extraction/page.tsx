@@ -56,11 +56,15 @@ export default function SkillExtractionPage() {
                     </div>
                 </div>
 
-                <div className="flex w-full items-center justify-between">
-                    <Button variant="ghost" onClick={handleBack}>
+                <div className="w-full flex items-center justify-between">
+                    <Button className="cursor-pointer" variant="ghost" onClick={handleBack}>
                         Back to Experience Input
                     </Button>
-                    <Button onClick={handleConfirm} disabled={confirming}>
+                    <Button
+                        className="cursor-pointer"
+                        onClick={handleConfirm}
+                        disabled={confirming}
+                    >
                         {confirming ? "Saving..." : "Confirm & Continue"}
                     </Button>
                 </div>
@@ -103,8 +107,9 @@ function SkillCard({
                             <button
                                 onClick={() => onRemove(skill)}
                                 className="
-                                    ml-1 text-xs font-bold text-muted-foreground transition-colors
+                                    cursor-pointer ml-1 text-muted-foreground
                                     hover:text-destructive
+                                    transition-colors text-xs font-bold
                                 "
                                 aria-label={`Remove ${skill}`}
                             >
