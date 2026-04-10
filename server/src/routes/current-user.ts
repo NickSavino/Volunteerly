@@ -1,3 +1,8 @@
+/**
+ * current-user.ts
+ * Routes for the authenticated user's own profile and avatar
+ */
+
 import { Router } from "express";
 import {
     createCurrentUser,
@@ -9,6 +14,8 @@ import {
 import multer from "multer";
 
 export const currentUserRouter = Router();
+
+// Keep uploaded images in memory - passed directly to Supabase storage
 const storage = multer.memoryStorage();
 const upload = multer({
     storage,
@@ -22,10 +29,17 @@ const upload = multer({
         cb(null, true);
     },
     limits: {
-        fileSize: 5 * 1024 * 1024,
+        fileSize: 5 * 1024 * 1024, // 5 MB max
     },
 });
 
+/**
+ * GET /current-user
+ * Returns the authenticated user's application profile.
+ * Auth: required
+ * Returns: 200 with user data
+ * Errors: 401, 404, 500
+ */
 currentUserRouter.get("/", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
@@ -44,12 +58,22 @@ currentUserRouter.get("/", async (req, res, next) => {
     }
 });
 
+/**
+ * PUT /current-user
+ * Creates or updates the current user's profile (role and email).
+ * Used during signup to set up the app-level user record after Supabase auth.
+ * Auth: required
+ * Body: role, email
+ * Returns: 200 with user data
+ * Errors: 401, 500
+ */
 currentUserRouter.put("/", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
 
         const { role, email } = req.body;
 
+        // Decide between create (new user) vs. update (existing user)
         const user = await getCurrentUser(userId);
         let modified_user;
         if (!user) {
@@ -71,6 +95,13 @@ currentUserRouter.put("/", async (req, res, next) => {
     }
 });
 
+/**
+ * DELETE /current-user
+ * Deletes the authenticated user's account and all associated data.
+ * Auth: required
+ * Returns: 204 no content
+ * Errors: 401, 500
+ */
 currentUserRouter.delete("/", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
@@ -83,6 +114,14 @@ currentUserRouter.delete("/", async (req, res, next) => {
     }
 });
 
+/**
+ * POST /current-user/avatar
+ * Uploads a new avatar image for the authenticated user.
+ * Auth: required
+ * Body: multipart/form-data with "image" field
+ * Returns: 200 with the storage path of the saved avatar
+ * Errors: 400 (no image), 401, 500
+ */
 currentUserRouter.post("/avatar", upload.single("image"), async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
