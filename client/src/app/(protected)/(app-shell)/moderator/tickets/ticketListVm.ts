@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { ModeratorService } from "@/services/ModeratorService";
 import type {
@@ -9,6 +7,8 @@ import type {
     ModeratorTicketList,
     ModeratorTicketStatus,
 } from "@volunteerly/shared";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export type TicketTabKey = ModeratorTicketStatus;
 export type TicketSortKey = "ascending" | "descending";
@@ -23,6 +23,9 @@ const PAGE_SIZE_OPTIONS = [3, 5, 10] as const;
 export function useTicketListViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
+    const pathName = usePathname();
+    const searchParams = useSearchParams();
+    const requestedTickedId = searchParams.get("ticketId");
 
     const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(
         undefined,
@@ -42,6 +45,7 @@ export function useTicketListViewModel() {
     function closeTicketDetail() {
         setIsTicketDetailOpen(false);
         setSelectedTicketId(null);
+        router.replace(pathName);
     }
 
     const [activeTab, setActiveTab] = useState<TicketTabKey>("OPEN");
@@ -73,6 +77,13 @@ export function useTicketListViewModel() {
 
         load();
     }, [session, router]);
+
+    useEffect(() => {
+        if (!requestedTickedId || selectedTicketId === requestedTickedId) return;
+
+        setSelectedTicketId(requestedTickedId);
+        setIsTicketDetailOpen(true);
+    }, [requestedTickedId, selectedTicketId]);
 
     const tabCounts = useMemo(
         () => ({

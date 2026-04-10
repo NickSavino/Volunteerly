@@ -1,8 +1,8 @@
 "use client";
 
-import { useCreateOpportunityViewModel } from "./orgCreateOpportunityVm";
-import OpportunityForm from "../opportunityForm";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import OpportunityForm from "../opportunityForm";
+import { useCreateOpportunityViewModel } from "./orgCreateOpportunityVm";
 
 export default function OppCreatePage() {
     const {

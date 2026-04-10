@@ -1,3 +1,7 @@
+/**
+ * page.tsx
+ * Opportunities browse page - lists available opportunities with filters, search, sort, and a resizable map
+ */
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";
@@ -17,6 +21,7 @@ import {
     type WorkTypeFilter,
 } from "./opportunitiesVm";
 
+// Leaflet needs the DOM, so we load the map component client-side only
 const OpportunitiesMap = dynamic(() => import("./OpportunitiesMap"), {
     ssr: false,
     loading: () => <div className="size-full animate-pulse bg-muted" />,
@@ -42,10 +47,14 @@ const SORT_LABELS: Record<SortOption, string> = {
     NEWEST: "Newest",
 };
 
+// Map panel sizing constraints for the drag-to-resize handle
 const MAP_MIN_WIDTH = 200;
 const MAP_MAX_WIDTH = 800;
 const MAP_DEFAULT_WIDTH = 420;
 
+/**
+ * Shared filter UI rendered in both the sidebar (desktop) and the mobile filter dialog
+ */
 function FiltersContent({
     selectedCategories,
     toggleCategory,
@@ -64,6 +73,7 @@ function FiltersContent({
 }) {
     return (
         <>
+            {/* Role / category checkboxes */}
             <div className="mb-6">
                 <p
                     className="
@@ -87,6 +97,7 @@ function FiltersContent({
                 </div>
             </div>
 
+            {/* Work type toggle pills - clicking the active one resets to ALL */}
             <div className="mb-6">
                 <p
                     className="
@@ -116,6 +127,7 @@ function FiltersContent({
                 </div>
             </div>
 
+            {/* Commitment level toggle pills - same toggle-off behaviour as work type */}
             <div className="mb-6">
                 <p
                     className="
@@ -175,13 +187,19 @@ export default function OpportunitiesPage() {
         appliedOppIds,
     } = useOpportunitiesViewModel();
 
+    // Mobile-only dialogs for filters and map
     const [filtersOpen, setFiltersOpen] = useState(false);
     const [mapOpen, setMapOpen] = useState(false);
 
+    // Refs used by the drag-to-resize map panel handle
     const mapWidthRef = useRef<number>(MAP_DEFAULT_WIDTH);
     const mapPanelRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
 
+    /**
+     * Handles the mousedown event on the resize handle, then tracks mousemove/mouseup globally
+     * We attach to window so the drag still works if the cursor leaves the handle element
+     */
     const onMouseDown = useCallback((e: React.MouseEvent) => {
         e.preventDefault();
         isDragging.current = true;
@@ -190,6 +208,7 @@ export default function OpportunitiesPage() {
 
         const onMouseMove = (ev: MouseEvent) => {
             if (!isDragging.current || !mapPanelRef.current) return;
+            // Calculate width from the right edge of the window
             const newWidth = window.innerWidth - ev.clientX;
             const clamped = Math.min(Math.max(newWidth, MAP_MIN_WIDTH), MAP_MAX_WIDTH);
             mapWidthRef.current = clamped;
@@ -208,6 +227,7 @@ export default function OpportunitiesPage() {
         window.addEventListener("mouseup", onMouseUp);
     }, []);
 
+    // Bundle filter props so we can spread them into both the sidebar and the mobile dialog
     const filterProps = {
         selectedCategories,
         toggleCategory,
@@ -228,6 +248,7 @@ export default function OpportunitiesPage() {
     return (
         <div className="flex h-screen flex-col overflow-hidden bg-background">
             <div className="flex flex-1 overflow-hidden">
+                {/* Desktop filter sidebar - hidden on mobile */}
                 <aside
                     className="
                         hidden w-56 shrink-0 overflow-y-auto border-r bg-card p-5
@@ -240,6 +261,7 @@ export default function OpportunitiesPage() {
 
                 <div className="flex flex-1 overflow-hidden">
                     <div className="flex flex-1 flex-col overflow-hidden">
+                        {/* Top bar: count, search, mobile buttons, sort dropdown */}
                         <div className="shrink-0 border-b bg-card px-5 py-4">
                             <div className="flex items-center justify-between gap-3">
                                 <h1 className="font-bold text-foreground">
@@ -260,6 +282,7 @@ export default function OpportunitiesPage() {
                                     "
                                 />
                                 <div className="flex items-center gap-2">
+                                    {/* These buttons are only visible on smaller screens */}
                                     <button
                                         onClick={() => setFiltersOpen(true)}
                                         className="
@@ -332,6 +355,7 @@ export default function OpportunitiesPage() {
                             </div>
                         )}
 
+                        {/* Scrollable opportunity list */}
                         <div className="flex-1 overflow-y-auto p-5 space-y-4">
                             {opportunities.length === 0 ? (
                                 <div
@@ -350,6 +374,7 @@ export default function OpportunitiesPage() {
                                         matchPct={getMatchPct(opp)}
                                         isSelected={selectedOpp?.id === opp.id}
                                         hasApplied={appliedOppIds.has(opp.id)}
+                                        // Clicking the same card again deselects it
                                         onClick={() =>
                                             setSelectedOpp(selectedOpp?.id === opp.id ? null : opp)
                                         }
@@ -359,6 +384,7 @@ export default function OpportunitiesPage() {
                         </div>
                     </div>
 
+                    {/* Drag handle - only visible on desktop alongside the map panel */}
                     <div
                         onMouseDown={onMouseDown}
                         className="
@@ -379,6 +405,7 @@ export default function OpportunitiesPage() {
                         />
                     </div>
 
+                    {/* Map panel - starts at MAP_DEFAULT_WIDTH and resizes via the drag handle */}
                     <div
                         ref={mapPanelRef}
                         className="
@@ -393,6 +420,7 @@ export default function OpportunitiesPage() {
                 </div>
             </div>
 
+            {/* Mobile filter dialog */}
             <Dialog open={filtersOpen} onOpenChange={setFiltersOpen}>
                 <DialogContent
                     className="
@@ -407,6 +435,7 @@ export default function OpportunitiesPage() {
                 </DialogContent>
             </Dialog>
 
+            {/* Mobile map dialog */}
             <Dialog open={mapOpen} onOpenChange={setMapOpen}>
                 <DialogContent
                     className="
@@ -423,6 +452,7 @@ export default function OpportunitiesPage() {
                 </DialogContent>
             </Dialog>
 
+            {/* Detail modal and apply modal - rendered at the top of the stacking context */}
             <div className="relative z-50">
                 <OpportunityDetailModal
                     opp={selectedOpp}

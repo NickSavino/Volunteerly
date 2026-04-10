@@ -1,7 +1,5 @@
 "use client";
 
-import { Building2, CheckSquare, Square, BuildingIcon } from "lucide-react";
-import { SortKey, useOrgListViewModel, type TabKey } from "./orgListVm";
 import { AppModal } from "@/components/common/app-modal";
 import { ConfirmActionDialog } from "@/components/common/confirm-action-dialog";
 import { ModeratorFilterBar } from "@/components/moderator/moderator-filter-bar";
@@ -9,6 +7,9 @@ import { ModeratorListContainer } from "@/components/moderator/moderator-list-co
 import { ModeratorPageHeader } from "@/components/moderator/moderator-page-header";
 import { ModeratorPagination } from "@/components/moderator/moderator-pagination";
 import { ModeratorTabs } from "@/components/moderator/moderator-tabs";
+import { Button } from "@/components/ui/button";
+import { Building2, BuildingIcon, CheckSquare, Square } from "lucide-react";
+import { SortKey, useOrgListViewModel, type TabKey } from "./orgListVm";
 
 const TABS: { key: TabKey; label: string }[] = [
     { key: "ALL", label: "All Organizations" },
@@ -383,10 +384,9 @@ export default function ModeratorOrganizationsPage() {
                                     >
                                         <Building2 className="size-8 text-primary" />
                                         <p className="text-xs text-muted-foreground">Document</p>
-                                        <a
-                                            href={review.selectedOrg.docId}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                        <Button
+                                            type="button"
+                                            onClick={() => void review.handleViewDocument()}
                                             className="
                                                 rounded-md bg-primary px-3 py-1 text-xs font-medium
                                                 text-foreground
@@ -394,7 +394,7 @@ export default function ModeratorOrganizationsPage() {
                                             "
                                         >
                                             View
-                                        </a>
+                                        </Button>
                                     </div>
                                 </div>
                             ) : (

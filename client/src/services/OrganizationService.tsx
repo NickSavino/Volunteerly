@@ -1,22 +1,22 @@
 import { api } from "@/lib/api";
 import {
+    ApplicationSchema,
+    ApplicationsSchema,
+    CountSchema,
     CurrentOrganizationSchema,
     CurrentOrganizationUpdate,
-    OpportunitiesSchema,
     ModeratorOrganizationList,
     ModeratorOrganizationListSchema,
-    OrganizationSchema,
-    CountSchema,
-    TotalHoursSchema,
-    OpportunitySchema,
-    ApplicationsSchema,
-    ApplicationSchema,
+    OpportunitiesSchema,
     OpportunityAnalyticsSchema,
-    ProgressUpdate,
-    ProgressUpdateSchema,
-    UpdateOpportunitySchema,
+    OpportunitySchema,
     organizationAwardsSchema,
     OrganizationReviewStatsSchema,
+    OrganizationSchema,
+    ProgressUpdate,
+    ProgressUpdateSchema,
+    TotalHoursSchema,
+    UpdateOpportunitySchema,
 } from "@volunteerly/shared";
 
 export class OrganizationService {
@@ -189,10 +189,10 @@ export class OrganizationService {
         });
     }
 
-    static async postFlag(flaggedUserId: string, reason: string) {
+    static async postFlag(flaggedUserId: string, opportunityId: string, reason: string) {
         return api<{ success: boolean }>("/current-organization/flags", {
             method: "POST",
-            body: JSON.stringify({ flaggedUserId, reason }),
+            body: JSON.stringify({ flaggedUserId, opportunityId, reason }),
         });
     }
     static async updateOpportunity(opportunityId: string, opportunity: UpdateOpportunitySchema) {

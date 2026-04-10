@@ -5,12 +5,14 @@ import { ChatComposer } from "@/components/common/chat/chat-composer";
 import { ChatConversationList } from "@/components/common/chat/chat-conversation-list";
 import { ChatMessageList } from "@/components/common/chat/chat-message-list";
 import { ChatThreadHeader } from "@/components/common/chat/chat-thread-header";
+import { LoadingScreen } from "@/components/common/loading-screen";
+import { ArrowLeft } from "lucide-react";
 
 export default function OrganizationMessagesPage() {
     const vm = useOrganizationMessagesViewModel();
 
     if (vm.loading) {
-        return <main className="p-6">Loading...</main>;
+        return <LoadingScreen />;
     }
 
     if (vm.error) {
@@ -18,18 +20,63 @@ export default function OrganizationMessagesPage() {
     }
 
     return (
-        <div className="h-[calc(100vh-73px)] overflow-hidden border-t border-border bg-background">
-            <div className="grid h-full min-h-0 grid-cols-[320px_1fr]">
-                <ChatConversationList
-                    conversations={vm.conversations}
-                    selectedConversationId={vm.selectedConversationId}
-                    onSelect={vm.selectConversation}
-                    sectionTitle="Inbox"
-                />
+        <div className="h-[calc(100dvh-73px)] overflow-hidden border-t border-border bg-background">
+            <div
+                className="
+                    grid h-full min-h-0 grid-cols-1
+                    md:grid-cols-[320px_minmax(0,1fr)]
+                "
+            >
+                <div
+                    className={
+                        vm.selectedConversation
+                            ? `
+                                hidden
+                                md:block
+                                min-h-0
+                            `
+                            : "block min-h-0"
+                    }
+                >
+                    <ChatConversationList
+                        conversations={vm.conversations}
+                        selectedConversationId={vm.selectedConversationId}
+                        onSelect={vm.selectConversation}
+                        sectionTitle="Inbox"
+                    />
+                </div>
 
-                <div className="grid h-full min-h-0 grid-rows-[auto_1fr_auto]">
+                <div
+                    className={
+                        vm.selectedConversation
+                            ? "flex min-h-0 min-w-0 flex-col"
+                            : `
+                                hidden min-h-0 min-w-0
+                                md:flex md:flex-col
+                            `
+                    }
+                >
                     {vm.selectedConversation ? (
                         <>
+                            <div
+                                className="
+                                    border-b border-border px-4 py-3
+                                    md:hidden
+                                "
+                            >
+                                <button
+                                    type="button"
+                                    onClick={vm.clearSelection}
+                                    className="
+                                        inline-flex items-center gap-2 text-sm font-medium
+                                        text-foreground
+                                    "
+                                >
+                                    <ArrowLeft className="size-4" />
+                                    Back to inbox
+                                </button>
+                            </div>
+
                             <ChatThreadHeader
                                 title={vm.threadTitle}
                                 subtitle={vm.threadSubtitle}
@@ -37,7 +84,7 @@ export default function OrganizationMessagesPage() {
                                 avatarFallback={vm.threadTitle.slice(0, 2).toUpperCase()}
                             />
 
-                            <div className="min-h-0">
+                            <div className="min-h-0 flex-1 overflow-hidden">
                                 <ChatMessageList
                                     messages={vm.selectedConversation.messages}
                                     currentUserId={vm.currentUserId}
@@ -48,7 +95,8 @@ export default function OrganizationMessagesPage() {
                             {vm.isClosedTicketConversation ? (
                                 <div
                                     className="
-                                        border-t border-border p-4 text-sm text-muted-foreground
+                                        shrink-0 border-t border-border p-4 text-sm
+                                        text-muted-foreground
                                     "
                                 >
                                     This ticket is closed. Replies are disabled.
@@ -68,7 +116,12 @@ export default function OrganizationMessagesPage() {
                             )}
                         </>
                     ) : (
-                        <div className="flex items-center justify-center text-muted-foreground">
+                        <div
+                            className="
+                                hidden h-full items-center justify-center text-muted-foreground
+                                md:flex
+                            "
+                        >
                             Select a conversation.
                         </div>
                     )}

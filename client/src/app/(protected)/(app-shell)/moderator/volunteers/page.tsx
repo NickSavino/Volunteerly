@@ -1,29 +1,57 @@
 "use client";
 
-import Image from "next/image";
-import { ExternalLink, Star } from "lucide-react";
-import { useVolunteerListViewModel, VOLUNTEER_TABS, VolunteerSortKey } from "./volunteerListVm";
+import {
+    VolunteerDetailModal,
+    VolunteerModalMode,
+} from "@/app/(protected)/(app-shell)/moderator/volunteers/volunteer-detail-modal";
+import { LoadingScreen } from "@/components/common/loading-screen";
 import { ModeratorFilterBar } from "@/components/moderator/moderator-filter-bar";
 import { ModeratorListContainer } from "@/components/moderator/moderator-list-container";
 import { ModeratorPageHeader } from "@/components/moderator/moderator-page-header";
 import { ModeratorPagination } from "@/components/moderator/moderator-pagination";
 import { ModeratorTabs } from "@/components/moderator/moderator-tabs";
+import { ExternalLink, Star } from "lucide-react";
+import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import {
-    VolunteerDetailModal,
-    VolunteerModalMode,
-} from "@/app/(protected)/(app-shell)/moderator/volunteers/volunteer-detail-modal";
+import { useVolunteerListViewModel, VOLUNTEER_TABS, VolunteerSortKey } from "./volunteerListVm";
 
 function getSeverity(pastFlagsCount: number) {
     return pastFlagsCount >= 3 ? "HIGH" : "MEDIUM";
 }
 
+const VALID_VOLUNTEER_MODAL_MODES: VolunteerModalMode[] = [
+    "profile",
+    "investigation",
+    "flag",
+    "warning",
+    "suspend",
+    "escalate",
+];
+
 export default function ModeratorVolunteersPage() {
     const { auth, page, filters, data, pagination } = useVolunteerListViewModel();
+
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    const requestedVolunteerId = searchParams.get("volunteerId");
+    const requestedMode = searchParams.get("mode");
 
     const [selectedVolunteerId, setSelectedVolunteerId] = useState<string | null>(null);
     const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);
     const [volunteerModalMode, setVolunteerModalMode] = useState<VolunteerModalMode>("profile");
+
+    const requestedVolunteerMode: VolunteerModalMode = VALID_VOLUNTEER_MODAL_MODES.includes(
+        requestedMode as VolunteerModalMode,
+    )
+        ? (requestedMode as VolunteerModalMode)
+        : "profile";
+
+    const activeVolunteerId = requestedVolunteerId ?? selectedVolunteerId;
+    const activeVolunteerMode = requestedVolunteerId ? requestedVolunteerMode : volunteerModalMode;
+    const isVolunteerModalVisible = !!requestedVolunteerId || isVolunteerModalOpen;
 
     function openVolunteerModal(volunteerId: string, mode: VolunteerModalMode) {
         setSelectedVolunteerId(volunteerId);
@@ -32,13 +60,18 @@ export default function ModeratorVolunteersPage() {
     }
 
     function closeVolunteerModal() {
+        if (requestedVolunteerId) {
+            router.replace(pathname);
+            return;
+        }
+
         setIsVolunteerModalOpen(false);
         setSelectedVolunteerId(null);
         setVolunteerModalMode("profile");
     }
 
     if (auth.loading && !auth.session) {
-        return <main className="p-6">Loading...</main>;
+        return <LoadingScreen />;
     }
 
     return (
@@ -305,9 +338,9 @@ export default function ModeratorVolunteersPage() {
             </main>
 
             <VolunteerDetailModal
-                volunteerId={selectedVolunteerId}
-                open={isVolunteerModalOpen}
-                mode={volunteerModalMode}
+                volunteerId={activeVolunteerId}
+                open={isVolunteerModalVisible}
+                mode={activeVolunteerMode}
                 onClose={closeVolunteerModal}
                 onUpdated={page.refreshVolunteers}
             />

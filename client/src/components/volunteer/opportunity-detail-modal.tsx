@@ -1,3 +1,7 @@
+/**
+ * opportunity-detail-modal.tsx
+ * Slide-in modal showing full details of a selected opportunity with an apply / already-applied state
+ */
 "use client";
 
 import { Building2 } from "lucide-react";
@@ -5,6 +9,9 @@ import { useRouter } from "next/navigation";
 import { AppModal } from "@/components/common/app-modal";
 import { cn } from "@/lib/utils";
 import type { Opportunity } from "@volunteerly/shared";
+import { UserService } from "@/services/UserService";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { getAvatarFallback } from "../navigation/nav-utils";
 
 const WORK_TYPE_LABELS: Record<string, string> = {
     IN_PERSON: "On-site",
@@ -26,6 +33,9 @@ type OppDetailModalProps = {
     onApply: () => void;
 };
 
+/**
+ * Small labeled info block used in the detail grid (length, deadline, posted date)
+ */
 function DetailRow({ label, value }: { label: string; value: string }) {
     return (
         <div className="rounded-xl bg-muted p-3">
@@ -35,6 +45,10 @@ function DetailRow({ label, value }: { label: string; value: string }) {
     );
 }
 
+/**
+ * Full-detail modal for a volunteer opportunity
+ * Returns null when no opportunity is selected so the modal is simply absent from the DOM
+ */
 export function OpportunityDetailModal({
     opp,
     matchPct,
@@ -44,16 +58,22 @@ export function OpportunityDetailModal({
 }: OppDetailModalProps) {
     const router = useRouter();
 
+    // Nothing selected - don't render anything
     if (!opp) return null;
 
     const orgId = opp.organization?.id;
 
+    /**
+     * Closes the modal then navigates to the org's public profile
+     * Closing first avoids a flash of the modal over the new page
+     */
     function handleOrgClick() {
         if (!orgId) return;
         onClose();
         router.push(`/volunteer/organizations/${orgId}`);
     }
 
+    // Match badge color thresholds mirror those in OpportunityCard
     const matchCls =
         matchPct >= 80
             ? "bg-green-100 text-green-700"
@@ -73,13 +93,14 @@ export function OpportunityDetailModal({
                     <button
                         onClick={onClose}
                         className="
-                            h-11 min-w-28 rounded-xl border border-border bg-card px-5 text-sm
-                            font-semibold text-foreground
+                            cursor-pointer h-11 min-w-28 rounded-xl border border-border bg-card
+                            px-5 text-sm font-semibold text-foreground
                             hover:bg-secondary
                         "
                     >
                         Close
                     </button>
+                    {/* Footer action switches between a static "Applied" badge and the Apply button */}
                     {hasApplied ? (
                         <span
                             className="
@@ -93,8 +114,8 @@ export function OpportunityDetailModal({
                         <button
                             onClick={onApply}
                             className="
-                                h-11 min-w-36 rounded-xl bg-primary px-5 text-sm font-semibold
-                                text-foreground
+                                cursor-pointer h-11 min-w-36 rounded-xl bg-primary px-5 text-sm
+                                font-semibold text-foreground
                                 hover:opacity-90
                             "
                         >
@@ -105,6 +126,7 @@ export function OpportunityDetailModal({
             }
         >
             <div className="space-y-5">
+                {/* Organization header row with avatar, name, address, and match badge */}
                 <div className="flex items-center gap-3">
                     <button
                         onClick={handleOrgClick}
@@ -117,7 +139,14 @@ export function OpportunityDetailModal({
                             !orgId && "pointer-events-none",
                         )}
                     >
-                        {opp.organization?.orgName?.slice(0, 2).toUpperCase() ?? "OG"}
+                        <Avatar className="size-12">
+                            <AvatarImage
+                                src={UserService.getAvatarURL(opp.organization?.id || "")}
+                            />
+                            <AvatarFallback>
+                                {getAvatarFallback(opp.organization?.orgName)}
+                            </AvatarFallback>
+                        </Avatar>
                     </button>
                     <div>
                         <button
@@ -155,6 +184,7 @@ export function OpportunityDetailModal({
                     </div>
                 </div>
 
+                {/* Tag row: work type, commitment level, category */}
                 <div className="flex flex-wrap gap-2">
                     <span className="rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground">
                         {WORK_TYPE_LABELS[opp.workType] ?? opp.workType}
@@ -167,6 +197,7 @@ export function OpportunityDetailModal({
                     </span>
                 </div>
 
+                {/* Key metadata grid */}
                 <div className="grid grid-cols-2 gap-3">
                     <DetailRow label="Length" value={opp.length || "Flexible"} />
                     <DetailRow
@@ -191,6 +222,7 @@ export function OpportunityDetailModal({
                     />
                 </div>
 
+                {/* Availability days - only shown if the opportunity specifies scheduling */}
                 {opp?.availability && opp.availability.length > 0 && (
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-semibold text-gray-800">Availability</p>
@@ -218,6 +250,7 @@ export function OpportunityDetailModal({
                     <p className="text-sm/relaxed text-muted-foreground">{opp.description}</p>
                 </div>
 
+                {/* Ideal candidate section - optional field set by the organization */}
                 {opp.candidateDesc && (
                     <div>
                         <h3 className="mb-2 text-sm font-semibold text-foreground">

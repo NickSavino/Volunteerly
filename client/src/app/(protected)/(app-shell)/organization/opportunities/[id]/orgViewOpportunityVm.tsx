@@ -1,3 +1,4 @@
+import { api } from "@/lib/api";
 import { useAuth } from "@/providers/auth-provider";
 import { OrganizationService } from "@/services/OrganizationService";
 import { Application, CurrentOrganization, Opportunity, ProgressUpdate } from "@volunteerly/shared";
@@ -155,6 +156,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
             try {
                 await OrganizationService.postFlag(
                     opportunity.volunteer.id,
+                    opportunity.id,
                     input.flagReason.trim(),
                 );
             } catch {
@@ -171,6 +173,25 @@ export function useOrgViewOpportunityViewModel(id: string) {
         toast.success(input.flagged ? "Review and flag posted!" : "Review posted!", {
             position: "top-right",
         });
+    }
+
+    async function openMessageThread() {
+        if (!opportunity?.id || !opportunity?.volunteer?.id) return;
+
+        try {
+            const { conversationId } = await api<{ conversationId: string }>(
+                "/current-organization/opportunity/message-thread",
+                {
+                    method: "POST",
+                    body: JSON.stringify({ oppId: opportunity.id }),
+                },
+            );
+
+            router.push(`/organization/messages?conversationId=${conversationId}`);
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to open conversation.", { position: "top-right" });
+        }
     }
 
     return {
@@ -193,5 +214,6 @@ export function useOrgViewOpportunityViewModel(id: string) {
         setReviewModalOpen,
         submitting,
         submitReview,
+        openMessageThread,
     };
 }

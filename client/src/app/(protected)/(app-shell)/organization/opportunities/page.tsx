@@ -28,7 +28,12 @@ export default function OrgOpportunitiesPage() {
                     md:h-[calc(100vh-64px)] md:flex-row md:p-6
                 "
             >
-                <div className="max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6 md:mb-0">
+                <div
+                    className="
+                        mx-auto mb-5 flex min-h-full w-full flex-col gap-6
+                        md:mb-0
+                    "
+                >
                     <div
                         className="
                             mx-3 items-center justify-between
@@ -36,7 +41,7 @@ export default function OrgOpportunitiesPage() {
                         "
                     >
                         <div>
-                            <h1 className="text-2xl font-bold">Opportunities</h1>
+                            <h1 className="font-bold">Opportunities</h1>
                             <p>Manage and track your organization&apos;s volunteer projects.</p>
                         </div>
 
@@ -198,7 +203,13 @@ export default function OrgOpportunitiesPage() {
                                                             </span>
 
                                                             <span className="flex items-center gap-1">
-                                                                <Briefcase /> {opp.workType}
+                                                                <Briefcase />{" "}
+                                                                {opp.workType
+                                                                    .replaceAll("_", " ")
+                                                                    .toLowerCase()
+                                                                    .replace(/\b\w/g, (char) =>
+                                                                        char.toUpperCase(),
+                                                                    )}
                                                             </span>
                                                         </ItemDescription>
                                                     </ItemContent>
@@ -267,7 +278,13 @@ export default function OrgOpportunitiesPage() {
                                                             </span>
 
                                                             <span className="flex items-center gap-1">
-                                                                <Briefcase /> {opp.workType}
+                                                                <Briefcase />{" "}
+                                                                {opp.workType
+                                                                    .replaceAll("_", " ")
+                                                                    .toLowerCase()
+                                                                    .replace(/\b\w/g, (char) =>
+                                                                        char.toUpperCase(),
+                                                                    )}
                                                             </span>
                                                         </ItemDescription>
                                                     </ItemContent>

@@ -7,7 +7,7 @@ import { LoadingScreen } from "@/components/common/loading-screen";
 import { Navbar } from "@/components/custom/login_navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
@@ -35,7 +35,7 @@ export default function LoginPage() {
             <Navbar></Navbar>
             <main
                 className="
-                    flex h-screen flex-col
+                    flex flex-col h-[calc(100dvh-64px)]
                     md:h-[calc(100vh-64px)] md:flex-row
                 "
             >
@@ -45,18 +45,17 @@ export default function LoginPage() {
                         md:flex md:h-full md:w-1/2
                     "
                 >
-                    <Image
-                        src={tms.src}
-                        alt="Preview"
-                        width={tms.width}
-                        height={tms.height}
+                    <Image src={tms.src} alt="Preview" fill priority className="object-cover" />
+                    <div className="absolute inset-0 w-full bg-black/65"></div>
+                    <div
                         className="
-                            h-auto w-full
-                            md:h-full
+                            absolute bottom-20
+                            md:bottom-10
+                            left-5
+                            md:left-6
+                            text-left
                         "
-                    />
-                    <div className="absolute inset-0 w-full bg-black/50"></div>
-                    <div className="absolute bottom-20 left-12 text-left">
+                    >
                         <h1 className="text-4xl pb-2 font-bold tracking-tight text-muted">
                             Turn Skills Into Real Impact
                         </h1>
@@ -86,11 +85,13 @@ export default function LoginPage() {
                         md:w-1/2 md:justify-around
                     "
                 >
-                    <Card className="w-full max-w-md">
-                        <CardHeader>Log In</CardHeader>
-                        <CardContent>
-                            <form className="space-y-4" onSubmit={handleSubmit}>
-                                <div className="space-y-2">
+                    <Card className="w-full max-w-md min-h-[450px] flex flex-col">
+                        <CardHeader>
+                            <CardTitle className="text-xl">Log In</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-20 mt-8">
+                            <form className="space-y-10" onSubmit={handleSubmit}>
+                                <div className="space-y-4">
                                     <Label htmlFor="email">Email</Label>
                                     <Input
                                         id="email"
@@ -101,7 +102,7 @@ export default function LoginPage() {
                                         required
                                     />
                                 </div>
-                                <div className="space-y-2">
+                                <div className="space-y-4">
                                     <Label htmlFor="password">Password</Label>
                                     <Input
                                         id="password"

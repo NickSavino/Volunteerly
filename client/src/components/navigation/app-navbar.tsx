@@ -1,16 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
-import type { AppNavItem } from "./nav-config";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,7 +9,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuList,
+} from "@/components/ui/navigation-menu";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { AppNavItem } from "./nav-config";
 
 type AppNavbarProps = {
     homeHref: string;
@@ -95,13 +95,27 @@ export function AppNavbar({
                         <button
                             type="button"
                             className="
-                                flex min-w-55 items-center justify-between gap-3 rounded-full
-                                bg-yellow-50 px-4 py-2 text-left transition-colors
-                                hover:bg-yellow-100
+                                cursor-pointer flex
+                                md:min-w-55
+                                items-center justify-between gap-3 rounded-full
+                                md:bg-yellow-50 md:px-4
+                                py-2 text-left transition-colors
+                                md:hover:bg-yellow-100
                             "
                         >
-                            <div className="flex min-w-0 items-center gap-3">
-                                <div className="min-w-0">
+                            <div
+                                className="
+                                    flex min-w-0 items-center gap-3 ml-auto
+                                    md:ml-0
+                                    w-fit
+                                "
+                            >
+                                <div
+                                    className="
+                                        min-w-0 hidden
+                                        md:block
+                                    "
+                                >
                                     <p className="truncate text-sm font-medium text-yellow-600">
                                         {displayName}
                                     </p>
@@ -137,7 +151,7 @@ export function AppNavbar({
                                 const isActive = isNavItemActive(pathname, href);
 
                                 return (
-                                    <DropdownMenuItem key={href} asChild>
+                                    <DropdownMenuItem key={href} asChild className="cursor-pointer">
                                         <Link
                                             href={href}
                                             className={
@@ -153,7 +167,7 @@ export function AppNavbar({
 
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuItem asChild>
+                        <DropdownMenuItem asChild className="cursor-pointer">
                             <Link href={profileHref}>Profile</Link>
                         </DropdownMenuItem>
 
