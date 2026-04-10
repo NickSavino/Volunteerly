@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Application review page - shows the volunteer's full profile and lets the org approve them
+ */
+
 "use client";
 
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
@@ -24,6 +29,7 @@ export default function ViewApplicationPage({
 }: {
     params: Promise<{ id: string; appId: string }>;
 }) {
+    // Unwrap Next.js dynamic route params using React.use()
     const { id, appId } = use(params);
     const { loading, fetching, session, router, matchedSchedule, application, selectVolunteer } =
         useOppApplicationViewModel(id, appId);
@@ -61,6 +67,7 @@ export default function ViewApplicationPage({
                         <h1>Review Application</h1>
                     </div>
 
+                    {/* Volunteer profile summary card */}
                     <Card>
                         <CardContent>
                             <div
@@ -69,6 +76,7 @@ export default function ViewApplicationPage({
                                     md:grid md:grid-cols-8 md:text-left
                                 "
                             >
+                                {/* Avatar column */}
                                 <div
                                     className="
                                         flex justify-center
@@ -86,6 +94,7 @@ export default function ViewApplicationPage({
                                     </Avatar>
                                 </div>
 
+                                {/* Name, title, bio, and application date */}
                                 <div
                                     className="
                                         flex flex-col gap-1
@@ -102,6 +111,7 @@ export default function ViewApplicationPage({
                                             {application?.volunteer?.firstName}{" "}
                                             {application?.volunteer?.lastName}
                                         </h3>
+                                        {/* Color-coded match badge: green >= 80%, yellow >= 50%, red otherwise */}
                                         <Badge
                                             className={
                                                 (application?.matchPercentage || 0) >= 80
@@ -125,6 +135,7 @@ export default function ViewApplicationPage({
                                     <p className="text-sm">{application?.volunteer?.bio}</p>
                                 </div>
 
+                                {/* Location and star rating column */}
                                 <div
                                     className="
                                         flex flex-col items-center gap-3 pt-3
@@ -144,9 +155,11 @@ export default function ViewApplicationPage({
                                             </span>
                                         </div>
                                     </span>
+                                    {/* Only show star rating if the volunteer has been reviewed before */}
                                     {(application?.volunteer?.averageRating || 0) > 0 && (
                                         <>
                                             <div className="flex items-center gap-0.5">
+                                                {/* Partial star fill using overflow clipping technique */}
                                                 {[1, 2, 3, 4, 5].map((star) => {
                                                     const fill = Math.min(
                                                         1,
@@ -192,10 +205,12 @@ export default function ViewApplicationPage({
                         </CardContent>
                     </Card>
 
+                    {/* Work experience and education card */}
                     <Card>
                         <CardHeader>
                             <CardTitle>Volunteer Details</CardTitle>
                         </CardHeader>
+                        {/* Empty state when volunteer has no experience or education listed */}
                         {application?.volunteer?.workExperiences?.length === 0 &&
                             application?.volunteer?.educations?.length === 0 && (
                                 <CardContent className="flex h-full flex-col justify-center text-center">
@@ -259,6 +274,7 @@ export default function ViewApplicationPage({
                         )}
                     </Card>
 
+                    {/* Opportunity-specific details: their message and availability overlap */}
                     <Card>
                         <CardHeader>
                             <CardTitle>Opportunity Specific Details</CardTitle>

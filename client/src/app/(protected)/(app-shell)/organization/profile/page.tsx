@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Organization profile page - view and edit public details, view private details, manage avatar
+ */
+
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";
@@ -46,6 +51,7 @@ import {
 import { useState } from "react";
 import { useOrgProfileViewModel } from "./orgProfileVm";
 
+// Map award title strings to their corresponding lucide icons
 const awardIcons: Record<string, LucideIcon> = {
     "First Step": Rocket,
     "Community Builder": Trophy,
@@ -99,6 +105,7 @@ export default function OrgProfilePage() {
                     Back
                 </Button>
 
+                {/* Hero banner with avatar, org name, cause category badge, awards, and rating */}
                 <div
                     className="
                         relative mb-6 min-h-48 w-full overflow-hidden rounded-xl bg-gray-800
@@ -112,6 +119,7 @@ export default function OrgProfilePage() {
                             md:bottom-4
                         "
                     >
+                        {/* Avatar with pencil button overlay for uploading a new image */}
                         <div className="relative">
                             <Avatar className="size-20">
                                 <AvatarImage src={UserService.getAvatarURL(currentOrg?.id || "")} />
@@ -129,6 +137,7 @@ export default function OrgProfilePage() {
                             >
                                 <Pencil />
                             </Button>
+                            {/* Hidden file input triggered by the pencil button above */}
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -155,9 +164,12 @@ export default function OrgProfilePage() {
                             )}
                         </div>
                     </div>
+
+                    {/* Awards and star rating shown in the top right of the banner */}
                     <div className="absolute right-6 bottom-4 flex flex-col gap-2 text-center">
                         <div className="flex flex-row justify-end gap-2">
                             {Object.entries(awards).map(([title, description]) => {
+                                // Fall back to generic Award icon for any unrecognized award titles
                                 const Icon = awardIcons[title] || Award;
                                 return (
                                     <HoverCard key={title}>
@@ -175,6 +187,7 @@ export default function OrgProfilePage() {
                             })}
                         </div>
 
+                        {/* Partial fill star rating - only shown if the org has received reviews */}
                         {(reviewSummary.totalReviews || 0) > 0 && (
                             <HoverCard>
                                 <HoverCardTrigger asChild>
@@ -225,6 +238,7 @@ export default function OrgProfilePage() {
                         md:flex-row
                     "
                 >
+                    {/* Left column - editable public details and impact highlights */}
                     <div
                         className="
                             mx-auto mb-5 flex min-h-full w-full flex-col gap-6
@@ -235,6 +249,7 @@ export default function OrgProfilePage() {
                             <CardHeader>
                                 <CardTitle className="text-xl">Public Details</CardTitle>
                                 <CardAction>
+                                    {/* Toggle between Cancel and Edit based on editing state */}
                                     {editing ? (
                                         <Button
                                             type="button"
@@ -262,6 +277,7 @@ export default function OrgProfilePage() {
                                         <Label className="text-lg text-muted-foreground">
                                             Mission Statement
                                         </Label>
+                                        {/* Fields switch between read-only labels and editable inputs */}
                                         {!editing ? (
                                             <Label>{currentOrg?.missionStatement}</Label>
                                         ) : (
@@ -357,6 +373,8 @@ export default function OrgProfilePage() {
                                             )}
                                         </Field>
                                     </div>
+
+                                    {/* Address field - shows combined string in view mode, separate inputs when editing */}
                                     <Field>
                                         <Label className="text-lg text-muted-foreground">
                                             Address
@@ -505,6 +523,8 @@ export default function OrgProfilePage() {
 
                                     <hr className="mx-2 border-gray-300" />
                                     <CardTitle className="text-xl">Impact Highlights</CardTitle>
+
+                                    {/* Impact highlights - two key-value pairs shown as labels or inputs */}
                                     <div
                                         className="
                                             grid grid-cols-1 gap-4
@@ -537,6 +557,7 @@ export default function OrgProfilePage() {
                                             </>
                                         ) : (
                                             <>
+                                                {/* First highlight - label and value inputs */}
                                                 <Field>
                                                     <Input
                                                         id="impact1Label"
@@ -578,6 +599,7 @@ export default function OrgProfilePage() {
                                                     />
                                                 </Field>
 
+                                                {/* Second highlight - label and value inputs */}
                                                 <Field>
                                                     <Input
                                                         id="impact2Label"
@@ -636,6 +658,8 @@ export default function OrgProfilePage() {
                             </form>
                         </Card>
                     </div>
+
+                    {/* Right sidebar - read-only private details and support ticket link */}
                     <div
                         className="
                             mx-auto size-full max-w-3xl space-y-6
@@ -672,6 +696,7 @@ export default function OrgProfilePage() {
                                     </Button>
                                 </Field>
                                 <hr className="mx-2 border-gray-300" />
+                                {/* Private details can only be changed via a moderator ticket */}
                                 <CardDescription>
                                     Due to platform integrity, our moderator team can help you
                                     update private information.
@@ -689,6 +714,8 @@ export default function OrgProfilePage() {
                     </div>
                 </div>
             </main>
+
+            {/* After ticket submission, redirect to the new conversation thread */}
             <SubmitTicketModal
                 open={isTicketModalOpen}
                 onClose={() => setIsTicketModalOpen(false)}

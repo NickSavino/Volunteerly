@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Opportunity edit page - reuses the shared OpportunityForm in editing mode
+ */
+
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";
@@ -6,7 +11,10 @@ import { useCreateOpportunityViewModel } from "../../create/orgCreateOpportunity
 import OpportunityForm from "../../opportunityForm";
 
 export default function OppUpdatePage({ params }: { params: Promise<{ id: string }> }) {
+    // Unwrap Next.js dynamic route params using React.use()
     const { id } = use(params);
+
+    // Reuse the create view model - passing oppId puts it into edit mode
     const {
         loading,
         submitting,
@@ -26,6 +34,7 @@ export default function OppUpdatePage({ params }: { params: Promise<{ id: string
         <div className="min-h-screen">
             <title>Organization Application - Volunteerly</title>
             <main className="flex size-full flex-col items-center p-8">
+                {/* editing=true changes the form title and submit button label */}
                 <OpportunityForm
                     opportunity={opportunity}
                     handleDayToggle={handleDayToggle}

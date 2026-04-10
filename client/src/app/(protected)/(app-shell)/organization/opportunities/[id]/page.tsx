@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Organization opportunity detail page - handles OPEN (applications), FILLED (progress), and CLOSED (analytics) states
+ */
+
 "use client";
 
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
@@ -53,6 +58,7 @@ import { use, useState } from "react";
 import { useOrgViewOpportunityViewModel } from "./orgViewOpportunityVm";
 
 export default function ViewOpportunityPage({ params }: { params: Promise<{ id: string }> }) {
+    // Unwrap Next.js dynamic route params using React.use()
     const { id } = use(params);
     const {
         loading,
@@ -94,6 +100,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             md:mb-0 md:w-3/4
                         "
                     >
+                        {/* Header - back button, status badge, and date */}
                         <div>
                             <Button
                                 variant="ghost"
@@ -117,6 +124,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                             </div>
                         </div>
 
+                        {/* Opportunity title - formats the work type enum to readable text */}
                         <h2 className="font-bold">
                             {opportunity?.name} -{" "}
                             {opportunity?.workType
@@ -125,6 +133,8 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                 .replace(/\b\w/g, (char) => char.toUpperCase())}{" "}
                             - {opportunity?.category}
                         </h2>
+
+                        {/* Analytics stat cards only shown once the opportunity is CLOSED */}
                         {opportunity?.status == "CLOSED" && (
                             <div className="md:grid md:grid-cols-2 md:justify-around md:gap-3">
                                 <OrgStatCard
@@ -141,8 +151,15 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                 />
                             </div>
                         )}
+
+                        {/*
+                         * Main content is split into two branches:
+                         * - OPEN: shows project details and the applications list
+                         * - FILLED / CLOSED: shows assigned volunteer, progress timeline, and actions
+                         */}
                         {opportunity?.status == "OPEN" ? (
                             <div>
+                                {/* Project description with edit button */}
                                 <Card>
                                     <CardHeader>
                                         <CardTitle>Project Description</CardTitle>
@@ -223,6 +240,8 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                         </span>
                                     </CardContent>
                                 </Card>
+
+                                {/* Applications list */}
                                 <Card className="my-5">
                                     <CardHeader>
                                         <CardTitle>Applications</CardTitle>
@@ -283,6 +302,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                                         </ItemDescription>
                                                     </ItemContent>
                                                     <ItemActions>
+                                                        {/* Color-coded match badge */}
                                                         <Badge
                                                             className={
                                                                 app.matchPercentage >= 80
@@ -314,7 +334,9 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                 </Card>
                             </div>
                         ) : (
+                            // FILLED or CLOSED state - shows volunteer card, messaging, and progress timeline
                             <div>
+                                {/* Opportunity overview with complete button for FILLED */}
                                 <Card className="mb-5">
                                     <CardHeader>
                                         <CardTitle>Opportunity Overview</CardTitle>
@@ -381,6 +403,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                     </CardContent>
                                 </Card>
 
+                                {/* Assigned volunteer card with review and message actions */}
                                 <Card className="mb-5">
                                     <CardContent>
                                         <div
@@ -453,6 +476,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                     </CardContent>
                                 </Card>
 
+                                {/* Progress timeline card with "Add Update" dialog for FILLED opps */}
                                 <Card className="mb-5">
                                     <CardHeader>
                                         <CardTitle>Progress Tracking</CardTitle>
@@ -584,6 +608,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                                             </p>
                                         </CardContent>
                                     ) : (
+                                        // Scrollable timeline list with a left border as the timeline line
                                         <CardContent className="space-y-4">
                                             <div
                                                 className="
@@ -621,6 +646,7 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
                 </main>
             </div>
 
+            {/* Review modal rendered outside main flow to avoid z-index issues */}
             <ReviewModal
                 open={reviewModalOpen}
                 volunteerName={`${opportunity?.volunteer?.firstName ?? ""} ${opportunity?.volunteer?.lastName ?? ""}`.trim()}
@@ -632,6 +658,11 @@ export default function ViewOpportunityPage({ params }: { params: Promise<{ id: 
     );
 }
 
+/**
+ * Modal for submitting a star rating review and optional flag for a volunteer.
+ * Validates that a rating is selected and a flag reason is provided if flagging.
+ * Uses local state since this component manages its own form lifecycle.
+ */
 function ReviewModal({
     open,
     volunteerName,
@@ -649,6 +680,8 @@ function ReviewModal({
     const [hovered, setHovered] = useState(0);
     const [flagged, setFlagged] = useState(false);
     const [flagReason, setFlagReason] = useState("");
+
+    // Only show validation errors after the user has attempted to submit
     const [touched, setTouched] = useState(false);
 
     const ratingMissing = rating === 0;
@@ -658,6 +691,7 @@ function ReviewModal({
         setTouched(true);
         if (ratingMissing || flagReasonEmpty || submitting) return;
         await onSubmit({ rating, flagged, flagReason: flagged ? flagReason : undefined });
+        // Reset form after successful submission
         setRating(0);
         setFlagged(false);
         setFlagReason("");
@@ -665,6 +699,7 @@ function ReviewModal({
     }
 
     function handleClose() {
+        // Don't allow closing while a submission is in flight
         if (submitting) return;
         setRating(0);
         setFlagged(false);
@@ -713,6 +748,7 @@ function ReviewModal({
                     Reviewing: <span className="font-semibold">{volunteerName}</span>
                 </p>
 
+                {/* Interactive star rating - highlights stars up to the hovered or selected value */}
                 <div>
                     <label className="mb-1 block text-sm font-medium text-foreground">Rating</label>
                     <div className="flex gap-1">
@@ -746,6 +782,7 @@ function ReviewModal({
                     )}
                 </div>
 
+                {/* Flag toggle - reveals reason textarea when checked */}
                 <label className="flex cursor-pointer items-center gap-2 select-none">
                     <input
                         type="checkbox"

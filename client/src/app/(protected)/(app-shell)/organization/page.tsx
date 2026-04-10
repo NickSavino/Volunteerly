@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Organization main dashboard - overview of active opportunities and key stats
+ */
+
 "use client";
 
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
@@ -62,6 +67,7 @@ export default function HomePage() {
                     md:h-[calc(100vh-64px)] md:flex-row
                 "
             >
+                {/* Left section - stats and active opportunities list */}
                 <div
                     className="
                         mx-auto mb-5 flex min-h-full w-full flex-col gap-6
@@ -92,6 +98,7 @@ export default function HomePage() {
                         </div>
                     </div>
 
+                    {/* Three all-time stat cards */}
                     <div className="md:grid md:grid-cols-3 md:justify-around md:gap-3">
                         <OrgStatCard
                             icon={PersonStanding}
@@ -113,6 +120,7 @@ export default function HomePage() {
                         />
                     </div>
 
+                    {/* Active opportunities list - shows both OPEN and FILLED */}
                     <div className="flex-1 overflow-y-auto">
                         <Card className="h-full overflow-y-auto">
                             <CardHeader>
@@ -152,6 +160,7 @@ export default function HomePage() {
                                                 <ItemTitle>
                                                     {opp.name} <Badge>{opp.status}</Badge>{" "}
                                                 </ItemTitle>
+                                                {/* OPEN opps show applicant count and dates; FILLED show volunteer info */}
                                                 {opp.status == "OPEN" ? (
                                                     <ItemDescription
                                                         className="
@@ -222,6 +231,8 @@ export default function HomePage() {
                         </Card>
                     </div>
                 </div>
+
+                {/* Right sidebar - org profile card and support link */}
                 <div
                     className="
                         mx-auto flex min-h-full w-full max-w-3xl flex-col justify-center space-y-6
@@ -272,6 +283,7 @@ export default function HomePage() {
                         </CardContent>
                     </Card>
 
+                    {/* Support card - opens a moderator ticket modal */}
                     <Card className="mx-5">
                         <CardHeader>
                             <CardTitle>Need Help?</CardTitle>
@@ -293,6 +305,7 @@ export default function HomePage() {
                 </div>
             </main>
 
+            {/* After submitting a ticket, redirect to the new conversation */}
             <SubmitTicketModal
                 open={isTicketModalOpen}
                 onClose={() => setIsTicketModalOpen(false)}
