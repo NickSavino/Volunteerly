@@ -41,7 +41,7 @@ export default function OrgApplicationPage() {
         setAddress,
     } = useOrgApplicationViewModel();
 
-    if (loading || bootstrapping) {
+    if (loading || bootstrapping || submitting) {
         return <LoadingScreen />;
     }
 

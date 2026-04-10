@@ -1,20 +1,16 @@
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";
-import { SubmitTicketModal } from "@/components/common/tickets/submit-ticket-modal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, LogOut, MessageCircleQuestionMark, User } from "lucide-react";
-import { useState } from "react";
 import { Navbar } from "../application/navbar";
 import { useAppliedOrgDashboardViewModel } from "./appliedDashboardVm";
 
 export default function HomePage() {
     const { loading, session, router, signOut, currentOrganization } =
         useAppliedOrgDashboardViewModel();
-
-    const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
     if (loading || !session || !currentOrganization) {
         return <LoadingScreen />;
@@ -111,32 +107,25 @@ export default function HomePage() {
                         <CardHeader>
                             <CardTitle>Need Help?</CardTitle>
                             <CardDescription>
-                                Open a ticket with our moderator team for assistance.
+                                Please email our moderator team for assistance.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Button
-                                variant="ghost"
-                                className="
-                                    text-base flex w-full cursor-pointer items-center gap-3 py-6
-                                "
-                                onClick={() => setIsTicketModalOpen(true)}
-                            >
-                                <MessageCircleQuestionMark className="size-7! shrink-0" />
-                                Contact Support
-                            </Button>
+                            <a href="mailto:support@volunteerly.com">
+                                <Button
+                                    variant="ghost"
+                                    className="
+                                        text-base flex w-full cursor-pointer items-center gap-3 py-6
+                                    "
+                                >
+                                    <MessageCircleQuestionMark className="size-7! shrink-0" />
+                                    Contact Support
+                                </Button>
+                            </a>
                         </CardContent>
                     </Card>
                 </div>
             </main>
-
-            <SubmitTicketModal
-                open={isTicketModalOpen}
-                onClose={() => setIsTicketModalOpen(false)}
-                onSubmitted={(ticket) =>
-                    router.push(`/organization/messages?conversationId=${ticket.conversationId}`)
-                }
-            />
         </div>
     );
 }
