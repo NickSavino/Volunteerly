@@ -1,3 +1,8 @@
+/**
+ * oppApplicationVm.tsx
+ * View model for the organization's application review page
+ */
+
 import { useAuth } from "@/providers/auth-provider";
 import { OrganizationService } from "@/services/OrganizationService";
 import { Application, CurrentOrganization } from "@volunteerly/shared";
@@ -12,8 +17,11 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
     const [error, setError] = useState<string | null>(null);
     const [application, setApplication] = useState<Application>();
     const [fetching, setFetching] = useState(true);
+
+    // Days that overlap between what the opportunity needs and what the volunteer has available
     const [matchedSchedule, setMatchedSchedule] = useState<string[]>();
 
+    // Load org session and redirect to setup if not yet verified
     useEffect(() => {
         async function loadCurrentUser() {
             if (!session?.access_token) return;
@@ -43,15 +51,19 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
         loadCurrentUser();
     }, [session, router]);
 
+    // Load the application details and compute the availability overlap
     useEffect(() => {
         async function loadApplication() {
             try {
                 setFetching(true);
+
+                // Redirect back if the opportunity is no longer open
                 const opp = await OrganizationService.getOpportunity(oppId);
                 if (!(opp.data?.status == "OPEN")) {
                     router.replace(`/organization/opportunities/${oppId}`);
                     return;
                 }
+
                 const app = await OrganizationService.getApplication(appId);
                 if (!app.success) {
                     console.error(app.error);
@@ -60,6 +72,8 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
                     setFetching(false);
                     return;
                 }
+
+                // Compute which days the volunteer is available that the opportunity also needs
                 setMatchedSchedule(
                     opp.data.availability.filter((day) =>
                         app.data.volunteer?.availability?.includes(day),
@@ -75,6 +89,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
         loadApplication();
     }, [appId, oppId, router]);
 
+    // Selects this application's volunteer for the opportunity and redirects back
     async function selectVolunteer() {
         if (application?.volunteer?.id) {
             setFetching(true);
@@ -95,6 +110,7 @@ export function useOppApplicationViewModel(oppId: string, appId: string) {
         setError("Cannot Select Volunteer");
         toast.error("Failed to select Volunteer.", { position: "top-right" });
     }
+
     return {
         loading,
         fetching,

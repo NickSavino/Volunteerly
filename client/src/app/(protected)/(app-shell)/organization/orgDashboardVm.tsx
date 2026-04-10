@@ -1,3 +1,8 @@
+/**
+ * orgDashboardVm.tsx
+ * View model for the organization's main dashboard page
+ */
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
@@ -16,6 +21,7 @@ export function useOrgDashboardViewModel() {
     const [activeVlt, setActiveVlt] = useState(0);
     const [totalHours, setTotalHours] = useState(0);
 
+    // Load the org on session change - redirects incomplete profiles to the right setup page
     useEffect(() => {
         async function loadCurrentUser() {
             if (!session?.access_token) return;
@@ -45,6 +51,7 @@ export function useOrgDashboardViewModel() {
         loadCurrentUser();
     }, [session, router]);
 
+    // Load dashboard stats and active opportunities on mount
     useEffect(() => {
         async function loadOpportunities() {
             const opps = await OrganizationService.getActiveOpportunities();
