@@ -1,3 +1,7 @@
+/**
+ * page.tsx
+ * Experience Input page. Gets user to enter in their resume, work exp and education which will be used to extract their skills by groq.
+ */
 "use client";
 
 import { useExperienceInputViewModel } from "./experienceInputVm";
