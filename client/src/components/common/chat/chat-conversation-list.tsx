@@ -18,15 +18,20 @@ export function ChatConversationList({
     sectionTitle,
 }: ChatConversationListProps) {
     return (
-        <div className="flex h-full flex-col border-r border-border bg-background">
+        <div
+            className="
+                flex h-full min-h-0 min-w-0 flex-col overflow-hidden border-r border-border
+                bg-background
+            "
+        >
             <div className="border-b border-border px-4 py-3">
                 <p className="text-sm font-bold tracking-[0.18em] text-muted-foreground uppercase">
                     {sectionTitle}
                 </p>
             </div>
 
-            <ScrollArea className="h-full">
-                <div>
+            <ScrollArea className="h-full min-w-0">
+                <div className="min-w-0 overflow-hidden">
                     {conversations.map((conversation) => (
                         <ChatConversationListItem
                             key={conversation.id}

@@ -55,7 +55,7 @@ export function Navbar({
                                         <p className="text-sm text-primary">{name}</p>
                                         <p className="text-sm">{role}</p>
                                     </div>
-                                    <Avatar>
+                                    <Avatar className="shrink-0">
                                         <AvatarImage>
                                             {" "}
                                             <User />{" "}
