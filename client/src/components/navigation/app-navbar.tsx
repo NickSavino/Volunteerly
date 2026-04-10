@@ -1,16 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuList,
-} from "@/components/ui/navigation-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/logo.png";
-import type { AppNavItem } from "./nav-config";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,7 +9,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuList,
+} from "@/components/ui/navigation-menu";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { AppNavItem } from "./nav-config";
 
 type AppNavbarProps = {
     homeHref: string;
@@ -53,7 +53,12 @@ export function AppNavbar({
 
     return (
         <header className="w-full border-b bg-white px-6 py-3">
-            <div className="relative flex w-full items-center justify-between gap-6">
+            <div
+                className="
+                    relative flex w-full min-w-0 items-center justify-between
+                    sm:gap-6
+                "
+            >
                 <Link href={homeHref} className="shrink-0">
                     <Image src={logo} alt="Volunteerly" width={170} height={40} priority />
                 </Link>
@@ -95,43 +100,48 @@ export function AppNavbar({
                         <button
                             type="button"
                             className="
-                                cursor-pointer flex min-w-55 items-center justify-between gap-3
-                                rounded-full
-                                md:bg-yellow-50
-                                px-4 py-2 text-left transition-colors
-                                md:hover:bg-yellow-100
+                                ml-auto flex max-w-[calc(100vw-11rem)] items-center justify-between
+                                gap-2 rounded-full bg-yellow-50 px-3 py-2 text-left
+                                transition-colors
+                                hover:bg-yellow-100
+                                sm:max-w-none sm:min-w-[220px] sm:gap-3 sm:px-4
                             "
                         >
-                            <div
-                                className="
-                                    flex min-w-0 items-center gap-3 ml-auto
-                                    md:ml-0
-                                    w-fit
-                                "
-                            >
-                                <div
-                                    className="
-                                        min-w-0 hidden
-                                        md:block
-                                    "
-                                >
+                            <div className="flex min-w-0 items-center gap-3">
+                                <div className="min-w-0">
                                     <p className="truncate text-sm font-medium text-yellow-600">
                                         {displayName}
                                     </p>
-                                    <p className="truncate text-sm text-gray-400">{subtitle}</p>
+                                    <p
+                                        className="
+                                            hidden truncate text-sm text-gray-400
+                                            sm:block
+                                        "
+                                    >
+                                        {subtitle}
+                                    </p>
                                 </div>
 
-                                <Avatar className="size-9">
+                                <Avatar className="size-9 shrink-0">
                                     <AvatarImage src={avatarUrl ?? undefined} />
                                     <AvatarFallback>{avatarFallback}</AvatarFallback>
                                 </Avatar>
                             </div>
 
-                            <ChevronDown className="size-4 text-gray-500" />
+                            <ChevronDown
+                                className="
+                                    hidden size-4 shrink-0 text-gray-500
+                                    sm:block
+                                "
+                            />
                         </button>
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent align="end" className="w-56 p-2">
+                    <DropdownMenuContent
+                        align="end"
+                        collisionPadding={8}
+                        className="w-56 max-w-[calc(100vw-1rem)] p-2"
+                    >
                         <div
                             className="
                                 px-2 py-1.5
@@ -141,7 +151,7 @@ export function AppNavbar({
                             <p className="truncate text-sm font-medium text-gray-900">
                                 {displayName}
                             </p>
-                            <p className="truncate text-xs text-gray-500">{subtitle}</p>
+                            <p className="truncate text-sm text-gray-400">{subtitle}</p>
                         </div>
 
                         <div className="md:hidden">
@@ -166,7 +176,7 @@ export function AppNavbar({
 
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuItem asChild className="cursor-pointer">
+                        <DropdownMenuItem asChild>
                             <Link href={profileHref}>Profile</Link>
                         </DropdownMenuItem>
 

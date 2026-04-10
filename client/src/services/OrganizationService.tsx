@@ -1,22 +1,22 @@
 import { api } from "@/lib/api";
 import {
+    ApplicationSchema,
+    ApplicationsSchema,
+    CountSchema,
     CurrentOrganizationSchema,
     CurrentOrganizationUpdate,
-    OpportunitiesSchema,
     ModeratorOrganizationList,
     ModeratorOrganizationListSchema,
-    OrganizationSchema,
-    CountSchema,
-    TotalHoursSchema,
-    OpportunitySchema,
-    ApplicationsSchema,
-    ApplicationSchema,
+    OpportunitiesSchema,
     OpportunityAnalyticsSchema,
-    ProgressUpdate,
-    ProgressUpdateSchema,
-    UpdateOpportunitySchema,
+    OpportunitySchema,
     organizationAwardsSchema,
     OrganizationReviewStatsSchema,
+    OrganizationSchema,
+    ProgressUpdate,
+    ProgressUpdateSchema,
+    TotalHoursSchema,
+    UpdateOpportunitySchema,
 } from "@volunteerly/shared";
 
 export class OrganizationService {

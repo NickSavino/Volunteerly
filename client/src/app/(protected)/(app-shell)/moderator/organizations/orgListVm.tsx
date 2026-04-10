@@ -1,5 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { appToast } from "@/components/common/app-toast";
 import { useAuth } from "@/providers/auth-provider";
 import { ModeratorService } from "@/services/ModeratorService";
 import { OrganizationService } from "@/services/OrganizationService";
@@ -8,7 +7,8 @@ import type {
     ModeratorOrganizationList,
     ModeratorOrganizationListItem,
 } from "@volunteerly/shared";
-import { appToast } from "@/components/common/app-toast";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export type TabKey = "ALL" | "APPLIED" | "VERIFIED" | "REJECTED";
 export type SortKey = "alphabetical" | "newest" | "oldest";
@@ -25,6 +25,10 @@ const PAGE_SIZE_OPTIONS = [3, 5, 10] as const;
 export function useOrgListViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
+    const pathName = usePathname();
+    const searchParams = useSearchParams();
+    const requestedOrgId = searchParams.get("orgId");
+    const requestedAction = searchParams.get("action");
 
     const [currentModerator, setCurrentModerator] = useState<CurrentModerator | undefined>(
         undefined,
@@ -78,6 +82,15 @@ export function useOrgListViewModel() {
         }
         load();
     }, [session, router]);
+
+    useEffect(() => {
+        if (requestedAction !== "review" || !requestedOrgId || selectedOrg) return;
+
+        const requestedOrg = allOrgs.find((org) => org.id === requestedOrgId);
+        if (requestedOrg) {
+            openReviewModal(requestedOrg);
+        }
+    }, [allOrgs, requestedAction, requestedOrgId, selectedOrg]);
 
     const tabCounts = useMemo(
         () => ({
@@ -151,6 +164,7 @@ export function useOrgListViewModel() {
         setShowRejectModal(false);
         setShowApproveConfirm(false);
         setRejectionReason("");
+        router.replace(pathName);
     }
 
     function toggleCheck(key: keyof typeof checks) {
@@ -214,6 +228,28 @@ export function useOrgListViewModel() {
         }
     }
 
+    async function handleViewDocument() {
+        if (!selectedOrg?.docId) return;
+
+        try {
+            const fileBlob = await OrganizationService.getOrganizationDocument(selectedOrg.docId);
+
+            const url = URL.createObjectURL(fileBlob);
+            const newWindow = window.open(url, "_blank");
+            const interval = setInterval(() => {
+                if (newWindow?.close) {
+                    clearInterval(interval);
+                    URL.revokeObjectURL(url);
+                }
+            }, 2000);
+        } catch (err) {
+            console.error("Failed to load document", err);
+            appToast.error("Failed to load document", {
+                message: "The verification document could not be opened.",
+            });
+        }
+    }
+
     return {
         auth: {
             loading: loading || loadingData,
@@ -268,6 +304,7 @@ export function useOrgListViewModel() {
             handleApprove,
             handleReject,
             requestApprove,
+            handleViewDocument,
         },
     };
 }

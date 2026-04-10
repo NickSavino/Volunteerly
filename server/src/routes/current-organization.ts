@@ -1,32 +1,33 @@
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
+import { sendEmail } from "../services/azure-service.js";
+import { getOrCreateDirectConversation } from "../services/chat/chat-service.js";
 import {
     applyOrganization,
-    orgPostReview,
-    orgPostFlag,
-    createCurrentOrganization,
-    getCurrentOrganization,
-    getAllOpportunities,
-    updateCurrentOrganization,
-    getActiveOpportunities,
-    sumTotalOpportunityHours,
+    completeOpportunity,
     countActiveOpportunities,
     countAllOpportunities,
-    getOrgOpportunity,
-    getApplications,
-    getOrgApplication,
-    selectOppVolunteer,
-    completeOpportunity,
-    getOpportunityAnalytics,
-    createOrgProgressUpdate,
+    createCurrentOrganization,
     createOpportunity,
-    updateOpportunity,
+    createOrgProgressUpdate,
+    getActiveOpportunities,
+    getAllOpportunities,
+    getApplications,
+    getCurrentOrganization,
+    getOpportunityAnalytics,
     getOppVltApplication,
+    getOrgApplication,
+    getOrgOpportunity,
     getReviewSummary,
+    orgPostFlag,
+    orgPostReview,
+    selectOppVolunteer,
+    sumTotalOpportunityHours,
+    updateCurrentOrganization,
+    updateOpportunity,
 } from "../services/organization-service.js";
 import { getCurrentUser } from "../services/user-service.js";
-import { sendEmail } from "../services/azure-service.js";
 
 type AuthenticatedRequest = {
     auth?: {
@@ -702,5 +703,39 @@ currentOrganizationRouter.put("/opportunity", auth, async (req, res, next) => {
     } catch (error) {
         console.error(error);
         next(error);
+    }
+});
+
+currentOrganizationRouter.post("/opportunity/message-thread", auth, async (req, res, next) => {
+    try {
+        const userId = req.auth?.userId;
+        if (!userId) {
+            return res.status(401).json({
+                error: "Unauthorized",
+                message: "User context missing.",
+            });
+        }
+
+        const { oppId } = req.body;
+        if (!oppId || typeof oppId !== "string") {
+            return res.status(400).json({
+                error: "Bad Request",
+                message: "Opportunity ID is required.",
+            });
+        }
+
+        const opportunity = await getOrgOpportunity(userId, oppId);
+        if (!opportunity || !opportunity.volId) {
+            return res.status(404).json({
+                error: "Not Found",
+                message: "Assigned volunteer not found for this opportunity.",
+            });
+        }
+
+        const conversation = await getOrCreateDirectConversation(userId, opportunity.volId);
+
+        return res.status(200).json({ conversationId: conversation.id });
+    } catch (err) {
+        next(err);
     }
 });
