@@ -1,3 +1,9 @@
+/**
+ * page.tsx
+ * Organization waiting room page shown after submitting an application - displays
+ * approval/rejection status and allows the org to view their submitted application
+ */
+
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";
@@ -15,9 +21,11 @@ export default function HomePage() {
     if (loading || !session || !currentOrganization) {
         return <LoadingScreen />;
     }
+
     return (
         <div className="min-h-screen">
             <title>Organization Dashboard - Volunteerly</title>
+            {/* Use the setup navbar since the org is still unverified */}
             <Navbar
                 name={currentOrganization?.orgName || "Organization"}
                 role={"Unverified"}
@@ -30,6 +38,7 @@ export default function HomePage() {
                     md:h-[calc(100vh-64px)] md:flex-row
                 "
             >
+                {/* Left section - status message */}
                 <div
                     className="
                         max-w-3xl mx-auto mb-5 flex min-h-full w-full flex-col gap-6
@@ -40,6 +49,7 @@ export default function HomePage() {
                         <h1 className="text-2xl font-bold">
                             Welcome, {currentOrganization?.orgName}
                         </h1>
+                        {/* Show rejection reason if rejected, otherwise show the pending message */}
                         <div className="m-5 rounded-sm bg-warning p-5">
                             {currentOrganization?.status === "REJECTED" ? (
                                 <>
@@ -56,6 +66,8 @@ export default function HomePage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Right sidebar - org card with view application and logout buttons */}
                 <div
                     className="
                         mx-auto min-h-full w-full max-w-3xl space-y-6
@@ -103,6 +115,7 @@ export default function HomePage() {
                         </CardContent>
                     </Card>
 
+                    {/* Support card - links to email since the org can't open tickets yet (not verified) */}
                     <Card className="mx-5">
                         <CardHeader>
                             <CardTitle>Need Help?</CardTitle>

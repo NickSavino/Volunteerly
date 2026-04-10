@@ -1,3 +1,9 @@
+/**
+ * navbar.tsx
+ * Minimal navbar shown during the organization setup/application flow
+ * before the org has been verified and can access the full app shell
+ */
+
 import Link from "next/link";
 
 import {
@@ -29,6 +35,7 @@ export function Navbar({
                     <Image src={logo.src} alt="Logo" width={200} height={200} />
                 </Link>
 
+                {/* User menu - shows org name and role, with a log out action */}
                 <NavigationMenu>
                     <NavigationMenuList className="flex gap-2">
                         <NavigationMenuItem>
@@ -43,6 +50,7 @@ export function Navbar({
                                         flex w-full min-w-0 items-center gap-2 cursor-pointer
                                     "
                                 >
+                                    {/* Name and role text are hidden on smaller screens */}
                                     <div
                                         className="
                                             hidden
