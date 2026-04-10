@@ -1,3 +1,8 @@
+/**
+ * orgProfileVm.tsx
+ * View model for the organization's own profile view and edit page
+ */
+
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserService } from "@/services/UserService";
@@ -10,6 +15,8 @@ import { useAppSession } from "@/providers/app-session-provider";
 export function useOrgProfileViewModel() {
     const router = useRouter();
     const { session, user, loading, signOut } = useAuth();
+
+    // Keep a copy of the original data so we can reset the form on cancel
     const [originalOrg, setOriginalOrg] = useState<CurrentOrganization | undefined>(undefined);
     const [currentOrg, setCurrentOrg] = useState<CurrentOrganization | undefined>(undefined);
     const [error, setError] = useState<string | null>(null);
@@ -19,10 +26,16 @@ export function useOrgProfileViewModel() {
         avgRating: 0,
         totalReviews: 0,
     });
+
+    // Impact highlights are stored as two key-value objects - we manage them separately
+    // for easier form binding
     const [impactHighlights, setImpactHighlights] = useState({
         first: { label: "", value: "" },
         second: { label: "", value: "" },
     });
+
+    // Address is stored as a single comma-separated string in the DB but managed
+    // as separate fields in the form
     const [address, setAddress] = useState({
         streetAdr: "",
         city: "",
@@ -33,6 +46,7 @@ export function useOrgProfileViewModel() {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { refresh } = useAppSession();
 
+    // Load org data, awards, and reviews - also redirects if profile setup is incomplete
     useEffect(() => {
         async function loadCurrentUser() {
             if (!session?.access_token) return;
@@ -54,6 +68,8 @@ export function useOrgProfileViewModel() {
                 }
                 setCurrentOrg(org.data);
                 setOriginalOrg(org.data);
+
+                // Parse the stored address string back into individual fields
                 const adrData = org.data.hqAdr?.split(", ") || [];
                 setAddress({
                     streetAdr: adrData[0] || "",
@@ -61,6 +77,8 @@ export function useOrgProfileViewModel() {
                     province: adrData[2] || "AB",
                     postalCode: adrData[3] || "",
                 });
+
+                // Pull out the two impact highlight entries if they exist
                 if (org.data.impactHighlights && org.data.impactHighlights.length >= 2) {
                     setImpactHighlights({
                         first: {
@@ -97,6 +115,8 @@ export function useOrgProfileViewModel() {
         loadCurrentUser();
     }, [session, router, fetching]);
 
+    // Downloads and opens the org's submitted verification document in a new tab
+    // The blob URL is revoked 2 seconds after the window closes to avoid memory leaks
     async function viewSubmittedDoc() {
         if (currentOrg?.docId) {
             try {
@@ -119,6 +139,9 @@ export function useOrgProfileViewModel() {
         }
         return;
     }
+
+    // Submits the profile edit form - reassembles the address and impact highlights
+    // before sending to the API
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         if (!editing || !currentOrg) {
@@ -128,7 +151,10 @@ export function useOrgProfileViewModel() {
         setFetching(true);
         setError(null);
 
+        // Reconstruct the single address string from the separate form fields
         const hqAdr = `${address.streetAdr}, ${address.city}, ${address.province}, ${address.postalCode}`;
+
+        // Convert the split label/value pairs back to the key-value object format the API expects
         const updateOrg: CurrentOrganizationUpdate = {
             ...currentOrg,
             hqAdr: hqAdr,
@@ -155,6 +181,7 @@ export function useOrgProfileViewModel() {
         return;
     }
 
+    // Reverts all edit form fields back to the last saved values from the server
     async function resetEdit() {
         if (originalOrg) {
             setCurrentOrg(originalOrg);
@@ -190,6 +217,7 @@ export function useOrgProfileViewModel() {
         setEditing(false);
     }
 
+    // Uploads the newly selected avatar file and refreshes the app session to show it
     async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
         const newAvatar = e.target.files?.[0];
         setFetching(true);
@@ -209,6 +237,7 @@ export function useOrgProfileViewModel() {
         }
         setFetching(false);
     }
+
     return {
         loading,
         session,

@@ -1,3 +1,8 @@
+/**
+ * orgCreateOpportunityVm.tsx
+ * View model for both creating and editing volunteer opportunities
+ */
+
 import { useAuth } from "@/providers/auth-provider";
 import { OrganizationService } from "@/services/OrganizationService";
 import { CurrentOrganization, UpdateOpportunitySchema } from "@volunteerly/shared";
@@ -5,6 +10,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+/**
+ * Shared view model for the create and update opportunity pages.
+ * When oppId is provided, the form loads the existing opportunity for editing.
+ * When oppId is omitted, the form starts blank for creating a new one.
+ * @param oppId - Optional ID of an existing opportunity to edit
+ */
 export function useCreateOpportunityViewModel(oppId?: string) {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
@@ -25,6 +36,7 @@ export function useCreateOpportunityViewModel(oppId?: string) {
     const [error, setError] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
 
+    // Load the org profile on mount - also loads existing opportunity data if editing
     useEffect(() => {
         async function loadCurrentUser() {
             if (!session?.access_token || currentOrg) return;
@@ -39,6 +51,7 @@ export function useCreateOpportunityViewModel(oppId?: string) {
             }
             setCurrentOrg(org.data);
 
+            // If we're in edit mode, pre-populate the form with existing values
             if (oppId) {
                 const opp = await OrganizationService.getOpportunity(oppId);
                 setOpportunity(opp.data as UpdateOpportunitySchema);
@@ -50,12 +63,14 @@ export function useCreateOpportunityViewModel(oppId?: string) {
         loadCurrentUser();
     }, [session, router, currentOrg, oppId]);
 
+    // Handles both create and update depending on whether oppId is set
     async function handleSubmit() {
         if (opportunity && currentOrg) {
             setSubmitting(true);
             setError(null);
 
             if (oppId) {
+                // Edit mode - send an update
                 const orgId = currentOrg.id;
                 const deadlineDate = new Date(opportunity.deadlineDate);
                 const opp: UpdateOpportunitySchema = {
@@ -75,6 +90,7 @@ export function useCreateOpportunityViewModel(oppId?: string) {
                     console.error(error);
                 }
             } else {
+                // Create mode - post a new opportunity
                 const orgId = currentOrg.id;
                 const deadlineDate = new Date(opportunity.deadlineDate);
                 const opp: UpdateOpportunitySchema = {
@@ -96,6 +112,8 @@ export function useCreateOpportunityViewModel(oppId?: string) {
             setSubmitting(false);
         }
     }
+
+    // Toggles a day in the availability array - adds it if missing, removes it if already selected
     async function handleDayToggle(day: string) {
         if (opportunity.availability.includes(day)) {
             const newAv = opportunity.availability.filter((d) => d != day);

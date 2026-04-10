@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Organization messaging/inbox page - two-panel layout with conversation list and thread view
+ */
+
 "use client";
 
 import { useOrganizationMessagesViewModel } from "@/app/(protected)/(app-shell)/organization/messages/messagesVm";
@@ -21,12 +26,18 @@ export default function OrganizationMessagesPage() {
 
     return (
         <div className="h-[calc(100dvh-73px)] overflow-hidden border-t border-border bg-background">
+            {/*
+             * Two-column grid on desktop: fixed-width conversation list on the left,
+             * flexible thread panel on the right. On mobile only one panel is visible
+             * at a time - the list hides when a conversation is selected and vice versa.
+             */}
             <div
                 className="
                     grid h-full min-h-0 grid-cols-1
                     md:grid-cols-[320px_minmax(0,1fr)]
                 "
             >
+                {/* Conversation list panel - hidden on mobile when a thread is open */}
                 <div
                     className={
                         vm.selectedConversation
@@ -46,6 +57,7 @@ export default function OrganizationMessagesPage() {
                     />
                 </div>
 
+                {/* Thread detail panel - hidden on mobile when no conversation is selected */}
                 <div
                     className={
                         vm.selectedConversation
@@ -58,6 +70,7 @@ export default function OrganizationMessagesPage() {
                 >
                     {vm.selectedConversation ? (
                         <>
+                            {/* Mobile-only back button to return to the conversation list */}
                             <div
                                 className="
                                     border-b border-border px-4 py-3
@@ -88,10 +101,12 @@ export default function OrganizationMessagesPage() {
                                 <ChatMessageList
                                     messages={vm.selectedConversation.messages}
                                     currentUserId={vm.currentUserId}
+                                    // Use ticket styling variant for support conversations
                                     variant={vm.isTicketConversation ? "ticket" : "default"}
                                 />
                             </div>
 
+                            {/* Show a disabled notice for closed tickets, otherwise show the composer */}
                             {vm.isClosedTicketConversation ? (
                                 <div
                                     className="
@@ -116,6 +131,7 @@ export default function OrganizationMessagesPage() {
                             )}
                         </>
                     ) : (
+                        // Empty state shown on desktop when no conversation is selected
                         <div
                             className="
                                 hidden h-full items-center justify-center text-muted-foreground

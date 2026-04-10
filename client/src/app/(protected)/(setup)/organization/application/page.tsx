@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Organization verification application page - multi-section form with read-only mode after submission
+ */
+
 "use client";
 
 import { Navbar } from "@/app/(protected)/(setup)/organization/application/navbar";
@@ -48,6 +53,7 @@ export default function OrgApplicationPage() {
     return (
         <div className="min-h-screen">
             <title>Organization Application - Volunteerly</title>
+            {/* Simplified setup navbar - no full app shell since the org isn't verified yet */}
             <Navbar
                 name={currentOrg?.orgName || "Organization"}
                 role={"Unverified"}
@@ -55,6 +61,7 @@ export default function OrgApplicationPage() {
             ></Navbar>
             <main className="flex size-full flex-col items-center p-8">
                 <div className="flex w-full justify-start">
+                    {/* Back button only shown in read-only mode (i.e. already applied) */}
                     {isReadOnly && (
                         <Button
                             variant="ghost"
@@ -66,6 +73,8 @@ export default function OrgApplicationPage() {
                         </Button>
                     )}
                 </div>
+
+                {/* Status banner - shows different messaging depending on application state */}
                 <div className="pb-5 text-center">
                     <div className="mb-5 rounded-sm bg-warning p-1 text-foreground">
                         <h2>{isReadOnly ? "Application Submitted" : "Limited Functionality"}</h2>
@@ -86,8 +95,11 @@ export default function OrgApplicationPage() {
                         <br /> Complete the application below and our moderators will review it.
                     </p>
                 </div>
+
+                {/* Application form - all fields are disabled in read-only mode */}
                 <Card className="w-full max-w-4xl">
                     <form className="space-y-6" onSubmit={handleSubmit}>
+                        {/* Section 1 - Basic org details */}
                         <CardHeader>
                             <CardTitle>Organization Details</CardTitle>
                             <CardDescription>
@@ -146,6 +158,7 @@ export default function OrgApplicationPage() {
                                 <Label htmlFor="website">
                                     Website<span className="text-destructive">*</span>
                                 </Label>
+                                {/* InputGroup prepends "https://" visually without including it in the stored value */}
                                 <InputGroup id="website">
                                     <InputGroupInput
                                         id="website"
@@ -289,6 +302,7 @@ export default function OrgApplicationPage() {
                             </Field>
                         </CardContent>
 
+                        {/* Section 2 - Charity number and verification document upload */}
                         <CardHeader>
                             <CardTitle>Non-Profit Verification</CardTitle>
                             <CardDescription>
@@ -308,6 +322,7 @@ export default function OrgApplicationPage() {
                                     <Label htmlFor="charityNumber">
                                         Charity Number<span className="text-destructive">*</span>
                                     </Label>
+                                    {/* Show blank instead of 0 when no charity number has been set yet */}
                                     <Input
                                         id="charityNumber"
                                         disabled={isReadOnly}
@@ -353,6 +368,7 @@ export default function OrgApplicationPage() {
                             </div>
                         </CardContent>
 
+                        {/* Section 3 - Primary contact details */}
                         <CardHeader>
                             <CardTitle>Contact Information</CardTitle>
                             <CardDescription> Organization Point of Contact </CardDescription>
@@ -436,6 +452,8 @@ export default function OrgApplicationPage() {
                             </Button>
                         </div>
                     </form>
+
+                    {/* Show document viewer button below the form in read-only mode */}
                     {isReadOnly && (
                         <div className="px-6 pb-6">
                             <Button
