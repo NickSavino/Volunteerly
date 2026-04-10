@@ -12,7 +12,6 @@ import { CurrentUserSchema } from "@volunteerly/shared";
 
 export type ChartRange = "last_month" | "last_6_months" | "last_year" | "this_year" | "total";
 
-
 /**
  * Drives all state and data loading for the volunteer dashboard page
  * @returns all the data and handlers needed by the dashboard page component
