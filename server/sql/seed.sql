@@ -40,7 +40,7 @@ DELETE FROM auth.users WHERE email IN (
     'volunteer3@test.com',
     'volunteer4@test.com',
     'org1@test.com',
-    'org2@test.com',
+    'worldunited@wu.org',
     'org3@test.com',
     'mod1@test.com'
 );
@@ -91,6 +91,7 @@ DECLARE
 
     review1_id   UUID := 'a0000000-0000-4000-8000-000000000901';
     review2_id   UUID := 'a0000000-0000-4000-8000-000000000902';
+    review3_id   UUID := 'a0000000-0000-4000-8000-000000000903';
     flag1_id     UUID := 'a0000000-0000-4000-8000-000000001001';
     progress1_id UUID := 'a0000000-0000-4000-8000-000000001101';
     progress2_id UUID := 'a0000000-0000-4000-8000-000000001102';
@@ -148,7 +149,7 @@ VALUES
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'volunteer3@test.com', crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'volunteer4@test.com', crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'org1@test.com',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
-    (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'org2@test.com',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
+    (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'worldunited@wu.org',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'org3@test.com',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'mod1@test.com',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', '');
 
@@ -158,7 +159,7 @@ SELECT id INTO vol2_id FROM auth.users WHERE email = 'volunteer2@test.com';
 SELECT id INTO vol3_id FROM auth.users WHERE email = 'volunteer3@test.com';
 SELECT id INTO vol4_id FROM auth.users WHERE email = 'volunteer4@test.com';
 SELECT id INTO org1_id FROM auth.users WHERE email = 'org1@test.com';
-SELECT id INTO org2_id FROM auth.users WHERE email = 'org2@test.com';
+SELECT id INTO org2_id FROM auth.users WHERE email = 'worldunited@wu.org';
 SELECT id INTO org3_id FROM auth.users WHERE email = 'org3@test.com';
 SELECT id INTO mod1_id FROM auth.users WHERE email = 'mod1@test.com';
 
@@ -180,7 +181,7 @@ VALUES (mod1_id::text, 'Admin', 'Moderator');
 INSERT INTO public.organizations (id, org_name, status, charity_num, doc_id, contact_name, contact_email, contact_num, hq_adr, mission_statement, cause_category, website, impact_highlights)
 VALUES
     (org1_id::text, 'Red Cross International', 'VERIFIED', 123456788, 'organization-documents/org_' || org1_id::text || '.pdf',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '2609 15 St NE, Calgary, AB, Canada, T2E 8Y2',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org',   '[{"countries served": 42}, {"people helped": 12400}]'),
-    (org2_id::text, 'World United',  'VERIFIED', 654321432, 'organization-documents/org_' || org2_id::text || '.pdf', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada, T1Y 6S1',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"countries operated in": 12}, {"students helped": 3800}]'),
+    (org2_id::text, 'World United',  'VERIFIED', 654321432, 'organization-documents/org_' || org2_id::text || '.pdf', 'Bob Green',  'bob@wu.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada, T1Y 6S1',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"countries operated in": 12}, {"students helped": 3800}]'),
     (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012513,  'organization-documents/org_' || org3_id::text || '.pdf',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org',         '[{"meals served": 5200}, {"families housed": 300}]');
 
 --Insert Volunteers 
@@ -203,7 +204,7 @@ VALUES
 --Insert Opps
 INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability, updated_at)
 VALUES
-    (opp1_id::text, org1_id::text, vol1_id::text, 'CLOSED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 30, '3 months', '2026-01-15', '2026-04-15', '["Monday", "Tuesday", "Wednesday"]', '2026-01-15'),
+    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 30, '3 months', '2026-01-15', '2026-04-15', '["Monday", "Tuesday", "Wednesday"]', '2026-01-15'),
     (opp2_id::text, org2_id::text, vol1_id::text, 'CLOSED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Friday", "Saturday", "Sunday"]', '2026-01-10'),
     (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 0, '6 months', '2026-03-01', '2026-09-01', '["Monday", "Wednesday", "Friday"]', '2026-03-01'),
     (opp4_id::text, org1_id::text, NULL, 'OPEN',   'Tax Analyst',    'Accounting', 'Help streamline our tax flow',           'Accounting and/or finance experience required',        'HYBRID',    'PART_TIME', 0, 'Ongoing', '2026-04-06', '2026-09-01', '["Thursday", "Friday"]', '2026-04-06'),
@@ -236,8 +237,8 @@ VALUES
     (app1_id::text, opp3_id::text, vol1_id::text, 85, 'I have 5 years data science experience at google.', '2026-03-05'),
     (app2_id::text, opp1_id::text, vol2_id::text, 70, 'I have a degree in software engineering.',             '2026-01-20'),
     (app3_id::text, opp2_id::text, vol1_id::text, 90, 'I have extensive experience in data analytics.',       '2026-02-01'),
-    (app4_id::text, opp7_id::text, vol1_id::text, 71, 'I have alot of data experience that would be perfect for this opportunity.',       '2026-02-01'),
-    (app5_id::text, opp7_id::text, vol3_id::text, 87, 'At google another one of my responsibilties was maintaining data pipelines which makes me a perfect fit for this role.',       '2026-02-01');
+    (app4_id::text, opp7_id::text, vol1_id::text, 87, 'I have alot of data experience that would be perfect for this opportunity.',       '2026-02-01'),
+    (app5_id::text, opp7_id::text, vol3_id::text, 71, 'At google another one of my responsibilties was maintaining data pipelines which makes me a perfect fit for this role.',       '2026-02-01');
 
 
 
@@ -262,7 +263,10 @@ VALUES
 INSERT INTO public.reviews (id, issuer_id, reviewee_id, opportunity_id, rating)
 VALUES
     (review1_id::text, org1_id::text, vol1_id::text, opp1_id::text, 4),
-    (review2_id::text, vol1_id::text, org1_id::text, opp1_id::text, 3);
+    (review2_id::text, vol1_id::text, org1_id::text, opp1_id::text, 3),
+    (review3_id::text, vol1_id::text, org2_id::text, opp2_id::text, 4);
+
+
 
 UPDATE public.volunteers SET average_rating = 4 WHERE id = vol1_id::text;
 
@@ -512,7 +516,7 @@ VALUES
         org2_id::text,
         'World United',
         'ORGANIZATION',
-        'Can you clarify the premium analytics charge on our invoice?',
+        'What are the necessary steps to take if a volunteer backs out of an opportunity?',
         '2026-03-20 10:47:00'
     ),
     (
@@ -521,7 +525,7 @@ VALUES
         mod1_id::text,
         'Admin Moderator',
         'MODERATOR',
-        'We confirmed the charge and closed the ticket after follow-up.',
+        'Hello, you can submit a ticket and one of our moderators can help you through the process.',
         '2026-03-21 09:15:00'
     );
 
