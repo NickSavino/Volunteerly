@@ -1,3 +1,7 @@
+/**
+ * page.tsx
+ * Volunteer profile page. Shows avatar, rating, milestones, and an editable general info form
+ */
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";

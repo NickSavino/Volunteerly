@@ -1,3 +1,7 @@
+/**
+ * page.tsx
+ * Volunteer Dashboard page. Shows kpi cards, analytics chart, partnered orgs, and all their opportunities
+ */
 "use client";
 
 import { Building2, Clock, DollarSign, Star } from "lucide-react";

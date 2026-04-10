@@ -1,7 +1,16 @@
+/**
+ * volunteer-service.ts
+ * Server-side service functions for all volunteer data operations — wraps Prisma queries for volunteer routes
+ */
 import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import type { OpportunityFilters } from "@volunteerly/shared";
 
+/**
+ * Fetches a volunteer by ID along with their review count
+ * @param volunteerId - the volunteer's user ID
+ * @returns the volunteer row with an added reviewCount field, or null if not found
+ */
 export async function getCurrentVolunteer(volunteerId: string) {
     const volunteer = await prisma.volunteer.findUnique({
         where: { id: volunteerId },
@@ -13,6 +22,14 @@ export async function getCurrentVolunteer(volunteerId: string) {
     return { ...volunteer, reviewCount };
 }
 
+/**
+ * Creates a new volunteer record with just a name — called during initial account setup
+ * @param userId - the Supabase user ID to use as the volunteer's primary key
+ * @param firstName
+ * @param lastName
+ * @returns the created Volunteer record
+ * @throws if creation fails
+ */
 export async function createCurrentVolunteer(userId: string, firstName: string, lastName: string) {
     const volunteer = await prisma.volunteer.create({
         data: {
@@ -25,6 +42,18 @@ export async function createCurrentVolunteer(userId: string, firstName: string, 
     return volunteer;
 }
 
+/**
+ * Updates the volunteer's editable profile fields
+ * @param userId - the volunteer to update
+ * @param firstName
+ * @param lastName
+ * @param location - city/province string
+ * @param bio - about me text
+ * @param availability - JSON array of full day names e.g. ["Monday", "Wednesday"]
+ * @param hourlyValue - the volunteer's estimated hourly rate in CAD
+ * @returns the updated Volunteer record
+ * @throws if update fails
+ */
 export async function updateCurrentVolunteer(
     userId: string,
     firstName: string,
@@ -42,6 +71,11 @@ export async function updateCurrentVolunteer(
     return volunteer;
 }
 
+/**
+ * Fetches all FILLED and CLOSED opportunities assigned to a volunteer for the dashboard table
+ * @param volunteerId
+ * @returns array of opportunities with organization name included
+ */
 export async function getYourOpportunities(volunteerId: string) {
     return prisma.opportunity.findMany({
         where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
@@ -53,6 +87,12 @@ export async function getYourOpportunities(volunteerId: string) {
     });
 }
 
+/**
+ * Fetches a single opportunity by ID, scoped to the volunteer — includes organization info and progress updates
+ * @param volunteerId - ensures the volunteer owns this opportunity
+ * @param oppId
+ * @returns the opportunity with nested relations, or null if not found
+ */
 export async function getOpportunityById(volunteerId: string, oppId: string) {
     return prisma.opportunity.findFirst({
         where: { id: oppId, volId: volunteerId },
@@ -75,6 +115,13 @@ export async function getOpportunityById(volunteerId: string, oppId: string) {
     });
 }
 
+/**
+ * Adds a progress update to an opportunity and increments its total hours in a single transaction
+ * @param userId - the volunteer submitting the update
+ * @param oppId - the opportunity being updated
+ * @param input - title, description, and hours contributed this update
+ * @returns the created ProgressUpdate record
+ */
 export async function addProgressUpdate(
     userId: string,
     oppId: string,
@@ -105,6 +152,11 @@ export async function addProgressUpdate(
     });
 }
 
+/**
+ * Creates a system-generated "Completion Requested" progress update to notify the organization
+ * @param volunteerId
+ * @param oppId
+ */
 export async function requestCompletion(volunteerId: string, oppId: string) {
     const opp = await prisma.opportunity.findFirst({
         where: { id: oppId, volId: volunteerId },
@@ -123,6 +175,14 @@ export async function requestCompletion(volunteerId: string, oppId: string) {
     });
 }
 
+/**
+ * Posts a star rating review from a volunteer to an organization for a specific opportunity.
+ * Throws if the volunteer has already reviewed this opportunity.
+ * @param issuerId - the volunteer posting the review
+ * @param revieweeId - the organization being reviewed
+ * @param opportunityId - the opportunity context
+ * @param input - rating (1–5)
+ */
 export async function postReview(
     issuerId: string,
     revieweeId: string,
@@ -144,6 +204,15 @@ export async function postReview(
     });
 }
 
+/**
+ * Flags an organization for moderator review. Also marks the organization's user as FLAGGED.
+ * Throws if the volunteer has already flagged this organization for this opportunity.
+ * @param issuerId - the volunteer submitting the flag
+ * @param flaggedUserId - the organization's user ID
+ * @param opportunityId - the opportunity context
+ * @param reason - the volunteer's stated reason
+ * @returns the created Flag record
+ */
 export async function postFlag(
     issuerId: string,
     flaggedUserId: string,
@@ -181,6 +250,12 @@ export async function postFlag(
     });
 }
 
+/**
+ * Gets the distinct organizations a volunteer has worked with, along with their total hours per org.
+ * Used for the partner organizations list and org-count KPI on the dashboard.
+ * @param volunteerId
+ * @returns array of { id, orgName, totalHours }
+ */
 export async function getVolunteerOrganizations(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
         where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
@@ -211,6 +286,12 @@ export async function getVolunteerOrganizations(volunteerId: string) {
     return Array.from(map.values());
 }
 
+/**
+ * Builds a "YYYY-MM" → hours map from the volunteer's completed opportunities.
+ * Used to drive the contribution chart on the dashboard.
+ * @param volunteerId
+ * @returns Record of month key to total hours volunteered in that month
+ */
 export async function getMonthlyHours(volunteerId: string) {
     const opportunities = await prisma.opportunity.findMany({
         where: { volId: volunteerId, status: { in: ["FILLED", "CLOSED"] } },
@@ -229,6 +310,12 @@ export async function getMonthlyHours(volunteerId: string) {
     return Object.fromEntries(map);
 }
 
+/**
+ * Fetches open opportunities with optional server-side filtering.
+ * Category filtering and availability matching are done client-side in the VM.
+ * @param filters - optional search query, workType, commitmentLevel, and maxHours
+ * @returns array of opportunities with basic organization info included
+ */
 export async function browseOpportunities(filters: OpportunityFilters) {
     return prisma.opportunity.findMany({
         where: {
@@ -268,6 +355,15 @@ export async function browseOpportunities(filters: OpportunityFilters) {
     });
 }
 
+/**
+ * Creates an application for a volunteer to an opportunity.
+ * Throws if they've already applied to prevent duplicates.
+ * @param volId
+ * @param oppId
+ * @param message - the volunteer's cover message
+ * @param matchPercentage - the cosine similarity score at time of application
+ * @returns the created Application record
+ */
 export async function applyToOpportunity(
     volId: string,
     oppId: string,
@@ -284,6 +380,12 @@ export async function applyToOpportunity(
     });
 }
 
+/**
+ * Gets the IDs of all opportunities the volunteer has applied to.
+ * Used to show the "✓ Applied" badge on opportunity cards.
+ * @param volId
+ * @returns array of opportunity UUIDs
+ */
 export async function getAppliedOppIds(volId: string): Promise<string[]> {
     const applications = await prisma.application.findMany({
         where: { volId },
@@ -291,6 +393,14 @@ export async function getAppliedOppIds(volId: string): Promise<string[]> {
     });
     return applications.map((a) => a.oppId);
 }
+
+/**
+ * Logs the skills a volunteer gained from completing an opportunity for the skill tree.
+ * Throws if skills have already been submitted for this volunteer/opportunity combination.
+ * @param volId
+ * @param oppId
+ * @param skills - array of skill name strings to log
+ */
 export async function logOpportunitySkills(volId: string, oppId: string, skills: string[]) {
     const existing = await prisma.opportunitySkill.findFirst({
         where: { volId, opportunityId: oppId },
@@ -309,6 +419,12 @@ export async function logOpportunitySkills(volId: string, oppId: string, skills:
     });
 }
 
+/**
+ * Fetches the skills a volunteer logged for a specific completed opportunity
+ * @param volId
+ * @param oppId
+ * @returns array of skill name strings
+ */
 export async function getOpportunitySkills(volId: string, oppId: string): Promise<string[]> {
     const skills = await prisma.opportunitySkill.findMany({
         where: { volId, opportunityId: oppId },
@@ -317,6 +433,12 @@ export async function getOpportunitySkills(volId: string, oppId: string): Promis
     return skills.map((s) => s.skillName);
 }
 
+/**
+ * Counts how many times each skill has been logged across all of a volunteer's opportunities.
+ * Used to build the skill tree visualization showing skill frequency/depth.
+ * @param volId
+ * @returns Record of skillName → count
+ */
 export async function getVolunteerSkillCounts(volId: string): Promise<Record<string, number>> {
     const skills = await prisma.opportunitySkill.findMany({
         where: { volId },
@@ -330,6 +452,13 @@ export async function getVolunteerSkillCounts(volId: string): Promise<Record<str
     return counts;
 }
 
+/**
+ * Computes cosine similarity match scores between a volunteer's skill vector
+ * and all open opportunity skill vectors using pgvector's <=> operator.
+ * Returns an empty object if the volunteer has no vector yet.
+ * @param userId - the volunteer to score opportunities for
+ * @returns Record of oppId to match percentage (1–100), only for opportunities with vectors
+ */
 export async function getOpportunityMatchScores(userId: string): Promise<Record<string, number>> {
     const volunteer = await prisma.$queryRaw<{ has_vector: boolean }[]>`
         SELECT (skill_vector IS NOT NULL) AS has_vector

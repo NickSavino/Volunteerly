@@ -1,3 +1,7 @@
+/**
+ * skill-extraction.ts
+ * Routes for the volunteer onboarding skill extraction flow. Handles resume parsing, skill saving, and vector backfill
+ */
 import { Router } from "express";
 import multer from "multer";
 import { createRequire } from "module";
@@ -20,6 +24,15 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
 });
 
+/**
+ * POST /current-volunteer/extract-skills
+ * Parses a resume PDF and uses Groq to extract the top 10 technical and non-technical skills,
+ * plus an estimated hourly rate based on work experience and education.
+ * Auth: required
+ * Body: multipart/form-data with "resume" (PDF), optional "workExperience" and "education" text
+ * Returns: 200 with { technical, nonTechnical, hourlyRate }
+ * Errors: 400 (no file), 422 (no extractable text), 500
+ */
 skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) => {
     try {
         const file = req.file;
@@ -62,6 +75,15 @@ skillExtractionRouter.post("/", upload.single("resume"), async (req, res, next) 
     }
 });
 
+/**
+ * POST /current-volunteer/extract-skills/confirm
+ * Saves the confirmed skill profile, work experience, education, Gemini skill vector,
+ * hourly rate, and marks the volunteer's account as VERIFIED.
+ * Auth: required
+ * Body: { technical, nonTechnical, workExperiences, educations, hourlyRate }
+ * Returns: 200 with { success: true }
+ * Errors: 400 (invalid arrays), 500
+ */
 skillExtractionRouter.post("/confirm", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
@@ -159,6 +181,15 @@ skillExtractionRouter.post("/confirm", async (req, res, next) => {
     }
 });
 
+/**
+ * POST /current-volunteer/extract-skills/backfill
+ * Generates and saves a skill vector for volunteers who have a skill profile but no vector yet.
+ * Called silently on dashboard load for seeded accounts.
+ * Auth: required
+ * Body: none
+ * Returns: 200 with { success: true } or { skipped: true } if no profile exists
+ * Errors: 500
+ */
 skillExtractionRouter.post("/backfill", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;

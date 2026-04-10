@@ -1,3 +1,7 @@
+/**
+ * experienceInputVm.tsx
+ * View model for the volunteer onboarding experience input page. Manages resume, work history, and education form state
+ */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -25,6 +29,10 @@ export type FormErrors = {
     education?: string;
 };
 
+/**
+ * Drives all state and logic for the volunteer experience input page
+ * @returns all form state, handlers, and submission logic needed by the page component
+ */
 export function useExperienceInputViewModel() {
     const router = useRouter();
     const { session, signOut } = useAuth();
@@ -82,6 +90,10 @@ export function useExperienceInputViewModel() {
         );
     }
 
+    /**
+     * Validates all form sections, resume required, no incomplete work/education entries
+     * @returns true if the form is valid, false otherwise
+     */
     function validate(): boolean {
         const newErrors: FormErrors = {};
 
@@ -107,6 +119,10 @@ export function useExperienceInputViewModel() {
         return Object.keys(newErrors).length === 0;
     }
 
+    /**
+     * Serializes form data into plain text, sends to Groq for skill extraction, then
+     * stashes the results in sessionStorage before navigating to the skill review page
+     */
     async function handleSubmit() {
         if (!validate()) return;
         setSubmitting(true);

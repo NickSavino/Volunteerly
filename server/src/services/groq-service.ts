@@ -1,3 +1,7 @@
+/**
+ * groq-service.ts
+ * Handles all Groq LLM API calls. Skill extraction from resumes, hourly rate estimation, and opportunity skill parsing
+ */
 import { env } from "../lib/env.js";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -8,6 +12,14 @@ export type ExtractedSkills = {
     hourlyRate: number;
 };
 
+/**
+ * Sends resume text plus work/education context to Groq and extracts
+ * the top 10 technical and top 10 non-technical skills from the content.
+ * Uses llama-3.3-70b-versatile with a strict JSON-only prompt to avoid parsing issues.
+ * @param resumeText - the full text context to analyze (PDF text + manual entries)
+ * @returns ExtractedSkills with technical and nonTechnical arrays (hourlyRate is 0 — added by the route)
+ * @throws if Groq returns a non-OK response or the JSON can't be parsed
+ */
 export async function extractSkillsFromResumeText(resumeText: string): Promise<ExtractedSkills> {
     const prompt = `
 You are a professional resume analyst. Carefully read the entire resume text provided and extract the top 10 skills from each of these two categories: technical skills and non-technical skills (which includes skills in the domain of soft skills and leadership skills).
@@ -68,6 +80,14 @@ ${resumeText}`;
     }
 }
 
+/**
+ * Estimates an hourly rate in Canadian dollars for a volunteer based on their
+ * work history and education. Uses a reference list of Alberta role rates as grounding.
+ * @param workExperience - formatted text describing the volunteer's work history
+ * @param education - formatted text describing the volunteer's education
+ * @returns an integer hourly rate in CAD
+ * @throws if Groq returns a non-OK response or the rate can't be parsed as an integer
+ */
 export async function calculateHourlyRate(
     workExperience: string,
     education: string,
@@ -149,6 +169,16 @@ ${education}`;
     return rate;
 }
 
+/**
+ * Extracts the top 10 technical and top 10 non-technical skills required by a volunteer opportunity.
+ * Used when an org creates or updates an opportunity to generate a skill vector for similarity matching.
+ * @param name - the opportunity name
+ * @param category - the opportunity category
+ * @param description - the opportunity description
+ * @param candidateDesc - the ideal candidate description
+ * @returns object with technical and nonTechnical skill arrays
+ * @throws if Groq returns a non-OK response or the JSON can't be parsed
+ */
 export async function extractSkillsFromOpportunity(
     name: string,
     category: string,

@@ -1,3 +1,7 @@
+/**
+ * vltDashboardVm.tsx
+ * View model for the volunteer dashboard. Loads KPI data, opportunities, partner orgs, and chart data
+ */
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { VolunteerService, PartnerOrg } from "@/services/VolunteerService";
@@ -8,6 +12,11 @@ import { CurrentUserSchema } from "@volunteerly/shared";
 
 export type ChartRange = "last_month" | "last_6_months" | "last_year" | "this_year" | "total";
 
+
+/**
+ * Drives all state and data loading for the volunteer dashboard page
+ * @returns all the data and handlers needed by the dashboard page component
+ */
 export function useVltDashboardViewModel() {
     const router = useRouter();
     const { session, user, loading, signOut } = useAuth();
@@ -105,7 +114,10 @@ export function useVltDashboardViewModel() {
     const { chartLabels, chartData } = useMemo(() => {
         const now = new Date();
 
-        //helper func to get N months
+        /**
+         * Builds a sequential range of N months ending at the current month
+         * @param monthCount - how many months to include
+         */
         function buildMonthRange(monthCount: number): { labels: string[]; data: number[] } {
             const labels: string[] = [];
             const data: number[] = [];

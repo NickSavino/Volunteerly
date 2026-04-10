@@ -1,3 +1,7 @@
+/**
+ * page.tsx
+ * Skill Extraction page. Lets users view and remove their parsed skills, they can go back to exp input or continue which will embed their skills as a vector.
+ */
 "use client";
 
 import { UnverifiedNavbar } from "@/app/(protected)/(setup)/volunteer/unverified_volunteer_navbar";
