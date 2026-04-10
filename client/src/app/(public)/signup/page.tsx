@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { useSignUpViewModel } from "./signupVM";
 
 export default function LoginPage() {
@@ -38,7 +38,7 @@ export default function LoginPage() {
             <Navbar></Navbar>
             <main
                 className="
-                    flex h-screen flex-col
+                    flex flex-col h-[calc(100dvh-64px)]
                     md:h-[calc(100vh-64px)] md:flex-row
                 "
             >
@@ -48,18 +48,17 @@ export default function LoginPage() {
                         md:flex md:h-full md:w-1/2
                     "
                 >
-                    <Image
-                        src={tms.src}
-                        alt="Preview"
-                        width={tms.width}
-                        height={tms.height}
+                    <Image src={tms.src} alt="Preview" fill priority className="object-cover" />
+                    <div className="absolute inset-0 w-full bg-black/65"></div>
+                    <div
                         className="
-                            h-auto w-full
-                            md:h-full
+                            absolute bottom-20
+                            md:bottom-10
+                            left-5
+                            md:left-6
+                            text-left
                         "
-                    />
-                    <div className="absolute inset-0 w-full bg-black/50"></div>
-                    <div className="absolute bottom-20 left-12 text-left">
+                    >
                         <h1 className="text-4xl pb-2 font-bold tracking-tight text-muted">
                             Turn Skills Into Real Impact
                         </h1>
@@ -90,7 +89,9 @@ export default function LoginPage() {
                     "
                 >
                     <Card className="w-full max-w-md min-w-0">
-                        <CardHeader>Sign Up</CardHeader>
+                        <CardHeader>
+                            <CardTitle className="text-xl">Sign Up</CardTitle>
+                        </CardHeader>
                         <CardContent>
                             <Tabs defaultValue="VOLUNTEER" value={role} onValueChange={setRole}>
                                 <TabsList className="flex w-full justify-center">
@@ -98,7 +99,7 @@ export default function LoginPage() {
                                     <TabsTrigger value="ORGANIZATION">Organization</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="VOLUNTEER">
-                                    <form className="space-y-4" onSubmit={handleSubmit}>
+                                    <form className="space-y-6" onSubmit={handleSubmit}>
                                         <div className="space-y-2">
                                             <Label htmlFor="fName">First Name</Label>
                                             <Input

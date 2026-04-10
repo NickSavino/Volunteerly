@@ -3,8 +3,8 @@
  * Server-side service functions for all volunteer data operations — wraps Prisma queries for volunteer routes
  */
 import { Prisma } from "@prisma/client";
-import { prisma } from "../lib/prisma.js";
 import type { OpportunityFilters } from "@volunteerly/shared";
+import { prisma } from "../lib/prisma.js";
 
 /**
  * Fetches a volunteer by ID along with their review count

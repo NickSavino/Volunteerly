@@ -1,3 +1,4 @@
+import { api } from "@/lib/api";
 import { useAuth } from "@/providers/auth-provider";
 import { OrganizationService } from "@/services/OrganizationService";
 import { Application, CurrentOrganization, Opportunity, ProgressUpdate } from "@volunteerly/shared";
@@ -174,6 +175,25 @@ export function useOrgViewOpportunityViewModel(id: string) {
         });
     }
 
+    async function openMessageThread() {
+        if (!opportunity?.id || !opportunity?.volunteer?.id) return;
+
+        try {
+            const { conversationId } = await api<{ conversationId: string }>(
+                "/current-organization/opportunity/message-thread",
+                {
+                    method: "POST",
+                    body: JSON.stringify({ oppId: opportunity.id }),
+                },
+            );
+
+            router.push(`/organization/messages?conversationId=${conversationId}`);
+        } catch (error) {
+            console.error(error);
+            toast.error("Failed to open conversation.", { position: "top-right" });
+        }
+    }
+
     return {
         loading,
         fetching,
@@ -194,5 +214,6 @@ export function useOrgViewOpportunityViewModel(id: string) {
         setReviewModalOpen,
         submitting,
         submitReview,
+        openMessageThread,
     };
 }
