@@ -1,3 +1,8 @@
+/**
+ * loginVM.tsx
+ * View model for the login page - handles authentication and role-based routing
+ */
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
@@ -10,6 +15,8 @@ export function useLoginViewModel() {
     const router = useRouter();
     const { session, loading } = useAuth();
 
+    // Two-phase redirect flow: first we set pendingRedirect after credentials are
+    // accepted, then once the session is ready we determine the right route
     const [pendingRedirect, setPendingRedirect] = useState(false);
     const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
@@ -18,6 +25,7 @@ export function useLoginViewModel() {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Step 1 - submit credentials to Supabase auth
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         setSubmitting(true);
@@ -31,9 +39,11 @@ export function useLoginViewModel() {
             return;
         }
 
+        // Credentials accepted - wait for the session to propagate before routing
         setPendingRedirect(true);
     }
 
+    // Step 2 - once the session is live, fetch the user's role and determine their landing page
     useEffect(() => {
         async function handleRouting() {
             if (!pendingRedirect) return;
@@ -52,6 +62,7 @@ export function useLoginViewModel() {
 
                 const currentUser = userResult.data;
 
+                // Banned users are signed out immediately with an error message
                 if (currentUser.status === "BANNED") {
                     await AuthService.signOutUser();
                     setError("This account has been suspended.");
@@ -61,6 +72,7 @@ export function useLoginViewModel() {
                 }
 
                 if (currentUser.role === "VOLUNTEER") {
+                    // Unverified volunteers still need to finish onboarding
                     const nextRoute =
                         currentUser.status === "UNVERIFIED"
                             ? "/volunteer/experience-input"
@@ -82,6 +94,7 @@ export function useLoginViewModel() {
 
                     const org = orgResult.data;
 
+                    // Orgs in different states get sent to different parts of the setup flow
                     const nextRoute =
                         org.status === "CREATED"
                             ? "/organization/application"
@@ -124,6 +137,7 @@ export function useLoginViewModel() {
         void handleRouting();
     }, [pendingRedirect, loading, session]);
 
+    // Step 3 - once the route is determined and the session is confirmed, navigate
     useEffect(() => {
         async function continueAfterRouteReady() {
             if (!pendingRoute) return;

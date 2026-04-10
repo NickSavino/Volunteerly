@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Signup page - account creation for volunteers and organizations via a tabbed form
+ */
+
 "use client";
 
 import tms from "@/assets/tms.png";
@@ -42,6 +47,7 @@ export default function LoginPage() {
                     md:h-[calc(100vh-64px)] md:flex-row
                 "
             >
+                {/* Left panel - hero image with testimonial, hidden on mobile */}
                 <div
                     className="
                         relative hidden h-screen w-full flex-col overflow-hidden
@@ -82,6 +88,8 @@ export default function LoginPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Right panel - tabbed signup form (Volunteer / Organization) */}
                 <div
                     className="
                         flex w-full flex-1 items-center justify-center px-8
@@ -93,11 +101,14 @@ export default function LoginPage() {
                             <CardTitle className="text-xl">Sign Up</CardTitle>
                         </CardHeader>
                         <CardContent>
+                            {/* Tab selection drives the role state used during submission */}
                             <Tabs defaultValue="VOLUNTEER" value={role} onValueChange={setRole}>
                                 <TabsList className="flex w-full justify-center">
                                     <TabsTrigger value="VOLUNTEER">Volunteer</TabsTrigger>
                                     <TabsTrigger value="ORGANIZATION">Organization</TabsTrigger>
                                 </TabsList>
+
+                                {/* Volunteer signup form */}
                                 <TabsContent value="VOLUNTEER">
                                     <form className="space-y-6" onSubmit={handleSubmit}>
                                         <div className="space-y-2">
@@ -161,8 +172,11 @@ export default function LoginPage() {
                                         </p>
                                     </form>
                                 </TabsContent>
+
+                                {/* Organization signup form */}
                                 <TabsContent value="ORGANIZATION">
                                     <div>
+                                        {/* Reminder that orgs must complete an application after signing up */}
                                         <p
                                             className="
                                                 my-2 rounded-sm bg-warning p-1 text-center text-sm
