@@ -35,10 +35,12 @@ EXCEPTION WHEN others THEN
 END $cleanup$;
 
 DELETE FROM auth.users WHERE email IN (
-    'volunteer1@test.com',
+    'volunteerlyuser@gmail.com',
     'volunteer2@test.com',
+    'volunteer3@test.com',
+    'volunteer4@test.com',
     'org1@test.com',
-    'org2@test.com',
+    'worldunited@wu.org',
     'org3@test.com',
     'mod1@test.com'
 );
@@ -47,6 +49,8 @@ DO $$
 DECLARE
     vol1_id      UUID;
     vol2_id      UUID;
+    vol3_id      UUID;
+    vol4_id      UUID;
     org1_id      UUID;
     org2_id      UUID;
     org3_id      UUID;
@@ -58,10 +62,14 @@ DECLARE
     opp4_id      UUID := 'a0000000-0000-4000-8000-000000000204';
     opp5_id      UUID := 'a0000000-0000-4000-8000-000000000205';
     opp6_id      UUID := 'a0000000-0000-4000-8000-000000000206';
+    opp7_id      UUID := 'a0000000-0000-4000-8000-000000000207';
+    opp8_id      UUID := 'a0000000-0000-4000-8000-000000000208';
 
     app1_id      UUID := 'a0000000-0000-4000-8000-000000000301';
     app2_id      UUID := 'a0000000-0000-4000-8000-000000000302';
     app3_id      UUID := 'a0000000-0000-4000-8000-000000000303';
+    app4_id      UUID := 'a0000000-0000-4000-8000-000000000304';
+    app5_id      UUID := 'a0000000-0000-4000-8000-000000000305';
 
     tree1_id     UUID := 'a0000000-0000-4000-8000-000000000401';
     node1_id     UUID := 'a0000000-0000-4000-8000-000000000501';
@@ -83,6 +91,7 @@ DECLARE
 
     review1_id   UUID := 'a0000000-0000-4000-8000-000000000901';
     review2_id   UUID := 'a0000000-0000-4000-8000-000000000902';
+    review3_id   UUID := 'a0000000-0000-4000-8000-000000000903';
     flag1_id     UUID := 'a0000000-0000-4000-8000-000000001001';
     progress1_id UUID := 'a0000000-0000-4000-8000-000000001101';
     progress2_id UUID := 'a0000000-0000-4000-8000-000000001102';
@@ -93,14 +102,20 @@ DECLARE
     progress7_id UUID := 'a0000000-0000-4000-8000-000000001107';
     progress8_id UUID := 'a0000000-0000-4000-8000-000000001108';
     progress9_id UUID := 'a0000000-0000-4000-8000-000000001109';
+    progress10_id UUID := 'a0000000-0000-4000-8000-000000001110';
+    progress11_id UUID := 'a0000000-0000-4000-8000-000000001111';
     
     work_exp1_id  UUID := 'a0000000-0000-4000-8000-000000001002';
     work_exp2_id  UUID := 'a0000000-0000-4000-8000-000000001003';
     work_exp3_id  UUID := 'a0000000-0000-4000-8000-000000001004';
+    work_exp4_id  UUID := 'a0000000-0000-4000-8000-000000010005';
+    work_exp5_id  UUID := 'a0000000-0000-4000-8000-000000010006';
 
     education1_id UUID := 'a0000000-0000-4000-8000-000000001005';
     education2_id UUID := 'a0000000-0000-4000-8000-000000001006';
     education3_id UUID := 'a0000000-0000-4000-8000-000000001007';
+    education4_id UUID := 'a0000000-0000-4000-8000-000000010008';
+    education5_id UUID := 'a0000000-0000-4000-8000-000000010009';
 
     vol_skill1_id UUID := 'a0000000-0000-4000-8000-000000001008';
     vol_skill2_id UUID := 'a0000000-0000-4000-8000-000000001009';
@@ -129,24 +144,30 @@ INSERT INTO auth.users (
     email_change
 )
 VALUES
-    (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'volunteer1@test.com', crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
+    (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'volunteerlyuser@gmail.com', crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'volunteer2@test.com', crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
+    (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'volunteer3@test.com', crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
+    (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'volunteer4@test.com', crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'org1@test.com',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
-    (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'org2@test.com',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
+    (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'worldunited@wu.org',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'org3@test.com',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', ''),
     (gen_random_uuid(), '00000000-0000-0000-0000-000000000000', 'mod1@test.com',       crypt('password', gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(), 'authenticated', 'authenticated', '', '', '', '');
 
 --Grab the IDs
-SELECT id INTO vol1_id FROM auth.users WHERE email = 'volunteer1@test.com';
+SELECT id INTO vol1_id FROM auth.users WHERE email = 'volunteerlyuser@gmail.com';
 SELECT id INTO vol2_id FROM auth.users WHERE email = 'volunteer2@test.com';
+SELECT id INTO vol3_id FROM auth.users WHERE email = 'volunteer3@test.com';
+SELECT id INTO vol4_id FROM auth.users WHERE email = 'volunteer4@test.com';
 SELECT id INTO org1_id FROM auth.users WHERE email = 'org1@test.com';
-SELECT id INTO org2_id FROM auth.users WHERE email = 'org2@test.com';
+SELECT id INTO org2_id FROM auth.users WHERE email = 'worldunited@wu.org';
 SELECT id INTO org3_id FROM auth.users WHERE email = 'org3@test.com';
 SELECT id INTO mod1_id FROM auth.users WHERE email = 'mod1@test.com';
 
 --Update public users roles
 UPDATE public.users SET role = 'VOLUNTEER',    status = 'VERIFIED' WHERE id = vol1_id::text;
 UPDATE public.users SET role = 'VOLUNTEER',    status = 'VERIFIED' WHERE id = vol2_id::text;
+UPDATE public.users SET role = 'VOLUNTEER',    status = 'VERIFIED' WHERE id = vol3_id::text;
+UPDATE public.users SET role = 'VOLUNTEER',    status = 'VERIFIED' WHERE id = vol4_id::text;
 UPDATE public.users SET role = 'ORGANIZATION', status = 'VERIFIED' WHERE id = org1_id::text;
 UPDATE public.users SET role = 'ORGANIZATION', status = 'VERIFIED' WHERE id = org2_id::text;
 UPDATE public.users SET role = 'ORGANIZATION', status = 'VERIFIED' WHERE id = org3_id::text;
@@ -160,52 +181,65 @@ VALUES (mod1_id::text, 'Admin', 'Moderator');
 INSERT INTO public.organizations (id, org_name, status, charity_num, doc_id, contact_name, contact_email, contact_num, hq_adr, mission_statement, cause_category, website, impact_highlights)
 VALUES
     (org1_id::text, 'Red Cross International', 'VERIFIED', 123456788, 'organization-documents/org_' || org1_id::text || '.pdf',  'Jane Smith', 'jane@redcross.org',        '403-555-0101', '2609 15 St NE, Calgary, AB, Canada, T2E 8Y2',   'Providing humanitarian aid worldwide.',     'Humanitarian', 'https://redcross.org',   '[{"countries served": 42}, {"people helped": 12400}]'),
-    (org2_id::text, 'World United',  'VERIFIED', 654321432, 'organization-documents/org_' || org2_id::text || '.pdf', 'Bob Green',  'bob@worldunited.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada, T1Y 6S1',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"countries operated in": 12}, {"students helped": 3800}]'),
+    (org2_id::text, 'World United',  'VERIFIED', 654321432, 'organization-documents/org_' || org2_id::text || '.pdf', 'Bob Green',  'bob@wu.org',       '403-555-0202', '5510 26 Ave NE, Calgary, AB, Canada, T1Y 6S1',  'Uniting the World one step at a time.',           'Humanitarian',  'https://worldunited.org', '[{"countries operated in": 12}, {"students helped": 3800}]'),
     (org3_id::text, 'The Mustard Seed',  'VERIFIED', 789012513,  'organization-documents/org_' || org3_id::text || '.pdf',   'Alice Dev',  'alice@theseed.org', '403-555-0303', '102 11 Ave SE, Calgary, AB, Canada, T2G 0X8', 'Ending Homelessness.', 'Poverty',    'https://tms.org',         '[{"meals served": 5200}, {"families housed": 300}]');
 
 --Insert Volunteers 
 INSERT INTO public.volunteers (id, first_name, last_name, location, bio, hourly_value, organizations_assisted, availability)
 VALUES
-    (vol1_id::text, 'Estelle', 'Bright', 'Calgary, AB', 'Passionate volunteer with a love for data.', 25, 2, '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]'),
-    (vol2_id::text, 'Joshua',  'Bright', 'Calgary, AB', 'Software developer who loves giving back.',  30, 1, '["Monday", "Saturday", "Sunday"]');
+    (vol1_id::text, 'Estelle', 'Bright', 'Calgary, AB', 'I have a love for data and volunteering!', 32, 2, '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]'),
+    (vol2_id::text, 'Joshua',  'Bright', 'Calgary, AB', 'Im a Software developer who loves giving back.',  47, 1, '["Monday", "Saturday", "Sunday"]'),
+    (vol3_id::text, 'Rean',  'Schwarzer', 'Calgary, AB', 'Im a data scientist at google.',  40, 0, '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]'),
+    (vol4_id::text, 'Lloyd',  'Bannings', 'Calgary, AB', 'Im a recent grad looking for volunteering opportunities. ',  25, 0, '["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]');
 
 --Insert Volunteer Skill Profiles
 INSERT INTO public.volunteer_skill_profiles (vol_id, technical, non_technical, created_at)
 VALUES
     (vol1_id::text, '["Python", "SQL", "Java", "JavaScript", "API Integration", "Data Pipelines", "REST API", "Salesforce", "React.js", "Data Quality Assurance"]', '["Collaboration", "Communication", "Adaptability", "Leadership", "Problem-Solving", "Time Management", "Data-Driven Decision Making", "Teamwork", "Strategic Thinking"]', '2026-04-08'),
-    (vol2_id::text, '["Python", "SQL", "Excel VBA", "Java", "JavaScript", "HTML", "CSS", "Power BI", "Bloomberg", "FactSet"]', '["Financial Management", "Leadership", "Collaboration", "Communication", "Data Analysis", "Problem Solving", "Time Management", "Strategic Thinking", "Team Management", "Adaptability"]', '2026-04-07');
+    (vol2_id::text, '["Python", "SQL", "Excel VBA", "Java", "JavaScript", "HTML", "CSS", "Power BI", "Bloomberg", "FactSet"]', '["Financial Management", "Leadership", "Collaboration", "Communication", "Data Analysis", "Problem Solving", "Time Management", "Strategic Thinking", "Team Management", "Adaptability"]', '2026-04-07'),
+    (vol3_id::text, '["Python", "SQL", "Machine Learning", "PyTorch", "TensorFlow", "Keras", "NumPy", "Pandas", "Excel", "Analysis"]', '["Leadership", "Collaboration", "Communication", "Data Analysis", "Problem Solving", "Time Management", "Adaptability", "Adaptability"]', '2026-04-07'),
+    (vol4_id::text, '["Python", "SQL", "C", "Java", "C++", "JavaScript", "CSS", "Haskell", "Prolog", "Assembly"]', '["Leadership", "Collaboration", "Communication", "Problem Solving", "Time Management", "Adaptability"]', '2026-04-07');
 
 
 --Insert Opps
-INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability)
+INSERT INTO public.opportunities (id, org_id, vol_id, status, name, category, description, candidate_desc, work_type, commitment_level, hours, length, posted_date, deadline_date, availability, updated_at)
 VALUES
-    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 30, '3 months', '2026-01-15', '2026-04-15', '["Monday", "Tuesday", "Wednesday"]'),
-    (opp2_id::text, org2_id::text, vol1_id::text, 'FILLED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Friday", "Saturday", "Sunday"]'),
-    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 0, '6 months', '2026-03-01', '2026-09-01', '["Monday", "Wednesday", "Friday"]'),
-    (opp4_id::text, org1_id::text, NULL, 'OPEN',   'Tax Analyst',    'Accounting', 'Help streamline our tax flow',           'Accounting and/or finance experience required',        'HYBRID',    'PART_TIME', 0, 'Ongoing', '2026-04-10', '2026-09-01', '["Thursday", "Friday"]'),
-    (opp5_id::text, org2_id::text, NULL, 'OPEN',   'Project Manager',    'Management', 'We need someone who has PM experience to help guide our new volunteers',           'Leadership and project management',        'IN_PERSON',    'FLEXIBLE', 0, '12 months', '2026-05-01', '2026-10-01', '["Monday"]'),
-    (opp6_id::text, org3_id::text, NULL, 'OPEN',   'IT Developer',    'IT', 'We need an IT expert to help setup our infrastructure.',           'IT Experience (TCP/UDP)',        'IN_PERSON',    'PART_TIME', 0, '1 month', '2026-05-22', '2026-11-01', '["Wednesday", "Thursday"]');
+    (opp1_id::text, org1_id::text, vol1_id::text, 'FILLED', 'Website Development',      'Web Dev',      'Create a website for our charity',          'Must have relevant seng experience.',     'IN_PERSON', 'PART_TIME', 30, '3 months', '2026-01-15', '2026-04-15', '["Monday", "Tuesday", "Wednesday"]', '2026-01-15'),
+    (opp2_id::text, org2_id::text, vol1_id::text, 'CLOSED', 'Dashboard Creation',       'Data Analytics','Create a dashboard for our stakeholders.',  'Analytics experience required.',          'IN_PERSON', 'FLEXIBLE',  32, 'Ongoing',  '2026-02-10', NULL,         '["Friday", "Saturday", "Sunday"]', '2026-01-10'),
+    (opp3_id::text, org3_id::text, vol2_id::text, 'OPEN',   'Future Trend Analysis',    'Data Science', 'Predict our Q3 donation amounts.',           'Programming experience required.',        'HYBRID',    'PART_TIME', 0, '6 months', '2026-03-01', '2026-09-01', '["Monday", "Wednesday", "Friday"]', '2026-03-01'),
+    (opp4_id::text, org1_id::text, NULL, 'OPEN',   'Tax Analyst',    'Accounting', 'Help streamline our tax flow',           'Accounting and/or finance experience required',        'HYBRID',    'PART_TIME', 0, 'Ongoing', '2026-04-06', '2026-09-01', '["Thursday", "Friday"]', '2026-04-06'),
+    (opp5_id::text, org2_id::text, NULL, 'OPEN',   'Project Manager',    'Management', 'We need someone who has PM experience to help guide our new volunteers',           'Leadership and project management',        'IN_PERSON',    'FLEXIBLE', 0, '12 months', '2026-02-01', '2026-10-01', '["Monday"]', '2026-02-01'),
+    (opp6_id::text, org2_id::text, vol3_id::text, 'FILLED',   'AI Specialist',    'Data Science', 'We would like someone to create a chatbot for our website to help answer questions about our mission and goal.',           'Data Science/Machine Learning and NLP experience',  'IN_PERSON',    'PART_TIME', 7, '3 months', '2026-04-01', '2026-10-01', '["Wednesday", "Thursday", "Friday"]', '2026-04-01'),
+    (opp7_id::text, org2_id::text, NULL, 'OPEN',   'Data Pipeline Engineer',    'Data Analytics', 'We need help fixing our data pipeline.',           'Data experience',        'HYBRID',    'PART_TIME', 0, '1 month', '2026-04-02', '2026-6-20', '["Friday", "Saturday", "Sunday"]', '2026-04-02'),
+    (opp8_id::text, org2_id::text, vol4_id::text, 'FILLED',   'Data Entry',    'Data Analytics', 'We have some legacy spreadsheets that need to be entered into our modern architecture.',           'Data experience',        'HYBRID',    'PART_TIME', 5, '1 month', '2026-03-28', '2026-5-01', '["Monday", "Wednesday", "Friday", "Saturday", "Sunday"]', '2026-03-28');
 
 --Insert Vol Work Experiences
 INSERT INTO public.volunteer_work_experiences (id, vol_id, job_title, company, responsibilities, created_at, start_date, end_date)
 VALUES
     (work_exp1_id::text, vol1_id::text, 'Data & AI Consultant', 'EY', 'Leverages AI to help drive decisions',   '2026-04-05',  '2025-03-05', '2026-02-10'),
     (work_exp2_id::text, vol2_id::text, 'Investment Banker', 'RBC', 'Create Excel dashboards',   '2026-04-05',  '2026-03-05', '2026-06-01'),
-    (work_exp3_id::text, vol2_id::text, 'Data Science Associate', 'CTC', 'Develop machine learning models to forcast sales',   '2026-04-05',  '2026-05-04', NULL);
+    (work_exp3_id::text, vol2_id::text, 'Data Science Associate', 'CTC', 'Develop machine learning models to forcast sales',   '2026-04-05',  '2026-05-04', NULL),
+    (work_exp4_id::text, vol3_id::text, 'Data Scientist', 'Google', 'Developed and maintained the google search algorithms',   '2026-04-05',  '2020-01-09', NULL),
+    (work_exp5_id::text, vol4_id::text, 'Software Engineering Intern', 'MNP', 'Helped create 2 software applications for clients',   '2026-04-05',  '2025-09-03',  '2026-04-05');
 
 --Inset vol Educations
 INSERT INTO public.volunteer_educations (id, vol_id, institution, degree, graduation_year, created_at)
 VALUES
     (education1_id::text, vol1_id::text, 'University of Manitoba', 'Software Engineering', '2025',   '2026-04-05'),
     (education2_id::text, vol2_id::text, 'University of Saskatchewan', 'Finance', '2020',   '2026-04-05'),
-    (education3_id::text, vol2_id::text, 'University of Guelph', 'Music Theory', '2026',   '2026-04-05');
+    (education3_id::text, vol2_id::text, 'University of Guelph', 'Music Theory', '2026',   '2026-04-05'),
+    (education4_id::text, vol3_id::text, 'University of Calgary', 'Computer Science', '2019',   '2026-04-05'),
+    (education5_id::text, vol4_id::text, 'University of Alberta', 'Software Engineering', '2026',   '2026-04-05');
 
 --Applications
 INSERT INTO public.applications (id, opp_id, vol_id, match_pct, message, date_applied)
 VALUES
     (app1_id::text, opp3_id::text, vol1_id::text, 85, 'I have 5 years data science experience at google.', '2026-03-05'),
     (app2_id::text, opp1_id::text, vol2_id::text, 70, 'I have a degree in software engineering.',             '2026-01-20'),
-    (app3_id::text, opp2_id::text, vol1_id::text, 90, 'I have extensive experience in data analytics.',       '2026-02-01');
+    (app3_id::text, opp2_id::text, vol1_id::text, 90, 'I have extensive experience in data analytics.',       '2026-02-01'),
+    (app4_id::text, opp7_id::text, vol1_id::text, 87, 'I have alot of data experience that would be perfect for this opportunity.',       '2026-02-01'),
+    (app5_id::text, opp7_id::text, vol3_id::text, 71, 'At google another one of my responsibilties was maintaining data pipelines which makes me a perfect fit for this role.',       '2026-02-01');
+
 
 
 --Progress Updates
@@ -217,17 +251,22 @@ VALUES
     (progress1_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 1 Update', 'Completed figma designs', 8, '2026-01-02'),
     (progress5_id::text, opp1_id::text, vol1_id::text, 'VOLUNTEER', 'Week 2 Update', 'Created Unit tests and verified the completness of the project!', 10, '2026-01-05'),
     
-    (progress6_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Implemented half of the requested charts', 8, '2026-02-10'),
-    (progress7_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Finished the flow from the db to tableau', 10, '2026-02-09'),
-    (progress8_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Created the base dashboard in tableau', 10, '2026-02-05'),
-    (progress9_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Created a data cleaning pipeline', 4, '2026-02-02');
+    (progress6_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Implemented half of the requested charts', 8, '2026-02-09'),
+    (progress7_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 1 Update', 'Finished the flow from the db to tableau', 10, '2026-02-10'),
+    (progress8_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 2 Update', 'Created the base dashboard in tableau', 10, '2026-02-15'),
+    (progress9_id::text, opp2_id::text, vol2_id::text, 'VOLUNTEER', 'Week 3 Update', 'Created a data cleaning pipeline', 4, '2026-02-19'),
+    (progress10_id::text, opp6_id::text, vol3_id::text, 'VOLUNTEER', 'Week 1 Update', 'Cleaned and tokenized all relevant information for the chatbot', 7, '2026-04-10'),
+    (progress11_id::text, opp8_id::text, vol4_id::text, 'VOLUNTEER', 'Week 1 Update', 'Finished transferring over the first sheet, I can start the second one soon!', 7, '2026-04-3');
 
 
 --Reviews
 INSERT INTO public.reviews (id, issuer_id, reviewee_id, opportunity_id, rating)
 VALUES
     (review1_id::text, org1_id::text, vol1_id::text, opp1_id::text, 4),
-    (review2_id::text, vol1_id::text, org1_id::text, opp1_id::text, 3);
+    (review2_id::text, vol1_id::text, org1_id::text, opp1_id::text, 3),
+    (review3_id::text, vol1_id::text, org2_id::text, opp2_id::text, 4);
+
+
 
 UPDATE public.volunteers SET average_rating = 4 WHERE id = vol1_id::text;
 
@@ -477,7 +516,7 @@ VALUES
         org2_id::text,
         'World United',
         'ORGANIZATION',
-        'Can you clarify the premium analytics charge on our invoice?',
+        'What are the necessary steps to take if a volunteer backs out of an opportunity?',
         '2026-03-20 10:47:00'
     ),
     (
@@ -486,7 +525,7 @@ VALUES
         mod1_id::text,
         'Admin Moderator',
         'MODERATOR',
-        'We confirmed the charge and closed the ticket after follow-up.',
+        'Hello, you can submit a ticket and one of our moderators can help you through the process.',
         '2026-03-21 09:15:00'
     );
 

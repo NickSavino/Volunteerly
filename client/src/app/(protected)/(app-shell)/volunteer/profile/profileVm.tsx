@@ -1,3 +1,7 @@
+/**
+ * profileVm.tsx
+ * View model for the volunteer profile page. Handles loading, editing, saving, and avatar upload
+ */
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -19,6 +23,10 @@ export type ProfileErrors = {
     availability?: string;
 };
 
+/**
+ * Drives all state and logic for the volunteer profile edit page
+ * @returns all the state and handlers needed by the profile page component
+ */
 export function useProfileViewModel() {
     const router = useRouter();
     const { session, loading, signOut } = useAuth();
@@ -74,6 +82,10 @@ export function useProfileViewModel() {
         loadData();
     }, [session]);
 
+    /**
+     * Handles a new avatar file being selected — uploads it and busts the image cache
+     * @param e - the file input change event
+     */
     async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -99,12 +111,20 @@ export function useProfileViewModel() {
         setErrors({});
     }
 
+    /**
+     * Toggles a day in the availability selection
+     * @param day - the full day name to add or remove
+     */
     function toggleDay(day: string) {
         setAvailability((prev) =>
             prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
         );
     }
 
+    /**
+     * Validates all required fields before saving
+     * @returns true if all fields pass, false if any are empty
+     */
     function validate(): boolean {
         const newErrors: ProfileErrors = {};
         if (!firstName.trim()) newErrors.firstName = "First name is required.";
@@ -116,6 +136,9 @@ export function useProfileViewModel() {
         return Object.keys(newErrors).length === 0;
     }
 
+    /**
+     * Saves the edited profile to the server, refreshes the session cache, and shows a toast
+     */
     async function handleSave() {
         if (!validate()) return;
         setSaving(true);
