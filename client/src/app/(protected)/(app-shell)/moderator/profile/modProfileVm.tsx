@@ -1,14 +1,19 @@
+/**
+ * modProfileVm.tsx
+ * Manages moderator profile editing and security actions.
+ */
+
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
-import { useAuth } from "@/providers/auth-provider";
 import { useAppSession } from "@/providers/app-session-provider";
-import { UserService } from "@/services/UserService";
-import { ModeratorService } from "@/services/ModeratorService";
+import { useAuth } from "@/providers/auth-provider";
 import { AuthService } from "@/services/AuthService";
+import { ModeratorService } from "@/services/ModeratorService";
+import { UserService } from "@/services/UserService";
 
 export type ModProfileErrors = {
     firstName?: string;

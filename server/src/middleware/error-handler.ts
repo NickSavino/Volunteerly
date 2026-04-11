@@ -1,4 +1,9 @@
-import type { Request, Response, NextFunction } from "express";
+/**
+ * error-handler.ts
+ * Formats unhandled errors as JSON responses.
+ */
+
+import type { NextFunction, Request, Response } from "express";
 
 export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction) {
     console.error(err);

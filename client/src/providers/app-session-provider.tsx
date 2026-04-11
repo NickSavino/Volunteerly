@@ -1,3 +1,8 @@
+/**
+ * app-session-provider.tsx
+ * manages role-specific app session state.
+ */
+
 "use client";
 
 import { api } from "@/lib/api";
@@ -59,6 +64,7 @@ export function AppSessionProvider({ children }: { children: ReactNode }) {
         setCurrentModerator(null);
     }, []);
 
+    // Ignore stale async responses when refresh() is called or auth state changes mid-request
     const refresh = useCallback(async () => {
         const requestId = ++requestIdRef.current;
 

@@ -1,3 +1,8 @@
+/**
+ * message.ts
+ * Defines chat message and chat message creation schemas.
+ */
+
 import z from "zod";
 import { UserRoleSchema } from "../user.js";
 

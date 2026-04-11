@@ -1,3 +1,8 @@
+/**
+ * ModDashboardVm.tsx
+ * Builds moderator dashboard state and summary data.
+ */
+
 import { useAppSession } from "@/providers/app-session-provider";
 import { useAuth } from "@/providers/auth-provider";
 import { ModeratorService } from "@/services/ModeratorService";

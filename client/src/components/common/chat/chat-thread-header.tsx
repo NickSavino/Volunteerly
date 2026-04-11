@@ -1,3 +1,8 @@
+/**
+ * chat-thread-header.tsx
+ * Renders the header section for a chat conversation thread.
+ */
+
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

@@ -1,9 +1,23 @@
-import { Router } from "express";
+/**
+ * tickets.ts
+ * Handles ticket creation routes for authenticated users.
+ */
+
 import { CreateTicketSchema } from "@volunteerly/shared";
+import { Router } from "express";
 import { createTicket } from "../services/ticket-service.js";
 
 export const ticketsRouter = Router();
 
+/**
+ * POST /tickets
+ * Creates a new support ticket for the authenticated user.
+ * Auth: required
+ * Params: none
+ * Body: CreateTicket
+ * Returns: 201 with CreatedTicket
+ * Errors: 400, 401, 500
+ */
 ticketsRouter.post("/", async (req, res, next) => {
     try {
         const parsed = CreateTicketSchema.safeParse(req.body);

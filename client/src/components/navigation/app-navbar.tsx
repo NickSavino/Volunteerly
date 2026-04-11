@@ -1,3 +1,8 @@
+/**
+ * app-navbar.tsx
+ * Renders the main authenticated navigation bar for app users.
+ */
+
 "use client";
 
 import logo from "@/assets/logo.png";

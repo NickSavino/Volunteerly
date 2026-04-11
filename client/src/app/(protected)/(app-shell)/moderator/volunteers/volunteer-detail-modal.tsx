@@ -1,3 +1,8 @@
+/**
+ * volunteer-detail-modal.tsx
+ * Displays volunteer moderation details and actions.
+ */
+
 "use client";
 
 import { AppModal } from "@/components/common/app-modal";

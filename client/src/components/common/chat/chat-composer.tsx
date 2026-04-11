@@ -1,8 +1,13 @@
+/**
+ * chat-composer.tsx
+ * Renders the chat message input and send action controls.
+ */
+
 "use client";
 
-import { SendHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { SendHorizontal } from "lucide-react";
 
 type ChatComposerProps = {
     value: string;

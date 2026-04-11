@@ -1,8 +1,13 @@
+/**
+ * chat-message-list.tsx
+ * Renders a scrollable list of chat messages for a conversation.
+ */
+
 "use client";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { ChatMessage } from "@volunteerly/shared";
 import { ChatMessageBubble } from "./chat-message-bubble";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 type ChatMessageListProps = {
     messages: ChatMessage[];

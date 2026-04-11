@@ -1,12 +1,17 @@
 import { ModeratorTicketDetail, ModeratorTicketList } from "@volunteerly/shared";
 import { prisma } from "../../lib/prisma.js";
 import { getDisplayName } from "../helpers/service-utils.js";
+import { ensureTicketConversation } from "../ticket-service.js";
 import {
     moderatorTicketDetailInclude,
     ModeratorTicketDetailRecord,
 } from "./moderator-ticket.queries.js";
-import { ensureTicketConversation } from "../ticket-service.js";
 
+/**
+ * moderator-ticket-service.ts
+ * Handles moderator ticket list/detail queries and claim/close workflows.
+ * @returns Promise<ModeratorTicketDetail>
+ */
 function toModeratorTicketDetail(ticket: ModeratorTicketDetailRecord): ModeratorTicketDetail {
     return {
         id: ticket.id,
@@ -65,6 +70,10 @@ function toModeratorTicketDetail(ticket: ModeratorTicketDetailRecord): Moderator
     };
 }
 
+/**
+ * Fetches all moderator-facing tickets in descending created order.
+ * @returns Promise<ModeratorTicketList>
+ */
 export async function getModeratorTicketList(): Promise<ModeratorTicketList> {
     const tickets = await prisma.ticket.findMany({
         orderBy: { createdAt: "desc" },
@@ -83,6 +92,11 @@ export async function getModeratorTicketList(): Promise<ModeratorTicketList> {
     }));
 }
 
+/**
+ * Fetches one moderator ticket with issuer, target, and conversation detail.
+ * @param ticketId
+ * @returns Promise<ModeratorTicketDetail | null>
+ */
 export async function getModeratorTicketDetail(
     ticketId: string,
 ): Promise<ModeratorTicketDetail | null> {
@@ -94,6 +108,12 @@ export async function getModeratorTicketDetail(
     return ticket ? toModeratorTicketDetail(ticket) : null;
 }
 
+/**
+ * Claims a ticket for a moderator
+ * @param ticketId
+ * @param moderatorId
+ * @returns Promise<ModeratorTicketDetail>
+ */
 export async function claimModeratorTicket(
     ticketId: string,
     moderatorId: string,
@@ -142,6 +162,12 @@ export async function claimModeratorTicket(
     return detail;
 }
 
+/**
+ * Closes a ticket assigned to the provided moderator.
+ * @param ticketId
+ * @param moderatorId
+ * @returns Promise<ModeratorTicketDetail>
+ */
 export async function closeModeratorTicket(
     ticketId: string,
     moderatorId: string,

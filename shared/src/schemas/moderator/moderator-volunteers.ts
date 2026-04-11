@@ -1,6 +1,11 @@
+/**
+ * moderator-volunteers.ts
+ * Defines moderator volunteer list, detail, and action input schemas.
+ */
+
 import z from "zod";
-import { ModeratorUrgencyRatingSchema } from "./moderator-tickets.js";
 import { UserRoleSchema } from "../user.js";
+import { ModeratorUrgencyRatingSchema } from "./moderator-tickets.js";
 
 export const VolunteerModerationStateSchema = z.enum(["CLEAR", "FLAGGED", "RESOLVED", "CLOSED"]);
 export type VolunteerModerationState = z.infer<typeof VolunteerModerationStateSchema>;

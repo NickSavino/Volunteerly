@@ -1,4 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+/**
+ * auth.ts
+ * Authenticates requests from bearer tokens.
+ */
+
+import { NextFunction, Request, Response } from "express";
 import { supabase } from "../lib/supabase.js";
 
 export async function auth(req: Request, res: Response, next: NextFunction) {

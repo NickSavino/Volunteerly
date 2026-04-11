@@ -1,6 +1,12 @@
+/**
+ * auth-provider.tsx
+ * Provides Supabase auth state to the client app.
+ */
+
 "use client";
 
 import { Session, User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import {
     createContext,
     ReactNode,
@@ -11,7 +17,6 @@ import {
     useState,
 } from "react";
 import { supabase } from "../lib/supabase";
-import { useRouter } from "next/navigation";
 
 type AuthContextValue = {
     session: Session | null;

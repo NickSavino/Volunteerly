@@ -1,17 +1,22 @@
+/**
+ * index.ts
+ * Registers API route groups.
+ */
+
 import { Router } from "express";
-import { healthRouter } from "./health.js";
+import { auth } from "../middleware/auth.js";
+import { requireRole } from "../middleware/require-role.js";
+import { chatRouter } from "./chat/index.js";
+import { currentModeratorRouter } from "./current-moderator.js";
+import { currentOrganizationRouter } from "./current-organization.js";
 import { currentUserRouter } from "./current-user.js";
 import { currentVolunteerRouter } from "./current-volunteer.js";
-import { currentOrganizationRouter } from "./current-organization.js";
-import { OrganizationRouter } from "./organization.js";
-import { currentModeratorRouter } from "./current-moderator.js";
+import { healthRouter } from "./health.js";
 import { moderatorRouter } from "./moderator/index.js";
-import { volunteerOrganizationRouter } from "./volunteer-organization.js";
-import { requireRole } from "../middleware/require-role.js";
-import { auth } from "../middleware/auth.js";
+import { OrganizationRouter } from "./organization.js";
 import { skillExtractionRouter } from "./skill-extraction.js";
-import { chatRouter } from "./chat/index.js";
 import { ticketsRouter } from "./tickets.js";
+import { volunteerOrganizationRouter } from "./volunteer-organization.js";
 
 export const apiRouter = Router();
 

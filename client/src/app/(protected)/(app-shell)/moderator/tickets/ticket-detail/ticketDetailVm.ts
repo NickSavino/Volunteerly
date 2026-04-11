@@ -1,3 +1,8 @@
+/**
+ * ticketDetailVm.ts
+ * Manages ticket detail loading, replies, claim, and close actions.
+ */
+
 "use client";
 
 import { api } from "@/lib/api";
