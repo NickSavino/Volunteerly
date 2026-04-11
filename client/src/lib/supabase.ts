@@ -1,3 +1,8 @@
+/**
+ * supabase.ts
+ * Creates the frontend Supabase client.
+ */
+
 import { createClient } from "@supabase/supabase-js";
 import { env } from "./env";
 

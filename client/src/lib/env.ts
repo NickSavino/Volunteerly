@@ -1,3 +1,8 @@
+/**
+ * env.ts
+ * Validates client environment variables.
+ */
+
 import z from "zod";
 
 const envSchema = z.object({
