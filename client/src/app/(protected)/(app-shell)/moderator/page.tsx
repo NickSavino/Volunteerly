@@ -1,3 +1,7 @@
+/**
+ * moderator/page.tsx
+ * Renders the moderator dashboard overview.
+ */
 "use client";
 
 import { LoadingScreen } from "@/components/common/loading-screen";

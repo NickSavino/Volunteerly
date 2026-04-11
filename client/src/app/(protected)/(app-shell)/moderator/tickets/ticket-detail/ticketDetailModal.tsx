@@ -1,14 +1,19 @@
+/**
+ * ticketDetailModal.tsx
+ * Displays ticket details, conversation history, and moderator actions.
+ */
+
 "use client";
 
-import { MessageSquareText } from "lucide-react";
-import { AppModal } from "@/components/common/app-modal";
-import { LoadingScreen } from "@/components/common/loading-screen";
 import { UseTicketDetailViewModel } from "@/app/(protected)/(app-shell)/moderator/tickets/ticket-detail/ticketDetailVm";
-import { ChatMessageList } from "@/components/common/chat/chat-message-list";
+import { AppModal } from "@/components/common/app-modal";
 import { ChatComposer } from "@/components/common/chat/chat-composer";
+import { ChatMessageList } from "@/components/common/chat/chat-message-list";
 import { ChatParticipantCard } from "@/components/common/chat/chat-participant-card";
+import { LoadingScreen } from "@/components/common/loading-screen";
 import { Button } from "@/components/ui/button";
 import { ModeratorTicketDetail } from "@volunteerly/shared";
+import { MessageSquareText } from "lucide-react";
 
 type TicketDetailModalProps = {
     ticketId: string | null;

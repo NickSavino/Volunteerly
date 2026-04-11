@@ -1,11 +1,14 @@
+/**
+ * moderator/profile/page.tsx
+ * Renders the moderator profile page.
+ */
+
 "use client";
 
-import { UserService } from "@/services/UserService";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useModProfileViewModel } from "@/app/(protected)/(app-shell)/moderator/profile/modProfileVm";
 import { LoadingScreen } from "@/components/common/loading-screen";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -14,8 +17,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Shield, Lock, CalendarDays, Pencil } from "lucide-react";
-import { useModProfileViewModel } from "@/app/(protected)/(app-shell)/moderator/profile/modProfileVm";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { UserService } from "@/services/UserService";
+import { CalendarDays, Lock, Pencil, Shield } from "lucide-react";
 
 export default function ModeratorProfilePage() {
     const vm = useModProfileViewModel();
