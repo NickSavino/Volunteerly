@@ -1,3 +1,8 @@
+/**
+ * fixtures.ts
+ * Defines shared mock data and constants for client service tests.
+ */
+
 export const UUID_A = "123e4567-e89b-12d3-a456-426614174000";
 export const UUID_B = "123e4567-e89b-12d3-a456-426614174001";
 export const ISO_DATE = "2026-01-01T00:00:00.000Z";

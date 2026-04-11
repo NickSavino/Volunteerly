@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Public landing page - explains how Volunteerly works for both volunteers and organizations
+ */
+
 "use client";
 
 import tms from "@/assets/tms.png";
@@ -12,6 +17,7 @@ import { useAuth } from "../../providers/auth-provider";
 export default function LandingPage() {
     const { loading } = useAuth();
 
+    // Show a minimal loading state while auth resolves to avoid a flash of content
     if (loading) {
         return <main className="p-6">Loading...</main>;
     }
@@ -25,6 +31,7 @@ export default function LandingPage() {
                     md:h-[calc(100vh-64px)] md:flex-row
                 "
             >
+                {/* Left panel - hero image with testimonial overlay */}
                 <div
                     className="
                         relative flex h-screen w-full flex-col overflow-hidden
@@ -65,6 +72,8 @@ export default function LandingPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Right panel - "How It Works" steps for both user types */}
                 <div
                     className="
                         flex size-full flex-col items-center px-8
@@ -75,6 +84,7 @@ export default function LandingPage() {
                         How It Works?
                     </h1>
                     <div className="flex flex-1 flex-col justify-around">
+                        {/* Volunteer flow */}
                         <div className="space-y-0 text-left">
                             <h2
                                 className="
@@ -121,6 +131,8 @@ export default function LandingPage() {
                                 </ItemContent>
                             </Item>
                         </div>
+
+                        {/* Organization flow */}
                         <div className="space-y-0 text-left">
                             <h2
                                 className="

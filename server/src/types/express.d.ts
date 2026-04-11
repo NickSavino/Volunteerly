@@ -1,3 +1,8 @@
+/**
+ * express.d.ts
+ * Extends Express request types with authenticated user context.
+ */
+
 export {};
 
 declare global {

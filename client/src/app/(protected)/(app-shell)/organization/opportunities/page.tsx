@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Organization opportunities list page - tabbed view of OPEN, FILLED, and CLOSED opportunities
+ */
+
 "use client";
 
 import volunteerly_logo from "@/assets/volunteerly_logo.png";
@@ -34,6 +39,7 @@ export default function OrgOpportunitiesPage() {
                         md:mb-0
                     "
                 >
+                    {/* Page header with title and create button */}
                     <div
                         className="
                             mx-3 items-center justify-between
@@ -61,6 +67,10 @@ export default function OrgOpportunitiesPage() {
                     <div className="flex-1 overflow-y-auto">
                         <Card className="h-full overflow-y-auto">
                             <CardContent className="flex h-full flex-col">
+                                {/*
+                                 * Three tabs - Posted (OPEN), In-Progress (FILLED), Completed (CLOSED)
+                                 * The view model filters the full list based on currentTab
+                                 */}
                                 <Tabs
                                     defaultValue="OPEN"
                                     value={currentTab}
@@ -86,6 +96,8 @@ export default function OrgOpportunitiesPage() {
                                             </TabsTrigger>
                                         </TabsList>
                                     </div>
+
+                                    {/* OPEN tab - shows applicant count, post date, and deadline */}
                                     <TabsContent value={"OPEN"}>
                                         {filteredOpportunities.length === 0 ? (
                                             <CardContent
@@ -157,6 +169,7 @@ export default function OrgOpportunitiesPage() {
                                         )}
                                     </TabsContent>
 
+                                    {/* FILLED tab - shows assigned volunteer, duration, and work type */}
                                     <TabsContent value={"FILLED"}>
                                         {filteredOpportunities.length === 0 ? (
                                             <CardContent
@@ -204,6 +217,7 @@ export default function OrgOpportunitiesPage() {
 
                                                             <span className="flex items-center gap-1">
                                                                 <Briefcase />{" "}
+                                                                {/* Convert enum snake_case to readable Title Case */}
                                                                 {opp.workType
                                                                     .replaceAll("_", " ")
                                                                     .toLowerCase()
@@ -232,6 +246,7 @@ export default function OrgOpportunitiesPage() {
                                         )}
                                     </TabsContent>
 
+                                    {/* CLOSED tab - shows completed opportunity history */}
                                     <TabsContent value={"CLOSED"}>
                                         {filteredOpportunities.length === 0 ? (
                                             <CardContent

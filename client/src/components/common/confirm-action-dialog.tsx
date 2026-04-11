@@ -1,5 +1,12 @@
+/**
+ * confirm-action-dialog.tsx
+ * Renders a reusable confirmation dialog for destructive or important actions.
+ */
+
 "use client";
 
+import { cn } from "@/lib/utils";
+import { Check, X } from "lucide-react";
 import { ReactNode } from "react";
 import {
     AlertDialog,
@@ -9,8 +16,6 @@ import {
     AlertDialogDescription,
     AlertDialogTitle,
 } from "../ui/alert-dialog";
-import { Check, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 type ConfirmActionDialogProps = {
     open: boolean;

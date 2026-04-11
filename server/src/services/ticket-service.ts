@@ -1,7 +1,18 @@
+/**
+ * ticket-service.ts
+ * Handles ticket creation and ticket conversation setup.
+ */
+
 import type { Prisma } from "@prisma/client";
 import { CreateTicket, CreatedTicket } from "@volunteerly/shared";
 import { prisma } from "../lib/prisma.js";
 
+/**
+ * Upserts a conversation participant for the given conversation and user.
+ * @param tx - Prisma transaction client
+ * @param conversationI
+ * @param userId
+ */
 async function upsertConversationParticipant(
     tx: Prisma.TransactionClient,
     conversationId: string,
@@ -29,6 +40,12 @@ type EnsureTicketConversationInput = {
     moderatorId?: string | null;
 };
 
+/**
+ * Ensures a ticket conversation exists and includes the required participants.
+ * @param tx - Prisma transaction client
+ * @param input - Object containing ticketId, issuerId, description, and optional moderatorId
+ * @returns Promise<{ id: string }>
+ */
 export async function ensureTicketConversation(
     tx: Prisma.TransactionClient,
     { ticketId, issuerId, description, moderatorId }: EnsureTicketConversationInput,
@@ -80,6 +97,12 @@ export async function ensureTicketConversation(
     return conversation;
 }
 
+/**
+ * Creates a new ticket and initializes its linked conversation.
+ * @param issuerId
+ * @param input - Object containing category, title, description, and urgencyRating for the new ticket
+ * @returns Promise<CreatedTicket>
+ */
 export async function createTicket(issuerId: string, input: CreateTicket): Promise<CreatedTicket> {
     return prisma.$transaction(async (tx) => {
         const ticket = await tx.ticket.create({

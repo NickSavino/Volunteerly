@@ -1,3 +1,8 @@
+/**
+ * loading-screen.tsx
+ * Renders a full-screen loading state for route and data initialization.
+ */
+
 "use client";
 
 import { Spinner } from "@/components/ui/spinner";

@@ -1,3 +1,8 @@
+/**
+ * orgViewOpportunityVm.tsx
+ * View model for the organization's single opportunity detail page
+ */
+
 import { api } from "@/lib/api";
 import { useAuth } from "@/providers/auth-provider";
 import { OrganizationService } from "@/services/OrganizationService";
@@ -16,6 +21,8 @@ export function useOrgViewOpportunityViewModel(id: string) {
     const [monetaryValue, setMonetaryValue] = useState(0);
     const [applications, setApplications] = useState<Application[]>([]);
     const [fetching, setFetching] = useState(true);
+
+    // When reload is toggled to true, the opportunity effect re-runs to refresh data
     const [reload, setReload] = useState(false);
     const [progressUpdate, setProgressUpdate] = useState<ProgressUpdate>({
         title: "",
@@ -25,6 +32,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
     const [reviewModalOpen, setReviewModalOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
+    // Load org on session change - redirect if not verified
     useEffect(() => {
         async function loadCurrentUser() {
             if (!session?.access_token) return;
@@ -54,6 +62,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
         loadCurrentUser();
     }, [session, router]);
 
+    // Load opportunity data - also fetches applications (if OPEN) or analytics (if CLOSED)
     useEffect(() => {
         async function loadOpportunities() {
             setFetching(true);
@@ -67,6 +76,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
 
             setOpportunity(opp.data);
 
+            // Only fetch applications when the opportunity is still accepting them
             if (opp.data.status == "OPEN") {
                 const apps = await OrganizationService.getApplications(opp.data.id);
                 if (!apps.success) {
@@ -79,6 +89,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
                 setApplications(apps.data);
             }
 
+            // Fetch analytics only for completed opportunities
             if (opp.data.status == "CLOSED") {
                 const analytics = await OrganizationService.getOpportunityAnalytics(opp.data.id);
                 if (analytics.success) {
@@ -93,6 +104,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
         loadOpportunities();
     }, [id, reload]);
 
+    // Marks the opportunity as complete - only valid when status is FILLED
     async function completeOpportunity() {
         if (opportunity?.status == "FILLED") {
             const completed_opp = await OrganizationService.completeOpportunity(opportunity.id);
@@ -105,6 +117,8 @@ export function useOrgViewOpportunityViewModel(id: string) {
         toast.error("Failed to complete Opportunity.", { position: "top-right" });
         setError("Cannot Complete Opportunity");
     }
+
+    // Posts a new progress update for the currently active opportunity
     async function addUpdate() {
         if (progressUpdate) {
             setFetching(true);
@@ -115,6 +129,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
             const updated = await OrganizationService.addProgressUpdate(payload);
             if (updated.success) {
                 toast.success("Progress Updated Added!", { position: "top-right" });
+                // Reset the form fields after a successful submission
                 setProgressUpdate({
                     title: "",
                     description: "",
@@ -130,6 +145,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
         }
     }
 
+    // Submits the review form, and optionally a flag, for the assigned volunteer
     async function submitReview(input: { rating: number; flagged: boolean; flagReason?: string }) {
         if (submitting || !opportunity?.volunteer?.id) return;
         setSubmitting(true);
@@ -144,6 +160,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
             setSubmitting(false);
             let msg = "Failed to post review. Please try again.";
             try {
+                // Check if the error body tells us it's a duplicate review
                 const body = JSON.parse(err instanceof Error ? err.message : "");
                 if (body?.error?.toLowerCase().includes("already")) {
                     msg = "You have already reviewed this volunteer for this opportunity.";
@@ -152,6 +169,8 @@ export function useOrgViewOpportunityViewModel(id: string) {
             toast.error(msg, { position: "top-right" });
             return;
         }
+
+        // If flagged, attempt to submit the flag separately after the review succeeds
         if (input.flagged && input.flagReason?.trim()) {
             try {
                 await OrganizationService.postFlag(
@@ -175,6 +194,7 @@ export function useOrgViewOpportunityViewModel(id: string) {
         });
     }
 
+    // Gets or creates a direct message thread with the assigned volunteer and navigates to it
     async function openMessageThread() {
         if (!opportunity?.id || !opportunity?.volunteer?.id) return;
 

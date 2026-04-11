@@ -1,3 +1,8 @@
+/**
+ * service-utils.ts
+ * Defines shared helper utilities used across backend services.
+ */
+
 import { UserRole } from "@volunteerly/shared";
 
 export function getDisplayName(user?: {

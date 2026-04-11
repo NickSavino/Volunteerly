@@ -1,3 +1,8 @@
+/**
+ * nav-config.ts
+ * Defines role-based navigation items and profile routing config.
+ */
+
 export type AppNavbarRole = "VOLUNTEER" | "ORGANIZATION" | "MODERATOR";
 
 export type AppNavItem = {

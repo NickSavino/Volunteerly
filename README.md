@@ -1,6 +1,6 @@
 # Volunteerly - SENG 513
 
-Volunteerly is a web platform that connects volunteers with organizations.
+Volunteerly is a full-stack web platform that connects skilled volunteers with organizations that need specialized help. It is built as a monorepo with a Next.js client, an Express + Prisma server, and a shared package for common schemas and types.
 
 ---
 
@@ -11,21 +11,34 @@ Volunteerly is a web platform that connects volunteers with organizations.
 - Next.js 16 - <https://nextjs.org/docs>
 - React - <https://react.dev/reference/react>
 - Typescript - <https://www.typescriptlang.org/docs/>
+- Tailwind CSS - <https://tailwindcss.com/>
+- Shacdn/ui - <https://www.shadcn.io/>
+- Leaflet - <https://leafletjs.com/>
+- Supabase JS - <https://supabase.com/docs/reference/javascript/introduction>
 
 ### Backend
 
 - Node.js 20.19.0 - <https://nodejs.org/en/learn/getting-started/introduction-to-nodejs>
 - Express.js 5.2.1 - <https://expressjs.com/en/5x/api.html>
 - Prisma ORM 7.4.2 - <https://www.prisma.io/docs/orm>
-
-### Database
-
+- TypeScript - <https://www.typescriptlang.org/>
 - PostgreSQL 16 - <https://www.postgresql.org/docs/>
+- Supabase - <https://supabase.com/docs>
+- Zod - <https://zod.dev/>
+- Azure Document Intelligence - <https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/>
+- Azure Communication Services - <https://learn.microsoft.com/en-us/azure/communication-services/>
 
-### Infrastructure
+### Tooling/Infrastructure
 
+- Node Package Manager - <https://docs.npmjs.com/>
 - Docker - <https://docs.docker.com/reference/dockerfile/>
+- Docker Compose - <https://docs.docker.com/compose/>
+- Supabase CLI - <https://supabase.com/docs/guides/local-development/cli/getting-started>
 - Make - <https://www.gnu.org/software/make/>
+- Jest - <https://jestjs.io/>
+- ESLint - https://eslint.org/docs/latest/
+- Prettier - <https://prettier.io/docs/>
+- Gitlab CI/CD - <https://docs.gitlab.com/ci/>
 
 ## Monorepo Structure
 
@@ -59,13 +72,6 @@ The dev environment is ran using docker for a consistent cross-platform environm
 Docker Desktop (reccomended), Docker engine (required):
 
 - <https://docs.docker.com/desktop/>
-
-Make:
-
-- Windows: <https://medium.com/@AliMasaoodi/installing-make-on-windows-10-using-chocolatey-a-step-by-step-guide-5e178c449394>
-- Mac: <https://www.google.com/search?client=firefox-b-d&q=install+make+on+mac>
-- Linux/WSL: <https://www.geeksforgeeks.org/installation-guide/how-to-install-make-on-ubuntu/>
-- Node.js (20+):
 
 - Ensure PostgreSQL client is setup, you should be able to run commands using `sql`
 
@@ -180,19 +186,15 @@ Reset the local database by running:
 
 - `npm run db:reset -w server`
 
-## Client Authentication Flow
+## Authentication Flow
 
-There the following pages manage authentication:
+Volunteerly uses Supabase Auth.
 
-- `/`
-- `/login`
-- `/signup`
-- `/bootstrap`
-- `/volunteer`
-- `/organization`
-- `/moderator`
+At a high level:
 
-After login or signup, the app routes to `/bootstrap`, fetches the current user from the backend, and redirects to the correct dashboard based on the user`s role.
+1. Supabase creates the auth user
+2. a database trigger inserts a related public user record
+3. after login/signup, the app routes through a session provider and redirects users to the correct dashboard based on role
 
 ## API Contract
 
@@ -208,13 +210,13 @@ Alternatively, you can run:
 
 For automatic reloading.
 
-### CSS
+## CSS
 
 Use components from [shacdn/ui](https://ui.shadcn.com/docs/components). Styling for web application is set in `/client/src/app/globals.css`.
 
 Imported components can be styled by accessing the relevant `.tsx` file for that component inside `/client/src/components/ui`
 
-### Docker
+## Docker
 
 Docker Compose is used for local development. The project uses three compose files to separate shared, development and production container settings:
 
@@ -249,7 +251,7 @@ For local testing of production, you may optionally use a separate .env.prod fil
 docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up --build
 ```
 
-### schema-milestone : Seeding Script Instructions
+## schema-milestone : Seeding Script Instructions
 
 1. Prerequisites
 
@@ -287,3 +289,15 @@ docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod
 6. Run the seeding script
 
     `npm run db:reset -w server`
+
+## Workspace READMEs
+
+See the package-level READMEs for more detail:
+
+- `client/README.md`
+- `server/README.md`
+- `shared/README.md`
+
+## Notes
+
+- Use `npm run` in the root or in a workspace to inspect all available scripts.

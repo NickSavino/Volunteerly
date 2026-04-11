@@ -1,3 +1,8 @@
+/**
+ * moderator.ts
+ * Defines moderator dashboard and profile schemas.
+ */
+
 import { z } from "zod";
 import { ModeratorTicketListSchema } from "./moderator-tickets.js";
 

@@ -1,3 +1,8 @@
+/**
+ * orgApplicationVm.tsx
+ * View model for the organization's verification application form
+ */
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
@@ -18,11 +23,12 @@ export function useOrgApplicationViewModel() {
         postalCode: "",
     });
     const [file, setFile] = useState<File | null>();
-
     const [error, setError] = useState<string | null>(null);
     const [bootstrapping, setBootStrapping] = useState(true);
     const [submitting, setSubmitting] = useState(false);
 
+    // On load, fetch the org's current state - if they've already applied, pre-fill the form
+    // but mark it as read-only so they can view but not re-submit
     useEffect(() => {
         async function loadCurrentUser() {
             if (!session?.access_token || currentOrg) {
@@ -39,6 +45,7 @@ export function useOrgApplicationViewModel() {
                     return;
                 }
 
+                // Parse the stored address back into separate fields for the form
                 const adrData = org.data.hqAdr?.split(", ") || [];
                 setAddress({
                     streetAdr: adrData[0] || "",
@@ -57,11 +64,13 @@ export function useOrgApplicationViewModel() {
         loadCurrentUser();
     }, [session, currentOrg]);
 
+    // Form is read-only once the application has been submitted or a decision has been made
     const isReadOnly =
         currentOrg?.status === "APPLIED" ||
         currentOrg?.status === "VERIFIED" ||
         currentOrg?.status === "REJECTED";
 
+    // Submits the application form with all org details and the verification document
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
 
@@ -72,6 +81,7 @@ export function useOrgApplicationViewModel() {
         setError(null);
 
         try {
+            // Merge the separate address fields back into one string before validation
             const createdOrg = CurrentOrganizationUpdateSchema.parse({
                 ...currentOrg,
                 hqAdr: `${address.streetAdr}, ${address.city}, ${address.province}, ${address.postalCode}`,
@@ -86,6 +96,7 @@ export function useOrgApplicationViewModel() {
 
             formData.append("document", file);
 
+            // Append all org fields to the form data for multipart submission
             Object.entries(createdOrg).forEach(([key, value]) => {
                 if (value !== undefined && value !== null) {
                     formData.append(key, String(value));
@@ -100,8 +111,10 @@ export function useOrgApplicationViewModel() {
                 return;
             }
 
+            // Refresh the app session so the new org status is reflected app-wide
             await refresh();
 
+            // If the org passed auto-approval, skip the waiting room entirely
             if (data.status == "VERIFIED") {
                 toast.success("Application was automatically approved!", { position: "top-right" });
                 router.replace("/organization");
@@ -119,6 +132,7 @@ export function useOrgApplicationViewModel() {
         }
     }
 
+    // Downloads and opens the previously submitted verification document in a new tab
     async function viewSubmittedDoc() {
         if (currentOrg?.docId) {
             try {
@@ -128,6 +142,8 @@ export function useOrgApplicationViewModel() {
 
                 const url = URL.createObjectURL(fileBlob);
                 const newWindow = window.open(url, "_blank");
+
+                // Clean up the blob URL once the tab is closed to avoid memory leaks
                 const interval = setInterval(() => {
                     if (newWindow?.closed) {
                         clearInterval(interval);

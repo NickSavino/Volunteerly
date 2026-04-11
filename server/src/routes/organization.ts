@@ -1,12 +1,17 @@
+/**
+ * organization.ts
+ * Routes for organization management, including approval, rejection, and document access
+ */
+
 import { Router } from "express";
 import { auth } from "../middleware/auth.js";
 import {
     approveOrganization,
-    rejectOrganization,
-    getCurrentOrganization,
+    downloadFile,
     getAllOrganizations,
     getAppliedOrganizations,
-    downloadFile,
+    getCurrentOrganization,
+    rejectOrganization,
 } from "../services/organization-service.js";
 import { getCurrentUser } from "../services/user-service.js";
 
@@ -19,6 +24,11 @@ type AuthenticatedRequest = {
 
 export const OrganizationRouter = Router();
 
+/**
+ * Ensures the requesting user exists and holds the MODERATOR role.
+ * Sends a 404 or 403 response automatically if the check fails.
+ * Returns the user record on success, or null if the request was rejected.
+ */
 async function requireModerator(
     userId: string,
     res: Parameters<Parameters<typeof OrganizationRouter.put>[1]>[1],
@@ -38,6 +48,15 @@ async function requireModerator(
     return mod;
 }
 
+/**
+ * GET /organizations
+ * Returns a list of organizations. Accepts an optional `status` query param.
+ * When status=APPLIED, returns only organizations pending review.
+ * Auth: required (moderator only)
+ * Query: status (optional)
+ * Returns: 200 with array of organizations
+ * Errors: 401, 403, 404, 500
+ */
 OrganizationRouter.get("/", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
@@ -54,6 +73,7 @@ OrganizationRouter.get("/", auth, async (req, res, next) => {
 
         const { status } = req.query;
 
+        // Filter by APPLIED status if requested, otherwise return all organizations
         const organizations =
             status === "APPLIED" ? await getAppliedOrganizations() : await getAllOrganizations();
 
@@ -63,6 +83,15 @@ OrganizationRouter.get("/", auth, async (req, res, next) => {
     }
 });
 
+/**
+ * GET /organizations/document
+ * Downloads an organization's document (PDF) from storage.
+ * Regular users can only access their own documents; moderators can access any.
+ * Auth: required (own document, or moderator for others)
+ * Query: file_path - storage path in the format "organization-documents/org_<userId>.pdf"
+ * Returns: 200 with PDF file attachment
+ * Errors: 400 (missing path), 401, 403, 404, 500
+ */
 OrganizationRouter.get("/document", auth, async (req: any, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
@@ -79,9 +108,10 @@ OrganizationRouter.get("/document", auth, async (req: any, res, next) => {
         if (!file_path) {
             return res.status(400).json({ error: "File Path is missing/invalid." });
         }
-
+        // Extract the owner's userId embedded in the filename (org_<userId>.<ext>)
         const fileId = file_path.split("org_")[1].split(".")[0];
 
+        // Allow access if the file belongs to the requester, otherwise require moderator
         if (!(fileId == userId)) {
             const mod = await requireModerator(userId, res);
             if (!mod) return;
@@ -98,6 +128,14 @@ OrganizationRouter.get("/document", auth, async (req: any, res, next) => {
     }
 });
 
+/**
+ * PUT /organizations/approve
+ * Approves a pending organization application.
+ * Auth: required (moderator only)
+ * Body: orgId
+ * Returns: 200 with updated organization data
+ * Errors: 400 (invalid state), 401, 403, 404, 500
+ */
 OrganizationRouter.put("/approve", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
@@ -132,6 +170,14 @@ OrganizationRouter.put("/approve", auth, async (req, res, next) => {
     }
 });
 
+/**
+ * PUT /organizations/reject
+ * Rejects a pending organization application with an optional reason.
+ * Auth: required (moderator only)
+ * Body: orgId, rejectionReason (optional)
+ * Returns: 200 with updated organization data
+ * Errors: 400 (invalid state), 401, 403, 404, 500
+ */
 OrganizationRouter.put("/reject", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
@@ -158,6 +204,7 @@ OrganizationRouter.put("/reject", auth, async (req, res, next) => {
                 .json({ error: "Invalid state", message: "Organization has not applied." });
         }
 
+        // Fall back to an empty string if no rejection reason is provided
         const rejected_org = await rejectOrganization(orgId, rejectionReason ?? "");
         res.status(200).json(rejected_org);
     } catch (error) {

@@ -1,3 +1,8 @@
+/**
+ * chat-conversation-list-item.tsx
+ * Renders a selectable conversation row in the chat sidebar.
+ */
+
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

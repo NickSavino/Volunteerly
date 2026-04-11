@@ -1,3 +1,8 @@
+/**
+ * current-moderator.ts
+ * Handles current moderator profile routes for authenticated moderators.
+ */
+
 import { Router } from "express";
 import {
     createCurrentModerator,
@@ -7,6 +12,15 @@ import {
 
 export const currentModeratorRouter = Router();
 
+/**
+ * GET /current-moderator
+ * Fetches the current moderator profile for the authenticated moderator.
+ * Auth: required (MODERATOR)
+ * Params: none
+ * Body: none
+ * Returns: 200 with current moderator record
+ * Errors: 401, 404, 500
+ */
 currentModeratorRouter.get("/", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
@@ -26,6 +40,15 @@ currentModeratorRouter.get("/", async (req, res, next) => {
     }
 });
 
+/**
+ * PUT /current-moderator
+ * Creates or updates the current moderator profile for the authenticated moderator.
+ * Auth: required (MODERATOR)
+ * Params: none
+ * Body: { firstName, lastName }
+ * Returns: 200 with created or updated moderator record
+ * Errors: 401, 500
+ */
 currentModeratorRouter.put("/", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;

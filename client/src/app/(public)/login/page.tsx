@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Login page - email/password authentication with role-based post-login routing
+ */
+
 "use client";
 
 import { useLoginViewModel } from "@/app/(public)/login/loginVM";
@@ -25,6 +30,7 @@ export default function LoginPage() {
         handleSubmit,
     } = useLoginViewModel();
 
+    // Show a loading screen while credentials are being verified or the session is initializing
     if (submitting || pendingRedirect) {
         return <LoadingScreen />;
     }
@@ -39,6 +45,7 @@ export default function LoginPage() {
                     md:h-[calc(100vh-64px)] md:flex-row
                 "
             >
+                {/* Left panel - hero image with testimonial, hidden on mobile */}
                 <div
                     className="
                         relative hidden h-screen w-full flex-col overflow-hidden
@@ -79,6 +86,8 @@ export default function LoginPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Right panel - login form */}
                 <div
                     className="
                         flex w-full flex-1 items-center justify-center px-8

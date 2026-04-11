@@ -1,3 +1,8 @@
+/**
+ * volunteer-organization.ts
+ * Defines public organization profile and impact highlight schemas.
+ */
+
 import { z } from "zod";
 
 export const ImpactHighlightSchema = z.object({

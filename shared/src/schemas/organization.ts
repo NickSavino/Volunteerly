@@ -1,3 +1,8 @@
+/**
+ * organization.ts
+ * Defines organization, moderator organization, and organization update schemas.
+ */
+
 import { z } from "zod";
 
 export const OrganizationStateSchema = z.enum(["CREATED", "APPLIED", "VERIFIED", "REJECTED"]);

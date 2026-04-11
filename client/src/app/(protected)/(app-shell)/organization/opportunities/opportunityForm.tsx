@@ -1,3 +1,8 @@
+/**
+ * opportunityForm.tsx
+ * Shared opportunity form used for both creating and editing opportunities
+ */
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldDescription } from "@/components/ui/field";
@@ -23,6 +28,8 @@ type OpportunityFormProps = {
     handleDayToggle: (day: string) => Promise<void>;
     setDeadlineDate: React.Dispatch<React.SetStateAction<string>>;
 };
+
+// Full week used to render the availability day toggles
 const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export default function OpportunityForm({
@@ -48,6 +55,7 @@ export default function OpportunityForm({
                 </CardHeader>
 
                 <CardContent className="space-y-3">
+                    {/* Name and category sit side by side on larger screens */}
                     <div
                         className="
                             grid grid-cols-1 gap-4
@@ -90,6 +98,7 @@ export default function OpportunityForm({
                             />
                         </Field>
                     </div>
+
                     <Field>
                         <Label htmlFor="desc">
                             Description<span className="text-destructive">*</span>
@@ -109,6 +118,7 @@ export default function OpportunityForm({
                             Provide detailed description of opportunity
                         </FieldDescription>
                     </Field>
+
                     <Field>
                         <Label htmlFor="candidate">
                             Ideal Candidate<span className="text-destructive">*</span>
@@ -129,6 +139,7 @@ export default function OpportunityForm({
                         </FieldDescription>
                     </Field>
 
+                    {/* Work type and commitment level dropdowns */}
                     <div
                         className="
                             grid grid-cols-1 gap-4
@@ -203,6 +214,7 @@ export default function OpportunityForm({
                         </Field>
                     </div>
 
+                    {/* Duration length and application deadline */}
                     <div
                         className="
                             grid grid-cols-1 gap-4
@@ -245,6 +257,8 @@ export default function OpportunityForm({
                             />
                         </Field>
                     </div>
+
+                    {/* Day-of-week availability toggles - one per day across a 7-column grid */}
                     <Field>
                         <Label htmlFor="availability">
                             Availability<span className="text-destructive">*</span>

@@ -1,3 +1,8 @@
+/**
+ * app-modal.tsx
+ * Renders a shared modal wrapper for application dialogs.
+ */
+
 "use client";
 
 import {

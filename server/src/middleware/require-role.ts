@@ -1,7 +1,17 @@
+/**
+ * require-role.ts
+ * Restricts authenticated routes to the allowed user roles.
+ */
+
 import { UserRole } from "@prisma/client";
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { prisma } from "../lib/prisma.js";
 
+/**
+ * Creates middleware that authorizes requests against the provided user roles.
+ * @param allowedRoles
+ * @returns Express middleware that validates the authenticated user's role.
+ */
 export function requireRole(...allowedRoles: UserRole[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {

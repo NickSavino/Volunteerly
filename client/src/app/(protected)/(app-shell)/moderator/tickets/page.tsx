@@ -1,14 +1,19 @@
+/**
+ * tickets/page.tsx
+ * Renders the moderator ticket management page.
+ */
+
 "use client";
 
-import { MessageSquareText } from "lucide-react";
-import { TICKET_TABS, TicketSortKey, useTicketListViewModel } from "./ticketListVm";
-import type { ModeratorTicket } from "@volunteerly/shared";
+import { TicketDetailModal } from "@/app/(protected)/(app-shell)/moderator/tickets/ticket-detail/ticketDetailModal";
 import { ModeratorFilterBar } from "@/components/moderator/moderator-filter-bar";
 import { ModeratorListContainer } from "@/components/moderator/moderator-list-container";
 import { ModeratorPageHeader } from "@/components/moderator/moderator-page-header";
 import { ModeratorPagination } from "@/components/moderator/moderator-pagination";
 import { ModeratorTabs } from "@/components/moderator/moderator-tabs";
-import { TicketDetailModal } from "@/app/(protected)/(app-shell)/moderator/tickets/ticket-detail/ticketDetailModal";
+import type { ModeratorTicket } from "@volunteerly/shared";
+import { MessageSquareText } from "lucide-react";
+import { TICKET_TABS, TicketSortKey, useTicketListViewModel } from "./ticketListVm";
 
 function formatCategory(category: ModeratorTicket["category"]) {
     switch (category) {

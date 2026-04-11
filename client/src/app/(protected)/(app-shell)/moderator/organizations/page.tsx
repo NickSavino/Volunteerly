@@ -1,3 +1,8 @@
+/**
+ * page.tsx
+ * Renders the moderator organization review page.
+ */
+
 "use client";
 
 import { AppModal } from "@/components/common/app-modal";

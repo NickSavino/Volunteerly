@@ -1,3 +1,8 @@
+/**
+ * ticket.ts
+ * Defines ticket status, category, urgency, and ticket creation schemas.
+ */
+
 import z from "zod";
 
 export const TicketStatusSchema = z.enum(["OPEN", "CLOSED"]);

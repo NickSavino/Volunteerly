@@ -1,3 +1,8 @@
+/**
+ * user.ts
+ * Defines shared user role, account state, and user data schemas.
+ */
+
 import { z } from "zod";
 
 export const UserRoleSchema = z.enum([

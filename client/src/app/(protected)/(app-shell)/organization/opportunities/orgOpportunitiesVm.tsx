@@ -1,3 +1,8 @@
+/**
+ * orgOpportunitiesVm.tsx
+ * View model for the organization's opportunities list page
+ */
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
@@ -13,8 +18,11 @@ export function useOrgOpportunitiesViewModel() {
     const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
     const [currentTab, setCurrentTab] = useState("OPEN");
     const [fetching, setFetching] = useState(true);
+
+    // Filter the full list down to just the opportunities matching the active tab
     const filteredOpportunities = opportunities.filter((opp) => opp.status === currentTab);
 
+    // Load org profile and redirect to setup pages if not fully verified
     useEffect(() => {
         async function loadCurrentUser() {
             if (!session?.access_token) return;
@@ -44,6 +52,7 @@ export function useOrgOpportunitiesViewModel() {
         loadCurrentUser();
     }, [session, router]);
 
+    // Load all opportunities for this org on mount
     useEffect(() => {
         async function loadOpportunities() {
             const opps = await OrganizationService.getAllOpportunities();

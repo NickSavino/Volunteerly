@@ -1,3 +1,8 @@
+/**
+ * orgListVm.tsx
+ * Manages moderator organization review state and filters.
+ */
+
 import { appToast } from "@/components/common/app-toast";
 import { useAuth } from "@/providers/auth-provider";
 import { ModeratorService } from "@/services/ModeratorService";

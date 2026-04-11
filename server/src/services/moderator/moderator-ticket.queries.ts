@@ -1,3 +1,8 @@
+/**
+ * moderator-ticket.queries.ts
+ * Defines Prisma include shapes and payload types for moderator ticket detail queries.
+ */
+
 import { Prisma } from "@prisma/client";
 import { chatUserArgs } from "../helpers/prisma-shapes.js";
 

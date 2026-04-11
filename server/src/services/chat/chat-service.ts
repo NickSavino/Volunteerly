@@ -1,3 +1,8 @@
+/**
+ * chat-service.ts
+ * Handles direct and ticket-based chat conversations and messages.
+ */
+
 import { ChatConversationDetail, ChatConversationList, ChatMessage } from "@volunteerly/shared";
 import { prisma } from "../../lib/prisma.js";
 import { getDisplayName } from "../helpers/service-utils.js";
@@ -23,6 +28,11 @@ function toChatMessage(message: ChatMessageRecord): ChatMessage {
     };
 }
 
+/**
+ * Fetches chat conversations for the specified user.
+ * @param userId
+ * @returns Promise<ChatConversationList>
+ */
 export async function getChatConversationList(userId: string): Promise<ChatConversationList> {
     const conversations: ChatConversationListRecord[] = await prisma.chatConversation.findMany({
         where: {
@@ -64,6 +74,12 @@ export async function getChatConversationList(userId: string): Promise<ChatConve
     });
 }
 
+/**
+ * Fetches a single chat conversation if the user is a participant.
+ * @param userId
+ * @param conversationId
+ * @returns Promise<ChatConversationDetail | null>
+ */
 export async function getChatConversationDetail(
     userId: string,
     conversationId: string,
@@ -101,6 +117,13 @@ export async function getChatConversationDetail(
     };
 }
 
+/**
+ * Creates a chat message in a conversation the user participates in.
+ * @param userId
+ * @param conversationId
+ * @param content
+ * @returns Promise<ChatMessage | null>
+ */
 export async function createChatMessage(
     userId: string,
     conversationId: string,
@@ -153,6 +176,12 @@ export async function createChatMessage(
     return toChatMessage(message);
 }
 
+/**
+ * Finds or creates a direct conversation between two users.
+ * @param userId
+ * @param participantUserId
+ * @returns Promise<{ id: string }>
+ */
 export async function getOrCreateDirectConversation(userId: string, participantUserId: string) {
     const existingConversation = await prisma.chatConversation.findFirst({
         where: {

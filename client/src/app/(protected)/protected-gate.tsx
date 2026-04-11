@@ -1,3 +1,8 @@
+/**
+ * protected-gate.tsx
+ * Redirects protected users based on role and onboarding state.
+ */
+
 import { LoadingScreen } from "@/components/common/loading-screen";
 import { resolveDefaultAppRoute } from "@/lib/utils";
 import { useAppSession } from "@/providers/app-session-provider";
@@ -47,6 +52,7 @@ export default function ProtectedGate({ children }: { children: ReactNode }) {
         void signOut();
     }, [currentUser, currentUser?.status, initialized, isAuthenticated, loading, signOut]);
 
+    // Compute one redirect target from auth state, role, and account status
     const redirectTarget = useMemo(() => {
         if (!initialized || loading) return null;
 

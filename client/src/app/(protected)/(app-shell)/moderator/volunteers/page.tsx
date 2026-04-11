@@ -1,3 +1,8 @@
+/**
+ * volunteers/page.tsx
+ * Renders the volunteer moderation page.
+ */
+
 "use client";
 
 import {

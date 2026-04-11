@@ -1,3 +1,8 @@
+/**
+ * server.ts
+ * Starts the HTTP server.
+ */
+
 import { createApp } from "./app.js";
 import { env } from "./lib/env.js";
 

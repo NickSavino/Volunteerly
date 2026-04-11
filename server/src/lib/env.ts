@@ -1,3 +1,8 @@
+/**
+ * env.ts
+ * Validates server environment variables.
+ */
+
 import "dotenv/config";
 
 import z from "zod";

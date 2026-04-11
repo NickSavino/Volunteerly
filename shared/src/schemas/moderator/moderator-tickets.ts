@@ -1,3 +1,8 @@
+/**
+ * moderator-tickets.ts
+ * Defines moderator ticket list schemas.
+ */
+
 import z from "zod";
 import { TicketCategorySchema, TicketStatusSchema, UrgencyRatingSchema } from "../ticket.js";
 

@@ -1,3 +1,8 @@
+/**
+ * signupVM.tsx
+ * View model for the signup page - handles account creation for volunteers and organizations
+ */
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthService } from "@/services/AuthService";
@@ -15,6 +20,7 @@ export function useSignUpViewModel() {
     const router = useRouter();
     const { session, loading } = useAuth();
 
+    // Hold the intended next route until the session is fully established
     const [pendingRoute, setPendingRoute] = useState<string | null>(null);
 
     const [fName, setfName] = useState("");
@@ -26,6 +32,10 @@ export function useSignUpViewModel() {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Handles the full multi-step signup flow:
+    // 1. Create the Supabase auth account
+    // 2. Create the app-level user record
+    // 3. Create the role-specific profile (volunteer or org)
     async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault();
         setSubmitting(true);
@@ -40,6 +50,7 @@ export function useSignUpViewModel() {
                 return;
             }
 
+            // Create the shared user record with role assignment
             const createdUser = CurrentUserUpdateSchema.parse({
                 email: email,
                 role: role,
@@ -56,6 +67,7 @@ export function useSignUpViewModel() {
                 return;
             }
 
+            // Create the role-specific profile record
             if (role == "VOLUNTEER") {
                 const createdVolunteer = UpdateCurrentVolunteerSchema.parse({
                     firstName: fName,
@@ -85,6 +97,7 @@ export function useSignUpViewModel() {
                 }
             }
 
+            // Queue the redirect - we wait for the session to be live before navigating
             if (data.session) {
                 const nextRoute =
                     role === "VOLUNTEER"
@@ -100,6 +113,7 @@ export function useSignUpViewModel() {
         }
     }
 
+    // Navigate once the session is confirmed live after signup
     useEffect(() => {
         async function continueAfterAuth() {
             if (!pendingRoute) return;

@@ -1,3 +1,8 @@
+/**
+ * current-organization.ts
+ * Routes for the authenticated organization's own data and opportunities
+ */
+
 import { Router } from "express";
 import multer from "multer";
 import { auth } from "../middleware/auth.js";
@@ -37,6 +42,8 @@ type AuthenticatedRequest = {
 };
 
 export const currentOrganizationRouter = Router();
+
+// Store uploads in memory rather than disk - we pass the buffer directly to Supabase
 const storage = multer.memoryStorage();
 const upload = multer({
     storage,
@@ -50,10 +57,17 @@ const upload = multer({
         cb(null, true);
     },
     limits: {
-        fileSize: 5 * 1024 * 1024,
+        fileSize: 5 * 1024 * 1024, // 5 MB max file size
     },
 });
 
+/**
+ * GET /current-organization
+ * Returns the authenticated organization's profile.
+ * Auth: required
+ * Returns: 200 with organization data
+ * Errors: 401, 404, 500
+ */
 currentOrganizationRouter.get("/", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
@@ -72,6 +86,14 @@ currentOrganizationRouter.get("/", async (req, res, next) => {
     }
 });
 
+/**
+ * PUT /current-organization
+ * Creates or updates the organization profile for the authenticated user.
+ * Auth: required
+ * Body: orgName, contactName, contactEmail, contactNum, missionStatement, causeCategory, website, impactHighlights, hqAdr
+ * Returns: 200 with updated organization
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.put("/", async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
@@ -88,6 +110,7 @@ currentOrganizationRouter.put("/", async (req, res, next) => {
             hqAdr,
         } = req.body;
 
+        // Check if org already exists to decide between create vs. update
         const user = await getCurrentOrganization(userId);
         let modified_user;
         if (!user) {
@@ -119,6 +142,14 @@ currentOrganizationRouter.put("/", async (req, res, next) => {
     }
 });
 
+/**
+ * PUT /current-organization/apply
+ * Submits the organization's verification application with a PDF document.
+ * Auth: required
+ * Body: multipart/form-data with document file + org fields
+ * Returns: 200 with updated organization (status APPLIED or VERIFIED if auto-approved)
+ * Errors: 401, 404, 500
+ */
 currentOrganizationRouter.put("/apply", upload.single("document"), async (req, res, next) => {
     try {
         const userId = req.auth!.userId;
@@ -131,6 +162,7 @@ currentOrganizationRouter.put("/apply", upload.single("document"), async (req, r
                 message: "Organization not found.",
             });
         } else {
+            // Prevent re-applying if already submitted or verified
             if (org.status == "APPLIED" || org.status == "VERIFIED") {
                 return res.status(500).json({
                     error: "Organization is not eligible to apply.",
@@ -185,6 +217,13 @@ currentOrganizationRouter.put("/apply", upload.single("document"), async (req, r
     }
 });
 
+/**
+ * GET /current-organization/opportunities
+ * Returns all opportunities posted by the authenticated organization.
+ * Auth: required
+ * Returns: 200 with opportunities array
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunities", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -197,6 +236,13 @@ currentOrganizationRouter.get("/opportunities", async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-organization/opportunities/active
+ * Returns active (OPEN or FILLED) opportunities for the current organization.
+ * Auth: required
+ * Returns: 200 with active opportunities array
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunities/active", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -209,6 +255,13 @@ currentOrganizationRouter.get("/opportunities/active", async (req, res, next) =>
     }
 });
 
+/**
+ * GET /current-organization/opportunities/totalCount
+ * Returns the total number of opportunities ever posted by this organization.
+ * Auth: required
+ * Returns: 200 with count
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunities/totalCount", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -221,6 +274,13 @@ currentOrganizationRouter.get("/opportunities/totalCount", async (req, res, next
     }
 });
 
+/**
+ * GET /current-organization/reviews
+ * Returns the review summary (average rating, total count) for this organization.
+ * Auth: required
+ * Returns: 200 with review stats
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/reviews", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -233,6 +293,13 @@ currentOrganizationRouter.get("/reviews", async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-organization/awards
+ * Computes and returns earned achievement badges for this organization.
+ * Auth: required
+ * Returns: 200 with awards object (badge title to description)
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/awards", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -241,10 +308,13 @@ currentOrganizationRouter.get("/awards", async (req, res, next) => {
         const awards: Record<string, string> = {};
 
         const org = await getCurrentOrganization(userId);
+
+        // Award for having a complete profile with impact highlights
         if (Array.isArray(org?.impactHighlights) && org?.impactHighlights?.length >= 2) {
             awards["Strong Presence"] = "Completed all organization profile details!";
         }
 
+        // Awards based on total opportunities posted - tiered milestones
         const opportunities = await countAllOpportunities(userId);
         if (opportunities >= 1) {
             awards["First Step"] = "Post first opportunity!";
@@ -262,6 +332,14 @@ currentOrganizationRouter.get("/awards", async (req, res, next) => {
         next(error);
     }
 });
+
+/**
+ * GET /current-organization/opportunities/hoursTotal
+ * Returns the sum of all volunteer hours logged across this org's opportunities.
+ * Auth: required
+ * Returns: 200 with total hours aggregate
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunities/hoursTotal", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -274,6 +352,13 @@ currentOrganizationRouter.get("/opportunities/hoursTotal", async (req, res, next
     }
 });
 
+/**
+ * GET /current-organization/opportunities/activeTotal
+ * Returns the count of currently active (FILLED) volunteers for this organization.
+ * Auth: required
+ * Returns: 200 with count
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunities/activeTotal", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -286,6 +371,14 @@ currentOrganizationRouter.get("/opportunities/activeTotal", async (req, res, nex
     }
 });
 
+/**
+ * GET /current-organization/opportunity
+ * Returns a single opportunity by ID, scoped to the authenticated organization.
+ * Auth: required
+ * Query: opp_id
+ * Returns: 200 with opportunity
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunity", auth, async (req, res, next) => {
     try {
         const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
@@ -318,6 +411,14 @@ currentOrganizationRouter.get("/opportunity", auth, async (req, res, next) => {
     }
 });
 
+/**
+ * GET /current-organization/opportunity/applications
+ * Returns all applications for a given opportunity owned by this organization.
+ * Auth: required
+ * Query: opp_id
+ * Returns: 200 with applications array
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunity/applications", auth, async (req, res, next) => {
     try {
         const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
@@ -350,6 +451,14 @@ currentOrganizationRouter.get("/opportunity/applications", auth, async (req, res
     }
 });
 
+/**
+ * GET /current-organization/opportunity/application
+ * Returns a single application by ID, ensuring the opportunity belongs to this org.
+ * Auth: required
+ * Query: app_id
+ * Returns: 200 with application details
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunity/application", auth, async (req, res, next) => {
     try {
         const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
@@ -382,6 +491,14 @@ currentOrganizationRouter.get("/opportunity/application", auth, async (req, res,
     }
 });
 
+/**
+ * PUT /current-organization/opportunity/select
+ * Selects a volunteer for an opportunity, marking it as FILLED, and sends a confirmation email.
+ * Auth: required
+ * Body: oppId, vltId
+ * Returns: 200 with updated opportunity
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next) => {
     try {
         const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
@@ -389,6 +506,7 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
 
         const { oppId, vltId } = req.body;
 
+        // Verify that the volunteer actually applied to this opportunity
         const application = await getOppVltApplication(userId, oppId, vltId);
 
         if (!application) {
@@ -407,6 +525,7 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
             });
         }
 
+        // Send a confirmation email to the selected volunteer
         const vltDetails = await getCurrentUser(vltId);
 
         if (vltDetails) {
@@ -453,6 +572,14 @@ currentOrganizationRouter.put("/opportunity/select", auth, async (req, res, next
     }
 });
 
+/**
+ * PUT /current-organization/opportunity/complete
+ * Marks a FILLED opportunity as CLOSED (completed).
+ * Auth: required
+ * Body: oppId
+ * Returns: 200 with completed opportunity
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.put("/opportunity/complete", auth, async (req, res, next) => {
     try {
         const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
@@ -469,6 +596,7 @@ currentOrganizationRouter.put("/opportunity/complete", auth, async (req, res, ne
             });
         }
 
+        // Can only complete an opportunity that's currently in FILLED state
         if (!(opportunity.status == "FILLED")) {
             return res.status(500).json({
                 error: "Cannot Complete Opportunity",
@@ -491,6 +619,14 @@ currentOrganizationRouter.put("/opportunity/complete", auth, async (req, res, ne
     }
 });
 
+/**
+ * GET /current-organization/opportunity/analytics
+ * Returns hours and estimated monetary value for a completed opportunity.
+ * Auth: required
+ * Query: oppId
+ * Returns: 200 with analytics data
+ * Errors: 401, 500
+ */
 currentOrganizationRouter.get("/opportunity/analytics", auth, async (req, res, next) => {
     try {
         const userId = (req as typeof req & AuthenticatedRequest).auth?.userId;
@@ -518,6 +654,14 @@ currentOrganizationRouter.get("/opportunity/analytics", auth, async (req, res, n
     }
 });
 
+/**
+ * POST /current-organization/opportunity/progressUpdate
+ * Adds a progress update entry to a currently active (FILLED) opportunity.
+ * Auth: required
+ * Body: opportunityId, title, description, hoursContributed
+ * Returns: 200 with the new progress update
+ * Errors: 401, 404, 500
+ */
 currentOrganizationRouter.post("/opportunity/progressUpdate", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
@@ -546,6 +690,7 @@ currentOrganizationRouter.post("/opportunity/progressUpdate", auth, async (req, 
                 message: "Opportunity not found, or not owned by organization",
             });
         } else {
+            // Only FILLED opportunities can receive progress updates
             if (!(opp.status == "FILLED")) {
                 return res.status(500).json({
                     error: "Cannot add progress update.",
@@ -574,6 +719,14 @@ currentOrganizationRouter.post("/opportunity/progressUpdate", auth, async (req, 
     }
 });
 
+/**
+ * POST /current-organization/opportunity
+ * Creates a new volunteer opportunity posting for this organization.
+ * Auth: required
+ * Body: name, category, description, candidateDesc, workType, commitmentLevel, length, deadlineDate, availability
+ * Returns: 200 with created opportunity
+ * Errors: 401, 404, 500
+ */
 currentOrganizationRouter.post("/opportunity", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
@@ -624,6 +777,14 @@ currentOrganizationRouter.post("/opportunity", auth, async (req, res, next) => {
     }
 });
 
+/**
+ * POST /current-organization/reviews
+ * Submits a star rating review for a volunteer after an opportunity.
+ * Auth: required
+ * Body: revieweeId, rating, opportunityId
+ * Returns: 201 with success flag
+ * Errors: 401, 409 (already reviewed), 500
+ */
 currentOrganizationRouter.post("/reviews", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -632,6 +793,7 @@ currentOrganizationRouter.post("/reviews", async (req, res, next) => {
         await orgPostReview(userId, revieweeId, opportunityId, rating);
         res.status(201).json({ success: true });
     } catch (error: any) {
+        // Special case - service throws a known string error for duplicate reviews
         if (error?.message === "ALREADY_REVIEWED") {
             return res.status(409).json({ error: "Already reviewed for this opportunity." });
         }
@@ -639,6 +801,14 @@ currentOrganizationRouter.post("/reviews", async (req, res, next) => {
     }
 });
 
+/**
+ * POST /current-organization/flags
+ * Flags a volunteer for problematic behavior during an opportunity.
+ * Auth: required
+ * Body: flaggedUserId, opportunityId, reason
+ * Returns: 201 with success flag
+ * Errors: 401, 409 (already flagged), 500
+ */
 currentOrganizationRouter.post("/flags", async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -647,6 +817,7 @@ currentOrganizationRouter.post("/flags", async (req, res, next) => {
         await orgPostFlag(userId, flaggedUserId, opportunityId, reason);
         res.status(201).json({ success: true });
     } catch (error: any) {
+        // Special case - service throws a known string error for duplicate flags
         if (error?.message === "ALREADY_FLAGGED") {
             return res.status(409).json({ error: "Already flagged for this opportunity." });
         }
@@ -654,6 +825,14 @@ currentOrganizationRouter.post("/flags", async (req, res, next) => {
     }
 });
 
+/**
+ * PUT /current-organization/opportunity
+ * Updates an existing opportunity's details.
+ * Auth: required
+ * Body: opportunityId, name, category, description, candidateDesc, workType, commitmentLevel, length, deadlineDate, availability
+ * Returns: 200 with updated opportunity
+ * Errors: 401, 404, 500
+ */
 currentOrganizationRouter.put("/opportunity", auth, async (req, res, next) => {
     try {
         const typedReq = req as typeof req & AuthenticatedRequest;
@@ -706,6 +885,14 @@ currentOrganizationRouter.put("/opportunity", auth, async (req, res, next) => {
     }
 });
 
+/**
+ * POST /current-organization/opportunity/message-thread
+ * Gets or creates a direct message conversation between the org and the assigned volunteer.
+ * Auth: required
+ * Body: oppId
+ * Returns: 200 with conversationId
+ * Errors: 400, 401, 404, 500
+ */
 currentOrganizationRouter.post("/opportunity/message-thread", auth, async (req, res, next) => {
     try {
         const userId = req.auth?.userId;
@@ -725,6 +912,8 @@ currentOrganizationRouter.post("/opportunity/message-thread", auth, async (req, 
         }
 
         const opportunity = await getOrgOpportunity(userId, oppId);
+
+        // Opportunity must have a volunteer assigned before messaging is possible
         if (!opportunity || !opportunity.volId) {
             return res.status(404).json({
                 error: "Not Found",

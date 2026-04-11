@@ -1,7 +1,12 @@
+/**
+ * conversation.ts
+ * Defines chat conversation, participant, and conversation detail schemas.
+ */
+
 import z from "zod";
+import { TicketStatusSchema } from "../ticket.js";
 import { UserRoleSchema } from "../user.js";
 import { ChatMessagesSchema } from "./message.js";
-import { TicketStatusSchema } from "../ticket.js";
 
 export const ConversationKindSchema = z.enum(["DIRECT", "TICKET"]);
 export type ConversationKind = z.infer<typeof ConversationKindSchema>;

@@ -1,3 +1,8 @@
+/**
+ * ticketListVm.ts
+ * Manages ticket list filtering, pagination, and modal state.
+ */
+
 "use client";
 
 import { useAuth } from "@/providers/auth-provider";

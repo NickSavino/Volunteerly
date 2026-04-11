@@ -1,3 +1,8 @@
+/**
+ * moderator-ticket.routes.ts
+ * Handles moderator ticket list, detail, claim, and close routes.
+ */
+
 import { Router } from "express";
 import {
     claimModeratorTicket,
@@ -8,6 +13,15 @@ import {
 
 export const moderatorTicketsRouter = Router();
 
+/**
+ * GET /moderator/tickets
+ * Fetches the moderator ticket list.
+ * Auth: required (MODERATOR)
+ * Params: none
+ * Body: none
+ * Returns: 200 with ModeratorTicketList
+ * Errors: 401, 500
+ */
 moderatorTicketsRouter.get("/", async (_, res, next) => {
     try {
         const tickets = await getModeratorTicketList();
@@ -18,6 +32,15 @@ moderatorTicketsRouter.get("/", async (_, res, next) => {
     }
 });
 
+/**
+ * GET /moderator/tickets/:ticketId
+ * Fetches detailed data for a single moderator ticket.
+ * Auth: required (MODERATOR)
+ * Params: ticketId
+ * Body: none
+ * Returns: 200 with ModeratorTicketDetail
+ * Errors: 401, 404, 500
+ */
 moderatorTicketsRouter.get("/:ticketId", async (req, res, next) => {
     try {
         const ticket = await getModeratorTicketDetail(req.params.ticketId);
@@ -35,6 +58,15 @@ moderatorTicketsRouter.get("/:ticketId", async (req, res, next) => {
     }
 });
 
+/**
+ * PATCH /moderator/tickets/:ticketId/claim
+ * Claims a moderator ticket for the authenticated moderator.
+ * Auth: required (MODERATOR)
+ * Params: ticketId
+ * Body: none
+ * Returns: 200 with updated ticket detail
+ * Errors: 401, 404, 409, 500
+ */
 moderatorTicketsRouter.patch("/:ticketId/claim", async (req, res, next) => {
     try {
         const ticket = await claimModeratorTicket(req.params.ticketId, req.auth!.userId);
@@ -54,6 +86,15 @@ moderatorTicketsRouter.patch("/:ticketId/claim", async (req, res, next) => {
     }
 });
 
+/**
+ * PATCH /moderator/tickets/:ticketId/close
+ * Closes a claimed moderator ticket.
+ * Auth: required (MODERATOR)
+ * Params: ticketId
+ * Body: none
+ * Returns: 200 with updated ticket detail
+ * Errors: 401, 404, 409, 500
+ */
 moderatorTicketsRouter.patch("/:ticketId/close", async (req, res, next) => {
     try {
         const ticket = await closeModeratorTicket(req.params.ticketId, req.auth!.userId);

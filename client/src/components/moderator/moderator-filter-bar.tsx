@@ -1,3 +1,7 @@
+/**
+ * moderator-filter-bar.tsx
+ * Renders reusable search, sort, and page-size controls for moderator lists.
+ */
 "use client";
 
 import { Search } from "lucide-react";

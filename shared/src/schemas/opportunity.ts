@@ -1,3 +1,8 @@
+/**
+ * opportunity.ts
+ * Defines opportunity, progress update, analytics, and filter schemas.
+ */
+
 import { z } from "zod";
 
 export const OpportunityAnalyticsSchema = z.object({

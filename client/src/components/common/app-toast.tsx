@@ -1,3 +1,8 @@
+/**
+ * app-toast.tsx
+ * Renders shared success and error toast helpers for the client app.
+ */
+
 "use client";
 
 import { AlertCircle, CheckCircle2, X } from "lucide-react";

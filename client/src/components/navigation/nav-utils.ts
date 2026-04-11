@@ -1,3 +1,8 @@
+/**
+ * nav-utils.ts
+ * Defines shared helper utilities for navigation.
+ */
+
 export function getAvatarFallback(name: string | undefined, fallback = "USR") {
     if (!name?.trim()) return fallback;
 
