@@ -1,3 +1,8 @@
+/**
+ * api.ts
+ * Defines shared API response schemas.
+ */
+
 import z from "zod";
 
 export const ApiErrorSchema = z.object({

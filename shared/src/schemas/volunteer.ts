@@ -1,3 +1,8 @@
+/**
+ * volunteer.ts
+ * Defines volunteer profile, skill extraction, and volunteer update schemas.
+ */
+
 import { z } from "zod";
 
 export const VolunteerSchema = z.object({

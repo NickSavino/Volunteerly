@@ -1,3 +1,8 @@
+/**
+ * application.ts
+ * Defines application and application list schemas.
+ */
+
 import { z } from "zod";
 
 export const ApplicationSchema = z.object({

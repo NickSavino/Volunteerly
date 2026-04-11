@@ -1,3 +1,8 @@
+/**
+ * moderator-ticket-detail.ts
+ * Defines expanded moderator ticket detail schema.
+ */
+
 import type z from "zod";
 import { ChatConversationDetailSchema, ChatParticipantSummarySchema } from "../chat/index.js";
 import { ModeratorTicketSchema } from "./moderator-tickets.js";
