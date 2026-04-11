@@ -1,3 +1,8 @@
+/**
+ * moderator-ticket.routes.ts
+ * Handles moderator ticket list, detail, claim, and close routes.
+ */
+
 import { Router } from "express";
 import {
     claimModeratorTicket,

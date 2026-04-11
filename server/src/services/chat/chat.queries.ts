@@ -1,3 +1,8 @@
+/**
+ * chat.queries.ts
+ * Defines Prisma query shapes and record types used by chat services.
+ */
+
 import { Prisma } from "@prisma/client";
 import { chatUserArgs } from "../helpers/prisma-shapes.js";
 

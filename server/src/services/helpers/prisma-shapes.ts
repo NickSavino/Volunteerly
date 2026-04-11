@@ -1,3 +1,8 @@
+/**
+ * prisma-shapes.ts
+ * Defines reusable Prisma select shapes and payload types for service queries.
+ */
+
 import { Prisma } from "@prisma/client";
 
 export const chatUserArgs = {

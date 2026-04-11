@@ -1,3 +1,8 @@
+/**
+ * current-moderator.ts
+ * Handles current moderator profile routes for authenticated moderators.
+ */
+
 import { Router } from "express";
 import {
     createCurrentModerator,

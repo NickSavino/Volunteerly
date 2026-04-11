@@ -1,3 +1,8 @@
+/**
+ * moderator-volunteer.routes.ts
+ * Handles moderator volunteer list, detail, and moderation action routes.
+ */
+
 import {
     ModeratorVolunteerEscalateInputSchema,
     ModeratorVolunteerFlagInputSchema,
