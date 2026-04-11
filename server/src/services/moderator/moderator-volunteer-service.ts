@@ -1,3 +1,8 @@
+/**
+ * moderator-volunteer-service.ts
+ * Handles moderator volunteer list/detail queries and volunteer moderation actions.
+ */
+
 import { Prisma } from "@prisma/client";
 import {
     ModeratorVolunteerDetail,
@@ -54,6 +59,10 @@ function isVolunteerSuspended(snapshot: Awaited<ReturnType<typeof getVolunteerSt
     return snapshot?.status === "CLOSED" || snapshot?.user.status === "BANNED";
 }
 
+/**
+ * Fetches moderator-facing volunteer summaries with flag context.
+ * @returns Promise<ModeratorVolunteerList>
+ */
 export async function getModeratorVolunteerList(): Promise<ModeratorVolunteerList> {
     const volunteers = await prisma.volunteer.findMany({
         orderBy: { createdAt: "desc" },
@@ -100,6 +109,11 @@ export async function getModeratorVolunteerList(): Promise<ModeratorVolunteerLis
     });
 }
 
+/**
+ * Fetches detailed moderation data for a volunteer.
+ * @param volunteerId
+ * @returns Promise<ModeratorVolunteerDetail | null>
+ */
 export async function getModeratorVolunteerDetail(
     volunteerId: string,
 ): Promise<ModeratorVolunteerDetail | null> {
@@ -166,6 +180,13 @@ export async function getModeratorVolunteerDetail(
     };
 }
 
+/**
+ * Creates a moderator flag and open volunteer report.
+ * @param volunteerId
+ * @param moderatorId
+ * @param input
+ * @returns Promise containing the created volunteer report record.
+ */
 export async function flagVolunteerByModerator(
     volunteerId: string,
     moderatorId: string,
@@ -209,6 +230,13 @@ export async function flagVolunteerByModerator(
     });
 }
 
+/**
+ * Resolves an open volunteer report with a warning.
+ * @param volunteerId
+ * @param moderatorId
+ * @param input
+ * @returns Promise<void>
+ */
 export async function warnVolunteer(
     volunteerId: string,
     moderatorId: string,
@@ -254,6 +282,13 @@ export async function warnVolunteer(
     });
 }
 
+/**
+ * Resolves an open volunteer report with a suspension.
+ * @param volunteerId
+ * @param moderatorId
+ * @param input
+ * @returns Promise<void>
+ */
 export async function suspendVolunteer(
     volunteerId: string,
     moderatorId: string,
@@ -301,6 +336,13 @@ export async function suspendVolunteer(
     });
 }
 
+/**
+ * Resolves an open volunteer report with an escalation.
+ * @param volunteerId
+ * @param moderatorId
+ * @param input
+ * @returns Promise<void>
+ */
 export async function escalateVolunteer(
     volunteerId: string,
     moderatorId: string,
