@@ -1,3 +1,8 @@
+/**
+ * moderator-pagination.tsx
+ * Renders pagination controls for moderator lists.
+ */
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type ModeratorPaginationProps = {

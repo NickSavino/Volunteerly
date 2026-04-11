@@ -1,3 +1,8 @@
+/**
+ * moderator-page-header.tsx
+ * Renders a consistent header for moderator pages.
+ */
+
 type ModeratorPageHeaderProps = {
     title: string;
     subtitle: string;

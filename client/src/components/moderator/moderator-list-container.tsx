@@ -1,3 +1,8 @@
+/**
+ * moderator-list-container.tsx
+ * Wraps moderator list content and empty states.
+ */
+
 type ModeratorListContainerProps = {
     children: React.ReactNode;
     isEmpty: boolean;

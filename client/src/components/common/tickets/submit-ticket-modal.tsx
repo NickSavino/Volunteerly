@@ -1,11 +1,12 @@
+/**
+ * submit-ticket-modal.tsx
+ * Renders the support ticket submission modal and form state.
+ */
+
 "use client";
 
-import { useState } from "react";
-import { MessageCircleQuestionMark } from "lucide-react";
-import type { CreatedTicket, TicketCategory, UrgencyRating } from "@volunteerly/shared";
 import { AppModal } from "@/components/common/app-modal";
 import { appToast } from "@/components/common/app-toast";
-import { TicketService } from "@/services/TicketService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +18,10 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { TicketService } from "@/services/TicketService";
+import type { CreatedTicket, TicketCategory, UrgencyRating } from "@volunteerly/shared";
+import { MessageCircleQuestionMark } from "lucide-react";
+import { useState } from "react";
 
 type SubmitTicketModalProps = {
     open: boolean;

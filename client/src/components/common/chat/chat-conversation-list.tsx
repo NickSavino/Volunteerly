@@ -1,3 +1,8 @@
+/**
+ * chat-conversation-list.tsx
+ * Renders the list of available chat conversations.
+ */
+
 "use client";
 
 import { ScrollArea } from "@/components/ui/scroll-area";

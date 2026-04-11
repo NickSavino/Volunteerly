@@ -1,3 +1,7 @@
+/**
+ * moderator-tabs.tsx
+ * Renders tab navigation for moderator views.
+ */
 "use client";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";

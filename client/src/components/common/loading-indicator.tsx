@@ -1,3 +1,8 @@
+/**
+ * loading-indicator.tsx
+ * Renders a reusable animated loading indicator.
+ */
+
 "use client";
 
 import { cn } from "@/lib/utils";

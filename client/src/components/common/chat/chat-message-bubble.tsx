@@ -1,3 +1,8 @@
+/**
+ * chat-message-bubble.tsx
+ * Renders a single chat message with sender and timestamp styling.
+ */
+
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

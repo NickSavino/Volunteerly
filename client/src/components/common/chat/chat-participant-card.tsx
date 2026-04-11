@@ -1,7 +1,12 @@
+/**
+ * chat-participant-card.tsx
+ * Renders participant details and available actions for a chat thread.
+ */
+
 "use client";
 
-import { ReactNode } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ReactNode } from "react";
 
 type ChatParticipantCardProps = {
     displayName: string;
